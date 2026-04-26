@@ -1,0 +1,153 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+ * SOS Pet — Tokens semânticos (CSS variables)
+ *
+ * Formato: "R G B" (sem vírgulas, sem rgb()) para permitir
+ * alpha dinâmico com Tailwind (bg-primary/50, text-fg/80, etc).
+ *
+ * Tema default = dark (aplicado no <html> via layout.tsx).
+ * Para usar light-warm em uma rota específica:
+ *   <html data-theme="light"> ou <div data-theme="light">
+ * ============================================================ */
+
+:root,
+[data-theme="dark"] {
+  /* Fundos */
+  --color-bg: 15 15 26; /* ink.800 */
+  --color-bg-raised: 20 20 31; /* ink.700 */
+  --color-bg-overlay: 10 10 15; /* ink.900 */
+
+  /* Texto */
+  --color-fg: 255 255 255;
+  --color-fg-muted: 156 163 175; /* gray-400 */
+  --color-fg-subtle: 107 107 128; /* ink.300 */
+
+  /* Bordas */
+  --color-border: 255 255 255; /* usado com opacidade baixa (/10) */
+  --color-border-strong: 255 255 255; /* usado com /20 */
+  --color-border-brand: 255 107 53;
+  --color-border-cyan: 0 229 255;
+
+  /* Acentos */
+  --color-primary: 255 107 53; /* laranja */
+  --color-primary-fg: 255 255 255;
+  --color-accent: 0 229 255; /* ciano */
+  --color-accent-fg: 7 7 13;
+}
+
+[data-theme="light"] {
+  /* Light-warm: landing, cadastro público, checkout */
+  --color-bg: 255 248 243; /* warm.50 */
+  --color-bg-raised: 255 255 255;
+  --color-bg-overlay: 255 240 228; /* warm.100 */
+
+  --color-fg: 26 26 26;
+  --color-fg-muted: 122 62 24;
+  --color-fg-subtle: 156 163 175;
+
+  --color-border: 0 0 0;
+  --color-border-strong: 0 0 0;
+  --color-border-brand: 255 107 53;
+  --color-border-cyan: 0 184 212;
+
+  --color-primary: 255 107 53;
+  --color-primary-fg: 255 255 255;
+  --color-accent: 0 184 212;
+  --color-accent-fg: 255 255 255;
+}
+
+/* ============================================================
+ * Reset / defaults
+ * ============================================================ */
+html,
+body {
+  min-height: 100vh;
+  background-color: rgb(var(--color-bg));
+  color: rgb(var(--color-fg));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar dark elegante */
+[data-theme="dark"] ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: rgb(var(--color-bg));
+}
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: rgba(255, 107, 53, 0.3);
+  border-radius: 8px;
+}
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 107, 53, 0.5);
+}
+
+/* Focus visível e acessível */
+*:focus-visible {
+  outline: 2px solid rgb(var(--color-primary));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ============================================================
+ * Utilities custom
+ * ============================================================ */
+@layer utilities {
+  .text-gradient-brand {
+    background: linear-gradient(
+      90deg,
+      rgb(var(--color-primary)),
+      rgb(var(--color-accent))
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .glow-text-brand {
+    text-shadow: 0 0 16px rgba(255, 107, 53, 0.5);
+  }
+
+  .bg-grid-subtle {
+    background-image: linear-gradient(
+        rgba(255, 107, 53, 0.03) 1px,
+        transparent 1px
+      ),
+      linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  /* Aura radial brand atrás do conteúdo (usado em listagem/detalhe/auth) */
+  .bg-radial-brand {
+    background-image: radial-gradient(
+        circle at 50% 0%,
+        rgba(255, 107, 53, 0.08),
+        transparent 60%
+      ),
+      radial-gradient(
+        circle at 100% 100%,
+        rgba(0, 229, 255, 0.06),
+        transparent 50%
+      );
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.4s ease-out;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

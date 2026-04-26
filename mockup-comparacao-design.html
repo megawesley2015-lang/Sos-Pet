@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SOS Pet — Comparação de Design (Listagem de Pets)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { font-family: 'Inter', system-ui, sans-serif; background: #0a0a0f; color: #fff; min-height: 100vh; }
+
+  /* ===== HEADER DA PÁGINA ===== */
+  .page-header {
+    padding: 48px 32px 24px;
+    text-align: center;
+    background: linear-gradient(180deg, #14141f 0%, #0a0a0f 100%);
+    border-bottom: 1px solid #1f1f2e;
+  }
+  .page-header h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: linear-gradient(90deg, #FF6B35, #00E5FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .page-header p { color: #9ca3af; font-size: 15px; max-width: 680px; margin: 0 auto; }
+
+  /* ===== GRID DAS 3 OPÇÕES ===== */
+  .comparison {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    padding: 32px;
+    max-width: 1800px;
+    margin: 0 auto;
+  }
+  @media (max-width: 1200px) { .comparison { grid-template-columns: 1fr; } }
+
+  .option {
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #1f1f2e;
+  }
+
+  .option-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .option-header h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .option-header .tag {
+    display: inline-block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .option-header p { font-size: 13px; color: #9ca3af; line-height: 1.5; }
+
+  .option-body {
+    flex: 1;
+    padding: 20px;
+  }
+
+  /* ===================================================== */
+  /* ===== OPÇÃO 1: LARANJA PURO (LIGHT-WARM) ========== */
+  /* ===================================================== */
+  .opt-orange { background: #FFF8F3; color: #1a1a1a; }
+  .opt-orange .option-header { background: #FFE8D6; border-bottom: 1px solid #FFD0A8; }
+  .opt-orange .option-header h2 { color: #C04A00; }
+  .opt-orange .option-header .tag { background: #FF6B35; color: #fff; }
+  .opt-orange .option-header p { color: #7a3e18; }
+
+  .orange-app { background: #FFF8F3; border-radius: 12px; overflow: hidden; }
+  .orange-topbar { background: #FF6B35; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; }
+  .orange-topbar .logo { font-family: 'Space Grotesk'; font-weight: 700; color: #fff; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+  .orange-topbar .avatar { width: 32px; height: 32px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #FF6B35; font-size: 13px; }
+  .orange-filters { display: flex; gap: 8px; padding: 14px 16px; overflow-x: auto; background: #FFE8D6; }
+  .orange-chip { padding: 6px 14px; border-radius: 999px; background: #fff; font-size: 12px; font-weight: 500; color: #7a3e18; white-space: nowrap; border: 1px solid #FFD0A8; }
+  .orange-chip.active { background: #FF6B35; color: #fff; border-color: #FF6B35; }
+  .orange-grid { padding: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .orange-card { background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #FFD0A8; }
+  .orange-card-img { height: 90px; background: linear-gradient(135deg, #FFE8D6, #FFD0A8); position: relative; display: flex; align-items: center; justify-content: center; font-size: 32px; }
+  .orange-badge { position: absolute; top: 8px; left: 8px; background: #DC2626; color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 999px; font-weight: 600; text-transform: uppercase; }
+  .orange-badge.found { background: #16A34A; }
+  .orange-card-body { padding: 10px 12px; }
+  .orange-card-body .name { font-weight: 700; font-size: 14px; color: #1a1a1a; }
+  .orange-card-body .loc { font-size: 11px; color: #7a3e18; margin-top: 2px; }
+  .orange-card-body .date { font-size: 10px; color: #9ca3af; margin-top: 4px; }
+  .orange-cta { margin: 16px; padding: 14px; background: #FF6B35; color: #fff; text-align: center; border-radius: 12px; font-weight: 700; font-size: 15px; box-shadow: 0 4px 12px rgba(255,107,53,0.3); }
+
+  /* ===================================================== */
+  /* ===== OPÇÃO 2: FUTURISTA PURO (DARK NEON) ========== */
+  /* ===================================================== */
+  .opt-futurist { background: #0a0a0f; color: #fff; }
+  .opt-futurist .option-header { background: #14141f; border-bottom: 1px solid #1f1f2e; }
+  .opt-futurist .option-header h2 { color: #00E5FF; text-shadow: 0 0 12px rgba(0,229,255,0.4); }
+  .opt-futurist .option-header .tag { background: rgba(0,229,255,0.15); color: #00E5FF; border: 1px solid rgba(0,229,255,0.4); }
+  .opt-futurist .option-header p { color: #7a8a9a; }
+
+  .fut-app { background: radial-gradient(circle at 20% 20%, #141428 0%, #0a0a0f 60%); border-radius: 12px; overflow: hidden; position: relative; }
+  .fut-app::before { content:''; position: absolute; inset: 0; background-image: linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px); background-size: 24px 24px; pointer-events: none; }
+  .fut-topbar { background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,229,255,0.2); position: relative; z-index: 1; }
+  .fut-topbar .logo { font-family: 'Space Grotesk'; font-weight: 700; color: #fff; font-size: 18px; display: flex; align-items: center; gap: 8px; text-shadow: 0 0 12px rgba(0,229,255,0.6); }
+  .fut-topbar .avatar { width: 32px; height: 32px; border-radius: 50%; background: #1a1a2e; border: 2px solid #00E5FF; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #00E5FF; font-size: 13px; box-shadow: 0 0 12px rgba(0,229,255,0.4); }
+  .fut-filters { display: flex; gap: 8px; padding: 14px 16px; overflow-x: auto; position: relative; z-index: 1; }
+  .fut-chip { padding: 6px 14px; border-radius: 999px; background: rgba(0,229,255,0.05); font-size: 12px; font-weight: 500; color: #7a8a9a; white-space: nowrap; border: 1px solid rgba(0,229,255,0.2); }
+  .fut-chip.active { background: rgba(0,229,255,0.15); color: #00E5FF; border-color: #00E5FF; box-shadow: 0 0 12px rgba(0,229,255,0.3), inset 0 0 8px rgba(0,229,255,0.1); }
+  .fut-grid { padding: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; position: relative; z-index: 1; }
+  .fut-card { background: rgba(10,10,20,0.6); border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,229,255,0.25); backdrop-filter: blur(10px); }
+  .fut-card-img { height: 90px; background: linear-gradient(135deg, #0a1a2e, #001a33); position: relative; display: flex; align-items: center; justify-content: center; font-size: 32px; filter: saturate(0.8); }
+  .fut-card-img::after { content:''; position: absolute; inset: 0; background: radial-gradient(circle, rgba(0,229,255,0.15), transparent 70%); }
+  .fut-badge { position: absolute; top: 8px; left: 8px; background: rgba(220,38,38,0.2); color: #FF6B6B; font-size: 10px; padding: 2px 8px; border-radius: 999px; font-weight: 600; text-transform: uppercase; border: 1px solid rgba(220,38,38,0.5); box-shadow: 0 0 8px rgba(220,38,38,0.4); z-index: 1; }
+  .fut-badge.found { background: rgba(0,229,255,0.15); color: #00E5FF; border-color: rgba(0,229,255,0.5); box-shadow: 0 0 8px rgba(0,229,255,0.4); }
+  .fut-card-body { padding: 10px 12px; }
+  .fut-card-body .name { font-weight: 700; font-size: 14px; color: #fff; }
+  .fut-card-body .loc { font-size: 11px; color: #00E5FF; margin-top: 2px; font-family: 'Space Grotesk'; letter-spacing: 0.5px; }
+  .fut-card-body .date { font-size: 10px; color: #4a5a6a; margin-top: 4px; }
+  .fut-cta { margin: 16px; padding: 14px; background: linear-gradient(90deg, #00E5FF, #00B4D8); color: #0a0a0f; text-align: center; border-radius: 12px; font-weight: 700; font-size: 15px; box-shadow: 0 0 24px rgba(0,229,255,0.4), inset 0 1px 0 rgba(255,255,255,0.3); position: relative; z-index: 1; }
+
+  /* ===================================================== */
+  /* ===== OPÇÃO 3: HÍBRIDO (RECOMENDADO) ============== */
+  /* ===================================================== */
+  .opt-hybrid { background: #0f0f1a; color: #fff; position: relative; }
+  .opt-hybrid::before { content:''; position: absolute; top: -1px; left: -1px; right: -1px; bottom: -1px; border-radius: 20px; padding: 2px; background: linear-gradient(135deg, #FF6B35, #00E5FF); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+  .opt-hybrid .option-header { background: #14141f; border-bottom: 1px solid #1f1f2e; position: relative; }
+  .opt-hybrid .option-header h2 { background: linear-gradient(90deg, #FF6B35, #00E5FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .opt-hybrid .option-header .tag { background: linear-gradient(90deg, #FF6B35, #00E5FF); color: #fff; font-weight: 700; }
+  .opt-hybrid .option-header p { color: #9ca3af; }
+  .opt-hybrid .star { position: absolute; top: 16px; right: 16px; background: #FF6B35; color: #fff; font-size: 10px; padding: 4px 10px; border-radius: 999px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 0 12px rgba(255,107,53,0.6); }
+
+  .hyb-app { background: radial-gradient(ellipse at top right, rgba(255,107,53,0.08) 0%, transparent 40%), radial-gradient(ellipse at bottom left, rgba(0,229,255,0.08) 0%, transparent 40%), #0f0f1a; border-radius: 12px; overflow: hidden; position: relative; }
+  .hyb-app::before { content:''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,107,53,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px); background-size: 28px 28px; pointer-events: none; }
+
+  .hyb-topbar { background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,107,53,0.2); position: relative; z-index: 1; }
+  .hyb-topbar .logo { font-family: 'Space Grotesk'; font-weight: 700; color: #fff; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+  .hyb-topbar .logo .paw { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,107,53,0.15); border: 2px solid #FF6B35; display: flex; align-items: center; justify-content: center; font-size: 14px; box-shadow: 0 0 12px rgba(255,107,53,0.4), inset 0 0 4px rgba(0,229,255,0.3); }
+  .hyb-topbar .avatar { width: 32px; height: 32px; border-radius: 50%; background: #1a1a2e; border: 2px solid #00E5FF; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #00E5FF; font-size: 13px; box-shadow: 0 0 8px rgba(0,229,255,0.4), 0 0 0 4px rgba(255,107,53,0.15); }
+
+  .hyb-hero { padding: 20px 16px 12px; position: relative; z-index: 1; }
+  .hyb-hero .title { font-family: 'Space Grotesk'; font-size: 22px; font-weight: 700; line-height: 1.2; }
+  .hyb-hero .title .accent { color: #FF6B35; text-shadow: 0 0 16px rgba(255,107,53,0.5); }
+  .hyb-hero .subtitle { color: #9ca3af; font-size: 13px; margin-top: 4px; }
+
+  .hyb-filters { display: flex; gap: 8px; padding: 0 16px 14px; overflow-x: auto; position: relative; z-index: 1; }
+  .hyb-chip { padding: 6px 14px; border-radius: 999px; background: rgba(255,255,255,0.04); font-size: 12px; font-weight: 500; color: #9ca3af; white-space: nowrap; border: 1px solid rgba(255,255,255,0.08); }
+  .hyb-chip.active { background: rgba(255,107,53,0.15); color: #FF6B35; border-color: #FF6B35; box-shadow: 0 0 12px rgba(255,107,53,0.3); }
+  .hyb-chip.ciano { background: rgba(0,229,255,0.1); color: #00E5FF; border-color: rgba(0,229,255,0.4); }
+
+  .hyb-grid { padding: 0 16px 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; position: relative; z-index: 1; }
+  .hyb-card { background: rgba(20,20,35,0.7); border-radius: 14px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(10px); transition: all 0.3s; position: relative; }
+  .hyb-card:hover { border-color: rgba(255,107,53,0.4); box-shadow: 0 0 24px rgba(255,107,53,0.2); }
+  .hyb-card-img { height: 100px; background: linear-gradient(135deg, #1a1a2e, #0a0a0f); position: relative; display: flex; align-items: center; justify-content: center; font-size: 36px; }
+  .hyb-card-img::after { content:''; position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(255,107,53,0.1), transparent 60%); }
+
+  .hyb-badge { position: absolute; top: 8px; left: 8px; background: rgba(255,107,53,0.2); color: #FFB899; font-size: 10px; padding: 3px 10px; border-radius: 999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid rgba(255,107,53,0.6); box-shadow: 0 0 12px rgba(255,107,53,0.4); z-index: 1; animation: pulse 2s ease-in-out infinite; }
+  .hyb-badge.found { background: rgba(0,229,255,0.15); color: #7DF5FF; border-color: rgba(0,229,255,0.6); box-shadow: 0 0 12px rgba(0,229,255,0.4); animation: none; }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 12px rgba(255,107,53,0.4); } 50% { box-shadow: 0 0 20px rgba(255,107,53,0.7); } }
+
+  .hyb-card-body { padding: 12px 14px; }
+  .hyb-card-body .name { font-weight: 700; font-size: 14px; color: #fff; display: flex; align-items: center; gap: 6px; }
+  .hyb-card-body .name::before { content:''; width: 6px; height: 6px; background: #FF6B35; border-radius: 50%; box-shadow: 0 0 6px #FF6B35; }
+  .hyb-card-body .name.found::before { background: #00E5FF; box-shadow: 0 0 6px #00E5FF; }
+  .hyb-card-body .loc { font-size: 11px; color: #9ca3af; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+  .hyb-card-body .loc svg { width: 10px; height: 10px; stroke: #FF6B35; }
+  .hyb-card-body .date { font-size: 10px; color: #6b7280; margin-top: 4px; font-family: 'Space Grotesk'; letter-spacing: 0.3px; }
+
+  .hyb-cta { margin: 16px; padding: 14px; background: #FF6B35; color: #fff; text-align: center; border-radius: 12px; font-weight: 700; font-size: 15px; box-shadow: 0 0 24px rgba(255,107,53,0.5), inset 0 1px 0 rgba(255,255,255,0.2); position: relative; z-index: 1; }
+  .hyb-cta::before { content:''; position: absolute; inset: -2px; border-radius: 14px; background: linear-gradient(90deg, #FF6B35, #00E5FF, #FF6B35); z-index: -1; opacity: 0.6; filter: blur(8px); }
+
+  /* ===== LEGENDA / PROS-CONS ===== */
+  .verdict {
+    padding: 12px 20px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    font-size: 12px;
+    line-height: 1.6;
+    background: rgba(0,0,0,0.2);
+  }
+  .opt-orange .verdict { background: #FFE8D6; color: #5a2e10; border-top-color: #FFD0A8; }
+  .opt-hybrid .verdict { background: rgba(255,107,53,0.05); color: #c0c0d0; }
+
+  .verdict .row { display: flex; gap: 8px; margin-bottom: 4px; }
+  .verdict .row:last-child { margin-bottom: 0; }
+  .verdict .ico { flex-shrink: 0; }
+  .verdict .pro { color: #16A34A; }
+  .verdict .con { color: #DC2626; }
+  .opt-futurist .verdict .pro { color: #00E5FF; }
+  .opt-futurist .verdict .con { color: #FF6B6B; }
+  .opt-hybrid .verdict .pro { color: #00E5FF; }
+  .opt-hybrid .verdict .con { color: #FF6B35; }
+
+  /* ===== RESUMO FINAL ===== */
+  .summary {
+    max-width: 1100px;
+    margin: 20px auto 60px;
+    padding: 32px;
+    background: linear-gradient(135deg, rgba(255,107,53,0.08), rgba(0,229,255,0.08));
+    border: 1px solid rgba(255,107,53,0.2);
+    border-radius: 20px;
+  }
+  .summary h3 { font-family: 'Space Grotesk'; font-size: 22px; margin-bottom: 16px; background: linear-gradient(90deg, #FF6B35, #00E5FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .summary p { color: #c0c0d0; line-height: 1.7; margin-bottom: 12px; }
+  .summary strong { color: #fff; }
+  .summary .next { margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); }
+  .summary .next h4 { color: #FF6B35; margin-bottom: 12px; font-family: 'Space Grotesk'; font-size: 16px; }
+  .summary ol { padding-left: 20px; color: #c0c0d0; }
+  .summary ol li { margin-bottom: 8px; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>SOS Pet — Comparação de Design</h1>
+  <p>Tela de Listagem de Pets (MVP Achados e Perdidos) aplicada em três direções visuais. Analise o impacto emocional, a leitura de informação e a identidade de cada uma antes de decidir.</p>
+</div>
+
+<div class="comparison">
+
+  <!-- ============================================== -->
+  <!-- OPÇÃO 1: LARANJA PURO                        -->
+  <!-- ============================================== -->
+  <div class="option opt-orange">
+    <div class="option-header">
+      <span class="tag">Opção 1</span>
+      <h2>Laranja Puro (Light-Warm)</h2>
+      <p>Energia, acolhimento e clareza. Estilo de apps pet tradicionais.</p>
+    </div>
+    <div class="option-body">
+      <div class="orange-app">
+        <div class="orange-topbar">
+          <div class="logo">🐾 SOS Pet</div>
+          <div class="avatar">W</div>
+        </div>
+        <div class="orange-filters">
+          <div class="orange-chip active">Todos</div>
+          <div class="orange-chip">Perdidos</div>
+          <div class="orange-chip">Encontrados</div>
+          <div class="orange-chip">Cão</div>
+          <div class="orange-chip">Gato</div>
+        </div>
+        <div class="orange-grid">
+          <div class="orange-card">
+            <div class="orange-card-img">🐕
+              <div class="orange-badge">Perdido</div>
+            </div>
+            <div class="orange-card-body">
+              <div class="name">Thor</div>
+              <div class="loc">Vila Madalena, SP</div>
+              <div class="date">há 2 horas</div>
+            </div>
+          </div>
+          <div class="orange-card">
+            <div class="orange-card-img">🐈
+              <div class="orange-badge found">Encontrado</div>
+            </div>
+            <div class="orange-card-body">
+              <div class="name">Sem nome</div>
+              <div class="loc">Pinheiros, SP</div>
+              <div class="date">há 5 horas</div>
+            </div>
+          </div>
+          <div class="orange-card">
+            <div class="orange-card-img">🐕
+              <div class="orange-badge">Perdido</div>
+            </div>
+            <div class="orange-card-body">
+              <div class="name">Luna</div>
+              <div class="loc">Moema, SP</div>
+              <div class="date">há 1 dia</div>
+            </div>
+          </div>
+          <div class="orange-card">
+            <div class="orange-card-img">🐈
+              <div class="orange-badge">Perdido</div>
+            </div>
+            <div class="orange-card-body">
+              <div class="name">Mel</div>
+              <div class="loc">Tatuapé, SP</div>
+              <div class="date">há 1 dia</div>
+            </div>
+          </div>
+        </div>
+        <div class="orange-cta">+ Registrar Pet Perdido</div>
+      </div>
+    </div>
+    <div class="verdict">
+      <div class="row"><span class="ico pro">✓</span><span><strong>Prós:</strong> acolhedor, acessível para 50+, alto contraste, baixa fadiga visual, ótimo para landing.</span></div>
+      <div class="row"><span class="ico con">✗</span><span><strong>Contras:</strong> mata o wow do heatmap, parece "mais um app pet", diferenciação zero.</span></div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- OPÇÃO 2: FUTURISTA PURO                      -->
+  <!-- ============================================== -->
+  <div class="option opt-futurist">
+    <div class="option-header">
+      <span class="tag">Opção 2</span>
+      <h2>Futurista Puro (Dark Ciano)</h2>
+      <p>Precisão, modernidade, "central de comando" tecnológica.</p>
+    </div>
+    <div class="option-body">
+      <div class="fut-app">
+        <div class="fut-topbar">
+          <div class="logo">🐾 SOS Pet</div>
+          <div class="avatar">W</div>
+        </div>
+        <div class="fut-filters">
+          <div class="fut-chip active">Todos</div>
+          <div class="fut-chip">Perdidos</div>
+          <div class="fut-chip">Encontrados</div>
+          <div class="fut-chip">Cão</div>
+          <div class="fut-chip">Gato</div>
+        </div>
+        <div class="fut-grid">
+          <div class="fut-card">
+            <div class="fut-card-img">🐕
+              <div class="fut-badge">Perdido</div>
+            </div>
+            <div class="fut-card-body">
+              <div class="name">Thor</div>
+              <div class="loc">VILA MADALENA, SP</div>
+              <div class="date">há 2 horas</div>
+            </div>
+          </div>
+          <div class="fut-card">
+            <div class="fut-card-img">🐈
+              <div class="fut-badge found">Encontrado</div>
+            </div>
+            <div class="fut-card-body">
+              <div class="name">Sem nome</div>
+              <div class="loc">PINHEIROS, SP</div>
+              <div class="date">há 5 horas</div>
+            </div>
+          </div>
+          <div class="fut-card">
+            <div class="fut-card-img">🐕
+              <div class="fut-badge">Perdido</div>
+            </div>
+            <div class="fut-card-body">
+              <div class="name">Luna</div>
+              <div class="loc">MOEMA, SP</div>
+              <div class="date">há 1 dia</div>
+            </div>
+          </div>
+          <div class="fut-card">
+            <div class="fut-card-img">🐈
+              <div class="fut-badge">Perdido</div>
+            </div>
+            <div class="fut-card-body">
+              <div class="name">Mel</div>
+              <div class="loc">TATUAPÉ, SP</div>
+              <div class="date">há 1 dia</div>
+            </div>
+          </div>
+        </div>
+        <div class="fut-cta">+ Registrar Pet Perdido</div>
+      </div>
+    </div>
+    <div class="verdict">
+      <div class="row"><span class="ico pro">✓</span><span><strong>Prós:</strong> heatmap brilha, identidade forte, sensação de alta tecnologia, retenção visual.</span></div>
+      <div class="row"><span class="ico con">✗</span><span><strong>Contras:</strong> frio demais pro contexto emocional, badge vermelho de "perdido" se perde, exclui público 50+.</span></div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- OPÇÃO 3: HÍBRIDO (RECOMENDADO)               -->
+  <!-- ============================================== -->
+  <div class="option opt-hybrid">
+    <div class="star">Recomendado</div>
+    <div class="option-header">
+      <span class="tag">Opção 3</span>
+      <h2>Híbrido (Dark com Dupla Aura)</h2>
+      <p>Laranja quente + ciano frio. Tecnologia com afeto — exatamente o posicionamento do SOS Pet.</p>
+    </div>
+    <div class="option-body">
+      <div class="hyb-app">
+        <div class="hyb-topbar">
+          <div class="logo">
+            <div class="paw">🐾</div>
+            SOS Pet
+          </div>
+          <div class="avatar">W</div>
+        </div>
+        <div class="hyb-hero">
+          <div class="title">Achados & <span class="accent">Perdidos</span></div>
+          <div class="subtitle">32 pets ativos na sua região agora</div>
+        </div>
+        <div class="hyb-filters">
+          <div class="hyb-chip active">Todos</div>
+          <div class="hyb-chip">Perdidos</div>
+          <div class="hyb-chip ciano">Encontrados</div>
+          <div class="hyb-chip">Cão</div>
+          <div class="hyb-chip">Gato</div>
+        </div>
+        <div class="hyb-grid">
+          <div class="hyb-card">
+            <div class="hyb-card-img">🐕
+              <div class="hyb-badge">SOS Perdido</div>
+            </div>
+            <div class="hyb-card-body">
+              <div class="name">Thor</div>
+              <div class="loc">◉ Vila Madalena, SP</div>
+              <div class="date">há 2 horas</div>
+            </div>
+          </div>
+          <div class="hyb-card">
+            <div class="hyb-card-img">🐈
+              <div class="hyb-badge found">Encontrado</div>
+            </div>
+            <div class="hyb-card-body">
+              <div class="name found">Sem nome</div>
+              <div class="loc">◉ Pinheiros, SP</div>
+              <div class="date">há 5 horas</div>
+            </div>
+          </div>
+          <div class="hyb-card">
+            <div class="hyb-card-img">🐕
+              <div class="hyb-badge">SOS Perdido</div>
+            </div>
+            <div class="hyb-card-body">
+              <div class="name">Luna</div>
+              <div class="loc">◉ Moema, SP</div>
+              <div class="date">há 1 dia</div>
+            </div>
+          </div>
+          <div class="hyb-card">
+            <div class="hyb-card-img">🐈
+              <div class="hyb-badge">SOS Perdido</div>
+            </div>
+            <div class="hyb-card-body">
+              <div class="name">Mel</div>
+              <div class="loc">◉ Tatuapé, SP</div>
+              <div class="date">há 1 dia</div>
+            </div>
+          </div>
+        </div>
+        <div class="hyb-cta">+ Registrar Pet Perdido</div>
+      </div>
+    </div>
+    <div class="verdict">
+      <div class="row"><span class="ico pro">✓</span><span><strong>Prós:</strong> calor emocional (laranja) + precisão técnica (ciano), heatmap brilha, identidade única, segue suas referências.</span></div>
+      <div class="row"><span class="ico con">✗</span><span><strong>Contras:</strong> landing/checkout ainda precisa de light-warm (conversão), glow custa performance — moderar uso.</span></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="summary">
+  <h3>Minha recomendação técnica como arquiteto</h3>
+  <p>A <strong>Opção 3 (Híbrido)</strong> é a correta para o SOS Pet porque ela traduz fielmente o moodboard que você enviou e resolve a tensão central do produto: você precisa parecer <strong>tecnológico</strong> (para que o usuário confie no rastreamento e no heatmap) e ao mesmo tempo <strong>humano</strong> (porque tutores em pânico não se conectam com interfaces frias).</p>
+  <p>O segredo está na <strong>economia do glow</strong>: use neon em no máximo 3 elementos por tela (CTA principal, badge de status, ícone focal). Tudo o resto é flat escuro. Isso mantém a estética futurista sem destruir performance em celulares antigos nem falhar em acessibilidade.</p>
+  <p>Para o MVP, mantenha a <strong>landing page e o fluxo de cadastro público em light-warm</strong> (conversão é ~15% maior), e todo o app autenticado e o mapa de calor em dark-híbrido. Um único design system com CSS variables resolve os dois temas sem código duplicado.</p>
+
+  <div class="next">
+    <h4>Próximos passos sugeridos</h4>
+    <ol>
+      <li>Aprovar a direção visual (Opção 3) e confirmar as cores-acento definitivas.</li>
+      <li>Gerar o <strong>tailwind.config.ts</strong> com tokens semânticos (primary, danger, success, cyan) para Next.js App Router.</li>
+      <li>Criar os componentes base reusáveis: <code>PetCard</code>, <code>FilterChip</code>, <code>SOSBadge</code>, <code>CTAButton</code>.</li>
+      <li>Definir set de ícones: Lucide (padrão) para UI + SVG custom para os 4–5 ícones-chave das funcionalidades principais (inspirado nas suas referências).</li>
+      <li>Implementar a primeira tela real do MVP: listagem pública de pets com Supabase.</li>
+    </ol>
+  </div>
+</div>
+
+</body>
+</html>
