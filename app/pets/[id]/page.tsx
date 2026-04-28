@@ -32,6 +32,38 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
+// Metadata por pet — puxa nome/cidade pra title e description
+export async function generateMetadata({ params }: PageProps) {
+  const { id } = await params;
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .from("pets")
+    .select("name, kind, species, neighborhood, city")
+    .eq("id", id)
+    .maybeSingle();
+
+  const pet = data as
+    | {
+        name: string | null;
+        kind: "lost" | "found";
+        species: string;
+        neighborhood: string;
+        city: string;
+      }
+    | null;
+
+  if (!pet) {
+    return { title: "Pet não encontrado" };
+  }
+
+  const verb = pet.kind === "lost" ? "Procura-se" : "Encontrado";
+  const nome = pet.name ?? `${pet.species} ${pet.kind}`;
+  return {
+    title: `${verb}: ${nome} em ${pet.city}`,
+    description: `${verb} ${nome} em ${pet.neighborhood}, ${pet.city}. Veja detalhes e ajude na rede SOS Pet.`,
+  };
+}
+
 export default async function PetDetailPage({ params }: PageProps) {
   const { id } = await params;
   const supabase = await createSupabaseServerClient();
