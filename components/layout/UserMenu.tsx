@@ -9,6 +9,7 @@ import {
   LogOut,
   PawPrint,
   Siren,
+  ShieldCheck,
   User as UserIcon,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -17,13 +18,14 @@ interface UserMenuProps {
   email: string;
   fullName: string | null;
   avatarUrl: string | null;
+  role?: string | null;
 }
 
 /**
  * Menu dropdown do usuário logado — visível na TopBar.
  * Server passa o user; este componente só lida com UI + signOut.
  */
-export function UserMenu({ email, fullName, avatarUrl }: UserMenuProps) {
+export function UserMenu({ email, fullName, avatarUrl, role }: UserMenuProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -141,6 +143,18 @@ export function UserMenu({ email, fullName, avatarUrl }: UserMenuProps) {
             <UserIcon className="h-4 w-4 text-cyan-400" />
             Meu perfil
           </Link>
+
+          {role === "admin" && (
+            <Link
+              href="/admin"
+              role="menuitem"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2 border-t border-white/5 px-4 py-2.5 text-sm text-brand-400 hover:bg-brand-500/10"
+            >
+              <ShieldCheck className="h-4 w-4" />
+              Painel admin
+            </Link>
+          )}
 
           <button
             type="button"

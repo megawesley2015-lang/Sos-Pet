@@ -20,17 +20,20 @@ export async function MarketingHeader() {
   let fullName: string | null = null;
   let avatarUrl: string | null = null;
 
+  let role: string | null = null;
+
   if (user) {
     const { data: profileRaw } = await supabase
       .from("profiles")
-      .select("full_name, avatar_url")
+      .select("full_name, avatar_url, role")
       .eq("id", user.id)
       .maybeSingle();
     const profile = profileRaw as
-      | { full_name: string | null; avatar_url: string | null }
+      | { full_name: string | null; avatar_url: string | null; role: string | null }
       | null;
     fullName = profile?.full_name ?? null;
     avatarUrl = profile?.avatar_url ?? null;
+    role = profile?.role ?? null;
   }
 
   return (
@@ -103,6 +106,7 @@ export async function MarketingHeader() {
                 email={user.email ?? ""}
                 fullName={fullName}
                 avatarUrl={avatarUrl}
+                role={role}
               />
             ) : (
               <>
