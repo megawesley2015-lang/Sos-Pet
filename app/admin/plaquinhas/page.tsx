@@ -126,7 +126,7 @@ export default async function AdminPlaquinhasPage() {
           )}
 
           {orders?.map((order) => {
-            const pet = order.pets as {
+            const pet = order.pets as unknown as {
               id: string;
               name: string | null;
               species: string;

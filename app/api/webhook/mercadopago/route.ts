@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
       .eq("id", order.pet_id)
       .eq("status", "draft");
 
-    const pet = order.pets as {
+    const pet = order.pets as unknown as {
       id: string;
       name: string | null;
       species: string;

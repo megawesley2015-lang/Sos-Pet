@@ -43,7 +43,9 @@ export async function renotificarFornecedorAction(formData: FormData) {
 
   if (!order || !SUPPLIER_EMAIL) return;
 
-  const pet = order.pets as { id: string; name: string | null; photo_url: string | null } | null;
+  // Supabase retorna joins como array — pegamos o primeiro elemento
+  const petsArr = (order.pets ?? []) as { id: string; name: string | null; photo_url: string | null }[];
+  const pet = petsArr.length > 0 ? petsArr[0] : null;
   const petName = pet?.name ?? "Sem nome";
   const petUrl = `${APP_URL}/pets/${pet?.id}`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(petUrl)}`;
