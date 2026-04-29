@@ -8,10 +8,11 @@ import { redirect } from "next/navigation";
  *
  * Formato na plaquinha: sospet.app/pet/[pet_uuid]
  */
-export default function PetShortUrl({
+export default async function PetShortUrl({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  redirect(`/pets/${params.id}`);
+  const { id } = await params;
+  redirect(`/pets/${id}`);
 }
