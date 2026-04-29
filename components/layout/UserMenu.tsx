@@ -92,6 +92,7 @@ export function UserMenu({ email, fullName, avatarUrl }: UserMenuProps) {
       {open && (
         <div
           role="menu"
+          data-theme="dark"
           className="absolute right-0 mt-2 w-56 overflow-hidden rounded-xl border border-white/10 bg-ink-700/95 shadow-card-dark backdrop-blur-md"
         >
           <div className="border-b border-white/5 px-4 py-3">
