@@ -68,6 +68,12 @@ export async function TopBar() {
           >
             Dicas
           </Link>
+          <Link
+            href="/loja"
+            className="text-sm font-medium text-brand-400 transition-colors hover:text-brand-300"
+          >
+            🛍️ Loja
+          </Link>
         </nav>
 
         {/* Auth */}

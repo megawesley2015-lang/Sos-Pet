@@ -56,6 +56,16 @@ export function MarketingFooter() {
                 Parcerias
               </Link>
             </li>
+            <li>
+              <Link href="/loja" className="hover:text-brand-600">
+                🛍️ Loja
+              </Link>
+            </li>
+            <li>
+              <Link href="/plaquinha" className="hover:text-brand-600">
+                🐾 Plaquinha com QR Code
+              </Link>
+            </li>
           </ul>
         </div>
 

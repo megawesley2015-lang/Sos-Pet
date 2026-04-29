@@ -20,6 +20,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/parcerias`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${base}/termos`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${base}/privacidade`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${base}/loja`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
+    { url: `${base}/plaquinha`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
   ];
 
   // Rotas dinâmicas — pets ativos + prestadores ativos

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Plus, Eye, EyeOff, Trash2, ExternalLink, Star } from "lucide-react";
-import { toggleProdutoAction, deletarProdutoAction } from "./actions";
+import { toggleProdutoAction, deletarProdutoAction, toggleFeaturedAction, atualizarOrdemAction } from "./actions";
 import NovoProdutoForm from "./NovoProdutoForm";
 
 type Product = {
@@ -125,6 +125,36 @@ export default function LojaAdminClient({ products }: { products: Product[] }) {
 
                   {/* Ações */}
                   <div className="flex items-center gap-2">
+                    {/* Ordem */}
+                    <form action={atualizarOrdemAction} className="flex gap-1">
+                      <input type="hidden" name="id" value={p.id} />
+                      <input
+                        name="sort_order"
+                        type="number"
+                        defaultValue={p.sort_order ?? 0}
+                        className="w-14 rounded-lg border border-white/10 bg-ink-900 px-2 py-1.5 text-center text-xs text-fg focus:border-brand-500 focus:outline-none"
+                        title="Ordem de exibição (menor = primeiro)"
+                        onBlur={(e) => e.currentTarget.form?.requestSubmit()}
+                      />
+                    </form>
+
+                    {/* Destaque */}
+                    <form action={toggleFeaturedAction}>
+                      <input type="hidden" name="id" value={p.id} />
+                      <input type="hidden" name="featured" value={String(p.featured)} />
+                      <button
+                        type="submit"
+                        className={`rounded-lg border p-2 transition ${
+                          p.featured
+                            ? "border-yellow-500/40 bg-yellow-500/10 text-yellow-400"
+                            : "border-white/10 text-fg-subtle hover:bg-white/5"
+                        }`}
+                        title={p.featured ? "Remover destaque" : "Marcar como destaque"}
+                      >
+                        <Star className="h-4 w-4" />
+                      </button>
+                    </form>
+
                     {p.external_url && (
                       <a
                         href={p.external_url}

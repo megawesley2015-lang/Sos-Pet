@@ -11,8 +11,9 @@ import {
   Truck,
   AlertCircle,
   ExternalLink,
+  Send,
 } from "lucide-react";
-import { renotificarFornecedorAction } from "./actions";
+import { renotificarFornecedorAction, atualizarRastreioAction } from "./actions";
 
 type OrderStatus =
   | "awaiting_payment"
@@ -228,6 +229,26 @@ export default async function AdminPlaquinhasPage() {
                         >
                           <AlertCircle className="h-3.5 w-3.5" />
                           Reenviar email
+                        </button>
+                      </form>
+                    )}
+
+                    {/* Form de tracking */}
+                    {isPaid && supplierStatus !== "delivered" && (
+                      <form action={atualizarRastreioAction} className="flex gap-1">
+                        <input type="hidden" name="orderId" value={order.id} />
+                        <input
+                          name="trackingCode"
+                          defaultValue={order.tracking_code ?? ""}
+                          placeholder="Cód. rastreio"
+                          className="min-w-0 flex-1 rounded-lg border border-white/10 bg-ink-900 px-2 py-1.5 text-xs text-fg placeholder-fg-subtle focus:border-cyan-500 focus:outline-none"
+                        />
+                        <button
+                          type="submit"
+                          className="flex items-center gap-1 rounded-lg border border-cyan-500/40 px-2 py-1.5 text-xs text-cyan-400 hover:bg-cyan-500/10"
+                          title="Salvar código de rastreio"
+                        >
+                          <Send className="h-3 w-3" />
                         </button>
                       </form>
                     )}

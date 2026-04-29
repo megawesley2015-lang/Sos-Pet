@@ -94,3 +94,14 @@ export async function atualizarOrdemAction(formData: FormData) {
   revalidatePath("/admin/loja");
   revalidatePath("/loja");
 }
+
+export async function toggleFeaturedAction(formData: FormData) {
+  const service = await assertAdmin();
+  const id = formData.get("id") as string;
+  const featured = formData.get("featured") === "true";
+
+  await service.from("store_products").update({ featured: !featured }).eq("id", id);
+
+  revalidatePath("/admin/loja");
+  revalidatePath("/loja");
+}
