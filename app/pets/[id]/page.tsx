@@ -16,6 +16,7 @@ import type { PetRow } from "@/lib/types/database";
 import { TopBar } from "@/components/layout/TopBar";
 import { SOSBadge } from "@/components/ui/SOSBadge";
 import { CTAButton } from "@/components/ui/CTAButton";
+import SightingsList from "./SightingsList";
 import {
   formatPhone,
   formatRelativeDate,
@@ -218,6 +219,11 @@ export default async function PetDetailPage({ params }: PageProps) {
                 </CTAButton>
               </div>
             </section>
+
+            {/* Avistamentos — apenas para pets perdidos */}
+            {pet.kind === "lost" && (
+              <SightingsList petId={pet.id} petName={pet.name ?? "Pet"} />
+            )}
           </div>
         </article>
       </main>
@@ -227,11 +233,4 @@ export default async function PetDetailPage({ params }: PageProps) {
 
 function Attr({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-white/5 bg-ink-800/50 p-3">
-      <p className="text-[10px] font-bold uppercase tracking-wide text-fg-subtle">
-        {label}
-      </p>
-      <p className="mt-0.5 text-sm font-medium text-fg">{value}</p>
-    </div>
-  );
-}
+    <div className="rounded-lg b

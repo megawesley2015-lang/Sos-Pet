@@ -286,6 +286,33 @@ export interface PetInsert {
 
 export type PetUpdate = Partial<PetInsert>;
 
+// ----- sightings (avistamentos) -----
+export interface SightingRow {
+  id: string;
+  created_at: string;
+  pet_id: string;
+  lat: number;
+  lng: number;
+  address: string | null;
+  photo_url: string | null;
+  description: string | null;
+  reporter_name: string | null;
+}
+
+export interface SightingInsert {
+  id?: string;
+  created_at?: string;
+  pet_id: string;
+  lat: number;
+  lng: number;
+  address?: string | null;
+  photo_url?: string | null;
+  description?: string | null;
+  reporter_name?: string | null;
+}
+
+export type SightingUpdate = Partial<SightingInsert>;
+
 // ============================================================
 // Database — formato canônico do supabase-js v2.50+
 // ============================================================
@@ -336,27 +363,4 @@ export type Database = {
       };
       parceiros: {
         Row: ParceiroRow;
-        Insert: ParceiroInsert;
-        Update: Partial<ParceiroInsert>;
-        Relationships: [];
-      };
-    };
-    Views: Record<never, never>;
-    Functions: {
-      incrementar_visualizacao_prestador: {
-        Args: { p_id: string };
-        Returns: undefined;
-      };
-      incrementar_clique_whatsapp: {
-        Args: { p_id: string };
-        Returns: undefined;
-      };
-      incrementar_clique_telefone: {
-        Args: { p_id: string };
-        Returns: undefined;
-      };
-    };
-    Enums: Record<never, never>;
-    CompositeTypes: Record<never, never>;
-  };
-};
+        I
