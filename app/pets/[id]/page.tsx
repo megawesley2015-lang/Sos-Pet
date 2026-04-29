@@ -220,9 +220,13 @@ export default async function PetDetailPage({ params }: PageProps) {
               </div>
             </section>
 
-            {/* Avistamentos — apenas para pets perdidos */}
+            {/* Avistamentos + Mapa — apenas para pets perdidos */}
             {pet.kind === "lost" && (
-              <SightingsList petId={pet.id} petName={pet.name ?? "Pet"} />
+              <SightingsList
+                petId={pet.id}
+                petName={pet.name ?? "Pet"}
+                petCity={pet.city}
+              />
             )}
           </div>
         </article>
@@ -233,4 +237,11 @@ export default async function PetDetailPage({ params }: PageProps) {
 
 function Attr({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg b
+    <div className="rounded-lg border border-white/5 bg-ink-800/50 p-3">
+      <p className="text-[10px] font-bold uppercase tracking-wide text-fg-subtle">
+        {label}
+      </p>
+      <p className="mt-0.5 text-sm font-medium text-fg">{value}</p>
+    </div>
+  );
+}

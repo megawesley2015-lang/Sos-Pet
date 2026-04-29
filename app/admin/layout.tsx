@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { LayoutDashboard, Building2, Handshake, PawPrint, ShieldCheck } from "lucide-react";
+import { LayoutDashboard, Building2, Handshake, PawPrint, ShieldCheck, Eye } from "lucide-react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
 
@@ -40,6 +40,7 @@ export default async function AdminLayout({
     { href: "/admin/prestadores", label: "Prestadores", icon: Building2 },
     { href: "/admin/parceiros", label: "Parceiros", icon: Handshake },
     { href: "/admin/pets", label: "Pets", icon: PawPrint },
+    { href: "/admin/avistamentos", label: "Avistamentos", icon: Eye },
   ];
 
   return (

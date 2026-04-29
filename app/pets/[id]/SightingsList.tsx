@@ -4,13 +4,15 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { SightingRow } from "@/lib/types/database";
 import { formatRelativeDate } from "@/lib/utils/format";
 import SightingButton from "./SightingButton";
+import PetMapDynamic from "@/components/map/PetMapDynamic";
 
 interface Props {
   petId: string;
   petName: string;
+  petCity?: string;
 }
 
-export default async function SightingsList({ petId, petName }: Props) {
+export default async function SightingsList({ petId, petName, petCity }: Props) {
   const supabase = await createSupabaseServerClient();
 
   const { data } = await supabase
@@ -39,6 +41,11 @@ export default async function SightingsList({ petId, petName }: Props) {
 
         <SightingButton petId={petId} petName={petName} />
       </div>
+
+      {/* Mapa aparece quando há pelo menos 1 avistamento com coordenadas */}
+      {sightings.length > 0 && (
+        <PetMapDynamic sightings={sightings} petCity={petCity} />
+      )}
 
       {sightings.length === 0 ? (
         <div className="rounded-xl border border-dashed border-white/10 bg-ink-800/30 p-6 text-center">

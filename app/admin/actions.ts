@@ -80,3 +80,11 @@ export async function reativarPetAction(petId: string) {
     .eq("id", petId);
   revalidatePath("/admin/pets");
 }
+
+// ─── Avistamentos ─────────────────────────────────────────────
+
+export async function deletarAvistamentoAction(sightingId: string) {
+  const supabase = await assertAdmin();
+  await supabase.from("sightings").delete().eq("id", sightingId);
+  revalidatePath("/admin/avistamentos");
+}

@@ -363,4 +363,33 @@ export type Database = {
       };
       parceiros: {
         Row: ParceiroRow;
-        I
+        Insert: ParceiroInsert;
+        Update: Partial<ParceiroInsert>;
+        Relationships: [];
+      };
+      sightings: {
+        Row: SightingRow;
+        Insert: SightingInsert;
+        Update: SightingUpdate;
+        Relationships: [];
+      };
+    };
+    Views: Record<never, never>;
+    Functions: {
+      incrementar_visualizacao_prestador: {
+        Args: { p_id: string };
+        Returns: undefined;
+      };
+      incrementar_clique_whatsapp: {
+        Args: { p_id: string };
+        Returns: undefined;
+      };
+      incrementar_clique_telefone: {
+        Args: { p_id: string };
+        Returns: undefined;
+      };
+    };
+    Enums: Record<never, never>;
+    CompositeTypes: Record<never, never>;
+  };
+};
