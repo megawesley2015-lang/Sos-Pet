@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import PWAInstaller from "@/components/pwa/PWAInstaller";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -84,6 +85,7 @@ export default function RootLayout({
     >
       <body className="min-h-screen bg-ink-800 font-sans antialiased">
         {children}
+        <PWAInstaller />
       </body>
     </html>
   );
