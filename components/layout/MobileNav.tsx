@@ -13,6 +13,7 @@ const NAV_LINKS = [
   { href: "/prestadores", label: "Prestadores" },
   { href: "/dicas", label: "Dicas" },
   { href: "/parcerias", label: "Parcerias" },
+  { href: "/loja", label: "🛍️ Loja" },
 ];
 
 /**

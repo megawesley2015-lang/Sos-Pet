@@ -77,6 +77,12 @@ export async function MarketingHeader() {
           >
             Parcerias
           </Link>
+          <Link
+            href="/loja"
+            className="text-sm font-medium text-brand-600 transition-colors hover:text-brand-700"
+          >
+            🛍️ Loja
+          </Link>
         </nav>
 
         {/* Ações desktop + mobile */}
