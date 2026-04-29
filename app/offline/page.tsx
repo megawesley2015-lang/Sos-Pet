@@ -1,12 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { WifiOff, PawPrint, RefreshCw } from "lucide-react";
 
-export const metadata = {
-  title: "Você está offline · SOS Pet",
-};
-
 /**
  * Página de fallback para o Service Worker quando não há conexão.
+ * "use client" necessário para o botão de reload (window.location).
  * O SW precacheia esta rota em PRECACHE_URLS do public/sw.js.
  */
 export default function OfflinePage() {
@@ -17,7 +16,7 @@ export default function OfflinePage() {
         <div className="flex h-20 w-20 items-center justify-center rounded-3xl border-2 border-brand-500/30 bg-brand-500/10">
           <PawPrint className="h-10 w-10 text-brand-400" />
         </div>
-        <div className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-ink-800 border-2 border-ink-700">
+        <div className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full border-2 border-ink-700 bg-ink-800">
           <WifiOff className="h-3.5 w-3.5 text-fg-subtle" />
         </div>
       </div>
