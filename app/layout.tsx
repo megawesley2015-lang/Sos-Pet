@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import PWAInstaller from "@/components/pwa/PWAInstaller";
+import EmergencyFAB from "@/components/ui/EmergencyFAB";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -85,7 +87,9 @@ export default function RootLayout({
     >
       <body className="min-h-screen bg-ink-800 font-sans antialiased">
         {children}
+        <EmergencyFAB />
         <PWAInstaller />
+        <GoogleAnalytics />
       </body>
     </html>
   );
