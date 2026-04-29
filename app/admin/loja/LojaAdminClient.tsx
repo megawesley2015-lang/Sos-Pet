@@ -18,6 +18,7 @@ type Product = {
   external_url: string | null;
   active: boolean;
   featured: boolean;
+  sort_order: number | null;
   created_at: string;
 };
 
