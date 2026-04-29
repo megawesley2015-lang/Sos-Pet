@@ -9,8 +9,11 @@ import {
   ShieldCheck,
   Siren,
   Sparkles,
+  Eye,
+  Users,
 } from "lucide-react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import CountUp from "@/components/ui/CountUp";
 
 export const dynamic = "force-dynamic";
 
@@ -31,7 +34,15 @@ export default async function LandingPage() {
   const supabase = await createSupabaseServerClient();
 
   // Stats reais — count(*) sem trazer linhas (head:true)
-  const [activeCount, lostCount, foundCount] = await Promise.all([
+  const [
+    activeCount,
+    lostCount,
+    foundCount,
+    resolvedCount,
+    sightingsCount,
+    prestadoresCount,
+    totalPetsCount,
+  ] = await Promise.all([
     supabase
       .from("pets")
       .select("*", { count: "exact", head: true })
@@ -46,6 +57,20 @@ export default async function LandingPage() {
       .select("*", { count: "exact", head: true })
       .eq("status", "active")
       .eq("kind", "found"),
+    supabase
+      .from("pets")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "resolved"),
+    supabase
+      .from("sightings")
+      .select("*", { count: "exact", head: true }),
+    supabase
+      .from("prestadores")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "ativo"),
+    supabase
+      .from("pets")
+      .select("*", { count: "exact", head: true }),
   ]);
 
   const stats = {
@@ -54,11 +79,19 @@ export default async function LandingPage() {
     found: foundCount.count ?? 0,
   };
 
+  const richStats = {
+    totalPets: totalPetsCount.count ?? 0,
+    resolved: resolvedCount.count ?? 0,
+    sightings: sightingsCount.count ?? 0,
+    prestadores: prestadoresCount.count ?? 0,
+  };
+
   return (
     <main>
       <Hero stats={stats} />
       <StatsBand stats={stats} />
       <HowItWorks />
+      <StatsSection stats={richStats} />
       <RescueHighlight />
       <Trust />
       <FinalCTA />
@@ -279,6 +312,133 @@ function HowItWorks() {
               </p>
             </div>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================
+// STATS SECTION — métricas de impacto com count-up animado
+// ============================================================
+function StatsSection({
+  stats,
+}: {
+  stats: {
+    totalPets: number;
+    resolved: number;
+    sightings: number;
+    prestadores: number;
+  };
+}) {
+  const items = [
+    {
+      value: stats.totalPets,
+      suffix: "+",
+      label: "Pets cadastrados",
+      desc: "animais registrados na rede desde o início",
+      color: "brand",
+      icon: PawPrint,
+    },
+    {
+      value: stats.resolved,
+      suffix: "",
+      label: "Reencontros felizes",
+      desc: "pets que voltaram para casa",
+      color: "cyan",
+      icon: HeartHandshake,
+    },
+    {
+      value: stats.sightings,
+      suffix: "+",
+      label: "Avistamentos",
+      desc: "registros de quem ajudou sem ser tutor",
+      color: "brand",
+      icon: Eye,
+    },
+    {
+      value: stats.prestadores,
+      suffix: "",
+      label: "Prestadores parceiros",
+      desc: "veterinários e pet shops na rede",
+      color: "cyan",
+      icon: Users,
+    },
+  ] as const;
+
+  return (
+    <section className="relative overflow-hidden bg-ink-900 py-20 sm:py-28" data-theme="dark">
+      {/* Fundo gradiente sutil */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 15% 50%, rgba(255,107,53,0.10), transparent 50%), radial-gradient(circle at 85% 50%, rgba(0,229,255,0.08), transparent 50%)",
+        }}
+      />
+
+      <div className="relative mx-auto max-w-6xl px-4">
+        {/* Cabeçalho */}
+        <div className="mx-auto max-w-2xl text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-cyan-300">
+            Impacto real
+          </span>
+          <h2 className="mt-4 font-display text-3xl font-black text-fg sm:text-4xl">
+            Cada número é um{" "}
+            <span className="text-brand-400 glow-text-brand">pet amado</span>.
+          </h2>
+          <p className="mt-3 text-sm text-fg-muted">
+            Dados em tempo real da nossa rede colaborativa de resgate.
+          </p>
+        </div>
+
+        {/* Grid de métricas */}
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {items.map((item) => {
+            const Icon = item.icon;
+            const isOrange = item.color === "brand";
+            return (
+              <div
+                key={item.label}
+                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-ink-700/60 p-6 backdrop-blur-sm transition-all hover:border-white/20 hover:bg-ink-700/80"
+              >
+                {/* Glow de fundo no hover */}
+                <div
+                  className={`pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition-opacity group-hover:opacity-100 ${
+                    isOrange
+                      ? "bg-gradient-to-br from-brand-500/10 via-transparent to-transparent"
+                      : "bg-gradient-to-br from-cyan-500/10 via-transparent to-transparent"
+                  }`}
+                />
+
+                <div
+                  className={`relative flex h-10 w-10 items-center justify-center rounded-xl ${
+                    isOrange
+                      ? "bg-brand-500/20 text-brand-400"
+                      : "bg-cyan-500/20 text-cyan-400"
+                  }`}
+                >
+                  <Icon className="h-5 w-5" strokeWidth={2.2} />
+                </div>
+
+                <p
+                  className={`relative mt-4 font-display text-4xl font-black tabular-nums ${
+                    isOrange ? "text-brand-400" : "text-cyan-300"
+                  }`}
+                >
+                  <CountUp to={item.value} suffix={item.suffix} />
+                </p>
+
+                <p className="relative mt-1 text-sm font-bold text-fg">
+                  {item.label}
+                </p>
+                <p className="relative mt-1 text-xs leading-relaxed text-fg-subtle">
+                  {item.desc}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
