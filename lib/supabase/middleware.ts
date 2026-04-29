@@ -27,6 +27,7 @@ const PROTECTED_PATHS = [
   "/resgate",
   "/prestadores/novo",
   "/dashboard-prestador",
+  "/admin",
 ];
 const PROTECTED_PATTERNS = [
   /^\/pets\/[^/]+\/editar/,
