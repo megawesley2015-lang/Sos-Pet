@@ -1,8 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { createServiceClient } from "@/lib/supabase/service";
+import { createSupabaseServerClient, createServiceClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
 import { criarPreferencia } from "@/lib/services/mercadopago";
 
