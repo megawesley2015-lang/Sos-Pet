@@ -39,7 +39,10 @@ export async function listPets(filters: PetFilters = {}): Promise<{
   }
   if (filters.kind) query = query.eq("kind", filters.kind);
   if (filters.species) query = query.eq("species", filters.species);
-  if (filters.city) query = query.ilike("city", `%${filters.city}%`);
+  if (filters.city) {
+    const safeCity = filters.city.slice(0, 80);
+    query = query.ilike("city", `%${safeCity}%`);
+  }
 
   const { data, error } = await query;
   return {

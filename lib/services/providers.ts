@@ -42,12 +42,17 @@ export async function listProviders(
     query = query.eq("status", "ativo");
   }
   if (filters.categoria) query = query.eq("categoria", filters.categoria);
-  if (filters.cidade) query = query.ilike("cidade", `%${filters.cidade}%`);
+  if (filters.cidade) {
+    const safeCidade = filters.cidade.slice(0, 80);
+    query = query.ilike("cidade", `%${safeCidade}%`);
+  }
   if (filters.emergencia24h) query = query.eq("emergencia24h", true);
   if (filters.delivery) query = query.eq("delivery", true);
   if (filters.busca) {
-    // OR em nome OU descricao (case-insensitive)
-    const term = `%${filters.busca}%`;
+    // Sanitiza o termo antes de injetar no parser do PostgREST:
+    // remove parênteses, vírgulas e aspas que podem malformar a expressão .or()
+    const safeBusca = filters.busca.replace(/[(),"'`]/g, "").slice(0, 100);
+    const term = `%${safeBusca}%`;
     query = query.or(`nome.ilike.${term},descricao.ilike.${term}`);
   }
 

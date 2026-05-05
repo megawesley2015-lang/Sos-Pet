@@ -62,7 +62,7 @@ export async function createProviderAction(
     slug,
     logo_url: logoUrl,
     capa_url: capaUrl,
-    // status default 'ativo' — moderação fica pra F7 admin
+    status: "pendente_aprovacao",
   });
 
   if (error) {
@@ -70,5 +70,6 @@ export async function createProviderAction(
   }
 
   revalidatePath("/prestadores");
-  redirect(`/prestadores/${slug}`);
+  // Redireciona para o dashboard — perfil ainda está pendente de aprovação
+  redirect("/dashboard-prestador");
 }

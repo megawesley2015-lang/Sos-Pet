@@ -1,13 +1,16 @@
 import Link from "next/link";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import { PawPrint, ExternalLink, Trash2, RotateCcw } from "lucide-react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getUserSafe } from "@/lib/auth/safe";
 import type { PetRow } from "@/lib/types/database";
 import { KIND_LABEL, SPECIES_LABEL, formatRelativeDate } from "@/lib/utils/format";
 import { removerPetAction, reativarPetAction } from "../actions";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Admin — Pets" };
+export const metadata: Metadata = { title: "Admin — Pets" };
 
 const STATUS_CLASSES: Record<string, string> = {
   active:   "bg-success/15 text-success",
@@ -17,6 +20,16 @@ const STATUS_CLASSES: Record<string, string> = {
 
 export default async function AdminPetsPage() {
   const supabase = await createSupabaseServerClient();
+
+  // Defesa em profundidade
+  const user = await getUserSafe(supabase);
+  if (!user) redirect("/login?next=/admin/pets");
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .maybeSingle();
+  if (profile?.role !== "admin") redirect("/");
 
   const { data: pets } = await supabase
     .from("pets")

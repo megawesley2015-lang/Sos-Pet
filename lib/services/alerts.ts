@@ -110,9 +110,14 @@ export async function updateAlertStatus(
   status: "ativo" | "resolvido" | "cancelado"
 ): Promise<{ ok: boolean; error: string | null }> {
   const supabase = await createSupabaseServerClient();
+  const user = await getUserSafe(supabase);
+  if (!user) return { ok: false, error: "Não autenticado." };
+
+  // Defesa em profundidade: garante que só o dono altere o status do alerta
   const { error } = await supabase
     .from("alertas_sos")
     .update({ status })
-    .eq("id", alertId);
+    .eq("id", alertId)
+    .eq("user_id", user.id);
   return { ok: !error, error: error?.message ?? null };
 }

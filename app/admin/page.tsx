@@ -1,12 +1,25 @@
+import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getUserSafe } from "@/lib/auth/safe";
 import { PawPrint, Building2, Users, Handshake, Siren, Clock } from "lucide-react";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = { title: "Admin — Visão Geral" };
+export const metadata: Metadata = { title: "Admin — Visão Geral" };
 
 export default async function AdminPage() {
   const supabase = await createSupabaseServerClient();
+
+  // Defesa em profundidade — não confia somente no layout/middleware
+  const user = await getUserSafe(supabase);
+  if (!user) redirect("/login?next=/admin");
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .maybeSingle();
+  if (profile?.role !== "admin") redirect("/");
 
   // Métricas em paralelo — 1 round-trip por tabela, tudo em batch
   const [
