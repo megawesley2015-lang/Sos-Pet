@@ -1,11 +1,17 @@
 /**
  * Service layer — perfil do user (tabela profiles).
  */
+import { cache } from "react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
 import type { ProfileRow, ProfileUpdate } from "@/lib/types/database";
 
-export async function getMyProfile(): Promise<ProfileRow | null> {
+/**
+ * Busca o perfil do usuário autenticado.
+ * React.cache deduplica chamadas dentro do mesmo request —
+ * TopBar, página e layout não disparam queries duplicadas.
+ */
+export const getMyProfile = cache(async (): Promise<ProfileRow | null> => {
   const supabase = await createSupabaseServerClient();
   const user = await getUserSafe(supabase);
   if (!user) return null;
@@ -15,7 +21,7 @@ export async function getMyProfile(): Promise<ProfileRow | null> {
     .eq("id", user.id)
     .maybeSingle();
   return (data as ProfileRow | null) ?? null;
-}
+});
 
 export async function updateMyProfile(
   patch: ProfileUpdate

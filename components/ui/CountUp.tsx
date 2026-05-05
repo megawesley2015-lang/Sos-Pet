@@ -27,6 +27,7 @@ export default function CountUp({
   const [value, setValue] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
   const started = useRef(false);
+  const rafId = useRef<number>(0);
 
   useEffect(() => {
     const el = ref.current;
@@ -42,14 +43,15 @@ export default function CountUp({
         const elapsed = now - startTime;
         const progress = Math.min(elapsed / duration, 1);
         // easeOutExpo
-        const ease =
-          progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+        const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
         setValue(Math.round(ease * to));
 
-        if (progress < 1) requestAnimationFrame(tick);
+        if (progress < 1) {
+          rafId.current = requestAnimationFrame(tick);
+        }
       };
 
-      requestAnimationFrame(tick);
+      rafId.current = requestAnimationFrame(tick);
     };
 
     const observer = new IntersectionObserver(
@@ -63,7 +65,10 @@ export default function CountUp({
     );
 
     observer.observe(el);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(rafId.current);
+    };
   }, [to, duration]);
 
   const display = format ? value.toLocaleString("pt-BR") : String(value);

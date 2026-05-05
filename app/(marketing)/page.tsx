@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { unstable_cache } from "next/cache";
 import {
   ArrowRight,
   HeartHandshake,
@@ -15,76 +16,65 @@ import {
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import CountUp from "@/components/ui/CountUp";
 
-export const dynamic = "force-dynamic";
+// Sem force-dynamic — as stats são cacheadas e revalidadas a cada 2 minutos.
+// Se um pet novo for cadastrado, atualiza no próximo ciclo (aceitável para landing).
+export const revalidate = 120;
+
+/**
+ * Stats da landing cacheadas com unstable_cache (TTL 2 min).
+ * Evita 7 queries ao Supabase a cada visita na página mais acessada do site.
+ */
+const getLandingStats = unstable_cache(
+  async () => {
+    const supabase = await createSupabaseServerClient();
+    const [
+      activeCount,
+      lostCount,
+      foundCount,
+      resolvedCount,
+      sightingsCount,
+      prestadoresCount,
+      totalPetsCount,
+    ] = await Promise.all([
+      supabase.from("pets").select("*", { count: "exact", head: true }).eq("status", "active"),
+      supabase.from("pets").select("*", { count: "exact", head: true }).eq("status", "active").eq("kind", "lost"),
+      supabase.from("pets").select("*", { count: "exact", head: true }).eq("status", "active").eq("kind", "found"),
+      supabase.from("pets").select("*", { count: "exact", head: true }).eq("status", "resolved"),
+      supabase.from("sightings").select("*", { count: "exact", head: true }),
+      supabase.from("prestadores").select("*", { count: "exact", head: true }).eq("status", "ativo"),
+      supabase.from("pets").select("*", { count: "exact", head: true }),
+    ]);
+    return {
+      stats: {
+        active: activeCount.count ?? 0,
+        lost:   lostCount.count ?? 0,
+        found:  foundCount.count ?? 0,
+      },
+      richStats: {
+        totalPets:   totalPetsCount.count ?? 0,
+        resolved:    resolvedCount.count ?? 0,
+        sightings:   sightingsCount.count ?? 0,
+        prestadores: prestadoresCount.count ?? 0,
+      },
+    };
+  },
+  ["landing-stats"],
+  { revalidate: 120 }
+);
 
 /**
  * Landing — rota raiz "/".
  *
  * Estrutura:
  *  1. Hero híbrido (dark gradient → warm) com 2 CTAs principais
- *  2. Stats em tempo real (count de pets ativos / lost / found)
+ *  2. Stats cacheadas (count de pets ativos / lost / found) — revalidadas a cada 2 min
  *  3. Como funciona — 3 passos
  *  4. Destaque Central de Resgate (SOS)
  *  5. Confiança / por que confiar
  *  6. CTA final
- *
- * Server Component — busca stats reais do Supabase (count via head:true).
  */
 export default async function LandingPage() {
-  const supabase = await createSupabaseServerClient();
-
-  // Stats reais — count(*) sem trazer linhas (head:true)
-  const [
-    activeCount,
-    lostCount,
-    foundCount,
-    resolvedCount,
-    sightingsCount,
-    prestadoresCount,
-    totalPetsCount,
-  ] = await Promise.all([
-    supabase
-      .from("pets")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "active"),
-    supabase
-      .from("pets")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "active")
-      .eq("kind", "lost"),
-    supabase
-      .from("pets")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "active")
-      .eq("kind", "found"),
-    supabase
-      .from("pets")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "resolved"),
-    supabase
-      .from("sightings")
-      .select("*", { count: "exact", head: true }),
-    supabase
-      .from("prestadores")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "ativo"),
-    supabase
-      .from("pets")
-      .select("*", { count: "exact", head: true }),
-  ]);
-
-  const stats = {
-    active: activeCount.count ?? 0,
-    lost: lostCount.count ?? 0,
-    found: foundCount.count ?? 0,
-  };
-
-  const richStats = {
-    totalPets: totalPetsCount.count ?? 0,
-    resolved: resolvedCount.count ?? 0,
-    sightings: sightingsCount.count ?? 0,
-    prestadores: prestadoresCount.count ?? 0,
-  };
+  const { stats, richStats } = await getLandingStats();
 
   return (
     <main>
