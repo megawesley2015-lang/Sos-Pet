@@ -1,6 +1,10 @@
 /**
  * Service layer — prestadores.
+ *
+ * `React.cache` em getProviderBySlug e getProviderStats — dedup automático
+ * dentro do mesmo request (Server Component + generateMetadata chamam ambos).
  */
+import { cache } from "react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type {
   PrestadorCategoria,
@@ -54,9 +58,9 @@ export async function listProviders(
   };
 }
 
-export async function getProviderBySlug(
+export const getProviderBySlug = cache(async (
   slug: string
-): Promise<PrestadorRow | null> {
+): Promise<PrestadorRow | null> => {
   const supabase = await createSupabaseServerClient();
   const { data } = await supabase
     .from("prestadores")
@@ -64,7 +68,7 @@ export async function getProviderBySlug(
     .eq("slug", slug)
     .maybeSingle();
   return (data as PrestadorRow | null) ?? null;
-}
+});
 
 export async function getProviderForOwner(
   id: string,
@@ -80,9 +84,9 @@ export async function getProviderForOwner(
   return (data as PrestadorRow | null) ?? null;
 }
 
-export async function getProviderStats(
+export const getProviderStats = cache(async (
   prestadorId: string
-): Promise<PrestadorStatsRow | null> {
+): Promise<PrestadorStatsRow | null> => {
   const supabase = await createSupabaseServerClient();
   const { data } = await supabase
     .from("prestador_stats")
@@ -90,7 +94,7 @@ export async function getProviderStats(
     .eq("prestador_id", prestadorId)
     .maybeSingle();
   return (data as PrestadorStatsRow | null) ?? null;
-}
+});
 
 /**
  * Gera slug único — appendiando "-2", "-3" etc se já existir.

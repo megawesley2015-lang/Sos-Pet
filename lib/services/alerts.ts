@@ -1,6 +1,7 @@
 /**
  * Service layer — Central de Resgate (alertas SOS).
  */
+import { cache } from "react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
 import { getPetForOwner } from "@/lib/services/pets";
@@ -47,10 +48,10 @@ export async function createAlert(
   if (error || !data) {
     return { alert: null, error: error?.message ?? "Erro ao criar alerta." };
   }
-  return { alert: data as AlertSosRow, error: null };
+  return { alert: data as unknown as AlertSosRow, error: null };
 }
 
-export async function listAlertsByPet(petId: string): Promise<AlertSosRow[]> {
+export const listAlertsByPet = cache(async (petId: string): Promise<AlertSosRow[]> => {
   const supabase = await createSupabaseServerClient();
   const { data } = await supabase
     .from("alertas_sos")
@@ -59,7 +60,7 @@ export async function listAlertsByPet(petId: string): Promise<AlertSosRow[]> {
     .order("created_at", { ascending: false })
     .limit(20);
   return (data as AlertSosRow[] | null) ?? [];
-}
+});
 
 export async function listMyAlerts(): Promise<AlertSosRow[]> {
   const supabase = await createSupabaseServerClient();
