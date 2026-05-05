@@ -159,19 +159,33 @@ export async function validarAssinaturaWebhook(
 ): Promise<boolean> {
   const secret = process.env.MP_WEBHOOK_SECRET;
   if (!secret) {
-    // Dev mode — sem validação
-    console.warn("[MP] MP_WEBHOOK_SECRET não configurado — pulando validação.");
+    // Fail-closed em produção — sem secret configurado não aceita nenhum webhook.
+    if (process.env.NODE_ENV === "production") {
+      console.error("[MP] MP_WEBHOOK_SECRET não configurado em produção — rejeitando webhook.");
+      return false;
+    }
+    console.warn("[MP] MP_WEBHOOK_SECRET não configurado — pulando validação (dev only).");
     return true;
   }
   if (!xSignature || !xRequestId) return false;
 
   // Formato da assinatura: "ts=...,v1=..."
   const parts = Object.fromEntries(
-    xSignature.split(",").map((p) => p.split("=") as [string, string])
+    xSignature.split(",").map((p) => {
+      const idx = p.indexOf("=");
+      return [p.slice(0, idx), p.slice(idx + 1)] as [string, string];
+    })
   );
   const ts = parts["ts"];
   const v1 = parts["v1"];
   if (!ts || !v1) return false;
+
+  // Proteção contra replay attack: rejeitar timestamps com mais de 5 minutos
+  const tsMs = Number(ts) * 1000;
+  if (Math.abs(Date.now() - tsMs) > 5 * 60 * 1000) {
+    console.warn("[MP] Webhook rejeitado: timestamp fora do intervalo de 5 minutos.");
+    return false;
+  }
 
   const manifest = `id:${dataId};request-id:${xRequestId};ts:${ts};`;
 
@@ -193,5 +207,12 @@ export async function validarAssinaturaWebhook(
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
 
-  return hex === v1;
+  // Comparação em tempo constante — evita timing attack na validação de HMAC
+  if (hex.length !== v1.length) return false;
+  const a = Buffer.from(hex, "hex");
+  const b = Buffer.from(v1, "hex");
+  if (a.length !== b.length) return false;
+  // timingSafeEqual disponível no runtime Node.js do Next.js
+  const { timingSafeEqual } = await import("crypto");
+  return timingSafeEqual(a, b);
 }

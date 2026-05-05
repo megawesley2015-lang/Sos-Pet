@@ -40,22 +40,43 @@ export async function registrarAvistamentoAction(
   if (!petId || !latRaw || !lngRaw) {
     return { error: "Dados incompletos. Tente novamente." };
   }
+
+  // Valida UUID para evitar path traversal no storage (C-05)
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!UUID_RE.test(petId)) {
+    return { error: "ID de pet inválido." };
+  }
+
   const lat = parseFloat(latRaw);
   const lng = parseFloat(lngRaw);
   if (isNaN(lat) || isNaN(lng)) {
     return { error: "Coordenadas inválidas." };
   }
+  // Valida range geográfico real
+  if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+    return { error: "Coordenadas fora do intervalo válido." };
+  }
+
+  // Limita tamanho dos campos de texto livres (M-04)
+  const safeAddress = address ? address.slice(0, 200) : null;
+  const safeDescription = description ? description.slice(0, 500) : null;
 
   // Upload da foto (opcional)
   let photo_url: string | null = null;
   if (photo && photo.size > 0) {
-    if (!photo.type.startsWith("image/")) {
-      return { error: "Arquivo inválido. Envie uma imagem." };
+    const ALLOWED_MIME = new Set(["image/jpeg", "image/png", "image/webp"]);
+    if (!ALLOWED_MIME.has(photo.type)) {
+      return { error: "Arquivo inválido. Use JPG, PNG ou WebP." };
     }
     if (photo.size > 5 * 1024 * 1024) {
       return { error: "Imagem muito grande. Máximo 5 MB." };
     }
-    const ext = photo.type.split("/")[1] ?? "jpg";
+    const MIME_TO_EXT: Record<string, string> = {
+      "image/jpeg": "jpg",
+      "image/png": "png",
+      "image/webp": "webp",
+    };
+    const ext = MIME_TO_EXT[photo.type] ?? "jpg";
     const filename = `${petId}/${Date.now()}.${ext}`;
 
     const { error: uploadError } = await supabase.storage
@@ -74,7 +95,7 @@ export async function registrarAvistamentoAction(
   // Insere o avistamento
   const { data: inserted, error: insertError } = await supabase
     .from("sightings")
-    .insert({ pet_id: petId, lat, lng, address, photo_url, description })
+    .insert({ pet_id: petId, lat, lng, address: safeAddress, photo_url, description: safeDescription })
     .select("id, created_at")
     .single();
 
@@ -89,8 +110,8 @@ export async function registrarAvistamentoAction(
   // Usamos o service client para acessar auth.users (email não está em profiles)
   notificarTutorPorEmail({
     petId,
-    address,
-    description,
+    address: safeAddress,
+    description: safeDescription,
     createdAt: inserted?.created_at ?? new Date().toISOString(),
   }).catch((err) => console.error("[sightings] email error:", err));
 

@@ -480,7 +480,7 @@ function RescueHighlight() {
             </p>
             <div className="mt-6">
               <Link
-                href="/registro"
+                href="/cadastro"
                 className="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-white shadow-glow-brand transition-all hover:bg-brand-400"
               >
                 Criar conta para usar
@@ -609,7 +609,7 @@ function FinalCTA() {
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="/registro"
+                href="/cadastro"
                 className="inline-flex items-center gap-2 rounded-xl border-2 border-white/60 bg-white/10 px-6 py-3.5 text-sm font-bold text-white backdrop-blur-sm transition-all hover:bg-white/20 active:scale-95"
               >
                 Criar conta grátis

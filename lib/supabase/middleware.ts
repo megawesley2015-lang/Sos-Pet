@@ -20,7 +20,20 @@ interface CookieToSet {
 const isDev = process.env.NODE_ENV !== "production";
 
 const SECURITY_HEADERS: Record<string, string> = {
-  "Content-Security-Policy": `default-src 'self'; script-src 'self' ${isDev ? "'unsafe-eval' 'unsafe-inline'" : "'unsafe-inline'"}; img-src 'self' https: data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; frame-ancestors 'none'; base-uri 'self';`,
+  "Content-Security-Policy": [
+    "default-src 'self'",
+    // unsafe-inline necessário para Next.js inline scripts; unsafe-eval apenas em dev
+    `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com`,
+    // Supabase fetch/websocket + Google Analytics
+    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.google-analytics.com https://analytics.google.com",
+    "img-src 'self' https: data: blob:",
+    // Leaflet tiles precisam de tiles.stadiamaps e similares
+    "style-src 'self' 'unsafe-inline'",
+    "font-src 'self' data:",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+  ].join("; "),
   "X-Content-Type-Options": "nosniff",
   "X-Frame-Options": "DENY",
   "Referrer-Policy": "strict-origin-when-cross-origin",

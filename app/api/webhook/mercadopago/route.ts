@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
         await supabase
           .from("pet_tag_orders")
           .update({ payment_status: "failed", payment_id: paymentId })
-          .eq("preference_id", payment.external_reference)
+          .eq("id", payment.external_reference)
           .eq("payment_status", "pending_payment");
       }
       return NextResponse.json({ ok: true });
@@ -106,6 +106,19 @@ export async function POST(req: NextRequest) {
       // Já processado ou pedido não encontrado
       console.log("[Webhook MP] Pedido já processado ou não encontrado:", payment.external_reference);
       return NextResponse.json({ ok: true });
+    }
+
+    // ── Verificar valor pago vs. esperado ──────────────────
+    const paidCents = Math.round(payment.transaction_amount * 100);
+    if (paidCents < order.amount_cents) {
+      console.error(
+        `[Webhook MP] Valor insuficiente: esperado ${order.amount_cents} centavos, recebido ${paidCents}`
+      );
+      await supabase
+        .from("pet_tag_orders")
+        .update({ payment_status: "failed", payment_id: paymentId })
+        .eq("id", order.id);
+      return NextResponse.json({ error: "Insufficient payment amount" }, { status: 422 });
     }
 
     // ── Ativar pet ─────────────────────────────────────────
@@ -256,7 +269,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("[Webhook MP] Erro interno:", err);
-    // Retorna 200 para o MP não retentar indefinidamente
-    return NextResponse.json({ ok: true });
+    // Retorna 500 para que o MP retente — erros inesperados (DB down, etc.)
+    // NÃO usar 200 aqui: um 200 silencia a falha e o pedido nunca é processado.
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
