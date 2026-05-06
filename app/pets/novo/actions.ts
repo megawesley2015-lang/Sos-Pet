@@ -7,6 +7,8 @@ import { getUserSafe } from "@/lib/auth/safe";
 import { uploadPetPhoto } from "@/lib/services/pets";
 import { createPetSchema, validatePhoto } from "@/lib/validation/pet";
 import { parseFormData } from "@/lib/validation/auth";
+import { findAndNotifyMatches } from "@/lib/services/matches";
+import type { PetRow } from "@/lib/types/database";
 import type { PetFormState } from "@/components/pets/PetForm";
 
 export async function createPetAction(
@@ -67,5 +69,13 @@ export async function createPetAction(
 
   revalidatePath("/pets");
   if (ownerId) revalidatePath("/meus-pets");
+
+  // Smart Match: se o pet foi cadastrado como "encontrado",
+  // varre os perdidos e notifica tutores com match ≥ 60% (best-effort)
+  if (parsed.data.kind === "found") {
+    const petRow = { ...parsed.data, id: data.id, owner_id: ownerId, photo_url: photoUrl } as PetRow;
+    findAndNotifyMatches(petRow).catch(() => {});
+  }
+
   redirect(`/pets/${data.id}`);
 }

@@ -4,6 +4,7 @@
  * Constraint UNIQUE(prestador_id, user_id) garante 1 avaliação por user
  * por prestador. INSERT duplicado vira upsert via onConflict.
  */
+import { cache } from "react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
 import type { AvaliacaoRow } from "@/lib/types/database";
@@ -20,10 +21,10 @@ export interface ReviewWithAuthor extends AvaliacaoRow {
  * gerado pra select aninhado (`*, profiles:user_id(...)`) sai como `never`
  * sem o `Relationships` declarado na FK — não vale a complexidade no MVP.
  */
-export async function listReviewsByProvider(
+export const listReviewsByProvider = cache(async (
   prestadorId: string,
   limit = 30
-): Promise<ReviewWithAuthor[]> {
+): Promise<ReviewWithAuthor[]> => {
   const supabase = await createSupabaseServerClient();
   const { data: rowsRaw } = await supabase
     .from("avaliacoes")
@@ -63,7 +64,7 @@ export async function listReviewsByProvider(
       author_avatar: profile?.avatar_url ?? null,
     };
   });
-}
+});
 
 /**
  * Avaliação que o user logado já fez deste prestador (se existir).

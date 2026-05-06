@@ -8,6 +8,8 @@ import {
 import { upsertReview, deleteReview } from "@/lib/services/reviews";
 import { createReviewSchema } from "@/lib/validation/review";
 import { parseFormData } from "@/lib/validation/auth";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getUserSafe } from "@/lib/auth/safe";
 
 /**
  * Server Action chamada quando o user clica no botão WhatsApp.
@@ -57,6 +59,19 @@ export async function deleteReviewAction(
   reviewId: string,
   slug: string
 ): Promise<void> {
+  // Verifica propriedade antes de deletar — defesa em profundidade além do RLS
+  const supabase = await createSupabaseServerClient();
+  const user = await getUserSafe(supabase);
+  if (!user) return;
+
+  const { data } = await supabase
+    .from("avaliacoes")
+    .select("user_id")
+    .eq("id", reviewId)
+    .maybeSingle();
+
+  if (!data || data.user_id !== user.id) return;
+
   await deleteReview(reviewId);
   revalidatePath(`/prestadores/${slug}`);
 }

@@ -13,7 +13,7 @@ async function assertAdmin() {
     .from("profiles")
     .select("role")
     .eq("id", user.id)
-    .single();
+    .maybeSingle();
   if (data?.role !== "admin") redirect("/");
   return createServiceClient();
 }

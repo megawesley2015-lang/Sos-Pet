@@ -1,6 +1,10 @@
 /**
  * Service layer — prestadores.
+ *
+ * `React.cache` em getProviderBySlug e getProviderStats — dedup automático
+ * dentro do mesmo request (Server Component + generateMetadata chamam ambos).
  */
+import { cache } from "react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type {
   PrestadorCategoria,
@@ -38,12 +42,17 @@ export async function listProviders(
     query = query.eq("status", "ativo");
   }
   if (filters.categoria) query = query.eq("categoria", filters.categoria);
-  if (filters.cidade) query = query.ilike("cidade", `%${filters.cidade}%`);
+  if (filters.cidade) {
+    const safeCidade = filters.cidade.slice(0, 80);
+    query = query.ilike("cidade", `%${safeCidade}%`);
+  }
   if (filters.emergencia24h) query = query.eq("emergencia24h", true);
   if (filters.delivery) query = query.eq("delivery", true);
   if (filters.busca) {
-    // OR em nome OU descricao (case-insensitive)
-    const term = `%${filters.busca}%`;
+    // Sanitiza o termo antes de injetar no parser do PostgREST:
+    // remove parênteses, vírgulas e aspas que podem malformar a expressão .or()
+    const safeBusca = filters.busca.replace(/[(),"'`]/g, "").slice(0, 100);
+    const term = `%${safeBusca}%`;
     query = query.or(`nome.ilike.${term},descricao.ilike.${term}`);
   }
 
@@ -54,9 +63,9 @@ export async function listProviders(
   };
 }
 
-export async function getProviderBySlug(
+export const getProviderBySlug = cache(async (
   slug: string
-): Promise<PrestadorRow | null> {
+): Promise<PrestadorRow | null> => {
   const supabase = await createSupabaseServerClient();
   const { data } = await supabase
     .from("prestadores")
@@ -64,7 +73,7 @@ export async function getProviderBySlug(
     .eq("slug", slug)
     .maybeSingle();
   return (data as PrestadorRow | null) ?? null;
-}
+});
 
 export async function getProviderForOwner(
   id: string,
@@ -80,9 +89,9 @@ export async function getProviderForOwner(
   return (data as PrestadorRow | null) ?? null;
 }
 
-export async function getProviderStats(
+export const getProviderStats = cache(async (
   prestadorId: string
-): Promise<PrestadorStatsRow | null> {
+): Promise<PrestadorStatsRow | null> => {
   const supabase = await createSupabaseServerClient();
   const { data } = await supabase
     .from("prestador_stats")
@@ -90,7 +99,7 @@ export async function getProviderStats(
     .eq("prestador_id", prestadorId)
     .maybeSingle();
   return (data as PrestadorStatsRow | null) ?? null;
-}
+});
 
 /**
  * Gera slug único — appendiando "-2", "-3" etc se já existir.

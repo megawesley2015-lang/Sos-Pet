@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import "leaflet/dist/leaflet.css";
 import type { SightingRow } from "@/lib/types/database";
 
 // Cores por idade do avistamento
@@ -50,15 +51,6 @@ export default function PetMap({ sightings, petCity }: Props) {
 
     // Importação dinâmica do Leaflet (evita erros de SSR)
     import("leaflet").then((L) => {
-      // CSS do Leaflet (importado uma única vez via link tag)
-      if (!document.getElementById("leaflet-css")) {
-        const link = document.createElement("link");
-        link.id = "leaflet-css";
-        link.rel = "stylesheet";
-        link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-        document.head.appendChild(link);
-      }
-
       if (!containerRef.current) return;
 
       // Pega o primeiro avistamento como centro inicial

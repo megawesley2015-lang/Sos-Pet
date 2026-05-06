@@ -9,11 +9,46 @@
  */
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import type { Database } from "@/lib/types/database";
 
 interface CookieToSet {
   name: string;
   value: string;
   options: CookieOptions;
+}
+
+const isDev = process.env.NODE_ENV !== "production";
+
+const SECURITY_HEADERS: Record<string, string> = {
+  "Content-Security-Policy": [
+    "default-src 'self'",
+    // unsafe-inline necessário para Next.js inline scripts; unsafe-eval apenas em dev
+    `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com`,
+    // Supabase fetch/websocket + Google Analytics
+    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.google-analytics.com https://analytics.google.com",
+    "img-src 'self' https: data: blob:",
+    // Leaflet tiles precisam de tiles.stadiamaps e similares
+    "style-src 'self' 'unsafe-inline'",
+    "font-src 'self' data:",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+  ].join("; "),
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+  "X-XSS-Protection": "0",
+};
+
+function addSecurityHeaders(response: NextResponse, request: NextRequest) {
+  Object.entries(SECURITY_HEADERS).forEach(([name, value]) => {
+    response.headers.set(name, value);
+  });
+  if (request.nextUrl.protocol === "https:") {
+    response.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+  }
+  return response;
 }
 
 /**
@@ -23,7 +58,6 @@ interface CookieToSet {
 const PROTECTED_PATHS = [
   "/meus-pets",
   "/perfil",
-  "/pets/novo",
   "/resgate",
   "/prestadores/novo",
   "/dashboard-prestador",
@@ -43,8 +77,9 @@ function isProtected(pathname: string): boolean {
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
+  response = addSecurityHeaders(response, request);
 
-  const supabase = createServerClient(
+  const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -57,6 +92,7 @@ export async function updateSession(request: NextRequest) {
             request.cookies.set(name, value)
           );
           response = NextResponse.next({ request });
+          response = addSecurityHeaders(response, request);
           cookiesToSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options)
           );
@@ -78,7 +114,8 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("next", pathname);
-    return NextResponse.redirect(url);
+    const redirectResponse = NextResponse.redirect(url);
+    return addSecurityHeaders(redirectResponse, request);
   }
 
   // Se logado e tentando acessar /login ou /registro, manda pra /pets
@@ -88,7 +125,8 @@ export async function updateSession(request: NextRequest) {
   ) {
     const url = request.nextUrl.clone();
     url.pathname = "/pets";
-    return NextResponse.redirect(url);
+    const redirectResponse = NextResponse.redirect(url);
+    return addSecurityHeaders(redirectResponse, request);
   }
 
   return response;

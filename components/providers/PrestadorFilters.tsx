@@ -1,18 +1,19 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useTransition } from "react";
+import { useTransition, useRef, useCallback } from "react";
 import { Search, X, Zap, Truck } from "lucide-react";
 import { PRESTADOR_CATEGORIES } from "@/lib/validation/provider";
 
 /**
  * Filtros de prestadores — sincronizados com searchParams via router.replace.
- * Não bloqueia navegação enquanto a Server Component recarrega (transition).
+ * Inputs de texto usam debounce de 350ms para evitar um router.replace por keystroke.
  */
 export function PrestadorFilters() {
   const router = useRouter();
   const params = useSearchParams();
   const [pending, startTransition] = useTransition();
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const set = (key: string, value: string | null) => {
     const next = new URLSearchParams(params.toString());
@@ -22,6 +23,12 @@ export function PrestadorFilters() {
       router.replace(`/prestadores?${next.toString()}`, { scroll: false });
     });
   };
+
+  const setDebounced = useCallback((key: string, value: string) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => set(key, value), 350);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params]);
 
   const toggle = (key: string) => {
     set(key, params.get(key) === "1" ? null : "1");
@@ -46,7 +53,7 @@ export function PrestadorFilters() {
             type="search"
             placeholder="Buscar por nome ou descrição…"
             defaultValue={activeBusca}
-            onChange={(e) => set("busca", e.target.value)}
+            onChange={(e) => setDebounced("busca", e.target.value)}
             className="w-full rounded-lg border border-white/10 bg-ink-800/70 py-2.5 pl-10 pr-3 text-sm text-fg placeholder:text-fg-subtle focus:border-cyan-500/60 focus:outline-none focus:ring-2 focus:ring-cyan-500/40"
           />
         </div>
@@ -54,7 +61,7 @@ export function PrestadorFilters() {
           type="text"
           placeholder="Cidade…"
           defaultValue={activeCidade}
-          onChange={(e) => set("cidade", e.target.value)}
+          onChange={(e) => setDebounced("cidade", e.target.value)}
           className="w-full rounded-lg border border-white/10 bg-ink-800/70 px-3 py-2.5 text-sm text-fg placeholder:text-fg-subtle focus:border-cyan-500/60 focus:outline-none focus:ring-2 focus:ring-cyan-500/40"
         />
       </div>

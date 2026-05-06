@@ -32,7 +32,9 @@ export function AvisosTicker({ avisos }: AvisosTickerProps) {
   }, [paused, avisos.length]);
 
   if (avisos.length === 0) return null;
-  const current = avisos[index];
+  // Garante que o índice nunca ultrapassa o array (proteção contra mudança de tamanho)
+  const safeIndex = index % avisos.length;
+  const current = avisos[safeIndex];
 
   const inner = (
     <div className="flex items-center gap-2 truncate text-xs sm:text-sm">
@@ -74,7 +76,7 @@ export function AvisosTicker({ avisos }: AvisosTickerProps) {
                 key={i}
                 aria-hidden
                 className={`h-1 rounded-full transition-all ${
-                  i === index
+                  i === safeIndex
                     ? "w-4 bg-white"
                     : "w-1 bg-white/40"
                 }`}

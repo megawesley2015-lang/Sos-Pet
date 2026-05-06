@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { unstable_cache } from "next/cache";
 import {
   ArrowRight,
   HeartHandshake,
@@ -14,88 +15,132 @@ import {
 } from "lucide-react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import CountUp from "@/components/ui/CountUp";
+import { PetsCarousel } from "@/components/pets/PetsCarousel";
+import type { PetRow } from "@/lib/types/database";
 
-export const dynamic = "force-dynamic";
+// Sem force-dynamic — as stats são cacheadas e revalidadas a cada 2 minutos.
+// Se um pet novo for cadastrado, atualiza no próximo ciclo (aceitável para landing).
+export const revalidate = 120;
+
+/**
+ * Stats da landing cacheadas com unstable_cache (TTL 2 min).
+ * Evita 7 queries ao Supabase a cada visita na página mais acessada do site.
+ */
+const getLandingStats = unstable_cache(
+  async () => {
+    const supabase = await createSupabaseServerClient();
+    const [
+      activeCount,
+      lostCount,
+      foundCount,
+      resolvedCount,
+      sightingsCount,
+      prestadoresCount,
+      totalPetsCount,
+    ] = await Promise.all([
+      supabase.from("pets").select("*", { count: "exact", head: true }).eq("status", "active"),
+      supabase.from("pets").select("*", { count: "exact", head: true }).eq("status", "active").eq("kind", "lost"),
+      supabase.from("pets").select("*", { count: "exact", head: true }).eq("status", "active").eq("kind", "found"),
+      supabase.from("pets").select("*", { count: "exact", head: true }).eq("status", "resolved"),
+      supabase.from("sightings").select("*", { count: "exact", head: true }),
+      supabase.from("prestadores").select("*", { count: "exact", head: true }).eq("status", "ativo"),
+      supabase.from("pets").select("*", { count: "exact", head: true }),
+    ]);
+    return {
+      stats: {
+        active: activeCount.count ?? 0,
+        lost:   lostCount.count ?? 0,
+        found:  foundCount.count ?? 0,
+      },
+      richStats: {
+        totalPets:   totalPetsCount.count ?? 0,
+        resolved:    resolvedCount.count ?? 0,
+        sightings:   sightingsCount.count ?? 0,
+        prestadores: prestadoresCount.count ?? 0,
+      },
+    };
+  },
+  ["landing-stats"],
+  { revalidate: 120 }
+);
 
 /**
  * Landing — rota raiz "/".
  *
  * Estrutura:
  *  1. Hero híbrido (dark gradient → warm) com 2 CTAs principais
- *  2. Stats em tempo real (count de pets ativos / lost / found)
+ *  2. Stats cacheadas (count de pets ativos / lost / found) — revalidadas a cada 2 min
  *  3. Como funciona — 3 passos
  *  4. Destaque Central de Resgate (SOS)
  *  5. Confiança / por que confiar
  *  6. CTA final
- *
- * Server Component — busca stats reais do Supabase (count via head:true).
  */
+// Pets perdidos recentes para o carrossel — TTL 60s (mais dinâmico que as stats)
+const getRecentLostPets = unstable_cache(
+  async () => {
+    const supabase = await createSupabaseServerClient();
+    const { data } = await supabase
+      .from("pets")
+      .select("id, name, species, photo_url, neighborhood, city, event_date")
+      .eq("status", "active")
+      .eq("kind", "lost")
+      .order("created_at", { ascending: false })
+      .limit(12);
+    return (data ?? []) as Pick<PetRow, "id" | "name" | "species" | "photo_url" | "neighborhood" | "city" | "event_date">[];
+  },
+  ["landing-lost-pets"],
+  { revalidate: 60 }
+);
+
 export default async function LandingPage() {
-  const supabase = await createSupabaseServerClient();
-
-  // Stats reais — count(*) sem trazer linhas (head:true)
-  const [
-    activeCount,
-    lostCount,
-    foundCount,
-    resolvedCount,
-    sightingsCount,
-    prestadoresCount,
-    totalPetsCount,
-  ] = await Promise.all([
-    supabase
-      .from("pets")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "active"),
-    supabase
-      .from("pets")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "active")
-      .eq("kind", "lost"),
-    supabase
-      .from("pets")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "active")
-      .eq("kind", "found"),
-    supabase
-      .from("pets")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "resolved"),
-    supabase
-      .from("sightings")
-      .select("*", { count: "exact", head: true }),
-    supabase
-      .from("prestadores")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "ativo"),
-    supabase
-      .from("pets")
-      .select("*", { count: "exact", head: true }),
+  const [{ stats, richStats }, lostPets] = await Promise.all([
+    getLandingStats(),
+    getRecentLostPets(),
   ]);
-
-  const stats = {
-    active: activeCount.count ?? 0,
-    lost: lostCount.count ?? 0,
-    found: foundCount.count ?? 0,
-  };
-
-  const richStats = {
-    totalPets: totalPetsCount.count ?? 0,
-    resolved: resolvedCount.count ?? 0,
-    sightings: sightingsCount.count ?? 0,
-    prestadores: prestadoresCount.count ?? 0,
-  };
 
   return (
     <main>
       <Hero stats={stats} />
       <StatsBand stats={stats} />
+      {lostPets.length > 0 && <PetsDestaque pets={lostPets} />}
       <HowItWorks />
       <StatsSection stats={richStats} />
       <RescueHighlight />
       <Trust />
       <FinalCTA />
     </main>
+  );
+}
+
+// ── Seção carrossel de pets perdidos ────────────────────────────────────────
+function PetsDestaque({
+  pets,
+}: {
+  pets: Pick<PetRow, "id" | "name" | "species" | "photo_url" | "neighborhood" | "city" | "event_date">[];
+}) {
+  return (
+    <section className="bg-ink-900 py-10">
+      <div className="mx-auto max-w-6xl px-4">
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h2 className="font-display text-xl font-bold text-fg">
+              🔴 Pets perdidos agora
+            </h2>
+            <p className="mt-0.5 text-sm text-fg-muted">
+              Reconheceu algum? Entre em contato com o tutor.
+            </p>
+          </div>
+          <Link
+            href="/pets?kind=lost"
+            className="flex items-center gap-1 text-xs font-bold text-brand-400 hover:text-brand-300"
+          >
+            Ver todos
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+        <PetsCarousel pets={pets} />
+      </div>
+    </section>
   );
 }
 
@@ -480,7 +525,7 @@ function RescueHighlight() {
             </p>
             <div className="mt-6">
               <Link
-                href="/registro"
+                href="/cadastro"
                 className="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-white shadow-glow-brand transition-all hover:bg-brand-400"
               >
                 Criar conta para usar
@@ -609,7 +654,7 @@ function FinalCTA() {
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="/registro"
+                href="/cadastro"
                 className="inline-flex items-center gap-2 rounded-xl border-2 border-white/60 bg-white/10 px-6 py-3.5 text-sm font-bold text-white backdrop-blur-sm transition-all hover:bg-white/20 active:scale-95"
               >
                 Criar conta grátis
