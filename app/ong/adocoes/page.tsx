@@ -32,12 +32,28 @@ export default async function AdocoesPage() {
     .eq("ong_id", user.id)
     .order("data_adocao", { ascending: false });
 
-  // Pets disponíveis para registrar adoção (sob cuidado da ONG)
-  const { data: petsDisponiveis } = await supabase
+  // Pets disponíveis para registrar adoção — query separada para evitar join tipado
+  const { data: petsDisponiveisRaw } = await supabase
     .from("prontuarios")
-    .select("id, pet_id, pets(id, name, species)")
+    .select("id, pet_id")
     .eq("ong_id", user.id)
     .limit(100);
+
+  // Busca os dados dos pets em paralelo
+  const petIds = (petsDisponiveisRaw ?? []).map((p) => p.pet_id).filter(Boolean);
+  const { data: petsData } = petIds.length
+    ? await supabase
+        .from("pets")
+        .select("id, name, species")
+        .in("id", petIds)
+    : { data: [] };
+
+  const petMap = new Map((petsData ?? []).map((p) => [p.id, p]));
+  const petsDisponiveis = (petsDisponiveisRaw ?? []).map((p) => ({
+    prontuarioId: p.id,
+    petId: p.pet_id ?? "",
+    petName: petMap.get(p.pet_id)?.name ?? "Sem nome",
+  }));
 
   const hoje = new Date();
   type Adocao = {
@@ -59,11 +75,7 @@ export default async function AdocoesPage() {
         </div>
         <NovaAdocaoModal
           ongId={user.id}
-          pets={(petsDisponiveis ?? []).map((p) => ({
-            prontuarioId: p.id,
-            petId: (p.pets as { id: string; name: string | null; species: string } | null)?.id ?? "",
-            petName: (p.pets as { id: string; name: string | null; species: string } | null)?.name ?? "Sem nome",
-          }))}
+          pets={petsDisponiveis}
         />
       </div>
 

@@ -57,10 +57,13 @@ export default async function ProntuarioPage({
       .order("data_inicio", { ascending: false }),
   ]);
 
-  const pet = pron.pets as {
+  type PetDetail = {
     id: string; name: string | null; species: string;
     photo_url: string | null; city: string; neighborhood: string; contact_phone: string;
-  } | null;
+  };
+  // Supabase retorna joins como array ou objeto dependendo do generic — normaliza aqui
+  const petsRaw = pron.pets as unknown as PetDetail[] | PetDetail | null;
+  const pet: PetDetail | null = Array.isArray(petsRaw) ? (petsRaw[0] ?? null) : petsRaw;
 
   const hoje = new Date().toISOString().slice(0, 10);
 

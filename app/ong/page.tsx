@@ -145,7 +145,9 @@ export default async function OngDashboard() {
           ) : (
             <ul className="space-y-3">
               {recentes.map((p) => {
-                const pet = p.pets as { name: string | null; species: string; photo_url: string | null } | null;
+                // Supabase retorna joins como array quando sem generic <Database>
+                const petsArr = p.pets as unknown as { name: string | null; species: string; photo_url: string | null }[] | null;
+                const pet = Array.isArray(petsArr) ? (petsArr[0] ?? null) : (petsArr as unknown as { name: string | null; species: string; photo_url: string | null } | null);
                 return (
                   <li key={p.id}>
                     <Link
