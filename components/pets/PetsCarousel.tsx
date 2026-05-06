@@ -57,7 +57,7 @@ export function PetsCarousel({ pets }: Props) {
       {/* Track */}
       <div
         ref={trackRef}
-        className="scrollbar-none flex gap-4 overflow-x-auto scroll-smooth pb-2"
+        className="flex gap-4 overflow-x-auto scroll-smooth pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
         style={{ scrollSnapType: "x mandatory" }}
       >
         {pets.map((pet, i) => (

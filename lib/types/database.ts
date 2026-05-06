@@ -18,7 +18,7 @@ export type PetSpecies = "dog" | "cat" | "other";
 export type PetSize = "small" | "medium" | "large";
 export type PetSex = "male" | "female" | "unknown";
 export type PetStatus = "active" | "resolved" | "removed";
-export type ProfileRole = "tutor" | "provider" | "admin";
+export type ProfileRole = "tutor" | "provider" | "admin" | "ong";
 
 export interface ProfileRow {
   id: string;

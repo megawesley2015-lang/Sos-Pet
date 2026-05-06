@@ -14,7 +14,7 @@ export default async function AdminLojaPage() {
     .from("profiles")
     .select("role")
     .eq("id", user.id)
-    .single();
+    .maybeSingle();
   if (profile?.role !== "admin") redirect("/");
 
   const service = createServiceClient();

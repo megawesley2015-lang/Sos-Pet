@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition, useRef, useState } from "react";
-import { Plus, ChevronDown } from "lucide-react";
+import { Plus } from "lucide-react";
 import { adicionarVacinaAction } from "./actions";
 
 export function VacinaForm({ prontuarioId }: { prontuarioId: string }) {
