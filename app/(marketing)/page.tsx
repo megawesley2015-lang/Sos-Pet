@@ -116,7 +116,8 @@ export default async function LandingPage() {
     <main>
       <Hero stats={stats} />
       <StatsBand stats={stats} />
-      {lostPets.length > 0 && <PetsDestaque pets={lostPets} />}
+      {/* Sempre exibe a seção — mostra placeholder quando não há pets perdidos */}
+      <PetsDestaque pets={lostPets} />
       <HowItWorks />
       <StatsSection stats={richStats} />
       <RescueHighlight />
@@ -152,7 +153,31 @@ function PetsDestaque({
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
-        <PetsCarousel pets={pets} />
+
+        {pets.length > 0 ? (
+          <PetsCarousel pets={pets} />
+        ) : (
+          /* Placeholder quando não há pets perdidos — incentiva o primeiro cadastro */
+          <div className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-brand-500/30 bg-brand-500/5 py-12 text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-500/15 text-3xl">
+              🐾
+            </div>
+            <div>
+              <p className="font-display text-base font-bold text-fg">
+                Nenhum pet perdido no momento
+              </p>
+              <p className="mt-1 text-sm text-fg-muted">
+                Quando um tutor registrar um pet perdido, ele aparecerá aqui.
+              </p>
+            </div>
+            <Link
+              href="/pets/novo"
+              className="rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-bold text-white hover:bg-brand-400"
+            >
+              Registrar pet perdido
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );

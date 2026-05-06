@@ -5,7 +5,9 @@
       "Bash(python -c ' *)",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(node scripts/diagnostico-db.mjs)",
+      "Bash(node scripts/update-fotos-loja.mjs)"
     ]
   }
 }
