@@ -17,6 +17,7 @@ import { TopBar } from "@/components/layout/TopBar";
 import { SOSBadge } from "@/components/ui/SOSBadge";
 import { CTAButton } from "@/components/ui/CTAButton";
 import SightingsList from "./SightingsList";
+import { EmergencyShopBanner } from "@/components/loja/EmergencyShopBanner";
 import {
   formatPhone,
   formatRelativeDate,
@@ -227,6 +228,11 @@ export default async function PetDetailPage({ params }: PageProps) {
                 petName={pet.name ?? "Pet"}
                 petCity={pet.city}
               />
+            )}
+
+            {/* Banner de emergência — CTA de segurança para pets perdidos */}
+            {pet.kind === "lost" && (
+              <EmergencyShopBanner petName={pet.name} />
             )}
           </div>
         </article>

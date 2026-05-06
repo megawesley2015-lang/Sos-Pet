@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import CountUp from "@/components/ui/CountUp";
+import { PetsCarousel } from "@/components/pets/PetsCarousel";
+import type { PetRow } from "@/lib/types/database";
 
 // Sem force-dynamic — as stats são cacheadas e revalidadas a cada 2 minutos.
 // Se um pet novo for cadastrado, atualiza no próximo ciclo (aceitável para landing).
@@ -73,19 +75,72 @@ const getLandingStats = unstable_cache(
  *  5. Confiança / por que confiar
  *  6. CTA final
  */
+// Pets perdidos recentes para o carrossel — TTL 60s (mais dinâmico que as stats)
+const getRecentLostPets = unstable_cache(
+  async () => {
+    const supabase = await createSupabaseServerClient();
+    const { data } = await supabase
+      .from("pets")
+      .select("id, name, species, photo_url, neighborhood, city, event_date")
+      .eq("status", "active")
+      .eq("kind", "lost")
+      .order("created_at", { ascending: false })
+      .limit(12);
+    return (data ?? []) as Pick<PetRow, "id" | "name" | "species" | "photo_url" | "neighborhood" | "city" | "event_date">[];
+  },
+  ["landing-lost-pets"],
+  { revalidate: 60 }
+);
+
 export default async function LandingPage() {
-  const { stats, richStats } = await getLandingStats();
+  const [{ stats, richStats }, lostPets] = await Promise.all([
+    getLandingStats(),
+    getRecentLostPets(),
+  ]);
 
   return (
     <main>
       <Hero stats={stats} />
       <StatsBand stats={stats} />
+      {lostPets.length > 0 && <PetsDestaque pets={lostPets} />}
       <HowItWorks />
       <StatsSection stats={richStats} />
       <RescueHighlight />
       <Trust />
       <FinalCTA />
     </main>
+  );
+}
+
+// ── Seção carrossel de pets perdidos ────────────────────────────────────────
+function PetsDestaque({
+  pets,
+}: {
+  pets: Pick<PetRow, "id" | "name" | "species" | "photo_url" | "neighborhood" | "city" | "event_date">[];
+}) {
+  return (
+    <section className="bg-ink-900 py-10">
+      <div className="mx-auto max-w-6xl px-4">
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h2 className="font-display text-xl font-bold text-fg">
+              🔴 Pets perdidos agora
+            </h2>
+            <p className="mt-0.5 text-sm text-fg-muted">
+              Reconheceu algum? Entre em contato com o tutor.
+            </p>
+          </div>
+          <Link
+            href="/pets?kind=lost"
+            className="flex items-center gap-1 text-xs font-bold text-brand-400 hover:text-brand-300"
+          >
+            Ver todos
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+        <PetsCarousel pets={pets} />
+      </div>
+    </section>
   );
 }
 

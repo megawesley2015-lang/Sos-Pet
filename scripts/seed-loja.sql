@@ -158,6 +158,58 @@ begin
       2490, null, 'Petz',
       'alimentacao', 'external', 'https://www.petz.com.br/cachorro/petiscos-e-ossos/petiscos-naturais',
       false, true, 10
+    ),
+
+    -- ── FORNECEDORES ESPECIALIZADOS EM PLAQUINHAS ─────────────────────────
+
+    (
+      'Plaquinha de Silicone com QR Code — My Family Brasil',
+      'Plaquinha colorida em silicone flexível e à prova d''água. QR Code gravado que direciona para perfil digital do pet com foto, nome e contatos. Disponível em várias cores e formatos (osso, patinha, coração).',
+      2990, 3990, 'My Family Brasil',
+      'plaquinha', 'external', 'https://www.myfamily.it/br/',
+      true, true, 11
+    ),
+    (
+      'Plaquinha Dupla Face Gravada a Laser — Pet Print',
+      'Plaquinha em aço inox escovado com gravação a laser em ambas as faces. Nome do pet na frente, telefone e endereço no verso. Resistente a água, sol e arranhões. Argola inox inclusa.',
+      2490, null, 'Pet Print',
+      'plaquinha', 'external', 'https://www.petprint.com.br/',
+      false, true, 12
+    ),
+    (
+      'Kit Identificação Completo — Pinnpet',
+      'Kit com plaquinha de metal + tag de silicone + adesivo reflexivo para a coleira. Três formas de identificação em um único kit. Personalizado com nome e telefone.',
+      4990, 6990, 'Pinnpet',
+      'plaquinha', 'external', 'https://pinnpet.com.br/',
+      true, true, 13
+    ),
+    (
+      'Plaquinha Acrílico Personalizada — Zocprint',
+      'Plaquinha em acrílico colorido com impressão UV de alta definição. Pode incluir foto do pet, QR Code e dados de contato. Acabamento premium e leve.',
+      3490, null, 'Zocprint',
+      'plaquinha', 'external', 'https://zocprint.com.br/',
+      false, true, 14
+    ),
+    (
+      'Medalha de Identificação Premium — Plaquinha.com',
+      'Medalha redonda em latão folheado a ouro ou prata com gravação em relevo. Elegante, durável e personalizada. Argola reforçada que não abre com facilidade.',
+      3990, 4990, 'Plaquinha.com',
+      'plaquinha', 'external', 'https://www.plaquinha.com/',
+      false, true, 15
+    ),
+    (
+      'Plaquinha + Camiseta Personalizada — Palecon Presentes',
+      'Combo: plaquinha gravada + camiseta personalizada com foto do pet. Ótimo para adoção responsável ou presente para tutores. Produção sob demanda.',
+      8990, 12990, 'Palecon Presentes',
+      'plaquinha', 'external', 'https://palecon.com.br/',
+      false, true, 16
+    ),
+    (
+      'Produtos Personalizados Pet — Printful',
+      'Camisetas, canecas, almofadas e acessórios com a foto do seu pet. Impressão digital de alta qualidade, entrega em todo o Brasil. Ótimo para presentear tutores.',
+      4990, null, 'Printful',
+      'acessorio', 'external', 'https://www.printful.com/pt/',
+      false, true, 17
     );
 
     raise notice '✅ 10 produtos inseridos com sucesso!';
