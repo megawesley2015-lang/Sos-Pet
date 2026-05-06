@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { unstable_cache } from "next/cache";
+import { createClient } from "@supabase/supabase-js";
+// createSupabaseServerClient não é usado aqui — landing usa cliente público sem cookies
 import {
   ArrowRight,
   HeartHandshake,
@@ -13,22 +15,34 @@ import {
   Eye,
   Users,
 } from "lucide-react";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 import CountUp from "@/components/ui/CountUp";
 import { PetsCarousel } from "@/components/pets/PetsCarousel";
 import type { PetRow } from "@/lib/types/database";
 
-// Sem force-dynamic — as stats são cacheadas e revalidadas a cada 2 minutos.
-// Se um pet novo for cadastrado, atualiza no próximo ciclo (aceitável para landing).
+// Sem force-dynamic — stats cacheadas, revalidadas a cada 2 minutos.
 export const revalidate = 120;
 
 /**
- * Stats da landing cacheadas com unstable_cache (TTL 2 min).
- * Evita 7 queries ao Supabase a cada visita na página mais acessada do site.
+ * Cria cliente Supabase SEM cookies — seguro para uso dentro de unstable_cache.
+ * unstable_cache revalida em background, fora do contexto de request onde
+ * cookies() estaria disponível. Para dados públicos (anon key), cookies não
+ * são necessários.
+ */
+function createPublicClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { auth: { persistSession: false } }
+  );
+}
+
+/**
+ * Stats da landing cacheadas (TTL 2 min).
+ * Usa cliente público sem cookies — compatível com revalidação em background.
  */
 const getLandingStats = unstable_cache(
   async () => {
-    const supabase = await createSupabaseServerClient();
+    const supabase = createPublicClient();
     const [
       activeCount,
       lostCount,
@@ -75,10 +89,10 @@ const getLandingStats = unstable_cache(
  *  5. Confiança / por que confiar
  *  6. CTA final
  */
-// Pets perdidos recentes para o carrossel — TTL 60s (mais dinâmico que as stats)
+// Pets perdidos recentes para o carrossel — TTL 60s — cliente público (sem cookies)
 const getRecentLostPets = unstable_cache(
   async () => {
-    const supabase = await createSupabaseServerClient();
+    const supabase = createPublicClient();
     const { data } = await supabase
       .from("pets")
       .select("id, name, species, photo_url, neighborhood, city, event_date")
