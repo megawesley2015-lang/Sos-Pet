@@ -68,13 +68,29 @@ export default async function OngDashboard() {
       ),
   ]);
 
-  // Últimos prontuários
-  const { data: recentes } = await supabase
+  // Últimos prontuários (sem join para evitar tipo array→objeto)
+  const { data: recentesRaw } = await supabase
     .from("prontuarios")
-    .select("id, data_resgate, situacao_saude, pet_id, pets(name, species, photo_url)")
+    .select("id, data_resgate, situacao_saude, pet_id")
     .eq("ong_id", user.id)
     .order("data_resgate", { ascending: false })
     .limit(5);
+
+  // Busca dados dos pets dos últimos prontuários
+  const recentesPetIds = (recentesRaw ?? []).map((p) => p.pet_id).filter(Boolean);
+  const { data: recentesPetsData } = recentesPetIds.length
+    ? await supabase
+        .from("pets")
+        .select("id, name, species, photo_url")
+        .in("id", recentesPetIds)
+    : { data: [] };
+  const recentesPetMap = new Map((recentesPetsData ?? []).map((p) => [p.id, p]));
+
+  type RecentePet = { name: string | null; species: string; photo_url: string | null } | null;
+  const recentes = (recentesRaw ?? []).map((p) => ({
+    ...p,
+    pets: (recentesPetMap.get(p.pet_id) ?? null) as RecentePet,
+  }));
 
   // Adoções aguardando acompanhamento
   const hoje = new Date();
@@ -145,9 +161,7 @@ export default async function OngDashboard() {
           ) : (
             <ul className="space-y-3">
               {recentes.map((p) => {
-                // Supabase retorna joins como array quando sem generic <Database>
-                const petsArr = p.pets as unknown as { name: string | null; species: string; photo_url: string | null }[] | null;
-                const pet = Array.isArray(petsArr) ? (petsArr[0] ?? null) : (petsArr as unknown as { name: string | null; species: string; photo_url: string | null } | null);
+                const pet = p.pets;
                 return (
                   <li key={p.id}>
                     <Link

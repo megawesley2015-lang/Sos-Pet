@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { unstable_cache } from "next/cache";
+import { createClient } from "@supabase/supabase-js";
+// createSupabaseServerClient não é usado aqui — landing usa cliente público sem cookies
 import {
   ArrowRight,
   HeartHandshake,
@@ -13,22 +15,34 @@ import {
   Eye,
   Users,
 } from "lucide-react";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 import CountUp from "@/components/ui/CountUp";
 import { PetsCarousel } from "@/components/pets/PetsCarousel";
 import type { PetRow } from "@/lib/types/database";
 
-// Sem force-dynamic — as stats são cacheadas e revalidadas a cada 2 minutos.
-// Se um pet novo for cadastrado, atualiza no próximo ciclo (aceitável para landing).
+// Sem force-dynamic — stats cacheadas, revalidadas a cada 2 minutos.
 export const revalidate = 120;
 
 /**
- * Stats da landing cacheadas com unstable_cache (TTL 2 min).
- * Evita 7 queries ao Supabase a cada visita na página mais acessada do site.
+ * Cria cliente Supabase SEM cookies — seguro para uso dentro de unstable_cache.
+ * unstable_cache revalida em background, fora do contexto de request onde
+ * cookies() estaria disponível. Para dados públicos (anon key), cookies não
+ * são necessários.
+ */
+function createPublicClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { auth: { persistSession: false } }
+  );
+}
+
+/**
+ * Stats da landing cacheadas (TTL 2 min).
+ * Usa cliente público sem cookies — compatível com revalidação em background.
  */
 const getLandingStats = unstable_cache(
   async () => {
-    const supabase = await createSupabaseServerClient();
+    const supabase = createPublicClient();
     const [
       activeCount,
       lostCount,
@@ -75,10 +89,10 @@ const getLandingStats = unstable_cache(
  *  5. Confiança / por que confiar
  *  6. CTA final
  */
-// Pets perdidos recentes para o carrossel — TTL 60s (mais dinâmico que as stats)
+// Pets perdidos recentes para o carrossel — TTL 60s — cliente público (sem cookies)
 const getRecentLostPets = unstable_cache(
   async () => {
-    const supabase = await createSupabaseServerClient();
+    const supabase = createPublicClient();
     const { data } = await supabase
       .from("pets")
       .select("id, name, species, photo_url, neighborhood, city, event_date")
@@ -102,7 +116,8 @@ export default async function LandingPage() {
     <main>
       <Hero stats={stats} />
       <StatsBand stats={stats} />
-      {lostPets.length > 0 && <PetsDestaque pets={lostPets} />}
+      {/* Sempre exibe a seção — mostra placeholder quando não há pets perdidos */}
+      <PetsDestaque pets={lostPets} />
       <HowItWorks />
       <StatsSection stats={richStats} />
       <RescueHighlight />
@@ -138,7 +153,31 @@ function PetsDestaque({
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
-        <PetsCarousel pets={pets} />
+
+        {pets.length > 0 ? (
+          <PetsCarousel pets={pets} />
+        ) : (
+          /* Placeholder quando não há pets perdidos — incentiva o primeiro cadastro */
+          <div className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-brand-500/30 bg-brand-500/5 py-12 text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-500/15 text-3xl">
+              🐾
+            </div>
+            <div>
+              <p className="font-display text-base font-bold text-fg">
+                Nenhum pet perdido no momento
+              </p>
+              <p className="mt-1 text-sm text-fg-muted">
+                Quando um tutor registrar um pet perdido, ele aparecerá aqui.
+              </p>
+            </div>
+            <Link
+              href="/pets/novo"
+              className="rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-bold text-white hover:bg-brand-400"
+            >
+              Registrar pet perdido
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );

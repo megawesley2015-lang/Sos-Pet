@@ -1,8 +1,9 @@
 -- ============================================================
 -- Módulo: Painel de ONGs e Protetores
+-- Migration idempotente: pode ser executada múltiplas vezes.
 -- ============================================================
 
--- ── 1. Perfis de ONG (extensão da tabela profiles) ───────────
+-- ── 1. Perfis de ONG ────────────────────────────────────────
 
 create table if not exists ong_details (
   profile_id  uuid primary key references profiles(id) on delete cascade,
@@ -18,12 +19,14 @@ create table if not exists ong_details (
 
 alter table ong_details enable row level security;
 
+drop policy if exists "ong_details_owner_select" on ong_details;
 create policy "ong_details_owner_select"
   on ong_details for select
   using (profile_id = auth.uid() or exists (
     select 1 from profiles where id = auth.uid() and role = 'admin'
   ));
 
+drop policy if exists "ong_details_owner_all" on ong_details;
 create policy "ong_details_owner_all"
   on ong_details for all
   using (profile_id = auth.uid());
@@ -51,6 +54,7 @@ create index if not exists prontuarios_resgate_idx on prontuarios(data_resgate d
 
 alter table prontuarios enable row level security;
 
+drop policy if exists "prontuarios_ong_all" on prontuarios;
 create policy "prontuarios_ong_all"
   on prontuarios for all
   using (ong_id = auth.uid() or exists (
@@ -75,6 +79,7 @@ create index if not exists vacinas_prontuario_idx on vacinas(prontuario_id);
 
 alter table vacinas enable row level security;
 
+drop policy if exists "vacinas_via_prontuario" on vacinas;
 create policy "vacinas_via_prontuario"
   on vacinas for all
   using (exists (
@@ -105,6 +110,7 @@ create index if not exists medicacoes_ativa_idx on medicacoes(ativa) where ativa
 
 alter table medicacoes enable row level security;
 
+drop policy if exists "medicacoes_via_prontuario" on medicacoes;
 create policy "medicacoes_via_prontuario"
   on medicacoes for all
   using (exists (
@@ -143,14 +149,9 @@ create index if not exists adocoes_status_idx on adocoes(status);
 
 alter table adocoes enable row level security;
 
+drop policy if exists "adocoes_ong_all" on adocoes;
 create policy "adocoes_ong_all"
   on adocoes for all
   using (ong_id = auth.uid() or exists (
     select 1 from profiles where id = auth.uid() and role = 'admin'
   ));
-
--- ── 6. Adicionar role 'ong' ao ProfileRole (se necessário) ──
--- O check de role é feito em aplicação. Se quiser enforçar no DB:
--- alter table profiles drop constraint if exists profiles_role_check;
--- alter table profiles add constraint profiles_role_check
---   check (role in ('tutor','provider','admin','ong'));

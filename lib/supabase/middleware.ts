@@ -23,9 +23,9 @@ const SECURITY_HEADERS: Record<string, string> = {
   "Content-Security-Policy": [
     "default-src 'self'",
     // unsafe-inline necessário para Next.js inline scripts; unsafe-eval apenas em dev
-    `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com`,
-    // Supabase fetch/websocket + Google Analytics
-    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.google-analytics.com https://analytics.google.com",
+    `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com https://vercel.live`,
+    // Supabase fetch/websocket + Google Analytics + Vercel Live toolbar
+    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.google-analytics.com https://analytics.google.com https://vercel.live wss://ws-us3.pusher.com https://sockjs-us3.pusher.com",
     "img-src 'self' https: data: blob:",
     // Leaflet tiles precisam de tiles.stadiamaps e similares
     "style-src 'self' 'unsafe-inline'",
