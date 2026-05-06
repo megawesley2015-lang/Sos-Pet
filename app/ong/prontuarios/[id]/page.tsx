@@ -33,17 +33,19 @@ export default async function ProntuarioPage({
 
   const { data: pron } = await supabase
     .from("prontuarios")
-    .select(`
-      id, data_resgate, situacao_saude, peso_kg, castrado, microchip, observacoes,
-      pets ( id, name, species, photo_url, city, neighborhood, contact_phone )
-    `)
+    .select("id, pet_id, data_resgate, situacao_saude, peso_kg, castrado, microchip, observacoes")
     .eq("id", id)
     .eq("ong_id", user.id)
     .maybeSingle();
 
   if (!pron) notFound();
 
-  const [{ data: vacinas }, { data: medicacoes }] = await Promise.all([
+  type PetDetail = {
+    id: string; name: string | null; species: string;
+    photo_url: string | null; city: string; neighborhood: string; contact_phone: string;
+  };
+
+  const [{ data: vacinas }, { data: medicacoes }, { data: petRaw }] = await Promise.all([
     supabase
       .from("vacinas")
       .select("*")
@@ -55,15 +57,14 @@ export default async function ProntuarioPage({
       .eq("prontuario_id", id)
       .order("ativa", { ascending: false })
       .order("data_inicio", { ascending: false }),
+    supabase
+      .from("pets")
+      .select("id, name, species, photo_url, city, neighborhood, contact_phone")
+      .eq("id", pron.pet_id)
+      .maybeSingle(),
   ]);
 
-  type PetDetail = {
-    id: string; name: string | null; species: string;
-    photo_url: string | null; city: string; neighborhood: string; contact_phone: string;
-  };
-  // Supabase retorna joins como array ou objeto dependendo do generic — normaliza aqui
-  const petsRaw = pron.pets as unknown as PetDetail[] | PetDetail | null;
-  const pet: PetDetail | null = Array.isArray(petsRaw) ? (petsRaw[0] ?? null) : petsRaw;
+  const pet = petRaw as PetDetail | null;
 
   const hoje = new Date().toISOString().slice(0, 10);
 

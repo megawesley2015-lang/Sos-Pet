@@ -35,31 +35,42 @@ export default async function OngPetsPage({ searchParams }: PageProps) {
   const user = await getUserSafe(supabase);
   if (!user) redirect("/login");
 
-  // Busca prontuários com dados do pet
-  let query = supabase
+  // Busca prontuários sem join (evita problema de tipo array→objeto)
+  let baseQuery = supabase
     .from("prontuarios")
-    .select(`
-      id, data_resgate, situacao_saude, peso_kg, castrado, microchip,
-      pets ( id, name, species, photo_url, city, neighborhood )
-    `)
+    .select("id, pet_id, data_resgate, situacao_saude, peso_kg, castrado, microchip")
     .eq("ong_id", user.id)
     .order(
       params.ordem === "saude" ? "situacao_saude" : "data_resgate",
       { ascending: false }
     );
 
-  if (params.saude) query = query.eq("situacao_saude", params.saude);
-  if (params.castrado === "sim") query = query.eq("castrado", true);
-  if (params.castrado === "nao") query = query.eq("castrado", false);
+  if (params.saude) baseQuery = baseQuery.eq("situacao_saude", params.saude);
+  if (params.castrado === "sim") baseQuery = baseQuery.eq("castrado", true);
+  if (params.castrado === "nao") baseQuery = baseQuery.eq("castrado", false);
 
-  const { data: rawProntuarios } = await query.limit(100);
+  const { data: rawProntuarios } = await baseQuery.limit(100);
+
+  // Busca dados dos pets separadamente
+  const pronPetIds = [...new Set((rawProntuarios ?? []).map((p) => p.pet_id).filter(Boolean))];
+  const { data: pronPetsData } = pronPetIds.length
+    ? await supabase
+        .from("pets")
+        .select("id, name, species, photo_url, city, neighborhood")
+        .in("id", pronPetIds)
+    : { data: [] };
 
   type PetLite = { id: string; name: string | null; species: string; photo_url: string | null; city: string; neighborhood: string };
-  type ProntuarioRow = { id: string; data_resgate: string; situacao_saude: string; peso_kg: number | null; castrado: boolean; microchip: string | null; pets: PetLite | null };
+  type ProntuarioRow = { id: string; pet_id: string; data_resgate: string; situacao_saude: string; peso_kg: number | null; castrado: boolean; microchip: string | null; pets: PetLite | null };
 
-  let prontuarios = (rawProntuarios ?? []) as ProntuarioRow[];
+  const pronPetMap = new Map((pronPetsData ?? []).map((p) => [p.id, p as PetLite]));
 
-  // Filtro de espécie (client-side, pois está em join)
+  let prontuarios: ProntuarioRow[] = (rawProntuarios ?? []).map((p) => ({
+    ...p,
+    pets: pronPetMap.get(p.pet_id) ?? null,
+  }));
+
+  // Filtro de espécie (client-side)
   if (params.especie) {
     prontuarios = prontuarios.filter((p) => p.pets?.species === params.especie);
   }
