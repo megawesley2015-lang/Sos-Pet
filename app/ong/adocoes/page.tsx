@@ -22,15 +22,36 @@ export default async function AdocoesPage() {
   const user = await getUserSafe(supabase);
   if (!user) redirect("/login");
 
-  const { data: adocoes } = await supabase
+  const { data: adocoesRaw } = await supabase
     .from("adocoes")
-    .select(`
-      id, adotante_nome, adotante_email, adotante_telefone,
-      data_adocao, status, acompanhamento_30d, acompanhamento_90d,
-      observacoes, pets ( id, name, species, photo_url )
-    `)
+    .select("id, pet_id, adotante_nome, adotante_email, adotante_telefone, data_adocao, status, acompanhamento_30d, acompanhamento_90d, observacoes")
     .eq("ong_id", user.id)
     .order("data_adocao", { ascending: false });
+
+  // Busca dados dos pets separadamente (evita cast de join array→objeto)
+  const adocaoPetIds = [...new Set((adocoesRaw ?? []).map((a) => a.pet_id).filter(Boolean))];
+  const { data: adocaoPetsData } = adocaoPetIds.length
+    ? await supabase
+        .from("pets")
+        .select("id, name, species, photo_url")
+        .in("id", adocaoPetIds)
+    : { data: [] };
+
+  const adocaoPetMap = new Map((adocaoPetsData ?? []).map((p) => [p.id, p]));
+
+  type PetLite = { id: string; name: string | null; species: string; photo_url: string | null };
+  type Adocao = {
+    id: string; pet_id: string; adotante_nome: string; adotante_email: string | null;
+    adotante_telefone: string; data_adocao: string; status: string;
+    acompanhamento_30d: boolean; acompanhamento_90d: boolean;
+    observacoes: string | null;
+    pet: PetLite | null;
+  };
+
+  const adocoes: Adocao[] = (adocoesRaw ?? []).map((a) => ({
+    ...a,
+    pet: adocaoPetMap.get(a.pet_id) ?? null,
+  }));
 
   // Pets disponíveis para registrar adoção — query separada para evitar join tipado
   const { data: petsDisponiveisRaw } = await supabase
@@ -56,13 +77,6 @@ export default async function AdocoesPage() {
   }));
 
   const hoje = new Date();
-  type Adocao = {
-    id: string; adotante_nome: string; adotante_email: string | null;
-    adotante_telefone: string; data_adocao: string; status: string;
-    acompanhamento_30d: boolean; acompanhamento_90d: boolean;
-    observacoes: string | null;
-    pets: { id: string; name: string | null; species: string; photo_url: string | null } | null;
-  };
 
   const SPECIES: Record<string, string> = { dog: "🐕", cat: "🐈", other: "🐾" };
 
@@ -86,12 +100,12 @@ export default async function AdocoesPage() {
         </div>
       ) : (
         <div className="space-y-3">
-          {(adocoes as Adocao[]).map((a) => {
+          {adocoes.map((a) => {
             const dias = Math.floor((hoje.getTime() - new Date(a.data_adocao).getTime()) / 86400_000);
             const precisa30 = !a.acompanhamento_30d && dias >= 30 && a.status === "ativo";
             const precisa90 = !a.acompanhamento_90d && dias >= 90 && a.status === "ativo";
             const temAlerta = precisa30 || precisa90;
-            const pet = a.pets;
+            const pet = a.pet;
 
             return (
               <div key={a.id} className={`rounded-xl border bg-ink-700/40 p-4 ${temAlerta ? "border-yellow-400/30" : "border-white/10"}`}>
