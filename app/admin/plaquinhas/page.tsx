@@ -23,6 +23,20 @@ type OrderStatus =
   | "shipped"
   | "delivered";
 
+type OrderWithPet = {
+  id: string;
+  created_at: string;
+  amount_cents: number;
+  payment_status: string;
+  supplier_status: string;
+  supplier_notified_at: string | null;
+  shipping_name: string;
+  shipping_address: Record<string, unknown>;
+  tag_contact_phone: string;
+  tracking_code: string | null;
+  pets: { id: string; name: string | null; species: string; photo_url: string | null } | null;
+};
+
 const STATUS_CONFIG: Record<
   OrderStatus,
   { label: string; color: string; icon: typeof Clock }
@@ -62,16 +76,18 @@ export default async function AdminPlaquinhasPage() {
     `)
     .order("created_at", { ascending: false });
 
+  const typedOrders = (orders ?? []) as unknown as OrderWithPet[];
+
   const APP_URL =
     process.env.NEXT_PUBLIC_APP_URL ??
     process.env.NEXT_PUBLIC_SITE_URL ??
     "http://localhost:3000";
 
   // Métricas rápidas
-  const total = orders?.length ?? 0;
-  const paid = orders?.filter((o) => o.payment_status === "paid").length ?? 0;
-  const pending = orders?.filter((o) => o.payment_status === "pending_payment").length ?? 0;
-  const shipped = orders?.filter((o) => o.supplier_status === "shipped" || o.supplier_status === "delivered").length ?? 0;
+  const total = typedOrders?.length ?? 0;
+  const paid = typedOrders?.filter((o) => o.payment_status === "paid").length ?? 0;
+  const pending = typedOrders?.filter((o) => o.payment_status === "pending_payment").length ?? 0;
+  const shipped = typedOrders?.filter((o) => o.supplier_status === "shipped" || o.supplier_status === "delivered").length ?? 0;
 
   return (
     <div className="min-h-screen bg-ink-900 p-6 text-fg">
@@ -126,7 +142,7 @@ export default async function AdminPlaquinhasPage() {
             </div>
           )}
 
-          {orders?.map((order) => {
+          {typedOrders?.map((order) => {
             const pet = order.pets as unknown as {
               id: string;
               name: string | null;

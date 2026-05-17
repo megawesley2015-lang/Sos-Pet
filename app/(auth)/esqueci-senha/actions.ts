@@ -5,7 +5,7 @@ import {
   forgotPasswordSchema,
   parseFormData,
 } from "@/lib/validation/auth";
-import { authCallbackUrl } from "@/lib/utils/url";
+import { getBaseUrl } from "@/lib/utils/url";
 
 export interface ForgotPasswordState {
   ok?: boolean;
@@ -24,11 +24,11 @@ export async function forgotPasswordAction(
   }
 
   const supabase = await createSupabaseServerClient();
-  // O link do Supabase chama nosso /auth/callback com type=recovery,
-  // que troca o code e nos manda pra /redefinir-senha.
+  // Usamos o callback padrão com next=/redefinir-senha. 
+  // O Supabase adicionará o 'code' automaticamente.
   const { error } = await supabase.auth.resetPasswordForEmail(
     parsed.data.email,
-    { redirectTo: authCallbackUrl("/redefinir-senha") }
+    { redirectTo: `${getBaseUrl()}/auth/callback?next=/redefinir-senha` }
   );
 
   // Por segurança (anti-enum), respondemos sucesso mesmo se o email não existir.

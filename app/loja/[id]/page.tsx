@@ -1,4 +1,5 @@
 import { createServiceClient } from "@/lib/supabase/server";
+import { safeExternalUrl } from "@/lib/utils/url";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, ExternalLink, ShoppingCart, Tag, Shield } from "lucide-react";
@@ -35,13 +36,27 @@ export default async function ProdutoDetalhe({
 
   if (!product) notFound();
 
+  const typedProduct = product as unknown as {
+    external_url: string | null;
+    price_cents: number;
+    original_price_cents: number | null;
+    photo_url: string | null;
+    name: string;
+    supplier_name: string | null;
+    description: string | null;
+    category: string;
+    checkout_type: string;
+  };
+
   const fmt = (cents: number) =>
     (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
+  const externalUrl = safeExternalUrl(typedProduct.external_url);
+
   const discount =
-    product.original_price_cents && product.original_price_cents > product.price_cents
+    typedProduct.original_price_cents && typedProduct.original_price_cents > typedProduct.price_cents
       ? Math.round(
-          ((product.original_price_cents - product.price_cents) / product.original_price_cents) * 100
+          ((typedProduct.original_price_cents - typedProduct.price_cents) / typedProduct.original_price_cents) * 100
         )
       : null;
 
@@ -57,11 +72,11 @@ export default async function ProdutoDetalhe({
         <div className="grid gap-8 md:grid-cols-2">
           {/* Imagem */}
           <div className="aspect-square overflow-hidden rounded-2xl bg-ink-700">
-            {product.photo_url ? (
+            {typedProduct.photo_url ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={product.photo_url}
-                alt={product.name}
+                src={typedProduct.photo_url}
+                alt={typedProduct.name}
                 className="h-full w-full object-cover"
               />
             ) : (
@@ -71,25 +86,25 @@ export default async function ProdutoDetalhe({
 
           {/* Detalhes */}
           <div className="flex flex-col">
-            {product.supplier_name && (
+            {typedProduct.supplier_name && (
               <p className="mb-2 text-xs font-medium uppercase tracking-widest text-fg-subtle">
-                {product.supplier_name}
+                {typedProduct.supplier_name}
               </p>
             )}
-            <h1 className="font-display text-2xl font-black text-fg">{product.name}</h1>
+            <h1 className="font-display text-2xl font-black text-fg">{typedProduct.name}</h1>
 
-            {product.description && (
-              <p className="mt-3 text-sm leading-relaxed text-fg-muted">{product.description}</p>
+            {typedProduct.description && (
+              <p className="mt-3 text-sm leading-relaxed text-fg-muted">{typedProduct.description}</p>
             )}
 
             {/* Preço */}
             <div className="mt-6 flex items-baseline gap-3">
               <span className="font-display text-3xl font-black text-brand-400">
-                {fmt(product.price_cents)}
+                {fmt(typedProduct.price_cents)}
               </span>
-              {product.original_price_cents && (
+              {typedProduct.original_price_cents && (
                 <span className="text-lg text-fg-subtle line-through">
-                  {fmt(product.original_price_cents)}
+                  {fmt(typedProduct.original_price_cents)}
                 </span>
               )}
               {discount && (
@@ -101,9 +116,9 @@ export default async function ProdutoDetalhe({
 
             {/* CTA */}
             <div className="mt-6">
-              {product.checkout_type === "external" && product.external_url ? (
+              {typedProduct.checkout_type === "external" && externalUrl ? (
                 <a
-                  href={product.external_url}
+                  href={externalUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-500 py-3.5 text-base font-bold text-white hover:bg-brand-400"

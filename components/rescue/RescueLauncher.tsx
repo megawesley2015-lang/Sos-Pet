@@ -8,6 +8,7 @@ import { generateAlertImage } from "@/lib/alerts/generateImage";
 import { shareAlertImage } from "@/lib/alerts/share";
 import { dispatchAlertAction } from "@/app/resgate/actions";
 import { CTAButton } from "@/components/ui/CTAButton";
+import { EmergencySafetyBanner } from "@/components/store/EmergencySafetyBanner";
 import type { PetRow } from "@/lib/types/database";
 
 interface RescueLauncherProps {
@@ -141,6 +142,11 @@ export function RescueLauncher({ pet, appUrl }: RescueLauncherProps) {
                 Baixar PNG
               </CTAButton>
             )}
+          </div>
+
+          {/* Banner de segurança pós-SOS */}
+          <div className="mt-5 text-left">
+            <EmergencySafetyBanner context="post-sos" />
           </div>
         </div>
       )}

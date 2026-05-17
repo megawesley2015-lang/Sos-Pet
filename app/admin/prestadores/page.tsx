@@ -4,7 +4,8 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { PrestadorRow } from "@/lib/types/database";
 import { aprovarPrestadorAction, rejeitarPrestadorAction } from "../actions";
 
-export const dynamic = "force-dynamic";
+// Cache curto — Server Actions admin revalidam quando algo muda
+export const revalidate = 30;
 export const metadata = { title: "Admin — Prestadores" };
 
 const STATUS_LABEL: Record<string, { label: string; classes: string }> = {
@@ -22,7 +23,7 @@ export default async function AdminPrestadoresPage() {
     .order("created_at", { ascending: false })
     .limit(100);
 
-  const lista = (prestadores ?? []) as PrestadorRow[];
+  const lista = (prestadores ?? []) as unknown as PrestadorRow[];
   const pendentes = lista.filter((p) => p.status === "pendente_aprovacao");
   const demais = lista.filter((p) => p.status !== "pendente_aprovacao");
 

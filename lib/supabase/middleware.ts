@@ -49,6 +49,7 @@ const PROTECTED_PATHS = [
   "/prestadores/novo",
   "/dashboard-prestador",
   "/admin",
+  "/ong",
 ];
 const PROTECTED_PATTERNS = [
   /^\/pets\/[^/]+\/editar/,
@@ -65,6 +66,10 @@ function isProtected(pathname: string): boolean {
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
   response = addSecurityHeaders(response, request);
+
+  // Propaga o pathname atual via header para Server Components que precisam dele
+  // (ex: ONG layout que precisa detectar se está em /ong/cadastro para evitar loop)
+  response.headers.set("x-pathname", request.nextUrl.pathname);
 
   const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

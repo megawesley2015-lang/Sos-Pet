@@ -11,6 +11,10 @@
 # testing
 /coverage
 
+# local scratch/runtime
+/scratch/
+/venv/
+
 # next.js
 /.next/
 /out/
@@ -49,3 +53,5 @@ next-env.d.ts
 
 # supabase
 supabase/.temp/
+.claude/
+.claude/

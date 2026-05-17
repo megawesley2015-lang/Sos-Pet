@@ -22,6 +22,7 @@ import { AvaliacaoForm } from "@/components/providers/AvaliacaoForm";
 import { AvaliacoesList } from "@/components/providers/AvaliacoesList";
 import { WhatsappButton } from "@/components/providers/WhatsappButton";
 import { PhoneButton } from "@/components/providers/PhoneButton";
+import { SchedulingModal } from "@/components/providers/SchedulingModal";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
 import {
@@ -32,11 +33,58 @@ import {
 } from "@/lib/services/providers";
 import { listReviewsByProvider, getMyReview } from "@/lib/services/reviews";
 import { formatPhone } from "@/lib/utils/format";
+import { getBaseUrl } from "@/lib/utils/url";
+import { providerJsonLd } from "@/lib/utils/jsonld";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+}
+
+/**
+ * Metadata por prestador — title + description + OG card.
+ * Usa logo/capa como og:image; cai pra summary card sem imagem se não tiver.
+ */
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const prestador = await getProviderBySlug(slug);
+
+  if (!prestador || prestador.status !== "ativo") {
+    return { title: "Prestador não encontrado" };
+  }
+
+  const baseUrl = getBaseUrl();
+  const url = `${baseUrl}/prestadores/${slug}`;
+  const title = `${prestador.nome} — ${CATEGORIA_LABEL[prestador.categoria]} em ${prestador.cidade}`;
+  const description =
+    prestador.descricao?.trim() ||
+    `${prestador.nome} é ${CATEGORIA_LABEL[prestador.categoria]} em ${prestador.cidade}. Encontre contato, avaliações e horários no SOS Pet.`;
+
+  const ogImage = prestador.capa_url ?? prestador.logo_url;
+  const images = ogImage ? [{ url: ogImage, alt: prestador.nome }] : undefined;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "website",
+      locale: "pt_BR",
+      siteName: "SOS Pet",
+      images,
+    },
+    twitter: {
+      card: ogImage ? "summary_large_image" : "summary",
+      title,
+      description,
+      images: ogImage ? [ogImage] : undefined,
+    },
+  };
 }
 
 export default async function PrestadorDetalhePage({ params }: PageProps) {
@@ -63,8 +111,15 @@ export default async function PrestadorDetalhePage({ params }: PageProps) {
   const isOwner = !!user && prestador.user_id === user.id;
   const myReview = user ? await getMyReview(prestador.id) : null;
 
+  // JSON-LD LocalBusiness — Google rich result com avaliações.
+  const jsonLd = providerJsonLd(prestador, getBaseUrl());
+
   return (
     <div className="min-h-screen bg-ink-800">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <TopBar />
 
       <main className="mx-auto max-w-4xl px-4 pb-16">
@@ -220,7 +275,16 @@ export default async function PrestadorDetalhePage({ params }: PageProps) {
           </h2>
 
           <div className="mt-3 flex flex-wrap gap-2">
-            {prestador.whatsapp && (
+            {prestador.whatsapp && prestador.agendamento_online && (
+              <SchedulingModal
+                prestadorId={prestador.id}
+                phone={prestador.whatsapp}
+                prestadorNome={prestador.nome}
+                horarios={prestador.horarios_disponiveis}
+                dias={prestador.dias_atendimento}
+              />
+            )}
+            {prestador.whatsapp && !prestador.agendamento_online && (
               <WhatsappButton
                 prestadorId={prestador.id}
                 phone={prestador.whatsapp}

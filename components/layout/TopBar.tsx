@@ -4,12 +4,6 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
 import { UserMenu } from "./UserMenu";
 
-/**
- * TopBar — header das páginas de app (dark theme).
- * Inclui logo + links de navegação + UserMenu (logado) ou botão Entrar.
- *
- * Server Component: sem flash de estado não-autenticado durante hydration.
- */
 export async function TopBar() {
   const supabase = await createSupabaseServerClient();
   const user = await getUserSafe(supabase);
@@ -50,31 +44,28 @@ export async function TopBar() {
           </div>
         </Link>
 
-        {/* Nav — links principais (desktop) */}
+        {/* Nav desktop */}
         <nav className="hidden items-center gap-5 sm:flex">
-          <Link
-            href="/pets"
-            className="text-sm font-medium text-fg-muted transition-colors hover:text-fg"
-          >
+          <Link href="/pets" className="text-sm font-medium text-fg-muted transition-colors hover:text-fg">
             Achados
           </Link>
-          <Link
-            href="/prestadores"
-            className="text-sm font-medium text-fg-muted transition-colors hover:text-fg"
-          >
+          <Link href="/mapa" className="text-sm font-medium text-fg-muted transition-colors hover:text-fg">
+            Mapa
+          </Link>
+          <Link href="/avistamentos" className="text-sm font-medium text-fg-muted transition-colors hover:text-fg">
+            Avistamentos
+          </Link>
+          <Link href="/prestadores" className="text-sm font-medium text-fg-muted transition-colors hover:text-fg">
             Prestadores
           </Link>
-          <Link
-            href="/dicas"
-            className="text-sm font-medium text-fg-muted transition-colors hover:text-fg"
-          >
+          <Link href="/dicas" className="text-sm font-medium text-fg-muted transition-colors hover:text-fg">
             Dicas
           </Link>
-          <Link
-            href="/loja"
-            className="text-sm font-medium text-brand-400 transition-colors hover:text-brand-300"
-          >
-            🛍️ Loja
+          <Link href="/sentinela" className="text-sm font-medium text-cyan-400 transition-colors hover:text-cyan-300">
+            Sentinela
+          </Link>
+          <Link href="/loja" className="text-sm font-medium text-brand-400 transition-colors hover:text-brand-300">
+            Loja
           </Link>
         </nav>
 

@@ -11,15 +11,14 @@
  * que getSession() que só lê o cookie). Em Server Components/Actions, sempre
  * preferir getUserSafe().
  *
- * Tipo `SupabaseClient<any, any, any>` aceita tanto o client tipado fortemente
- * (Server) quanto o do browser sem tipo. Os getters de auth não dependem do
- * Database type — só fazem GET /auth/v1/user.
+ * Tipo `SupabaseClient<Database>` é usado aqui para manter tipagem forte no
+ * cliente server-side enquanto ainda aceita clientes auth-only.
  */
 import type { Session, SupabaseClient, User } from "@supabase/supabase-js";
+import type { Database } from "@/lib/types/database";
 import { handleAuthError } from "./errors";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnySupabaseClient = SupabaseClient<any, any, any>;
+type AnySupabaseClient = SupabaseClient<Database, "public">;
 
 export async function getUserSafe(
   supabase: AnySupabaseClient

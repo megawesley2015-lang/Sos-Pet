@@ -1,12 +1,10 @@
-import { MarketingHeader } from "@/components/layout/MarketingHeader";
-import { MarketingFooter } from "@/components/layout/MarketingFooter";
+import { TopBar } from "@/components/layout/TopBar";
 
 export default function LojaLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
-      <MarketingHeader />
+    <div className="min-h-screen bg-ink-800">
+      <TopBar />
       <main>{children}</main>
-      <MarketingFooter />
-    </>
+    </div>
   );
 }

@@ -443,7 +443,7 @@ export default function SightingModal({
                   </p>
                 </div>
                 {description && (
-                  <p className="text-xs text-fg-muted italic">"{description}"</p>
+                  <p className="text-xs text-fg-muted italic">{`"${description}"`}</p>
                 )}
               </div>
 

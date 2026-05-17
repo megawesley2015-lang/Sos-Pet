@@ -12,7 +12,56 @@ const APP_URL =
   "http://localhost:3000";
 
 const SUPPLIER_EMAIL = process.env.SUPPLIER_EMAIL ?? "";
-const SUPPLIER_NAME = process.env.SUPPLIER_NAME ?? "Fornecedor";
+
+type WebhookOrder = {
+  id: string;
+  pet_id: string;
+  user_id: string | null;
+  amount_cents: number;
+  tag_contact_phone: string;
+  shipping_name: string;
+  shipping_address: {
+    cep: string;
+    logradouro: string;
+    numero: string;
+    complemento: string | null;
+    bairro: string;
+    cidade: string;
+    estado: string;
+  };
+  pets: {
+    id: string;
+    name: string | null;
+    species: string;
+    photo_url: string | null;
+  } | null;
+};
+
+const SECURITY_HEADERS = {
+  "Content-Security-Policy": "default-src 'none'; img-src 'self' https: data:; style-src 'unsafe-inline'; font-src 'self' data:; frame-ancestors 'none'; base-uri 'none';",
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+  "X-XSS-Protection": "0",
+};
+
+function escapeHtml(value: unknown): string {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function safeText(value: unknown): string {
+  return escapeHtml(value == null ? "" : String(value).trim());
+}
+
+function responseJson(body: unknown, status = 200) {
+  return NextResponse.json(body, { status, headers: SECURITY_HEADERS });
+}
 
 /**
  * POST /api/webhook/mercadopago
@@ -34,34 +83,40 @@ const SUPPLIER_NAME = process.env.SUPPLIER_NAME ?? "Fornecedor";
 export async function POST(req: NextRequest) {
   try {
     const rawBody = await req.text();
-    const body = JSON.parse(rawBody);
+    let body: unknown;
 
-    // ── Validar assinatura ─────────────────────────────────
+    try {
+      body = JSON.parse(rawBody) as unknown;
+    } catch {
+      return responseJson({ error: "Invalid JSON payload" }, 400);
+    }
+
+    const bodyObj = body as Record<string, unknown>;
+    const dataObj = bodyObj.data as Record<string, unknown> | undefined;
+
     const xSig = req.headers.get("x-signature");
     const xReqId = req.headers.get("x-request-id");
-    const dataId = body?.data?.id?.toString() ?? "";
+    const dataId = safeText(dataObj?.id);
 
-    const valid = await validarAssinaturaWebhook(xSig, xReqId, dataId, rawBody);
+    const valid = await validarAssinaturaWebhook(xSig, xReqId, dataId);
     if (!valid) {
       console.error("[Webhook MP] Assinatura inválida");
-      return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
+      return responseJson({ error: "Invalid signature" }, 401);
     }
 
-    // ── Só processar eventos de pagamento ─────────────────
-    if (body.type !== "payment") {
-      return NextResponse.json({ ok: true });
+    const eventType = safeText(bodyObj.type);
+    if (eventType !== "payment") {
+      return responseJson({ ok: true });
     }
 
-    const paymentId = body.data?.id?.toString();
+    const paymentId = safeText(dataObj?.id);
     if (!paymentId) {
-      return NextResponse.json({ ok: true });
+      return responseJson({ error: "Missing payment id" }, 400);
     }
 
-    // ── Buscar pagamento no MP ─────────────────────────────
     const payment = await buscarPagamento(paymentId);
 
     if (payment.status !== "approved") {
-      // Registrar falha se rejeitado
       if (payment.status === "rejected" || payment.status === "cancelled") {
         const supabase = createServiceClient();
         await supabase
@@ -70,10 +125,9 @@ export async function POST(req: NextRequest) {
           .eq("preference_id", payment.external_reference)
           .eq("payment_status", "pending_payment");
       }
-      return NextResponse.json({ ok: true });
+      return responseJson({ ok: true });
     }
 
-    // ── Atualizar pedido (idempotente) ─────────────────────
     const supabase = createServiceClient();
 
     const { data: order, error: orderError } = await supabase
@@ -83,56 +137,49 @@ export async function POST(req: NextRequest) {
         payment_id: paymentId,
         supplier_status: "queued",
       })
-      .eq("id", payment.external_reference) // external_reference = orderId
-      .eq("payment_status", "pending_payment") // só atualiza se ainda pending (idempotência)
-      .select(`
-        id,
-        pet_id,
-        user_id,
-        amount_cents,
-        tag_contact_phone,
-        shipping_name,
-        shipping_address,
-        pets (
-          id,
-          name,
-          species,
-          photo_url
-        )
-      `)
-      .single();
+      .eq("id", payment.external_reference)
+      .eq("payment_status", "pending_payment")
+      .select(
+        "id, pet_id, user_id, amount_cents, tag_contact_phone, shipping_name, shipping_address, pets ( id, name, species, photo_url )"
+      )
+      .single<WebhookOrder>();
 
     if (orderError || !order) {
-      // Já processado ou pedido não encontrado
       console.log("[Webhook MP] Pedido já processado ou não encontrado:", payment.external_reference);
-      return NextResponse.json({ ok: true });
+      return responseJson({ ok: true });
     }
 
-    // ── Ativar pet ─────────────────────────────────────────
     await supabase
       .from("pets")
       .update({ status: "active" })
       .eq("id", order.pet_id)
       .eq("status", "draft");
 
-    const pet = order.pets as unknown as {
-      id: string;
-      name: string | null;
-      species: string;
-      photo_url: string | null;
-    } | null;
-
-    const petName = pet?.name ?? "Sem nome";
-    const petUrl = `${APP_URL}/pets/${order.pet_id}`;
+    const pet = order.pets;
+    const petName = safeText(pet?.name ?? "Sem nome");
+    const petUrl = `${APP_URL}/pets/${encodeURIComponent(order.pet_id)}`;
+    const safePetUrl = escapeHtml(petUrl);
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(petUrl)}&color=FF6B35&bgcolor=0F0F1A`;
-    const addr = order.shipping_address as Record<string, string>;
+    const safeQrUrl = escapeHtml(qrUrl);
+    const addr = order.shipping_address;
+    const safeOrderId = safeText(order.id.slice(0, 8).toUpperCase());
+    const safePhone = safeText(order.tag_contact_phone);
+    const safeShippingName = safeText(order.shipping_name);
+    const safeLogradouro = safeText(addr.logradouro);
+    const safeNumero = safeText(addr.numero);
+    const safeComplemento = safeText(addr.complemento);
+    const safeBairro = safeText(addr.bairro);
+    const safeCidade = safeText(addr.cidade);
+    const safeEstado = safeText(addr.estado);
+    const safeCep = safeText(addr.cep);
+    const safeAppUrl = escapeHtml(APP_URL);
+    const safePhotoUrl = pet?.photo_url ? escapeHtml(pet.photo_url) : null;
 
-    // ── Email ao fornecedor ────────────────────────────────
     if (SUPPLIER_EMAIL) {
       const supplierHtml = `
         <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px;background:#0F0F1A;color:#F1EDE8;border-radius:16px;">
           <h1 style="color:#FF6B35;font-size:22px;margin:0 0 4px">🐾 Novo Pedido — SOS Pet</h1>
-          <p style="color:#9A8F8A;font-size:14px;margin:0 0 24px">Pedido <strong style="color:#F1EDE8">#${order.id.slice(0, 8).toUpperCase()}</strong></p>
+          <p style="color:#9A8F8A;font-size:14px;margin:0 0 24px">Pedido <strong style="color:#F1EDE8">#${safeOrderId}</strong></p>
 
           <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
             <tr style="background:#1A1A2E">
@@ -146,28 +193,28 @@ export async function POST(req: NextRequest) {
             </tr>
             <tr style="border-top:1px solid rgba(255,255,255,0.08);background:#1A1A2E">
               <td style="padding:12px 16px;font-size:14px;color:#9A8F8A">Telefone (gravar)</td>
-              <td style="padding:12px 16px;font-size:18px;font-weight:bold;color:#00E5FF">${order.tag_contact_phone}</td>
+              <td style="padding:12px 16px;font-size:18px;font-weight:bold;color:#00E5FF">${safePhone}</td>
             </tr>
             <tr style="border-top:1px solid rgba(255,255,255,0.08)">
               <td style="padding:12px 16px;font-size:14px;color:#9A8F8A">QR Code URL</td>
               <td style="padding:12px 16px;font-size:13px;color:#00E5FF;word-break:break-all;">
-                <a href="${petUrl}" style="color:#00E5FF">${petUrl}</a>
+                <a href="${safePetUrl}" style="color:#00E5FF">${safePetUrl}</a>
               </td>
             </tr>
           </table>
 
           <div style="text-align:center;margin:24px 0;">
             <p style="font-size:12px;color:#9A8F8A;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">QR Code para imprimir na plaquinha</p>
-            <img src="${qrUrl}" alt="QR Code" width="200" height="200" style="border-radius:12px;background:#fff;padding:8px;" />
+            <img src="${safeQrUrl}" alt="QR Code" width="200" height="200" style="border-radius:12px;background:#fff;padding:8px;" />
             <p style="font-size:11px;color:#9A8F8A;margin-top:8px">
-              <a href="${qrUrl}" style="color:#FF6B35">Download QR Code (400x400px)</a>
+              <a href="${safeQrUrl}" style="color:#FF6B35">Download QR Code (400x400px)</a>
             </p>
           </div>
 
-          ${pet?.photo_url ? `
+          ${safePhotoUrl ? `
           <div style="text-align:center;margin:24px 0;">
             <p style="font-size:12px;color:#9A8F8A;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">Foto do pet (referência)</p>
-            <img src="${pet.photo_url}" alt="${petName}" width="160" height="160" style="border-radius:50%;object-fit:cover;border:3px solid #FF6B35;" />
+            <img src="${safePhotoUrl}" alt="${petName}" width="160" height="160" style="border-radius:50%;object-fit:cover;border:3px solid #FF6B35;" />
           </div>
           ` : ""}
 
@@ -179,32 +226,31 @@ export async function POST(req: NextRequest) {
             </tr>
             <tr style="border-top:1px solid rgba(255,255,255,0.08)">
               <td style="padding:12px 16px;font-size:14px;color:#9A8F8A;width:140px">Destinatário</td>
-              <td style="padding:12px 16px;font-size:14px;font-weight:bold;color:#F1EDE8">${order.shipping_name}</td>
+              <td style="padding:12px 16px;font-size:14px;font-weight:bold;color:#F1EDE8">${safeShippingName}</td>
             </tr>
             <tr style="border-top:1px solid rgba(255,255,255,0.08);background:#1A1A2E">
               <td style="padding:12px 16px;font-size:14px;color:#9A8F8A">Endereço</td>
               <td style="padding:12px 16px;font-size:14px;color:#F1EDE8">
-                ${addr.logradouro}, ${addr.numero}${addr.complemento ? ` — ${addr.complemento}` : ""}<br>
-                ${addr.bairro} · ${addr.cidade} / ${addr.estado}<br>
-                CEP: ${addr.cep}
+                ${safeLogradouro}, ${safeNumero}${safeComplemento ? ` — ${safeComplemento}` : ""}<br>
+                ${safeBairro} · ${safeCidade} / ${safeEstado}<br>
+                CEP: ${safeCep}
               </td>
             </tr>
           </table>
 
           <p style="font-size:12px;color:#9A8F8A;text-align:center;margin-top:24px;">
             Pedido gerado automaticamente pelo sistema SOS Pet.<br>
-            Dúvidas? Acesse o painel em <a href="${APP_URL}/admin/plaquinhas" style="color:#FF6B35">${APP_URL}/admin/plaquinhas</a>
+            Dúvidas? Acesse o painel em <a href="${safeAppUrl}/admin/plaquinhas" style="color:#FF6B35">${safeAppUrl}/admin/plaquinhas</a>
           </p>
         </div>
       `;
 
       await sendEmail({
         to: SUPPLIER_EMAIL,
-        subject: `[SOS Pet] Novo pedido #${order.id.slice(0, 8).toUpperCase()} — ${petName}`,
+        subject: `[SOS Pet] Novo pedido #${safeOrderId} — ${petName}`,
         html: supplierHtml,
       }).catch(console.error);
 
-      // Registrar quando notificou o fornecedor
       await supabase
         .from("pet_tag_orders")
         .update({
@@ -214,8 +260,7 @@ export async function POST(req: NextRequest) {
         .eq("id", order.id);
     }
 
-    // ── Email de confirmação ao cliente ───────────────────
-    const clientEmail = payment.payer?.email;
+    const clientEmail = safeText(payment.payer?.email);
     if (clientEmail) {
       const clientHtml = `
         <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0F0F1A;color:#F1EDE8;border-radius:16px;">
@@ -226,9 +271,9 @@ export async function POST(req: NextRequest) {
 
           <div style="background:#1A1A2E;border-radius:12px;padding:20px;margin-bottom:20px;text-align:center;">
             <p style="font-size:12px;color:#9A8F8A;margin:0 0 12px;text-transform:uppercase;letter-spacing:1px">QR Code do seu pet</p>
-            <img src="${qrUrl}" alt="QR Code" width="160" height="160" style="border-radius:10px;background:#fff;padding:6px;" />
+            <img src="${safeQrUrl}" alt="QR Code" width="160" height="160" style="border-radius:10px;background:#fff;padding:6px;" />
             <p style="font-size:13px;color:#F1EDE8;margin:12px 0 4px">Perfil digital ativo:</p>
-            <a href="${petUrl}" style="color:#00E5FF;font-size:13px;word-break:break-all">${petUrl}</a>
+            <a href="${safePetUrl}" style="color:#00E5FF;font-size:13px;word-break:break-all">${safePetUrl}</a>
           </div>
 
           <p style="font-size:13px;color:#9A8F8A;margin-bottom:8px">
@@ -241,7 +286,7 @@ export async function POST(req: NextRequest) {
           <hr style="border:none;border-top:1px solid rgba(255,255,255,0.08);margin:24px 0;">
           <p style="font-size:11px;color:#9A8F8A;text-align:center;">
             SOS Pet · Rede colaborativa de resgate<br>
-            <a href="${APP_URL}" style="color:#FF6B35">${APP_URL}</a>
+            <a href="${safeAppUrl}" style="color:#FF6B35">${safeAppUrl}</a>
           </p>
         </div>
       `;
@@ -253,10 +298,9 @@ export async function POST(req: NextRequest) {
       }).catch(console.error);
     }
 
-    return NextResponse.json({ ok: true });
+    return responseJson({ ok: true });
   } catch (err) {
     console.error("[Webhook MP] Erro interno:", err);
-    // Retorna 200 para o MP não retentar indefinidamente
-    return NextResponse.json({ ok: true });
+    return responseJson({ error: "Internal server error" }, 500);
   }
 }

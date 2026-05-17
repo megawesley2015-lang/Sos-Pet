@@ -154,13 +154,15 @@ export async function buscarPagamento(paymentId: string): Promise<MPPayment> {
 export async function validarAssinaturaWebhook(
   xSignature: string | null,
   xRequestId: string | null,
-  dataId: string,
-  rawBody: string
+  dataId: string
 ): Promise<boolean> {
   const secret = process.env.MP_WEBHOOK_SECRET;
   if (!secret) {
-    // Dev mode — sem validação
-    console.warn("[MP] MP_WEBHOOK_SECRET não configurado — pulando validação.");
+    if (process.env.NODE_ENV === "production") {
+      console.error("[MP] MP_WEBHOOK_SECRET ausente em produção — webhook bloqueado.");
+      return false;
+    }
+    console.warn("[MP] MP_WEBHOOK_SECRET não configurado — pulando validação em dev.");
     return true;
   }
   if (!xSignature || !xRequestId) return false;

@@ -1,12 +1,27 @@
 import Link from "next/link";
-import { CheckCircle, QrCode, Package, ArrowRight } from "lucide-react";
+import { CheckCircle, QrCode, Package, ArrowRight, PawPrint } from "lucide-react";
 import { TopBar } from "@/components/layout/TopBar";
 
 export const metadata = {
   title: "Pedido confirmado! — SOS Pet",
 };
 
-export default function PlaquinhaSucessoPage() {
+/**
+ * MercadoPago redireciona para esta página após pagamento aprovado,
+ * incluindo os query params:
+ *   ?pet=<pet_id>       — adicionado por nós no successUrl (plaquinha/actions.ts)
+ *   &collection_id=...&external_reference=<orderId>&payment_id=...
+ *
+ * Usamos `pet` para exibir o link direto ao perfil digital do pet.
+ */
+export default async function PlaquinhaSucessoPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ pet?: string; collection_status?: string }>;
+}) {
+  const params = await searchParams;
+  const petId = params.pet;
+
   return (
     <div data-theme="dark" className="min-h-screen bg-ink-900 text-fg">
       <TopBar />
@@ -84,19 +99,31 @@ export default function PlaquinhaSucessoPage() {
           📧 Enviamos um email de confirmação com o QR code do seu pet.
         </p>
 
+        {/* CTAs — primário aponta para o perfil digital do pet se tiver petId */}
         <div className="mt-8 flex flex-wrap justify-center gap-3">
+          {petId ? (
+            <Link
+              href={`/pets/${petId}`}
+              className="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-white shadow-glow-brand hover:bg-brand-400"
+            >
+              <PawPrint className="h-4 w-4" />
+              Ver perfil digital do pet
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          ) : (
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-white shadow-glow-brand hover:bg-brand-400"
+            >
+              Ir para a home
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          )}
           <Link
             href="/pets"
             className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-5 py-3 text-sm font-medium text-fg-muted hover:bg-white/5"
           >
             Ver pets na rede
-          </Link>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-white shadow-glow-brand hover:bg-brand-400"
-          >
-            Ir para a home
-            <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </main>

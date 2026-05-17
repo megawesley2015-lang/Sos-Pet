@@ -3,7 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { createServiceClient, createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
+import { parseFormData } from "@/lib/validation/auth";
+import { storeProductSchema } from "@/lib/validation/store";
 import { redirect } from "next/navigation";
+import { syncPrintfulCatalog } from "@/lib/services/printful";
 
 async function assertAdmin() {
   const supabase = await createSupabaseServerClient();
@@ -21,15 +24,21 @@ async function assertAdmin() {
 export async function criarProdutoAction(formData: FormData) {
   const service = await assertAdmin();
 
-  const name = (formData.get("name") as string).trim();
-  const description = (formData.get("description") as string | null)?.trim() || null;
-  const priceBrl = parseFloat(formData.get("price_brl") as string) || 0;
-  const originalBrl = parseFloat(formData.get("original_price_brl") as string) || 0;
-  const supplierName = (formData.get("supplier_name") as string | null)?.trim() || null;
-  const category = (formData.get("category") as string) || "geral";
-  const checkoutType = (formData.get("checkout_type") as string) || "external";
-  const externalUrl = (formData.get("external_url") as string | null)?.trim() || null;
-  const featured = formData.get("featured") === "true";
+  const parsed = parseFormData(storeProductSchema, formData);
+  if (!parsed.ok) {
+    throw new Error(Object.values(parsed.errors).join(" | "));
+  }
+  const {
+    name,
+    description,
+    price_brl,
+    original_price_brl,
+    supplier_name,
+    category,
+    checkout_type,
+    external_url,
+    featured,
+  } = parsed.data;
   const photo = formData.get("photo") as File | null;
 
   let photoUrl: string | null = null;
@@ -48,17 +57,24 @@ export async function criarProdutoAction(formData: FormData) {
   await service.from("store_products").insert({
     name,
     description,
-    price_cents: Math.round(priceBrl * 100),
-    original_price_cents: originalBrl > 0 ? Math.round(originalBrl * 100) : null,
+    price_cents: Math.round(price_brl * 100),
+    original_price_cents: original_price_brl > 0 ? Math.round(original_price_brl * 100) : null,
     photo_url: photoUrl,
-    supplier_name: supplierName,
+    supplier_name,
     category,
-    checkout_type: checkoutType,
-    external_url: externalUrl,
+    checkout_type,
+    external_url,
     featured,
     active: true,
   });
 
+  revalidatePath("/admin/loja");
+  revalidatePath("/loja");
+}
+
+export async function sincronizarPrintfulAction() {
+  await assertAdmin();
+  await syncPrintfulCatalog();
   revalidatePath("/admin/loja");
   revalidatePath("/loja");
 }

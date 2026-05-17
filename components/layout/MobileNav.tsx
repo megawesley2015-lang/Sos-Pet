@@ -9,11 +9,14 @@ interface MobileNavProps {
 }
 
 const NAV_LINKS = [
-  { href: "/pets", label: "Achados & Perdidos" },
+  { href: "/pets",        label: "Achados & Perdidos" },
+  { href: "/mapa",        label: "🗺️ Mapa de Alertas" },
+  { href: "/avistamentos",label: "Avistamentos" },
   { href: "/prestadores", label: "Prestadores" },
-  { href: "/dicas", label: "Dicas" },
-  { href: "/parcerias", label: "Parcerias" },
-  { href: "/loja", label: "🛍️ Loja" },
+  { href: "/dicas",       label: "Dicas" },
+  { href: "/sentinela",   label: "📷 Rede Sentinela" },
+  { href: "/parcerias",   label: "Parcerias" },
+  { href: "/loja",        label: "🛍️ Loja" },
 ];
 
 /**

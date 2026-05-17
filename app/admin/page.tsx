@@ -1,7 +1,13 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { PawPrint, Building2, Users, Handshake, Siren, Clock } from "lucide-react";
 
-export const dynamic = "force-dynamic";
+/**
+ * Cache de 30s — antes era force-dynamic (9 counts a cada navegação).
+ * revalidatePath('/admin') é chamado pelos Server Actions admin
+ * quando algo muda, então o cache se atualiza imediatamente após qualquer
+ * aprovação/rejeição. 30s é o teto pra dados "naturalmente" stale.
+ */
+export const revalidate = 30;
 
 export const metadata = { title: "Admin — Visão Geral" };
 

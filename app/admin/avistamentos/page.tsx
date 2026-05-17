@@ -6,7 +6,8 @@ import type { SightingRow, PetRow } from "@/lib/types/database";
 import { formatRelativeDate } from "@/lib/utils/format";
 import { deletarAvistamentoAction } from "../actions";
 
-export const dynamic = "force-dynamic";
+// Cache curto — Server Actions admin revalidam quando algo muda
+export const revalidate = 30;
 export const metadata = { title: "Admin — Avistamentos" };
 
 interface SightingWithPet extends SightingRow {
@@ -22,7 +23,7 @@ export default async function AdminAvistamentosPage() {
     .order("created_at", { ascending: false })
     .limit(100);
 
-  const lista = (data ?? []) as SightingWithPet[];
+  const lista = (data ?? []) as unknown as SightingWithPet[];
 
   return (
     <div className="space-y-6">
@@ -92,7 +93,7 @@ function AvistamentoCard({ sighting: s }: { sighting: SightingWithPet }) {
 
         {s.description && (
           <p className="mt-1 line-clamp-1 text-xs text-fg-subtle italic">
-            "{s.description}"
+            {`"${s.description}"`}
           </p>
         )}
 

@@ -3,8 +3,15 @@
  *
  * Princípio: nenhuma página fala SQL direto. Todas passam aqui.
  * Isso facilita refatorar (cache, joins futuros, instrumentação).
+ *
+ * `React.cache` — dedup automático dentro do mesmo request. Quando uma página
+ * chama getPetById em generateMetadata + na page render, vira 1 round-trip só.
  */
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { cache } from "react";
+import {
+  createSupabaseServerClient,
+  createServiceClient,
+} from "@/lib/supabase/server";
 import type {
   PetKind,
   PetRow,
@@ -20,42 +27,134 @@ export interface PetFilters {
   limit?: number;
 }
 
+/**
+ * Lista pets para visualização. Estratégia (B-05):
+ *   - Sem ownerId  → usa view `pets_public` (sem contact_*) — público, scrape-resistant.
+ *   - Com ownerId  → usa tabela `pets` direto (RLS deixa owner ver tudo dele,
+ *                    incluindo contato pra editar).
+ *
+ * Listagens públicas chegam até com `contact_phone === ""` se a página tentar
+ * exibir contato — por isso a página de detalhe usa `getPetContact` separado.
+ */
 export async function listPets(filters: PetFilters = {}): Promise<{
   pets: PetRow[];
   error: string | null;
 }> {
   const supabase = await createSupabaseServerClient();
-  let query = supabase
-    .from("pets")
+
+  // Branches separadas pro TS conseguir inferir o shape correto.
+  // Owner → tabela `pets` (RLS libera dono).
+  // Público → view `pets_public` (sem contact_*, anti-scraping).
+  if (filters.ownerId) {
+    let q = supabase
+      .from("pets")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(filters.limit ?? 48)
+      .eq("owner_id", filters.ownerId);
+
+    if (filters.kind) q = q.eq("kind", filters.kind);
+    if (filters.species) q = q.eq("species", filters.species);
+    if (filters.city) q = q.ilike("city", `%${filters.city}%`);
+
+    const { data, error } = await q;
+    return {
+      pets: (data as PetRow[] | null) ?? [],
+      error: error?.message ?? null,
+    };
+  }
+
+  let q = supabase
+    .from("pets_public")
     .select("*")
     .order("created_at", { ascending: false })
-    .limit(filters.limit ?? 48);
+    .limit(filters.limit ?? 48)
+    .eq("status", "active");
 
-  if (filters.ownerId) {
-    // Quando filtrando por owner, mostramos active + resolved (dono vê tudo dele)
-    query = query.eq("owner_id", filters.ownerId);
-  } else {
-    query = query.eq("status", "active");
-  }
-  if (filters.kind) query = query.eq("kind", filters.kind);
-  if (filters.species) query = query.eq("species", filters.species);
-  if (filters.city) query = query.ilike("city", `%${filters.city}%`);
+  if (filters.kind) q = q.eq("kind", filters.kind);
+  if (filters.species) q = q.eq("species", filters.species);
+  if (filters.city) q = q.ilike("city", `%${filters.city}%`);
 
-  const { data, error } = await query;
+  const { data, error } = await q;
+
+  // View não tem contact_* — preenche com strings vazias pra preservar shape PetRow.
+  // Quem precisar do contato (página de detalhe) chama getPetContact separadamente.
+  const pets: PetRow[] = (
+    (data as Omit<PetRow, "contact_name" | "contact_phone" | "contact_whatsapp">[] | null) ?? []
+  ).map((row) => ({
+    ...row,
+    contact_name: "",
+    contact_phone: "",
+    contact_whatsapp: false,
+  }));
+
   return {
-    pets: (data as PetRow[] | null) ?? [],
+    pets,
     error: error?.message ?? null,
   };
 }
 
-export async function getPetById(id: string): Promise<PetRow | null> {
+/**
+ * Carrega o pet para a página de detalhe.
+ *
+ * Tenta primeiro a tabela `pets` direto (RLS deixa owner/admin enxergar com
+ * contact_* preenchido). Se anônimo, RLS retorna null — fallback para
+ * `pets_public` (sem contato) + RPC `get_pet_contact` em paralelo.
+ *
+ * Resultado tem `contact_*` SEMPRE preenchido (string vazia em fallback se a
+ * RPC falhar — improvável, mas defensivo).
+ */
+export const getPetById = cache(async (id: string): Promise<PetRow | null> => {
   const supabase = await createSupabaseServerClient();
-  const { data } = await supabase
+
+  // Caminho rápido: owner/admin acessa tabela direto
+  const { data: ownerRow } = await supabase
     .from("pets")
     .select("*")
     .eq("id", id)
     .maybeSingle();
-  return (data as PetRow | null) ?? null;
+  if (ownerRow) return ownerRow as PetRow;
+
+  // Anônimo: monta a partir da view pública + RPC de contato
+  const [pubRes, contactRes] = await Promise.all([
+    supabase.from("pets_public").select("*").eq("id", id).maybeSingle(),
+    supabase
+      .rpc("get_pet_contact", { pet_id: id })
+      .maybeSingle(),
+  ]);
+
+  if (!pubRes.data) return null;
+
+  const contact = contactRes.data as
+    | { contact_name: string; contact_phone: string; contact_whatsapp: boolean }
+    | null;
+
+  return {
+    ...(pubRes.data as Partial<PetRow>),
+    contact_name: contact?.contact_name ?? "",
+    contact_phone: contact?.contact_phone ?? "",
+    contact_whatsapp: contact?.contact_whatsapp ?? false,
+  } as PetRow;
+});
+
+/**
+ * Resolve apenas o contato de um pet (RPC `get_pet_contact`).
+ * Útil pra páginas que já têm o pet básico mas precisam só do contato sob demanda.
+ */
+export async function getPetContact(id: string): Promise<{
+  contact_name: string;
+  contact_phone: string;
+  contact_whatsapp: boolean;
+} | null> {
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .rpc("get_pet_contact", { pet_id: id })
+    .maybeSingle();
+  return (data as {
+    contact_name: string;
+    contact_phone: string;
+    contact_whatsapp: boolean;
+  } | null) ?? null;
 }
 
 /**
@@ -102,12 +201,18 @@ export async function deletePet(
  * Path: <ownerId|anon>/<timestamp>-<random>.<ext>
  *   - agrupa por owner pra facilitar housekeeping futuro
  *   - prefixo "anon" pra cadastros sem login
+ *
+ * SEGURANÇA (B-04): Usa SERVICE ROLE para bypassar RLS do Storage.
+ * Por quê: a partir da migration `20260504_hardening`, o bucket pet-photos
+ * NÃO aceita mais upload anônimo via REST direto — só service role.
+ * Toda foto chega via Server Action, que validou Turnstile + mime/size antes.
+ * Vetor de spam direto na REST do Supabase fechado.
  */
 export async function uploadPetPhoto(
   file: File,
   ownerId: string | null
 ): Promise<{ url: string | null; error: string | null }> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createServiceClient();
   const ext = (file.name.split(".").pop() ?? "jpg").toLowerCase();
   const folder = ownerId ?? "anon";
   const filename = `${folder}/${Date.now()}-${Math.random()
@@ -143,7 +248,8 @@ export async function deletePetPhotoByUrl(publicUrl: string): Promise<void> {
     const path = url.pathname.slice(idx + marker.length);
     if (!path) return;
 
-    const supabase = await createSupabaseServerClient();
+    // Usa service role pra alinhar com upload (B-04).
+    const supabase = createServiceClient();
     await supabase.storage.from("pet-photos").remove([path]);
   } catch {
     // ignora — limpeza de storage não é crítica

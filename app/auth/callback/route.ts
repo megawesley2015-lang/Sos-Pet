@@ -33,6 +33,8 @@ export async function GET(request: NextRequest) {
   }
 
   const supabase = await createSupabaseServerClient();
+  const type = url.searchParams.get("type");
+  
   const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(
     code
   );
@@ -41,6 +43,12 @@ export async function GET(request: NextRequest) {
     const dest = new URL("/login", url.origin);
     dest.searchParams.set("auth_error", exchangeError.message);
     return NextResponse.redirect(dest);
+  }
+
+  // Se for fluxo de recuperação de senha (via param type ou via next explicitamente pra redefinir)
+  // mandamos OBRIGATORIAMENTE para /redefinir-senha
+  if (type === "recovery" || next === "/redefinir-senha") {
+    return NextResponse.redirect(new URL("/redefinir-senha", url.origin));
   }
 
   // Sucesso → manda pro destino, garantindo que o path é interno

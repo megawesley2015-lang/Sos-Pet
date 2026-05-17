@@ -154,7 +154,7 @@ create table if not exists public.pets (
   contact_whatsapp boolean not null default true,
 
   -- Status de moderação (futuro)
-  status          text not null default 'active' check (status in ('active', 'resolved', 'removed'))
+  status          text not null default 'active' check (status in ('draft', 'active', 'resolved', 'removed'))
 );
 
 -- Índices para listagem e filtros
@@ -333,6 +333,10 @@ create table if not exists public.prestadores (
   agendamento_online   boolean not null default false,
   verificado           boolean not null default false,
   destaque             boolean not null default false,
+
+  -- Agendamento
+  dias_atendimento     jsonb,
+  horarios_disponiveis jsonb,
 
   -- Métricas denormalizadas (atualizadas por trigger atualizar_media_prestador)
   media_avaliacoes     numeric(3,2) not null default 0,
@@ -661,9 +665,162 @@ create policy "pet_photos_public_upload"
 -- com Edge Function ou trigger de validação.
 
 -- ============================================================
+-- TABLE: pet_saude  (Carteira de Saúde Realtime)
+-- ============================================================
+create table if not exists public.pet_saude (
+  id              uuid primary key default uuid_generate_v4(),
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now(),
+
+  pet_id          uuid not null references public.pets(id) on delete cascade,
+  user_id         uuid not null references auth.users(id) on delete cascade,
+
+  tipo            text not null check (tipo in ('vacina', 'medicamento', 'exame', 'outro')),
+  nome            text not null,
+  data_aplicacao  date not null,
+  proxima_dose    date,
+  notificar       boolean not null default false,
+  observacoes     text
+);
+
+create index if not exists pet_saude_pet_id_idx on public.pet_saude (pet_id);
+create index if not exists pet_saude_user_id_idx on public.pet_saude (user_id);
+
+-- Trigger: atualizar updated_at
+drop trigger if exists set_pet_saude_updated_at on public.pet_saude;
+create trigger set_pet_saude_updated_at
+  before update on public.pet_saude
+  for each row execute function public.set_updated_at();
+
+-- RLS: pet_saude
+alter table public.pet_saude enable row level security;
+
+-- SELECT: dono do pet (user_id) pode ver
+drop policy if exists "pet_saude_select_owner" on public.pet_saude;
+create policy "pet_saude_select_owner" on public.pet_saude
+  for select using (user_id = auth.uid());
+
+-- INSERT: dono do pet pode inserir
+drop policy if exists "pet_saude_insert_owner" on public.pet_saude;
+create policy "pet_saude_insert_owner" on public.pet_saude
+  for insert with check (user_id = auth.uid());
+
+-- UPDATE: dono do pet pode atualizar
+drop policy if exists "pet_saude_update_owner" on public.pet_saude;
+create policy "pet_saude_update_owner" on public.pet_saude
+  for update using (user_id = auth.uid()) with check (user_id = auth.uid());
+
+-- DELETE: dono do pet pode deletar
+drop policy if exists "pet_saude_delete_owner" on public.pet_saude;
+create policy "pet_saude_delete_owner" on public.pet_saude
+  for delete using (user_id = auth.uid());
+
+-- ============================================================
 -- SEED opcional (descomente para popular dados de teste)
 -- ============================================================
 -- insert into public.pets (kind, species, color, neighborhood, city, event_date, contact_name, contact_phone)
 -- values
 --   ('lost', 'dog', 'caramelo', 'Vila Madalena', 'São Paulo', current_date, 'Wesley', '11999999999'),
 --   ('found', 'cat', 'preto e branco', 'Pinheiros', 'São Paulo', current_date, 'Ana', '11988888888');
+
+-- ============================================================
+-- TABLE: store_products  (Loja SOS Pet — Dropshipping/Afiliados)
+-- ============================================================
+create table if not exists public.store_products (
+  id                    uuid primary key default uuid_generate_v4(),
+  created_at            timestamptz not null default now(),
+
+  name                  text not null,
+  description           text,
+  category              text not null default 'geral' check (category in (
+    'seguranca','saude','higiene','alimentacao','acessorio','plaquinha','geral'
+  )),
+
+  price_cents           int not null check (price_cents >= 0),
+  original_price_cents  int,
+
+  photo_url             text,
+  supplier_name         text,
+
+  -- checkout_type:
+  --   external → redireciona para URL do parceiro (afiliado/dropshipping)
+  --   internal → checkout interno (ex: plaquinha QR)
+  checkout_type         text not null default 'external' check (
+    checkout_type in ('external','internal')
+  ),
+  external_url          text,
+
+  featured              boolean not null default false,
+  active                boolean not null default true,
+  sort_order            int not null default 0
+);
+
+create index if not exists store_products_active_idx    on public.store_products (active);
+create index if not exists store_products_category_idx  on public.store_products (category);
+create index if not exists store_products_featured_idx  on public.store_products (featured) where featured = true;
+
+-- RLS: leitura pública, escrita só admin (service role)
+alter table public.store_products enable row level security;
+
+drop policy if exists "store_products_select_active" on public.store_products;
+create policy "store_products_select_active" on public.store_products
+  for select using (active = true);
+
+-- ============================================================
+-- SEED: Produtos iniciais curados
+-- Substitua os external_url com seus links reais de afiliado
+-- ============================================================
+insert into public.store_products
+  (name, description, category, price_cents, original_price_cents, supplier_name, checkout_type, external_url, featured, sort_order)
+select * from (values
+  (
+    'Medalha Identificação com QR Code',
+    'Plaquinha de alumínio com QR Code único. Qualquer pessoa que escanear vê o perfil do seu pet e seu contato imediatamente. Resistente à água.',
+    'seguranca', 3490, 4990, 'Parceiro SOS Pet', 'external',
+    'https://www.mercadolivre.com.br/plaquinha-identificacao-pet-qr-code',
+    true, 1
+  ),
+  (
+    'Rastreador GPS para Pets',
+    'Localize seu pet em tempo real pelo celular. Funciona com chip 4G. Ideal para pets que fogem com frequência.',
+    'seguranca', 14990, 19990, 'Parceiro SOS Pet', 'external',
+    'https://www.mercadolivre.com.br/rastreador-gps-pet',
+    true, 2
+  ),
+  (
+    'Peitoral Anti-Tração com Fivela de Segurança',
+    'Peitoral ergonômico que redistribui a pressão no peito, evitando acidentes. Possui fivela de segurança dupla.',
+    'seguranca', 8990, 12990, 'Parceiro SOS Pet', 'external',
+    'https://www.mercadolivre.com.br/peitoral-anti-tracao-pet',
+    false, 3
+  ),
+  (
+    'Vermífugo Preventivo Mensal',
+    'Vermífugo de amplo espectro para uso mensal. Protege contra vermes intestinais mais comuns. Consulte seu veterinário.',
+    'saude', 2990, null, 'Parceiro SOS Pet', 'external',
+    'https://www.mercadolivre.com.br/vermifugo-preventivo-caes-gatos',
+    false, 4
+  ),
+  (
+    'Antipulgas e Carrapatos — Aplicação Mensal',
+    'Proteção completa contra pulgas, carrapatos e mosquitos. Aplicação simples no pescoço. Duração de 30 dias.',
+    'saude', 4990, 6990, 'Parceiro SOS Pet', 'external',
+    'https://www.mercadolivre.com.br/antipulgas-carrapatos-caes-gatos',
+    false, 5
+  ),
+  (
+    'Kit Higiene Pet — Shampoo + Condicionador',
+    'Kit completo para banho em casa. Fórmula hipoalergênica, neutra e sem parabenos. Aroma suave e duradouro.',
+    'higiene', 5990, 7990, 'Parceiro SOS Pet', 'external',
+    'https://www.mercadolivre.com.br/shampoo-condicionador-pet-kit',
+    false, 6
+  ),
+  (
+    'Plaquinha Personalizada com QR Code SOS Pet',
+    'Plaquinha exclusiva do SOS Pet gravada com nome, telefone e QR Code que abre o perfil do pet no app. Alumínio reforçado.',
+    'plaquinha', 3990, null, 'SOS Pet', 'internal',
+    null,
+    true, 0
+  )
+) as s(name, description, category, price_cents, original_price_cents, supplier_name, checkout_type, external_url, featured, sort_order)
+where not exists (select 1 from public.store_products limit 1);

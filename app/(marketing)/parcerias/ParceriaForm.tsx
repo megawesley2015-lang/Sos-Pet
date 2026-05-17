@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import { submitParceriaAction, type ParceiroState } from "./actions";
 
@@ -92,9 +93,9 @@ export function ParceriaForm() {
 
       <p className="text-center text-[11px] text-ink-700">
         Ao enviar, você concorda com nossa{" "}
-        <a href="/privacidade" className="underline hover:text-brand-600">
+        <Link href="/privacidade" className="underline hover:text-brand-600">
           Política de Privacidade
-        </a>
+        </Link>
         .
       </p>
     </form>

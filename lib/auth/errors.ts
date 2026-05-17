@@ -8,9 +8,9 @@
  * Esta função detecta os sintomas e força um signOut local pra resetar o estado.
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/lib/types/database";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnySupabaseClient = SupabaseClient<any, any, any>;
+type AnySupabaseClient = SupabaseClient<Database>;
 
 const TOKEN_ERROR_PATTERNS = [
   "invalid refresh token",

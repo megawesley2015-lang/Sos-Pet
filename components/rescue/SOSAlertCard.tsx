@@ -15,8 +15,9 @@ interface SOSAlertCardProps {
 /**
  * Card visual do alerta SOS — alvo do html-to-image.toPng().
  *
- * Tamanho fixo 600×900 (formato story Insta/WhatsApp). Renderizado fora
- * de viewport (offscreen) só pra ser snapshotado.
+ * Tamanho fixo 540×810 DOM — com pixelRatio 2 no html-to-image gera
+ * exatamente 1080×1620px (formato story Insta/WhatsApp). Renderizado
+ * offscreen para ser snapshotado.
  *
  * IMPORTANT: html-to-image NÃO carrega CSS de @import nem fontes externas
  * de forma confiável. Por isso aqui usamos system-ui e cores inline.
@@ -27,19 +28,20 @@ export const SOSAlertCard = forwardRef<HTMLDivElement, SOSAlertCardProps>(
       <div
         ref={ref}
         style={{
-          width: 600,
-          height: 900,
+          width: 540,
+          height: 810,
           background:
             "linear-gradient(180deg, #0A0A0F 0%, #14141F 60%, #1F1F2E 100%)",
           color: "#fff",
           fontFamily:
             "system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
-          padding: "32px",
+          padding: "24px",
           display: "flex",
           flexDirection: "column",
-          gap: "16px",
+          gap: "12px",
           position: "relative",
           overflow: "hidden",
+          boxSizing: "border-box",
         }}
       >
         {/* Header */}
@@ -48,15 +50,16 @@ export const SOSAlertCard = forwardRef<HTMLDivElement, SOSAlertCardProps>(
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            flexShrink: 0,
           }}
         >
           <div
             style={{
               background: "#FF6B35",
               color: "#fff",
-              padding: "8px 16px",
+              padding: "7px 14px",
               borderRadius: 999,
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: 800,
               letterSpacing: 2,
               boxShadow: "0 0 24px rgba(255,107,53,0.6)",
@@ -76,17 +79,16 @@ export const SOSAlertCard = forwardRef<HTMLDivElement, SOSAlertCardProps>(
           </div>
         </div>
 
-        {/* Foto */}
+        {/* Foto — altura reduzida para sobrar espaço pra seção contato */}
         <div
           style={{
             flex: "0 0 auto",
             width: "100%",
-            height: 360,
-            borderRadius: 16,
+            height: 248,
+            borderRadius: 14,
             overflow: "hidden",
             background: "#1F1F2E",
             border: "3px solid rgba(255,107,53,0.4)",
-            position: "relative",
           }}
         >
           {pet.photo_url ? (
@@ -119,10 +121,10 @@ export const SOSAlertCard = forwardRef<HTMLDivElement, SOSAlertCardProps>(
         </div>
 
         {/* Título */}
-        <div>
+        <div style={{ flexShrink: 0 }}>
           <h1
             style={{
-              fontSize: 56,
+              fontSize: 48,
               lineHeight: 1,
               fontWeight: 900,
               margin: 0,
@@ -135,8 +137,8 @@ export const SOSAlertCard = forwardRef<HTMLDivElement, SOSAlertCardProps>(
           </h1>
           <p
             style={{
-              margin: "8px 0 0 0",
-              fontSize: 32,
+              margin: "6px 0 0 0",
+              fontSize: 26,
               fontWeight: 700,
             }}
           >
@@ -149,7 +151,8 @@ export const SOSAlertCard = forwardRef<HTMLDivElement, SOSAlertCardProps>(
           style={{
             display: "flex",
             flexWrap: "wrap",
-            gap: 8,
+            gap: 6,
+            flexShrink: 0,
           }}
         >
           {[
@@ -167,9 +170,9 @@ export const SOSAlertCard = forwardRef<HTMLDivElement, SOSAlertCardProps>(
                 style={{
                   background: "rgba(0,229,255,0.12)",
                   color: "#7FF0FF",
-                  padding: "6px 12px",
+                  padding: "5px 11px",
                   borderRadius: 999,
-                  fontSize: 14,
+                  fontSize: 13,
                   fontWeight: 600,
                   border: "1px solid rgba(0,229,255,0.3)",
                 }}
@@ -183,76 +186,80 @@ export const SOSAlertCard = forwardRef<HTMLDivElement, SOSAlertCardProps>(
         <div
           style={{
             background: "rgba(255,255,255,0.05)",
-            padding: 16,
+            padding: "12px 14px",
             borderRadius: 12,
             border: "1px solid rgba(255,255,255,0.1)",
+            flexShrink: 0,
           }}
         >
           <div
             style={{
-              fontSize: 11,
+              fontSize: 10,
               textTransform: "uppercase",
               color: "rgba(255,255,255,0.5)",
               letterSpacing: 2,
-              marginBottom: 4,
+              marginBottom: 3,
             }}
           >
             Visto pela última vez
           </div>
-          <div style={{ fontSize: 20, fontWeight: 700 }}>
+          <div style={{ fontSize: 18, fontWeight: 700 }}>
             {pet.neighborhood}, {pet.city}
             {pet.state ? ` — ${pet.state}` : ""}
           </div>
-          <div style={{ fontSize: 14, color: "rgba(255,255,255,0.7)", marginTop: 2 }}>
+          <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", marginTop: 2 }}>
             em {new Date(pet.event_date).toLocaleDateString("pt-BR")}
           </div>
         </div>
 
-        {/* Contato — hero do card */}
+        {/* Contato — sempre visível, sem marginTop auto que pode empurrar */}
         <div
           style={{
-            marginTop: "auto",
             background: "linear-gradient(135deg, #FF6B35 0%, #FF8B5C 100%)",
-            padding: 20,
-            borderRadius: 16,
+            padding: "16px 18px",
+            borderRadius: 14,
             color: "#fff",
             boxShadow: "0 8px 32px rgba(255,107,53,0.4)",
+            flexShrink: 0,
           }}
         >
           <div
             style={{
-              fontSize: 11,
+              fontSize: 10,
               textTransform: "uppercase",
               letterSpacing: 2,
               opacity: 0.85,
-              marginBottom: 4,
+              marginBottom: 3,
             }}
           >
             Encontrou? Avise:
           </div>
-          <div style={{ fontSize: 18, fontWeight: 700 }}>
+          <div style={{ fontSize: 16, fontWeight: 700 }}>
             {pet.contact_name}
           </div>
-          <div style={{ fontSize: 28, fontWeight: 900, marginTop: 4 }}>
+          <div style={{ fontSize: 26, fontWeight: 900, marginTop: 3 }}>
             {formatPhone(pet.contact_phone)}
           </div>
           {pet.contact_whatsapp && (
             <div
               style={{
-                marginTop: 6,
+                marginTop: 5,
                 fontSize: 13,
                 fontWeight: 700,
                 opacity: 0.9,
+                display: "flex",
+                alignItems: "center",
+                gap: 5,
               }}
             >
-              WhatsApp disponível
+              ✅ WhatsApp disponível
             </div>
           )}
-          {/* link só visual — não clicável dentro do PNG, claro */}
+          {/* link só visual — não clicável dentro do PNG */}
           {appUrl && (
             <div
               style={{
-                marginTop: 8,
+                marginTop: 6,
                 fontSize: 11,
                 opacity: 0.7,
               }}

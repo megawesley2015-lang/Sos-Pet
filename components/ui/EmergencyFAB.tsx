@@ -101,17 +101,18 @@ export default function EmergencyFAB() {
 
   return (
     <>
-      {/* Backdrop suave quando expandido */}
+      {/* Backdrop suave quando expandido — só ocupa a parte de baixo pra não bloquear topbar */}
       <div
         aria-hidden
-        className={`fixed inset-0 z-40 bg-black/30 backdrop-blur-[2px] transition-opacity duration-300 lg:hidden ${
+        onClick={() => setOpen(false)}
+        className={`fixed inset-0 z-40 transition-opacity duration-300 lg:hidden ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       />
 
-      {/* FAB container — só em mobile/tablet */}
+      {/* FAB container — só em mobile/tablet, posicionado acima da safe area */}
       <div
-        className={`emergency-fab fixed bottom-6 right-4 z-50 flex flex-col items-end gap-3 transition-all duration-300 lg:hidden ${
+        className={`emergency-fab fixed bottom-8 right-4 z-50 flex flex-col items-end gap-3 transition-all duration-300 lg:hidden ${
           visible ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0 pointer-events-none"
         }`}
       >

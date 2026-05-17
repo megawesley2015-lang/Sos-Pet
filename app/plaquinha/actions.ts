@@ -3,6 +3,8 @@
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient, createServiceClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
+import { parseFormData } from "@/lib/validation/auth";
+import { plaquinhaCheckoutSchema } from "@/lib/validation/store";
 import { criarPreferencia } from "@/lib/services/mercadopago";
 
 const TAG_PRICE_BRL = Number(process.env.TAG_PRICE_BRL ?? "39.90");
@@ -24,21 +26,26 @@ export async function iniciarCheckoutPlaquinha(formData: FormData) {
   const serviceClient = createServiceClient();
   const user = await getUserSafe(supabase);
 
-  // ── 1. Extrair campos ──────────────────────────────────────
-  const petName = (formData.get("pet_name") as string | null)?.trim() || null;
-  const species = (formData.get("species") as string) || "dog";
-  const tagPhone = (formData.get("tag_phone") as string)?.trim() ?? "";
-  const ownerName = (formData.get("owner_name") as string)?.trim() ?? "";
-  const ownerEmail = (formData.get("owner_email") as string)?.trim() ?? "";
+  // ── 1. Validar campos ──────────────────────────────────────
+  const parsed = parseFormData(plaquinhaCheckoutSchema, formData);
+  if (!parsed.ok) {
+    throw new Error(Object.values(parsed.errors).join(" | "));
+  }
+  const {
+    pet_name: petName,
+    species,
+    tag_phone: tagPhone,
+    owner_name: ownerName,
+    owner_email: ownerEmail,
+    cep,
+    logradouro,
+    numero,
+    complemento,
+    bairro,
+    cidade,
+    estado,
+  } = parsed.data;
   const photo = formData.get("photo") as File | null;
-
-  const cep = (formData.get("cep") as string)?.trim() ?? "";
-  const logradouro = (formData.get("logradouro") as string)?.trim() ?? "";
-  const numero = (formData.get("numero") as string)?.trim() ?? "";
-  const complemento = (formData.get("complemento") as string)?.trim() ?? "";
-  const bairro = (formData.get("bairro") as string)?.trim() ?? "";
-  const cidade = (formData.get("cidade") as string)?.trim() ?? "";
-  const estado = (formData.get("estado") as string)?.trim() ?? "";
 
   // ── 2. Upload da foto ──────────────────────────────────────
   let photoUrl: string | null = null;
@@ -71,8 +78,11 @@ export async function iniciarCheckoutPlaquinha(formData: FormData) {
       sex: "unknown",
       city: cidade,
       neighborhood: bairro,
+      event_date: new Date().toISOString().slice(0, 10),
+      contact_name: ownerName,
+      contact_whatsapp: true,
       description: `Plaquinha de identificação para ${petName ?? "meu pet"}`,
-      ...(user ? { user_id: user.id } : {}),
+      ...(user ? { owner_id: user.id } : {}),
       ...(photoUrl ? { photo_url: photoUrl } : {}),
     })
     .select("id")
@@ -95,7 +105,7 @@ export async function iniciarCheckoutPlaquinha(formData: FormData) {
         cep,
         logradouro,
         numero,
-        complemento,
+        complemento: complemento ?? null,
         bairro,
         cidade,
         estado,
@@ -106,13 +116,23 @@ export async function iniciarCheckoutPlaquinha(formData: FormData) {
 
   if (orderError || !order) {
     // Limpar pet criado
-    await serviceClient.from("pets").delete().eq("id", pet.id);
+    await serviceClient.from("pets").delete().eq("id", pet.id as string);
     throw new Error(`Erro ao criar pedido: ${orderError?.message}`);
   }
 
+  const typedOrder = order as unknown as { id: string };
+
   // ── 5. Criar preferência no MP ────────────────────────────
+  const APP_URL =
+    process.env.NEXT_PUBLIC_APP_URL ??
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    "http://localhost:3000";
+
   const preference = await criarPreferencia({
-    orderId: order.id,
+    orderId: typedOrder.id,
+    // Inclui pet.id na successUrl para que a página de sucesso
+    // possa linkar diretamente para o perfil digital do pet.
+    successUrl: `${APP_URL}/plaquinha/sucesso?pet=${pet.id}`,
     items: [
       {
         id: "plaquinha-standard",
@@ -133,7 +153,7 @@ export async function iniciarCheckoutPlaquinha(formData: FormData) {
   await serviceClient
     .from("pet_tag_orders")
     .update({ preference_id: preference.id })
-    .eq("id", order.id);
+    .eq("id", typedOrder.id);
 
   // ── 6. Redirecionar para o MP ─────────────────────────────
   const isProd = process.env.NODE_ENV === "production";

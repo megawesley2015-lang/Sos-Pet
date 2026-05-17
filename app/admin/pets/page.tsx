@@ -6,7 +6,8 @@ import type { PetRow } from "@/lib/types/database";
 import { KIND_LABEL, SPECIES_LABEL, formatRelativeDate } from "@/lib/utils/format";
 import { removerPetAction, reativarPetAction } from "../actions";
 
-export const dynamic = "force-dynamic";
+// Cache curto — Server Actions admin revalidam quando algo muda
+export const revalidate = 30;
 export const metadata = { title: "Admin — Pets" };
 
 const STATUS_CLASSES: Record<string, string> = {
@@ -24,7 +25,7 @@ export default async function AdminPetsPage() {
     .order("created_at", { ascending: false })
     .limit(100);
 
-  const lista = (pets ?? []) as PetRow[];
+  const lista = (pets ?? []) as unknown as PetRow[];
   const removidos = lista.filter((p) => p.status === "removed");
   const ativos = lista.filter((p) => p.status !== "removed");
 

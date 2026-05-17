@@ -5,7 +5,9 @@ import { CTAButton } from "@/components/ui/CTAButton";
 import { FormField } from "@/components/auth/FormField";
 import { FormAlert } from "@/components/auth/FormAlert";
 import { SubmitButton } from "@/components/auth/SubmitButton";
+import { TurnstileWidget } from "@/components/ui/TurnstileWidget";
 import { PhotoUpload } from "./PhotoUpload";
+import { LocationPickerSection } from "@/components/maps/LocationPickerSection";
 import type { PetRow } from "@/lib/types/database";
 
 export interface PetFormState {
@@ -22,6 +24,8 @@ interface PetFormProps {
   pendingLabel?: string;
   /** Mostrar botão "Excluir registro" (só na edição) */
   onDelete?: () => void;
+  /** Se true, mostra Turnstile (geralmente para cadastros anônimos) */
+  showCaptcha?: boolean;
 }
 
 const today = new Date().toISOString().slice(0, 10);
@@ -40,12 +44,17 @@ export function PetForm({
   submitLabel,
   pendingLabel,
   onDelete,
+  showCaptcha = false,
 }: PetFormProps) {
   const [state, formAction] = useActionState(action, initialState);
   const e = state.errors ?? {};
 
   return (
     <form action={formAction} noValidate className="space-y-1">
+      <div style={{ position: "absolute", left: "-9999px", top: "auto", width: "1px", height: "1px", overflow: "hidden" }} aria-hidden="true">
+        <label htmlFor="website">Website</label>
+        <input id="website" name="website" type="text" autoComplete="off" tabIndex={-1} defaultValue="" />
+      </div>
       {state.message && <FormAlert type="error" message={state.message} />}
 
       {/* Tipo de registro: lost / found */}
@@ -209,6 +218,11 @@ export function PetForm({
         error={e.event_date}
       />
 
+      <LocationPickerSection
+        initialLat={(initial as any)?.latitude}
+        initialLng={(initial as any)?.longitude}
+      />
+
       <fieldset className="mt-6 rounded-xl border border-cyan-500/30 bg-cyan-500/5 p-4">
         <legend className="px-2 text-xs font-bold uppercase tracking-wide text-cyan-300">
           Contato
@@ -242,6 +256,20 @@ export function PetForm({
           Este número tem WhatsApp
         </label>
       </fieldset>
+
+      {/* Anti-spam: Turnstile para cadastros anônimos */}
+      {showCaptcha && (
+        <div className="mt-6">
+          <TurnstileWidget className="flex justify-center" />
+          <p className="mt-2 text-xs text-fg-muted text-center">
+            Protegido por{" "}
+            <a href="https://www.cloudflare.com/products/turnstile/" target="_blank" rel="noopener noreferrer"
+              className="text-brand-400 hover:underline">
+              Cloudflare Turnstile
+            </a>
+          </p>
+        </div>
+      )}
 
       <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
         {onDelete ? (

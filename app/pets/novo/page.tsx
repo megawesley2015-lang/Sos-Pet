@@ -3,14 +3,22 @@ import { ArrowLeft } from "lucide-react";
 import { TopBar } from "@/components/layout/TopBar";
 import { PetForm } from "@/components/pets/PetForm";
 import { createPetAction } from "./actions";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getUserSafe } from "@/lib/auth/safe";
 
 /**
  * /pets/novo — cadastro de pet (perdido ou encontrado).
  *
  * Não exige login (regra de negócio MVP). Quando logado, owner_id é
  * preenchido na Server Action e o pet aparece em /meus-pets.
+ *
+ * Mostra Turnstile para cadastros anônimos (anti-spam).
  */
-export default function NovoPetPage() {
+export default async function NovoPetPage() {
+  const supabase = await createSupabaseServerClient();
+  const user = await getUserSafe(supabase);
+  const isAnonymous = !user;
+
   return (
     <div className="min-h-screen bg-ink-800">
       <TopBar />
@@ -38,6 +46,7 @@ export default function NovoPetPage() {
             action={createPetAction}
             submitLabel="Cadastrar pet"
             pendingLabel="Cadastrando…"
+            showCaptcha={isAnonymous}
           />
         </div>
       </main>

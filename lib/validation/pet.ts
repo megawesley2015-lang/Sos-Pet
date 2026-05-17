@@ -90,6 +90,16 @@ export const createPetSchema = z.object({
   contact_whatsapp: z
     .union([z.literal("on"), z.literal("true"), z.boolean(), z.undefined()])
     .transform((v) => v === "on" || v === "true" || v === true),
+
+  // Geolocalização — opcional (pode ser capturada via GPS no client)
+  latitude: z.preprocess(
+    (v) => (v === "" || v == null ? undefined : Number(v)),
+    z.number().min(-90).max(90).optional().nullable()
+  ),
+  longitude: z.preprocess(
+    (v) => (v === "" || v == null ? undefined : Number(v)),
+    z.number().min(-180).max(180).optional().nullable()
+  ),
 });
 
 export type CreatePetInput = z.infer<typeof createPetSchema>;

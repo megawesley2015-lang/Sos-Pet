@@ -4,6 +4,7 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useTransition } from "react";
 import { MapPin } from "lucide-react";
 import { FilterChip } from "@/components/ui/FilterChip";
+import { BAIXADA_SANTISTA } from "@/lib/utils/cities";
 
 /**
  * Filtros client-side que atualizam a URL (searchParams).
@@ -16,18 +17,8 @@ import { FilterChip } from "@/components/ui/FilterChip";
  *  - city:    qualquer cidade (GeoFilter Baixada Santista pré-definido)
  */
 
-// Cidades da Baixada Santista — filtro geográfico pré-definido
-const BAIXADA_SANTISTA = [
-  "Santos",
-  "São Vicente",
-  "Guarujá",
-  "Praia Grande",
-  "Cubatão",
-  "Bertioga",
-  "Mongaguá",
-  "Itanhaém",
-  "Peruíbe",
-];
+// Cidades da Baixada Santista vivem em lib/utils/cities.ts — fonte única
+// consumida também por app/sitemap.ts (SEO localizado).
 
 export function PetFilters() {
   const router = useRouter();

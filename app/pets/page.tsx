@@ -5,7 +5,7 @@ import { TopBar } from "@/components/layout/TopBar";
 import { PetFilters } from "@/components/pets/PetFilters";
 import { PetGrid } from "@/components/pets/PetGrid";
 import { CTAButton } from "@/components/ui/CTAButton";
-import type { PetKind, PetSpecies } from "@/lib/types/database";
+import type { PetKind, PetSpecies, PetRow } from "@/lib/types/database";
 
 /**
  * LISTAGEM PÚBLICA DE PETS
@@ -96,7 +96,7 @@ export default async function PetsPage({ searchParams }: PageProps) {
                 </p>
               </div>
             ) : (
-              <PetGrid pets={pets ?? []} />
+              <PetGrid pets={(pets ?? []) as unknown as PetRow[]} />
             )}
           </section>
         </main>

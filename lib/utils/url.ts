@@ -31,3 +31,20 @@ export function authCallbackUrl(redirectTo?: string): string {
   const next = redirectTo ? `?next=${encodeURIComponent(redirectTo)}` : "";
   return `${base}/auth/callback${next}`;
 }
+
+export function isSafeExternalUrl(value: unknown): value is string {
+  if (typeof value !== "string") return false;
+  const trimmed = value.trim();
+  if (!trimmed) return false;
+
+  try {
+    const url = new URL(trimmed);
+    return url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+export function safeExternalUrl(value: string | null | undefined): string | null {
+  return isSafeExternalUrl(value) ? value.trim() : null;
+}

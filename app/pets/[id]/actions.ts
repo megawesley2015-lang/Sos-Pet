@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { createSupabaseServerClient, createServiceClient } from "@/lib/supabase/server";
 import { notificarAvistamento } from "@/lib/services/email";
+import { createSightingSchema } from "@/lib/validation/alert";
+import { parseFormData } from "@/lib/validation/auth";
 import type { PetRow, ProfileRow } from "@/lib/types/database";
 
 export interface RegistrarAvistamentoState {
@@ -29,22 +31,13 @@ export async function registrarAvistamentoAction(
 ): Promise<RegistrarAvistamentoState> {
   const supabase = await createSupabaseServerClient();
 
-  const petId      = formData.get("pet_id")      as string | null;
-  const latRaw     = formData.get("lat")          as string | null;
-  const lngRaw     = formData.get("lng")          as string | null;
-  const address    = (formData.get("address")     as string | null) || null;
-  const description = (formData.get("description") as string | null) || null;
-  const photo      = formData.get("photo")        as File | null;
+  const parsed = parseFormData(createSightingSchema, formData);
+  if (!parsed.ok) {
+    return { error: parsed.errors._form ?? Object.values(parsed.errors)[0] ?? "Dados inválidos" };
+  }
 
-  // Validação básica
-  if (!petId || !latRaw || !lngRaw) {
-    return { error: "Dados incompletos. Tente novamente." };
-  }
-  const lat = parseFloat(latRaw);
-  const lng = parseFloat(lngRaw);
-  if (isNaN(lat) || isNaN(lng)) {
-    return { error: "Coordenadas inválidas." };
-  }
+  const { pet_id, lat, lng, address, description } = parsed.data;
+  const photo = formData.get("photo") as File | null;
 
   // Upload da foto (opcional)
   let photo_url: string | null = null;
@@ -56,7 +49,7 @@ export async function registrarAvistamentoAction(
       return { error: "Imagem muito grande. Máximo 5 MB." };
     }
     const ext = photo.type.split("/")[1] ?? "jpg";
-    const filename = `${petId}/${Date.now()}.${ext}`;
+    const filename = `${pet_id}/${Date.now()}.${ext}`;
 
     const { error: uploadError } = await supabase.storage
       .from("sightings")
@@ -74,7 +67,7 @@ export async function registrarAvistamentoAction(
   // Insere o avistamento
   const { data: inserted, error: insertError } = await supabase
     .from("sightings")
-    .insert({ pet_id: petId, lat, lng, address, photo_url, description })
+    .insert({ pet_id, lat, lng, address, photo_url, description })
     .select("id, created_at")
     .single();
 
@@ -83,15 +76,15 @@ export async function registrarAvistamentoAction(
     return { error: "Erro ao salvar avistamento. Tente novamente." };
   }
 
-  revalidatePath(`/pets/${petId}`);
+  revalidatePath(`/pets/${pet_id}`);
 
   // ── Notificação por email ao tutor (best-effort — não bloqueia o retorno) ──
   // Usamos o service client para acessar auth.users (email não está em profiles)
   notificarTutorPorEmail({
-    petId,
+    petId: pet_id,
     address,
     description,
-    createdAt: inserted?.created_at ?? new Date().toISOString(),
+    createdAt: (inserted as unknown as { created_at: string })?.created_at ?? new Date().toISOString(),
   }).catch((err) => console.error("[sightings] email error:", err));
 
   return { success: true };

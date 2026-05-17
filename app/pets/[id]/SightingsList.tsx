@@ -22,7 +22,7 @@ export default async function SightingsList({ petId, petName, petCity }: Props) 
     .order("created_at", { ascending: false })
     .limit(10);
 
-  const sightings = (data ?? []) as SightingRow[];
+  const sightings = (data ?? []) as unknown as SightingRow[];
 
   return (
     <section className="mt-8">

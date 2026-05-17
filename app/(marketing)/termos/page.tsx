@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { PageHeader } from "@/components/marketing/PageHeader";
 
 export const metadata = {
@@ -56,9 +57,9 @@ export default function TermosPage() {
             de contato e telefone informados, exclusivamente na página do
             registro. Esses dados não são compartilhados com terceiros nem
             usados para outros fins. Veja mais na nossa{" "}
-            <a href="/privacidade" className="text-brand-600 underline">
+            <Link href="/privacidade" className="text-brand-600 underline">
               Política de Privacidade
-            </a>
+            </Link>
             .
           </Section>
 

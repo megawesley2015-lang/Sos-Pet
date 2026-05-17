@@ -3,7 +3,8 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { ParceiroRow } from "@/lib/types/database";
 import { aprovarParceiroAction, rejeitarParceiroAction } from "../actions";
 
-export const dynamic = "force-dynamic";
+// Cache curto — Server Actions admin revalidam quando algo muda
+export const revalidate = 30;
 export const metadata = { title: "Admin — Parceiros" };
 
 const STATUS_MAP: Record<string, { label: string; classes: string; icon: React.ElementType }> = {
@@ -21,7 +22,7 @@ export default async function AdminParceirosPage() {
     .order("created_at", { ascending: false })
     .limit(100);
 
-  const lista = (parceiros ?? []) as ParceiroRow[];
+  const lista = (parceiros ?? []) as unknown as ParceiroRow[];
   const pendentes = lista.filter((p) => p.status === "pendente");
   const respondidos = lista.filter((p) => p.status !== "pendente");
 

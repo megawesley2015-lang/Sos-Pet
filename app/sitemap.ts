@@ -1,12 +1,21 @@
 import type { MetadataRoute } from "next";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getBaseUrl } from "@/lib/utils/url";
+import { BAIXADA_SANTISTA } from "@/lib/utils/cities";
+import { cityToSlug } from "@/lib/utils/string";
 
 /**
- * sitemap.xml dinâmico — lista rotas estáticas + pets ativos + prestadores.
+ * sitemap.xml dinâmico — lista rotas estáticas + SEO localizado + pets +
+ * prestadores ativos.
  *
  * Next chama isto no build e em tempo de request. Em prod (Vercel) é cacheado.
+ *
+ * Recalcula a cada hora — suficiente para SEO. Aumentar se a base ficar
+ * grande o suficiente pra render lento; reduzir se quiser indexação mais
+ * agressiva de pets novos.
  */
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = getBaseUrl();
   const now = new Date();
@@ -15,6 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${base}/`, lastModified: now, changeFrequency: "daily", priority: 1.0 },
     { url: `${base}/pets`, lastModified: now, changeFrequency: "hourly", priority: 0.9 },
+    { url: `${base}/pets/novo`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${base}/prestadores`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: `${base}/dicas`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${base}/parcerias`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
@@ -23,6 +33,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/loja`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     { url: `${base}/plaquinha`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
   ];
+
+  // SEO localizado — /achados-em-{slug} e /perdidos-em-{slug} para Baixada Santista
+  // É exatamente o que o Google indexa quando alguém busca "pet perdido em Santos".
+  const localizadas: MetadataRoute.Sitemap = BAIXADA_SANTISTA.flatMap((cidade) => {
+    const slug = cityToSlug(cidade);
+    return [
+      {
+        url: `${base}/achados-em-${slug}`,
+        lastModified: now,
+        changeFrequency: "daily" as const,
+        priority: 0.7,
+      },
+      {
+        url: `${base}/perdidos-em-${slug}`,
+        lastModified: now,
+        changeFrequency: "daily" as const,
+        priority: 0.7,
+      },
+    ];
+  });
 
   // Rotas dinâmicas — pets ativos + prestadores ativos
   // Catch + return parcial: se o Supabase falhar, sitemap continua útil
@@ -62,8 +92,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }));
 
-    return [...staticRoutes, ...petRoutes, ...providerRoutes];
+    return [...staticRoutes, ...localizadas, ...petRoutes, ...providerRoutes];
   } catch {
-    return staticRoutes;
+    return [...staticRoutes, ...localizadas];
   }
 }

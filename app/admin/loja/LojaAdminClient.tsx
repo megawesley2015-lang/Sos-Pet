@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Plus, Eye, EyeOff, Trash2, ExternalLink, Star } from "lucide-react";
-import { toggleProdutoAction, deletarProdutoAction, toggleFeaturedAction, atualizarOrdemAction } from "./actions";
+import { toggleProdutoAction, deletarProdutoAction, toggleFeaturedAction, atualizarOrdemAction, sincronizarPrintfulAction } from "./actions";
 import NovoProdutoForm from "./NovoProdutoForm";
 
-type Product = {
+export type Product = {
   id: string;
   name: string;
   description: string | null;
@@ -34,7 +35,7 @@ export default function LojaAdminClient({ products }: { products: Product[] }) {
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <a href="/admin" className="mb-1 block text-xs text-fg-subtle hover:text-fg">← Admin</a>
+            <Link href="/admin" className="mb-1 block text-xs text-fg-subtle hover:text-fg">← Admin</Link>
             <h1 className="font-display text-2xl font-black text-fg">Loja</h1>
             <p className="text-sm text-fg-muted">{products.length} produto{products.length !== 1 ? "s" : ""} cadastrado{products.length !== 1 ? "s" : ""}</p>
           </div>
@@ -47,6 +48,14 @@ export default function LojaAdminClient({ products }: { products: Product[] }) {
               <ExternalLink className="h-4 w-4" />
               Ver vitrine
             </a>
+            <form action={sincronizarPrintfulAction}>
+              <button
+                type="submit"
+                className="flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2.5 text-sm text-fg-muted hover:bg-white/5"
+              >
+                Sincronizar Printful
+              </button>
+            </form>
             <button
               onClick={() => setShowForm(true)}
               className="flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-2.5 text-sm font-bold text-white hover:bg-brand-400"

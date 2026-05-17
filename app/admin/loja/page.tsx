@@ -1,7 +1,7 @@
 import { createServiceClient, createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
 import { redirect } from "next/navigation";
-import LojaAdminClient from "./LojaAdminClient";
+import LojaAdminClient, { type Product } from "./LojaAdminClient";
 
 export const metadata = { title: "Loja — Admin · SOS Pet" };
 
@@ -25,5 +25,5 @@ export default async function AdminLojaPage() {
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
 
-  return <LojaAdminClient products={products ?? []} />;
+  return <LojaAdminClient products={(products ?? []) as Product[]} />;
 }

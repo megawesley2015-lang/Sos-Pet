@@ -8,17 +8,14 @@
  * com a SERVICE_ROLE_KEY — NUNCA exponha no client.
  *
  * NOTA TÉCNICA — typing:
- * O supabase-js v2.50+ tem inferência de tipos genérica frágil quando o
- * `Database` é mantido à mão (não gerado via `supabase gen types`).
- * Pra MVP, optamos por NÃO passar o generic `<Database>` no client. Isso:
- *   - Desativa autocomplete de coluna nos `.select()` / `.insert()`
- *   - Mas faz queries virarem `unknown` (não `never`), que dá pra tipar
- *     manualmente com `as PetRow[]` no service layer
- * Quando trocar pra `supabase gen types`, basta restaurar `<Database>`.
+ * Este módulo já usa `Database` para tipagem forte nas queries do servidor.
+ * Como o schema é mantido manualmente, mantemos os tipos no `lib/types/database`.
  */
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
+import type { Database } from "@/lib/types/database";
 
 interface CookieToSet {
   name: string;
@@ -26,10 +23,12 @@ interface CookieToSet {
   options: CookieOptions;
 }
 
-export async function createSupabaseServerClient() {
+export async function createSupabaseServerClient(): Promise<
+  SupabaseClient<Database, "public">
+> {
   const cookieStore = await cookies();
 
-  return createServerClient(
+  return createServerClient<Database, "public">(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -56,11 +55,11 @@ export async function createSupabaseServerClient() {
  * Cliente com SERVICE ROLE — bypass de RLS.
  * Use APENAS em server-side seguro (nunca exportar para client).
  */
-export function createServiceClient() {
+export function createServiceClient(): SupabaseClient<Database, "public"> {
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
     throw new Error("SUPABASE_SERVICE_ROLE_KEY não configurada");
   }
-  return createClient(
+  return createClient<Database, "public">(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY,
     {

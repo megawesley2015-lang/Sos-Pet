@@ -1,0 +1,22 @@
+import * as Sentry from "@sentry/nextjs";
+
+const DSN = process.env.NEXT_PUBLIC_SENTRY_DSN;
+
+if (DSN) {
+  Sentry.init({
+    dsn: DSN,
+    tracesSampleRate: 0.1,
+    ignoreErrors: [
+      "NEXT_REDIRECT",
+      "NEXT_NOT_FOUND",
+    ],
+    debug: process.env.NODE_ENV !== "production",
+    environment: process.env.NODE_ENV,
+    beforeSend(event) {
+      if (process.env.NODE_ENV !== "production" && !process.env.SENTRY_DEBUG) {
+        return null;
+      }
+      return event;
+    },
+  });
+}
