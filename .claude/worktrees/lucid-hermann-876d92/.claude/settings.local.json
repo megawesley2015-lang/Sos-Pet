@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pandoc \"C:\\\\Users\\\\wesley\\\\Desktop\\\\📋 INVENTÁRIO COMPLETO DO SOS PET.docx\" -t markdown)",
+      "Bash(python -c ' *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(node scripts/diagnostico-db.mjs)",
+      "Bash(node scripts/update-fotos-loja.mjs)"
+    ]
+  }
+}

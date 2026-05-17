@@ -3,6 +3,10 @@ import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
   outputFileTracingRoot: process.cwd(),
+  eslint: {
+    // ESLint roda separado no CI — não bloqueia o build de prod
+    ignoreDuringBuilds: true,
+  },
   images: {
     remotePatterns: [
       {
