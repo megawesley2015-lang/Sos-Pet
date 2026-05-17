@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Loader2, MapPin, Navigation } from "lucide-react";
+import { ArrowLeft, Eye, Loader2, MapPin, Navigation } from "lucide-react";
 import { registrarAvistamento } from "../actions";
 import type { SightingFormState } from "../actions";
 
