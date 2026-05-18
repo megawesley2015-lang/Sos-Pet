@@ -122,10 +122,7 @@ export function TurnstileWidget({
 }
 
 /**
- * Hook para extrair token do Turnstile de um FormData.
- * Usado em Server Actions.
+ * Re-exporta extractTurnstileToken para compatibilidade com imports existentes.
+ * A implementação real vive em lib/utils/turnstile.ts (sem diretiva de módulo).
  */
-export function extractTurnstileToken(formData: FormData): string | null {
-  const token = formData.get("cf-turnstile-response");
-  return typeof token === "string" ? token : null;
-}
+export { extractTurnstileToken } from "@/lib/utils/turnstile";

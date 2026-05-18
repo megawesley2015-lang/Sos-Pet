@@ -9,7 +9,7 @@ import { createPetSchema, validatePhoto } from "@/lib/validation/pet";
 import { parseFormData } from "@/lib/validation/auth";
 import { validateTurnstileToken } from "@/lib/services/turnstile";
 import { triggerPetMatching } from "@/lib/services/matching";
-import { extractTurnstileToken } from "@/components/ui/TurnstileWidget";
+import { extractTurnstileToken } from "@/lib/utils/turnstile";
 import type { PetFormState } from "@/components/pets/PetForm";
 
 export async function createPetAction(
