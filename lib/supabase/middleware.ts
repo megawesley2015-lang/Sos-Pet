@@ -17,14 +17,29 @@ interface CookieToSet {
   options: CookieOptions;
 }
 
-const isDev = process.env.NODE_ENV !== "production";
-
 const SECURITY_HEADERS: Record<string, string> = {
-  "Content-Security-Policy": `default-src 'self'; script-src 'self' ${isDev ? "'unsafe-eval' 'unsafe-inline'" : "'unsafe-inline'"}; img-src 'self' https: data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; frame-ancestors 'none'; base-uri 'self';`,
+  "Content-Security-Policy": [
+    "default-src 'self'",
+    // unsafe-eval necessário pro Next.js (hydration) e Leaflet
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com https://vercel.live https://*.vercel-scripts.com https://unpkg.com",
+    "style-src 'self' 'unsafe-inline'",
+    // blob: para preview local de foto antes do upload
+    "img-src 'self' blob: data: https:",
+    "font-src 'self' data:",
+    // Supabase REST + Realtime, Sentry, Nominatim, Vercel insights
+    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://nominatim.openstreetmap.org https://*.sentry.io https://sentry.io https://vitals.vercel-insights.com https://vercel.live https://unpkg.com",
+    // Leaflet usa blob workers
+    "worker-src 'self' blob:",
+    // Turnstile (captcha) roda em iframe
+    "frame-src https://challenges.cloudflare.com https://vercel.live",
+    "base-uri 'self'",
+  ].join("; "),
   "X-Content-Type-Options": "nosniff",
-  "X-Frame-Options": "DENY",
+  // SAMEORIGIN em vez de DENY para não quebrar iframes próprios (ex: preview de mapa)
+  "X-Frame-Options": "SAMEORIGIN",
   "Referrer-Policy": "strict-origin-when-cross-origin",
-  "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+  // geolocation=* habilita GPS nos formulários de cadastro
+  "Permissions-Policy": "geolocation=*, camera=(), microphone=()",
   "X-XSS-Protection": "0",
 };
 
