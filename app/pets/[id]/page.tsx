@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 import { ArrowLeft, MapPin, Phone, MessageCircle, PawPrint, Pencil, Siren } from "lucide-react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -10,10 +9,7 @@ import type { PetSaudeRow } from "@/lib/types/database";
 import { TopBar } from "@/components/layout/TopBar";
 import { SOSBadge } from "@/components/ui/SOSBadge";
 
-const PetDetailMap = dynamic(
-  () => import("@/components/maps/PetDetailMap").then((m) => ({ default: m.PetDetailMap })),
-  { ssr: false }
-);
+import { PetDetailMapClient } from "./PetDetailMapClient";
 import { CTAButton } from "@/components/ui/CTAButton";
 import SightingsList from "./SightingsList";
 import { HealthTimeline } from "@/components/pets/HealthTimeline";
@@ -229,7 +225,7 @@ export default async function PetDetailPage({ params }: PageProps) {
                 <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-fg-muted">
                   Mapa de busca
                 </h2>
-                <PetDetailMap
+                <PetDetailMapClient
                   petId={pet.id}
                   petName={pet.name}
                   species={pet.species}
