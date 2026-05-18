@@ -83,14 +83,17 @@ export default async function ProntuariosPage() {
       : Promise.resolve({ data: [] }),
   ]);
 
+  type LastRecord = { pet_id: string; record_date: string; type: string; description: string };
+  type VaccineDue = { pet_id: string; vaccine_name: string; next_dose_date: string | null };
+
   // Indexa por pet_id (pega apenas o primeiro/mais recente de cada)
-  const lastRecordByPet = new Map<string, typeof lastRecords extends (infer T)[] | null ? T : never>();
-  for (const r of lastRecords ?? []) {
+  const lastRecordByPet = new Map<string, LastRecord>();
+  for (const r of (lastRecords ?? []) as LastRecord[]) {
     if (!lastRecordByPet.has(r.pet_id)) lastRecordByPet.set(r.pet_id, r);
   }
 
-  const vaccineDueByPet = new Map<string, typeof vaccinesDue extends (infer T)[] | null ? T : never>();
-  for (const v of vaccinesDue ?? []) {
+  const vaccineDueByPet = new Map<string, VaccineDue>();
+  for (const v of (vaccinesDue ?? []) as VaccineDue[]) {
     if (!vaccineDueByPet.has(v.pet_id)) vaccineDueByPet.set(v.pet_id, v);
   }
 
