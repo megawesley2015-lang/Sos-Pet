@@ -1,11 +1,66 @@
 import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 
+// CSP e Permissions-Policy aplicados a todas as rotas.
+// Regras-chave:
+//  - blob: em img-src  → preview de foto antes do upload funcionar
+//  - blob: em worker-src → Leaflet Web Workers
+//  - challenges.cloudflare.com → widget Turnstile (captcha)
+//  - nominatim.openstreetmap.org → geocodificação de endereço
+//  - vercel.live → toolbar de preview (sem isso só gera log de CSP, não quebra nada)
+//  - geolocation=* em Permissions-Policy → botão GPS nos formulários
+const securityHeaders = [
+  {
+    key: "Permissions-Policy",
+    value: "geolocation=*, camera=(), microphone=()",
+  },
+  {
+    key: "Content-Security-Policy",
+    value: [
+      "default-src 'self'",
+      // Scripts: próprio app (inline necessário pro Next.js), Turnstile, Vercel toolbar
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com https://vercel.live https://*.vercel-scripts.com",
+      // Estilos: unsafe-inline necessário pro Leaflet e CSS-in-JS
+      "style-src 'self' 'unsafe-inline'",
+      // Imagens: blob para preview local, data para inline, https para remoto (Supabase, OSM tiles)
+      "img-src 'self' blob: data: https:",
+      // Fontes
+      "font-src 'self' data:",
+      // Conexões: Supabase REST + Realtime, Sentry, Nominatim, OSM tiles
+      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://nominatim.openstreetmap.org https://*.sentry.io https://sentry.io https://vitals.vercel-insights.com https://vercel.live",
+      // Workers (Leaflet usa blob workers)
+      "worker-src 'self' blob:",
+      // Frames (Turnstile roda num iframe)
+      "frame-src https://challenges.cloudflare.com https://vercel.live",
+    ].join("; "),
+  },
+  {
+    key: "X-Content-Type-Options",
+    value: "nosniff",
+  },
+  {
+    key: "X-Frame-Options",
+    value: "SAMEORIGIN",
+  },
+  {
+    key: "Referrer-Policy",
+    value: "strict-origin-when-cross-origin",
+  },
+];
+
 const nextConfig: NextConfig = {
   outputFileTracingRoot: process.cwd(),
   eslint: {
-    // ESLint roda separado no CI — não bloqueia o build de prod
     ignoreDuringBuilds: true,
+  },
+  async headers() {
+    return [
+      {
+        // Aplica em todas as rotas
+        source: "/(.*)",
+        headers: securityHeaders,
+      },
+    ];
   },
   images: {
     remotePatterns: [
