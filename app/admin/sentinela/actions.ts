@@ -20,38 +20,23 @@ async function assertAdmin() {
   return createServiceClient();
 }
 
-export async function verificarSentinelaAction(id: string) {
+export async function verificarSentinelaAction(id: string): Promise<void> {
   const supabase = await assertAdmin();
-  const { error } = await supabase
-    .from("sentinel_partners")
-    .update({ verified: true })
-    .eq("id", id);
-  if (error) return { ok: false, error: error.message };
+  await supabase.from("sentinel_partners").update({ verified: true }).eq("id", id);
   revalidatePath("/admin/sentinela");
   revalidatePath("/mapa");
-  return { ok: true };
 }
 
-export async function desativarSentinelaAction(id: string) {
+export async function desativarSentinelaAction(id: string): Promise<void> {
   const supabase = await assertAdmin();
-  const { error } = await supabase
-    .from("sentinel_partners")
-    .update({ is_active: false })
-    .eq("id", id);
-  if (error) return { ok: false, error: error.message };
+  await supabase.from("sentinel_partners").update({ is_active: false }).eq("id", id);
   revalidatePath("/admin/sentinela");
   revalidatePath("/mapa");
-  return { ok: true };
 }
 
-export async function reativarSentinelaAction(id: string) {
+export async function reativarSentinelaAction(id: string): Promise<void> {
   const supabase = await assertAdmin();
-  const { error } = await supabase
-    .from("sentinel_partners")
-    .update({ is_active: true })
-    .eq("id", id);
-  if (error) return { ok: false, error: error.message };
+  await supabase.from("sentinel_partners").update({ is_active: true }).eq("id", id);
   revalidatePath("/admin/sentinela");
   revalidatePath("/mapa");
-  return { ok: true };
 }
