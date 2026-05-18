@@ -803,14 +803,14 @@ export type Database = {
         Relationships: [];
       };
       sentinel_partners: {
-        Row: {
+        Row: DbRow<{
           id: string;
           name: string;
           type: string;
-          address: string;
+          address: string | null;
           neighborhood: string | null;
           city: string;
-          contact_phone: string;
+          contact_phone: string | null;
           contact_email: string | null;
           has_cameras: boolean;
           latitude: number | null;
@@ -818,15 +818,15 @@ export type Database = {
           verified: boolean;
           is_active: boolean;
           created_at: string;
-        };
-        Insert: {
+        }>;
+        Insert: DbInsert<{
           id?: string;
           name: string;
           type: string;
-          address: string;
+          address?: string | null;
           neighborhood?: string | null;
           city: string;
-          contact_phone: string;
+          contact_phone?: string | null;
           contact_email?: string | null;
           has_cameras?: boolean;
           latitude?: number | null;
@@ -834,20 +834,20 @@ export type Database = {
           verified?: boolean;
           is_active?: boolean;
           created_at?: string;
-        };
-        Update: Partial<{
-          name: string;
-          type: string;
-          address: string;
-          neighborhood: string | null;
-          city: string;
-          contact_phone: string;
-          contact_email: string | null;
-          has_cameras: boolean;
-          latitude: number | null;
-          longitude: number | null;
-          verified: boolean;
-          is_active: boolean;
+        }>;
+        Update: DbUpdate<{
+          name?: string;
+          type?: string;
+          address?: string | null;
+          neighborhood?: string | null;
+          city?: string;
+          contact_phone?: string | null;
+          contact_email?: string | null;
+          has_cameras?: boolean;
+          latitude?: number | null;
+          longitude?: number | null;
+          verified?: boolean;
+          is_active?: boolean;
         }>;
         Relationships: [];
       };
