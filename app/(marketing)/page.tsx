@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import CountUp from "@/components/ui/CountUp";
+import { HeroMap } from "@/components/maps/HeroMap";
+import type { PetMapPin } from "@/components/maps/PetAlertMap";
 
 export const dynamic = "force-dynamic";
 
@@ -42,6 +44,8 @@ export default async function LandingPage() {
     sightingsCount,
     prestadoresCount,
     totalPetsCount,
+    mapPetsResult,
+    locationLegendResult,
   ] = await Promise.all([
     supabase
       .from("pets")
@@ -71,6 +75,21 @@ export default async function LandingPage() {
     supabase
       .from("pets")
       .select("*", { count: "exact", head: true }),
+    // Alfinetes do mapa — pets ativos com coordenadas
+    supabase
+      .from("pets")
+      .select("id, kind, name, species, color, photo_url, latitude, longitude, city, neighborhood, created_at")
+      .eq("status", "active")
+      .not("latitude", "is", null)
+      .not("longitude", "is", null)
+      .order("created_at", { ascending: false })
+      .limit(200),
+    // Legenda de localizações — todos os pets ativos (com ou sem coords)
+    supabase
+      .from("pets")
+      .select("city, kind")
+      .eq("status", "active")
+      .limit(500),
   ]);
 
   const stats = {
@@ -86,9 +105,40 @@ export default async function LandingPage() {
     prestadores: prestadoresCount.count ?? 0,
   };
 
+  // Alfinetes — garante tipagem correta
+  const mapPets: PetMapPin[] = ((mapPetsResult.data ?? []) as any[]).map((p) => ({
+    id: p.id,
+    kind: p.kind as "lost" | "found",
+    name: p.name ?? null,
+    species: p.species ?? "other",
+    color: p.color ?? "",
+    photo_url: p.photo_url ?? null,
+    latitude: Number(p.latitude),
+    longitude: Number(p.longitude),
+    city: p.city ?? "",
+    neighborhood: p.neighborhood ?? "",
+    created_at: p.created_at ?? "",
+  }));
+
+  // Legenda: agrupa por cidade e conta perdidos/encontrados
+  type LocationStat = { city: string; lost: number; found: number; total: number };
+  const cityMap = new Map<string, LocationStat>();
+  for (const p of (locationLegendResult.data ?? []) as { city: string; kind: string }[]) {
+    const city = p.city?.trim();
+    if (!city) continue;
+    const entry = cityMap.get(city) ?? { city, lost: 0, found: 0, total: 0 };
+    if (p.kind === "lost") entry.lost++;
+    else if (p.kind === "found") entry.found++;
+    entry.total++;
+    cityMap.set(city, entry);
+  }
+  const locationStats = Array.from(cityMap.values())
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 10);
+
   return (
     <main>
-      <Hero stats={stats} />
+      <Hero stats={stats} mapPets={mapPets} locationStats={locationStats} />
       <StatsBand stats={stats} />
       <HowItWorks />
       <StatsSection stats={richStats} />
@@ -100,25 +150,37 @@ export default async function LandingPage() {
 }
 
 // ============================================================
-// HERO — bloco híbrido: parte dark embutida no warm
+// HERO — bloco híbrido: texto | mapa ao vivo | legenda de locais
 // ============================================================
-function Hero({ stats }: { stats: { active: number; lost: number; found: number } }) {
+type LocationStat = { city: string; lost: number; found: number; total: number };
+
+function Hero({
+  stats,
+  mapPets,
+  locationStats,
+}: {
+  stats: { active: number; lost: number; found: number };
+  mapPets: PetMapPin[];
+  locationStats: LocationStat[];
+}) {
   return (
     <section className="relative overflow-hidden">
-      {/* Bloco dark do hero — wrapper só pra reset de cores */}
       <div
         data-theme="dark"
         className="relative bg-ink-900 text-fg"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 20% 30%, rgba(255,107,53,0.15), transparent 50%), radial-gradient(circle at 80% 70%, rgba(0,229,255,0.10), transparent 50%)",
+            "radial-gradient(circle at 15% 30%, rgba(255,107,53,0.15), transparent 50%), radial-gradient(circle at 85% 70%, rgba(0,229,255,0.10), transparent 50%)",
         }}
       >
         <div className="bg-grid-subtle">
-          <div className="mx-auto max-w-6xl px-4 pt-16 pb-24 sm:pt-24 sm:pb-32">
-            <div className="grid items-center gap-10 lg:grid-cols-[1.2fr_1fr]">
-              <div>
-                <span className="inline-flex items-center gap-2 rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-cyan-300">
+          <div className="mx-auto max-w-7xl px-4 pt-16 pb-24 sm:pt-24 sm:pb-32">
+            {/* 3 colunas: texto | mapa | legenda */}
+            <div className="grid items-start gap-8 lg:grid-cols-[1fr_1.35fr_0.65fr]">
+
+              {/* ── Coluna 1: Texto + CTAs ── */}
+              <div className="flex flex-col justify-center lg:pt-4">
+                <span className="inline-flex items-center gap-2 rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-cyan-300 w-fit">
                   <Sparkles className="h-3 w-3" />
                   Rede colaborativa de resgate
                 </span>
@@ -131,7 +193,7 @@ function Hero({ stats }: { stats: { active: number; lost: number; found: number 
                   </span>
                 </h1>
 
-                <p className="mt-5 max-w-xl text-base text-fg-muted sm:text-lg">
+                <p className="mt-5 max-w-sm text-base text-fg-muted">
                   Cadastre seu pet desaparecido, dispare um alerta de resgate e
                   conte com a rede pra trazer ele de volta. Em segundos.
                 </p>
@@ -139,7 +201,7 @@ function Hero({ stats }: { stats: { active: number; lost: number; found: number 
                 <div className="mt-8 flex flex-wrap gap-3">
                   <Link
                     href="/pets/novo"
-                    className="group inline-flex items-center gap-2 rounded-xl bg-brand-500 px-6 py-3.5 text-sm font-bold text-white shadow-glow-brand-lg transition-all hover:bg-brand-400 hover:shadow-glow-brand-lg active:scale-95"
+                    className="group inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-white shadow-glow-brand-lg transition-all hover:bg-brand-400 active:scale-95"
                   >
                     <Siren className="h-4 w-4" strokeWidth={2.5} />
                     Cadastrar pet perdido
@@ -148,7 +210,7 @@ function Hero({ stats }: { stats: { active: number; lost: number; found: number 
 
                   <Link
                     href="/pets"
-                    className="inline-flex items-center gap-2 rounded-xl border-2 border-cyan-500/60 bg-cyan-500/10 px-6 py-3.5 text-sm font-bold text-cyan-200 transition-all hover:bg-cyan-500/20 hover:shadow-glow-cyan active:scale-95"
+                    className="inline-flex items-center gap-2 rounded-xl border-2 border-cyan-500/60 bg-cyan-500/10 px-5 py-3 text-sm font-bold text-cyan-200 transition-all hover:bg-cyan-500/20 hover:shadow-glow-cyan active:scale-95"
                   >
                     <Search className="h-4 w-4" strokeWidth={2.5} />
                     Ver pets na rede
@@ -158,34 +220,133 @@ function Hero({ stats }: { stats: { active: number; lost: number; found: number 
                 <p className="mt-5 text-xs text-fg-subtle">
                   100% gratuito · sem login pra cadastrar · você no controle
                 </p>
+
+                {/* Stats compactos embaixo do CTA (visíveis no desktop) */}
+                <div className="mt-8 hidden lg:flex items-center gap-5 border-t border-white/8 pt-6">
+                  <MiniStat label="Perdidos" value={stats.lost} color="brand" />
+                  <div className="h-6 w-px bg-white/10" />
+                  <MiniStat label="Encontrados" value={stats.found} color="cyan" />
+                  <div className="h-6 w-px bg-white/10" />
+                  <MiniStat label="Ativos" value={stats.active} color="white" />
+                </div>
               </div>
 
-              {/* Mini-card de stats no hero (mobile vai pro band abaixo) */}
+              {/* ── Coluna 2: Mapa ao vivo ── */}
               <div className="hidden lg:block">
                 <div className="relative">
-                  <div className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-brand-500/20 via-transparent to-cyan-500/20 blur-2xl" />
-                  <div className="relative rounded-3xl border border-white/10 bg-ink-700/70 p-6 backdrop-blur-sm">
-                    <p className="text-xs font-bold uppercase tracking-widest text-fg-subtle">
-                      Agora na rede
-                    </p>
-                    <p className="mt-1 font-display text-5xl font-black text-fg">
-                      {stats.active.toLocaleString("pt-BR")}
-                    </p>
-                    <p className="text-sm text-fg-muted">pets ativos</p>
+                  {/* Glow de fundo */}
+                  <div className="pointer-events-none absolute -inset-3 rounded-2xl bg-gradient-to-br from-brand-500/15 via-transparent to-cyan-500/15 blur-2xl" />
 
-                    <div className="mt-6 grid grid-cols-2 gap-3">
-                      <MiniStat
-                        label="Perdidos"
-                        value={stats.lost}
-                        color="brand"
-                      />
-                      <MiniStat
-                        label="Encontrados"
-                        value={stats.found}
-                        color="cyan"
-                      />
+                  <div className="relative overflow-hidden rounded-2xl border border-white/12 bg-ink-800">
+                    {/* Header do mapa */}
+                    <div className="flex items-center justify-between border-b border-white/8 px-4 py-2.5">
+                      <div className="flex items-center gap-2">
+                        <span className="relative flex h-2 w-2">
+                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-500 opacity-75" />
+                          <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-500" />
+                        </span>
+                        <span className="text-[11px] font-bold uppercase tracking-widest text-fg-muted">
+                          Ao vivo
+                        </span>
+                      </div>
+                      <Link
+                        href="/mapa"
+                        className="text-[11px] font-semibold text-cyan-400 hover:text-cyan-300"
+                      >
+                        Ver mapa completo →
+                      </Link>
+                    </div>
+
+                    {/* Mapa Leaflet */}
+                    <div style={{ height: "380px" }}>
+                      {mapPets.length > 0 ? (
+                        <HeroMap pets={mapPets} />
+                      ) : (
+                        <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
+                          <MapPin className="h-8 w-8 text-brand-500/40" />
+                          <p className="text-xs text-fg-subtle">
+                            Nenhum pet com localização ainda.
+                            <br />
+                            <Link href="/pets/novo" className="text-brand-400 hover:underline">
+                              Seja o primeiro a cadastrar!
+                            </Link>
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Legenda de pins embaixo do mapa */}
+                    <div className="flex items-center gap-4 border-t border-white/8 px-4 py-2.5">
+                      <span className="flex items-center gap-1.5 text-[11px] text-fg-muted">
+                        <span className="inline-block h-2.5 w-2.5 rounded-full bg-brand-500" />
+                        Perdido
+                      </span>
+                      <span className="flex items-center gap-1.5 text-[11px] text-fg-muted">
+                        <span className="inline-block h-2.5 w-2.5 rounded-full bg-cyan-400" />
+                        Encontrado
+                      </span>
+                      <span className="ml-auto text-[11px] text-fg-subtle">
+                        {mapPets.length} alfinete{mapPets.length !== 1 ? "s" : ""}
+                      </span>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              {/* ── Coluna 3: Legenda de cidades ── */}
+              <div className="hidden lg:block">
+                <div className="rounded-2xl border border-white/10 bg-ink-800/60 p-4 backdrop-blur-sm">
+                  <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-fg-subtle">
+                    Locais com registro
+                  </p>
+
+                  {locationStats.length === 0 ? (
+                    <p className="text-xs text-fg-subtle">
+                      Nenhum pet cadastrado ainda.
+                    </p>
+                  ) : (
+                    <ul className="space-y-2">
+                      {locationStats.map((loc) => (
+                        <li key={loc.city}>
+                          <Link
+                            href={`/pets?city=${encodeURIComponent(loc.city)}`}
+                            className="group flex items-start justify-between gap-2 rounded-lg px-2 py-1.5 transition hover:bg-white/5"
+                          >
+                            <span className="flex items-center gap-1.5 text-xs font-medium text-fg group-hover:text-brand-300 transition-colors truncate">
+                              <MapPin className="h-3 w-3 shrink-0 text-fg-subtle" />
+                              {loc.city}
+                            </span>
+                            <span className="flex shrink-0 items-center gap-1.5 text-[10px] font-bold tabular-nums">
+                              {loc.lost > 0 && (
+                                <span className="text-brand-400">{loc.lost}P</span>
+                              )}
+                              {loc.found > 0 && (
+                                <span className="text-cyan-400">{loc.found}E</span>
+                              )}
+                            </span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {/* Legenda das abreviações */}
+                  <div className="mt-4 flex gap-3 border-t border-white/8 pt-3">
+                    <span className="flex items-center gap-1 text-[10px] text-fg-subtle">
+                      <span className="font-bold text-brand-400">P</span> Perdido
+                    </span>
+                    <span className="flex items-center gap-1 text-[10px] text-fg-subtle">
+                      <span className="font-bold text-cyan-400">E</span> Encontrado
+                    </span>
+                  </div>
+
+                  <Link
+                    href="/pets"
+                    className="mt-3 flex items-center justify-center gap-1.5 rounded-lg border border-white/10 py-2 text-[11px] font-bold text-fg-muted transition hover:border-white/20 hover:text-fg"
+                  >
+                    Ver todos os pets
+                    <ArrowRight className="h-3 w-3" />
+                  </Link>
                 </div>
               </div>
             </div>
@@ -209,19 +370,21 @@ function MiniStat({
 }: {
   label: string;
   value: number;
-  color: "brand" | "cyan";
+  color: "brand" | "cyan" | "white";
 }) {
-  const ring =
+  const textColor =
     color === "brand"
-      ? "border-brand-500/40 text-brand-300"
-      : "border-cyan-500/40 text-cyan-300";
+      ? "text-brand-400"
+      : color === "cyan"
+      ? "text-cyan-300"
+      : "text-fg";
   return (
-    <div className={`rounded-xl border ${ring} bg-ink-800/50 p-3`}>
+    <div className="flex flex-col">
+      <p className={`font-display text-2xl font-black tabular-nums ${textColor}`}>
+        {value.toLocaleString("pt-BR")}
+      </p>
       <p className="text-[10px] font-bold uppercase tracking-widest text-fg-subtle">
         {label}
-      </p>
-      <p className="mt-1 font-display text-2xl font-black">
-        {value.toLocaleString("pt-BR")}
       </p>
     </div>
   );
@@ -489,7 +652,6 @@ function RescueHighlight() {
             </div>
           </div>
 
-          {/* Visualização do botão SOS — só estática (versão real precisa de client) */}
           <div className="flex justify-center">
             <div className="relative h-56 w-56">
               <div className="absolute inset-0 rounded-full bg-brand-500/30 blur-3xl" />

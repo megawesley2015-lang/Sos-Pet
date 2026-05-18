@@ -909,6 +909,5 @@ export type Database = {
       };
     };
     Enums: { [_ in string]: never };
-    CompositeTypes: { [_ in string]: never };
   };
 };
