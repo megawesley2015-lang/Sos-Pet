@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
 
   const supabase = await createSupabaseServerClient();
   const type = url.searchParams.get("type");
-  
+
   const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(
     code
   );
@@ -45,9 +45,19 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(dest);
   }
 
-  // Se for fluxo de recuperação de senha (via param type ou via next explicitamente pra redefinir)
-  // mandamos OBRIGATORIAMENTE para /redefinir-senha
-  if (type === "recovery" || next === "/redefinir-senha") {
+  // Detecta fluxo de recuperação de senha:
+  // 1. via param ?type=recovery ou ?next=/redefinir-senha (quando NEXT_PUBLIC_SITE_URL correto)
+  // 2. fallback: recovery_sent_at recente (<15min) — cobre caso de allowlist faltando no Supabase
+  let isRecovery = type === "recovery" || next === "/redefinir-senha";
+  if (!isRecovery) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user?.recovery_sent_at) {
+      const ageMs = Date.now() - new Date(user.recovery_sent_at).getTime();
+      if (ageMs < 15 * 60 * 1000) isRecovery = true; // janela de 15 minutos
+    }
+  }
+
+  if (isRecovery) {
     return NextResponse.redirect(new URL("/redefinir-senha", url.origin));
   }
 
