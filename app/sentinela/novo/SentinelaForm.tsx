@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useEffect, useRef } from "react";
+import { useActionState, useState, useRef } from "react";
 import { Camera, MapPin, CheckCircle2, Loader2, Building2, Phone, Mail } from "lucide-react";
 import { cadastrarSentinela, SENTINEL_TYPES } from "./actions";
 import type { SentinelaFormState } from "./actions";

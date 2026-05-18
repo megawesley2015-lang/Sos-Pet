@@ -36,8 +36,7 @@ export default async function SentinelaPage() {
     .limit(200);
 
   const partners = sentinels ?? [];
-  const verified   = partners.filter((p) => p.verified);
-  const unverified = partners.filter((p) => !p.verified);
+  const verified = partners.filter((p) => p.verified);
 
   return (
     <div className="min-h-screen bg-ink-800 bg-radial-brand">

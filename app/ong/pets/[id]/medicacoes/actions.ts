@@ -42,9 +42,11 @@ export async function addMedication(
   if (!user) return { error: "Não autenticado." };
   if (!(await assertPetOwner(supabase, petId, user.id))) return { error: "Sem permissão." };
 
-  const raw = Object.fromEntries([...formData.entries()].filter(([, v]) => v !== ""));
+  const raw: Record<string, FormDataEntryValue | boolean> = Object.fromEntries(
+    [...formData.entries()].filter(([, v]) => v !== "")
+  );
   // Checkbox retorna "on" se marcado, ausente se não
-  raw.is_ongoing = formData.get("is_ongoing") === "on" ? true : false;
+  raw.is_ongoing = formData.get("is_ongoing") === "on";
 
   const parsed = MedicationSchema.safeParse(raw);
   if (!parsed.success) return { fieldErrors: parsed.error.flatten().fieldErrors };
