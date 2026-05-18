@@ -19,7 +19,7 @@ const securityHeaders = [
     value: [
       "default-src 'self'",
       // Scripts: próprio app (inline necessário pro Next.js), Turnstile, Vercel toolbar
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com https://vercel.live https://*.vercel-scripts.com",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com https://vercel.live https://*.vercel-scripts.com https://unpkg.com",
       // Estilos: unsafe-inline necessário pro Leaflet e CSS-in-JS
       "style-src 'self' 'unsafe-inline'",
       // Imagens: blob para preview local, data para inline, https para remoto (Supabase, OSM tiles)
@@ -88,5 +88,4 @@ export default process.env.NEXT_PUBLIC_SENTRY_DSN
       disableLogger: true,
       // Silencia warnings de build exceto em CI
       silent: !process.env.CI,
-    })
-  : nextConfig;
+    }

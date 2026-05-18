@@ -61,30 +61,43 @@ export function PetDetailMap({
 
   useEffect(() => { setMounted(true); }, []);
 
+  // Carrega Leaflet + leaflet.heat em sequência
+  const loadLeaflet = async (): Promise<any> => {
+    // 1. CSS
+    if (!document.querySelector('link[href*="leaflet.css"]')) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+      document.head.appendChild(link);
+    }
+    // 2. Leaflet core
+    if (!(window as any).L) {
+      await new Promise<void>((resolve, reject) => {
+        const s = document.createElement("script");
+        s.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+        s.onload = () => resolve();
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
+    // 3. leaflet.heat (só depois do core)
+    if (!(window as any).L?.heatLayer) {
+      await new Promise<void>((resolve) => {
+        const s = document.createElement("script");
+        s.src = "https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js";
+        s.onload = () => resolve();
+        s.onerror = () => resolve(); // falha silenciosa — marcadores ainda funcionam
+        document.head.appendChild(s);
+      });
+    }
+    return (window as any).L;
+  };
+
   useEffect(() => {
     if (!mounted || !mapRef.current) return;
 
     const loadAndInit = async () => {
-      if (!(window as any).L) {
-        await new Promise<void>((resolve) => {
-          if (!document.querySelector('link[href*="leaflet.css"]')) {
-            const link = document.createElement("link");
-            link.rel = "stylesheet";
-            link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-            document.head.appendChild(link);
-          }
-          if (!document.querySelector('script[src*="leaflet.js"]')) {
-            const script = document.createElement("script");
-            script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
-            script.onload = () => resolve();
-            document.head.appendChild(script);
-          } else {
-            resolve();
-          }
-        });
-      }
-
-      const L = (window as any).L;
+      const L = await loadLeaflet();
       if (mapInstance.current) { mapInstance.current.remove(); }
 
       const map = L.map(mapRef.current!, {
@@ -101,28 +114,19 @@ export function PetDetailMap({
       ).addTo(map);
 
       // ── Círculos de raio ──────────────────────────────────
-      // Círculo externo (mais suave)
       L.circle([latitude, longitude], {
         radius: radii.r2,
-        color:  "#f97316",
-        fillColor: "#f97316",
-        fillOpacity: 0.05,
-        weight: 1,
-        dashArray: "6 4",
-        opacity: 0.5,
+        color: "#f97316", fillColor: "#f97316", fillOpacity: 0.05,
+        weight: 1, dashArray: "6 4", opacity: 0.5,
       }).addTo(map).bindTooltip(
         `Raio externo: ${(radii.r2 / 1000).toFixed(1)}km`,
         { permanent: false, direction: "top" }
       );
 
-      // Círculo interno (mais provável)
       L.circle([latitude, longitude], {
         radius: radii.r1,
-        color:  "#f97316",
-        fillColor: "#f97316",
-        fillOpacity: 0.10,
-        weight: 2,
-        opacity: 0.7,
+        color: "#f97316", fillColor: "#f97316", fillOpacity: 0.10,
+        weight: 2, opacity: 0.7,
       }).addTo(map).bindTooltip(
         `Raio prioritário: ${(radii.r1 / 1000).toFixed(1)}km`,
         { permanent: false, direction: "top" }
@@ -135,13 +139,11 @@ export function PetDetailMap({
             background:#f97316;opacity:0.2;animation:sosPulse 2s ease-out infinite;"></div>
           <div style="position:absolute;top:0;left:0;width:40px;height:40px;
             border-radius:50% 50% 50% 0;transform:rotate(-45deg);
-            background:#f97316;border:2px solid #431407;
-            box-shadow:0 0 16px #f9731680;"></div>
+            background:#f97316;border:2px solid #431407;box-shadow:0 0 16px #f9731680;"></div>
           <div style="position:absolute;top:8px;left:10px;font-size:18px;line-height:1;">
             ${species === "dog" ? "🐶" : species === "cat" ? "🐱" : "🐾"}
           </div>
-        </div>
-      `;
+        </div>`;
       const petIcon = L.divIcon({
         html: petIconHtml, className: "", iconSize: [40, 48], iconAnchor: [20, 48], popupAnchor: [0, -48],
       });
@@ -152,33 +154,48 @@ export function PetDetailMap({
           <span style="font-size:11px;color:#94a3b8;">Última localização conhecida</span>
         </div>`, { className: "sos-popup" });
 
-      // ── Avistamentos ─────────────────────────────────────
+      // ── Heat map de avistamentos (≥ 3 pontos) ─────────────
+      if (sightings.length >= 3 && L.heatLayer) {
+        // Peso por recência: avistamento recente vale mais no gradiente
+        const heatPoints = sightings.map((s) => {
+          const ageH = (Date.now() - new Date(s.created_at).getTime()) / 3_600_000;
+          const weight = ageH < 6 ? 1.0 : ageH < 24 ? 0.7 : ageH < 72 ? 0.4 : 0.2;
+          return [s.lat, s.lng, weight] as [number, number, number];
+        });
+
+        L.heatLayer(heatPoints, {
+          radius:  30,
+          blur:    22,
+          maxZoom: 17,
+          max:     1.0,
+          // Gradiente alinhado ao design: amarelo → laranja → vermelho
+          gradient: { 0.2: "#fbbf24", 0.5: "#f97316", 0.8: "#ef4444", 1.0: "#dc2626" },
+        }).addTo(map);
+      }
+
+      // ── Marcadores individuais de avistamento ─────────────
       sightings.forEach((s, i) => {
-        const age  = Date.now() - new Date(s.created_at).getTime();
+        const age   = Date.now() - new Date(s.created_at).getTime();
         const isNew = age < 24 * 60 * 60 * 1000;
         const iconHtml = `
           <div style="
-            width:16px;height:16px;border-radius:50%;
+            width:14px;height:14px;border-radius:50%;
             background:${isNew ? "#fbbf24" : "#78716c"};
             border:2px solid ${isNew ? "#92400e" : "#44403c"};
-            box-shadow:${isNew ? "0 0 8px #fbbf2480" : "none"};
-          "></div>
-        `;
-        const icon = L.divIcon({ html: iconHtml, className: "", iconSize: [16, 16], iconAnchor: [8, 8] });
+            box-shadow:${isNew ? "0 0 6px #fbbf2480" : "none"};
+          "></div>`;
+        const icon = L.divIcon({ html: iconHtml, className: "", iconSize: [14, 14], iconAnchor: [7, 7] });
         const marker = L.marker([s.lat, s.lng], { icon, zIndexOffset: -10 }).addTo(map);
-        if (s.description) {
-          const date = new Date(s.created_at).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
-          marker.bindPopup(`
-            <div style="font-family:system-ui;color:#f1f5f9;min-width:140px;">
-              <span style="color:#fbbf24;font-size:11px;font-weight:700;">🟡 Avistamento #${i + 1}</span><br/>
-              <span style="font-size:11px;color:#94a3b8;">${date}</span>
-              ${s.description ? `<br/><span style="font-size:12px;color:#e2e8f0;">${s.description}</span>` : ""}
-            </div>
-          `, { className: "sos-popup" });
-        }
+        const date = new Date(s.created_at).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
+        marker.bindPopup(`
+          <div style="font-family:system-ui;color:#f1f5f9;min-width:140px;">
+            <span style="color:#fbbf24;font-size:11px;font-weight:700;">🟡 Avistamento #${i + 1}</span><br/>
+            <span style="font-size:11px;color:#94a3b8;">${date}</span>
+            ${s.description ? `<br/><span style="font-size:12px;color:#e2e8f0;">${s.description}</span>` : ""}
+          </div>`, { className: "sos-popup" });
       });
 
-      // CSS global (só uma vez)
+      // CSS global
       if (!document.getElementById("sos-detail-map-style")) {
         const style = document.createElement("style");
         style.id = "sos-detail-map-style";
@@ -262,30 +279,3 @@ export function PetDetailMap({
             <span className="text-cyan-300">lat</span>{" "}
             {latitude.toFixed(6)}{" "}
             <span className="text-cyan-300">lng</span>{" "}
-            {longitude.toFixed(6)}{" "}
-            <span className="text-fg-subtle">· raio {suggestedRadius}</span>
-          </div>
-
-          <button
-            onClick={copyCoords}
-            className={`flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-bold transition-all ${
-              copied
-                ? "bg-success/20 text-success border border-success/30"
-                : "bg-ink-700 text-fg-muted border border-white/10 hover:border-cyan-500/40 hover:text-fg"
-            }`}
-          >
-            {copied ? (
-              <><CheckCircle2 className="h-3.5 w-3.5" /> Copiado!</>
-            ) : (
-              <><Copy className="h-3.5 w-3.5" /> Copiar coordenadas</>
-            )}
-          </button>
-
-          <p className="mt-3 text-[10px] text-fg-subtle">
-            💡 No Meta Ads Manager: Criar campanha → Público → Localização → Inserir endereço → Raio → colar coordenadas.
-          </p>
-        </div>
-      )}
-    </div>
-  );
-}
