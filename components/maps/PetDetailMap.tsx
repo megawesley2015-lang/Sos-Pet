@@ -279,3 +279,30 @@ export function PetDetailMap({
             <span className="text-cyan-300">lat</span>{" "}
             {latitude.toFixed(6)}{" "}
             <span className="text-cyan-300">lng</span>{" "}
+            {longitude.toFixed(6)}{" "}
+            <span className="text-fg-subtle">· raio {suggestedRadius}</span>
+          </div>
+
+          <button
+            onClick={copyCoords}
+            className={`flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-bold transition-all ${
+              copied
+                ? "bg-success/20 text-success border border-success/30"
+                : "bg-ink-700 text-fg-muted border border-white/10 hover:border-cyan-500/40 hover:text-fg"
+            }`}
+          >
+            {copied ? (
+              <><CheckCircle2 className="h-3.5 w-3.5" /> Copiado!</>
+            ) : (
+              <><Copy className="h-3.5 w-3.5" /> Copiar coordenadas</>
+            )}
+          </button>
+
+          <p className="mt-3 text-[10px] text-fg-subtle">
+            💡 No Meta Ads Manager: Criar campanha → Público → Localização → Inserir endereço → Raio → colar coordenadas.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
