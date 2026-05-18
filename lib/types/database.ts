@@ -798,6 +798,55 @@ export type Database = {
         Update: DbUpdate<AdoptionUpdate>;
         Relationships: [];
       };
+      sentinel_partners: {
+        Row: {
+          id: string;
+          name: string;
+          type: string;
+          address: string;
+          neighborhood: string | null;
+          city: string;
+          contact_phone: string;
+          contact_email: string | null;
+          has_cameras: boolean;
+          latitude: number | null;
+          longitude: number | null;
+          verified: boolean;
+          is_active: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          type: string;
+          address: string;
+          neighborhood?: string | null;
+          city: string;
+          contact_phone: string;
+          contact_email?: string | null;
+          has_cameras?: boolean;
+          latitude?: number | null;
+          longitude?: number | null;
+          verified?: boolean;
+          is_active?: boolean;
+          created_at?: string;
+        };
+        Update: Partial<{
+          name: string;
+          type: string;
+          address: string;
+          neighborhood: string | null;
+          city: string;
+          contact_phone: string;
+          contact_email: string | null;
+          has_cameras: boolean;
+          latitude: number | null;
+          longitude: number | null;
+          verified: boolean;
+          is_active: boolean;
+        }>;
+        Relationships: [];
+      };
     };
     Views: {
       // Definida na migration 20260504_hardening — listagem pública de pets
