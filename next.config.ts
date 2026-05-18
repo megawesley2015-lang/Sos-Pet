@@ -18,7 +18,7 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      // Scripts: próprio app (inline necessário pro Next.js), Turnstile, Vercel toolbar
+      // Scripts: próprio app (inline necessário pro Next.js), Turnstile, Vercel toolbar, Leaflet/leaflet.heat
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com https://vercel.live https://*.vercel-scripts.com https://unpkg.com",
       // Estilos: unsafe-inline necessário pro Leaflet e CSS-in-JS
       "style-src 'self' 'unsafe-inline'",
@@ -26,8 +26,8 @@ const securityHeaders = [
       "img-src 'self' blob: data: https:",
       // Fontes
       "font-src 'self' data:",
-      // Conexões: Supabase REST + Realtime, Sentry, Nominatim, OSM tiles
-      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://nominatim.openstreetmap.org https://*.sentry.io https://sentry.io https://vitals.vercel-insights.com https://vercel.live",
+      // Conexões: Supabase REST + Realtime, Sentry, Nominatim, OSM tiles, unpkg
+      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://nominatim.openstreetmap.org https://*.sentry.io https://sentry.io https://vitals.vercel-insights.com https://vercel.live https://unpkg.com",
       // Workers (Leaflet usa blob workers)
       "worker-src 'self' blob:",
       // Frames (Turnstile roda num iframe)
@@ -88,6 +88,5 @@ export default process.env.NEXT_PUBLIC_SENTRY_DSN
       disableLogger: true,
       // Silencia warnings de build exceto em CI
       silent: !process.env.CI,
-    }
     })
   : nextConfig;
