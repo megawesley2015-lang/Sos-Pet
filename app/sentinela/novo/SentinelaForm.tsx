@@ -2,8 +2,9 @@
 
 import { useActionState, useState, useRef } from "react";
 import { Camera, MapPin, CheckCircle2, Loader2, Building2, Phone, Mail } from "lucide-react";
-import { cadastrarSentinela, SENTINEL_TYPES } from "./actions";
+import { cadastrarSentinela } from "./actions";
 import type { SentinelaFormState } from "./actions";
+import { SENTINEL_TYPES } from "./constants";
 import Link from "next/link";
 
 const TYPE_LABELS: Record<(typeof SENTINEL_TYPES)[number], string> = {

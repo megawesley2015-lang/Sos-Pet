@@ -3,11 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createServiceClient } from "@/lib/supabase/server";
-
-const SENTINEL_TYPES = [
-  "pet_shop", "vet", "condo", "market",
-  "pharmacy", "gas_station", "school", "park", "other",
-] as const;
+import { SENTINEL_TYPES } from "./constants";
 
 const SentinelaSchema = z.object({
   name:          z.string().min(2, "Nome obrigatório").max(120),
@@ -83,5 +79,3 @@ export async function cadastrarSentinela(
 
   return { success: true };
 }
-
-export { SENTINEL_TYPES };
