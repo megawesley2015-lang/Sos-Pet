@@ -119,8 +119,8 @@ type Partner = {
   has_cameras: boolean;
   verified: boolean;
   is_active: boolean;
-  latitude: number;
-  longitude: number;
+  latitude: number | null;
+  longitude: number | null;
   created_at: string;
 };
 
@@ -168,9 +168,11 @@ function SentinelaCard({
                 <Phone className="h-3 w-3" /> {p.contact_phone}
               </span>
             )}
-            <span className="font-mono text-[11px] text-fg-subtle">
-              {p.latitude.toFixed(5)}, {p.longitude.toFixed(5)}
-            </span>
+            {p.latitude != null && p.longitude != null && (
+              <span className="font-mono text-[11px] text-fg-subtle">
+                {p.latitude.toFixed(5)}, {p.longitude.toFixed(5)}
+              </span>
+            )}
             <span className="text-fg-subtle">{date}</span>
           </div>
         </div>
