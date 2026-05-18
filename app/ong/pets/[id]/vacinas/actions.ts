@@ -6,8 +6,8 @@ import { getUserSafe } from "@/lib/auth/safe";
 import { z } from "zod";
 
 const VaccinationSchema = z.object({
-  vaccine_name: z.string().min(1, "Nome da vacina obrigatório").max(100),
-  applied_date: z.string().min(1, "Data de aplicação obrigatória"),
+  vaccine_name: z.string().min(1, "Nome da vacina obrigatorio").max(100),
+  applied_date: z.string().min(1, "Data de aplicacao obrigatoria"),
   next_dose_date: z.string().optional(),
   vet_name: z.string().max(100).optional(),
   batch: z.string().max(60).optional(),
@@ -33,8 +33,8 @@ export async function addVaccination(
 ): Promise<VaccineState> {
   const supabase = await createSupabaseServerClient();
   const user = await getUserSafe(supabase);
-  if (!user) return { error: "Não autenticado." };
-  if (!(await assertPetOwner(supabase, petId, user.id))) return { error: "Sem permissão." };
+  if (!user) return { error: "Nao autenticado." };
+  if (!(await assertPetOwner(supabase, petId, user.id))) return { error: "Sem permissao." };
 
   const raw = Object.fromEntries([...formData.entries()].filter(([, v]) => v !== ""));
   const parsed = VaccinationSchema.safeParse(raw);
@@ -48,15 +48,13 @@ export async function addVaccination(
   return { success: true };
 }
 
-export async function deleteVaccination(petId: string, vaccinationId: string): Promise<VaccineState> {
+export async function deleteVaccination(petId: string, vaccinationId: string): Promise<void> {
   const supabase = await createSupabaseServerClient();
   const user = await getUserSafe(supabase);
-  if (!user) return { error: "Não autenticado." };
-  if (!(await assertPetOwner(supabase, petId, user.id))) return { error: "Sem permissão." };
+  if (!user) return;
+  if (!(await assertPetOwner(supabase, petId, user.id))) return;
 
-  const { error } = await supabase.from("vaccinations").delete().eq("id", vaccinationId);
-  if (error) return { error: error.message };
+  await supabase.from("vaccinations").delete().eq("id", vaccinationId);
 
   revalidatePath(`/ong/pets/${petId}/vacinas`);
-  return { success: true };
 }
