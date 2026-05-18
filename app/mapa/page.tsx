@@ -1,4 +1,4 @@
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 import { TopBar } from "@/components/layout/TopBar";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { PetMapPin, SentinelPin, SightingPin } from "@/components/maps/PetAlertMap";
@@ -6,7 +6,7 @@ import type { PetMapPin, SentinelPin, SightingPin } from "@/components/maps/PetA
 export const dynamic = "force-dynamic";
 
 // Leaflet depende de window → SSR desabilitado
-const PetAlertMap = dynamic(
+const PetAlertMap = nextDynamic(
   () => import("@/components/maps/PetAlertMap").then((m) => ({ default: m.PetAlertMap })),
   {
     ssr: false,
