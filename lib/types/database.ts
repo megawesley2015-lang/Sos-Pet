@@ -304,6 +304,8 @@ export interface PetRow {
   contact_phone: string;
   contact_whatsapp: boolean;
   status: PetStatus;
+  latitude: number | null;
+  longitude: number | null;
 }
 
 export interface PetInsert {
@@ -330,6 +332,8 @@ export interface PetInsert {
   contact_phone: string;
   contact_whatsapp?: boolean;
   status?: PetStatus;
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 export type PetUpdate = Partial<PetInsert>;
