@@ -89,3 +89,5 @@ export default process.env.NEXT_PUBLIC_SENTRY_DSN
       // Silencia warnings de build exceto em CI
       silent: !process.env.CI,
     }
+    })
+  : nextConfig;
