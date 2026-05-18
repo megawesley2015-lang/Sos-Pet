@@ -71,11 +71,16 @@ BEGIN
 END;
 $func$;
 
--- Revoga grant antigo e re-concede com a nova assinatura
-REVOKE ALL ON FUNCTION public.create_pet_anon(
-  text,text,text,text,text,text,date,text,text,boolean,
-  text,text,text,text,text,text,text,text
-) FROM anon, authenticated;
+-- Revoga grant antigo (se a função antiga ainda existir) e re-concede com a nova assinatura
+DO $$
+BEGIN
+  REVOKE ALL ON FUNCTION public.create_pet_anon(
+    text,text,text,text,text,text,date,text,text,boolean,
+    text,text,text,text,text,text,text,text
+  ) FROM anon, authenticated;
+EXCEPTION WHEN undefined_function THEN
+  NULL; -- função antiga não existe, tudo bem
+END $$;
 
 GRANT EXECUTE ON FUNCTION public.create_pet_anon(
   text,text,text,text,text,text,date,text,text,boolean,
