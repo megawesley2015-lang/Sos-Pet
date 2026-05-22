@@ -78,9 +78,10 @@ export default async function AdminPlaquinhasPage() {
 
   const typedOrders = (orders ?? []) as unknown as OrderWithPet[];
 
+  // Prioridade: NEXT_PUBLIC_SITE_URL (setada na Vercel) > NEXT_PUBLIC_APP_URL (legado) > fallback local
   const APP_URL =
-    process.env.NEXT_PUBLIC_APP_URL ??
     process.env.NEXT_PUBLIC_SITE_URL ??
+    process.env.NEXT_PUBLIC_APP_URL ??
     "http://localhost:3000";
 
   // Métricas rápidas

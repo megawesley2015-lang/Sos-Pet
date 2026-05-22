@@ -123,9 +123,10 @@ export async function iniciarCheckoutPlaquinha(formData: FormData) {
   const typedOrder = order as unknown as { id: string };
 
   // ── 5. Criar preferência no MP ────────────────────────────
+  // Prioridade: NEXT_PUBLIC_SITE_URL (setada na Vercel) > NEXT_PUBLIC_APP_URL (legado) > fallback local
   const APP_URL =
-    process.env.NEXT_PUBLIC_APP_URL ??
     process.env.NEXT_PUBLIC_SITE_URL ??
+    process.env.NEXT_PUBLIC_APP_URL ??
     "http://localhost:3000";
 
   const preference = await criarPreferencia({

@@ -25,9 +25,10 @@ export const metadata: Metadata = {
   },
   description:
     "Rede colaborativa de resgate. Cadastre seu pet perdido, dispare um SOS e conte com a rede pra trazer ele de volta.",
+  // Prioridade: NEXT_PUBLIC_SITE_URL (setada na Vercel) > NEXT_PUBLIC_APP_URL (legado) > fallback local
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL ??
-      process.env.NEXT_PUBLIC_SITE_URL ??
+    process.env.NEXT_PUBLIC_SITE_URL ??
+      process.env.NEXT_PUBLIC_APP_URL ??
       "http://localhost:3000"
   ),
   applicationName: "SOS Pet",

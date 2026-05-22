@@ -1,30 +1,16 @@
 import Link from "next/link";
 import { PawPrint, UserRound } from "lucide-react";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { getUserSafe } from "@/lib/auth/safe";
+import { getSessionWithProfile } from "@/lib/auth/session";
 import { UserMenu } from "./UserMenu";
 
 export async function TopBar() {
-  const supabase = await createSupabaseServerClient();
-  const user = await getUserSafe(supabase);
+  // getSessionWithProfile é cacheada por React.cache:
+  // se chamada múltiplas vezes no mesmo request, executa apenas uma vez.
+  const { user, profile } = await getSessionWithProfile();
 
-  let fullName: string | null = null;
-  let avatarUrl: string | null = null;
-  let role: string | null = null;
-
-  if (user) {
-    const { data: profileRaw } = await supabase
-      .from("profiles")
-      .select("full_name, avatar_url, role")
-      .eq("id", user.id)
-      .maybeSingle();
-    const profile = profileRaw as
-      | { full_name: string | null; avatar_url: string | null; role: string | null }
-      | null;
-    fullName = profile?.full_name ?? null;
-    avatarUrl = profile?.avatar_url ?? null;
-    role = profile?.role ?? null;
-  }
+  const fullName = profile?.full_name ?? null;
+  const avatarUrl = profile?.avatar_url ?? null;
+  const role = profile?.role ?? null;
 
   return (
     <header className="sticky top-0 z-40 border-b border-brand-500/20 bg-ink-900/70 backdrop-blur-md">

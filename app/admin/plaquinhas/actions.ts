@@ -7,9 +7,10 @@ import { getUserSafe } from "@/lib/auth/safe";
 import { redirect } from "next/navigation";
 import { sendEmail } from "@/lib/services/email";
 
+// Prioridade: NEXT_PUBLIC_SITE_URL (setada na Vercel) > NEXT_PUBLIC_APP_URL (legado) > fallback local
 const APP_URL =
-  process.env.NEXT_PUBLIC_APP_URL ??
   process.env.NEXT_PUBLIC_SITE_URL ??
+  process.env.NEXT_PUBLIC_APP_URL ??
   "http://localhost:3000";
 
 const SUPPLIER_EMAIL = process.env.SUPPLIER_EMAIL ?? "";

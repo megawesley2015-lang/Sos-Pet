@@ -81,8 +81,8 @@ export default async function PetDetailPage({ params }: PageProps) {
     healthRecords = records;
   }
 
-  const petWithCoords = pet as any;
-  const hasLocation = !!petWithCoords.latitude && !!petWithCoords.longitude;
+  // latitude/longitude já estão no tipo PetRow — sem cast necessário
+  const hasLocation = !!pet.latitude && !!pet.longitude;
   let mapSightings: Array<{ lat: number; lng: number; description: string | null; created_at: string }> = [];
   if (pet.kind === "lost" && hasLocation) {
     const { data: sightingsData } = await supabase
@@ -230,8 +230,8 @@ export default async function PetDetailPage({ params }: PageProps) {
                   petName={pet.name}
                   species={pet.species}
                   kind={pet.kind}
-                  latitude={Number(petWithCoords.latitude)}
-                  longitude={Number(petWithCoords.longitude)}
+                  latitude={Number(pet.latitude)}
+                  longitude={Number(pet.longitude)}
                   sightings={mapSightings}
                   showMetaPanel={isOwner}
                 />

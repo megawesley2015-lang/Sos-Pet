@@ -1,5 +1,6 @@
 import { Suspense } from "react";
-import { Plus, Radar } from "lucide-react";
+import Link from "next/link";
+import { Plus, Radar, ChevronLeft, ChevronRight } from "lucide-react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { TopBar } from "@/components/layout/TopBar";
 import { PetFilters } from "@/components/pets/PetFilters";
@@ -11,19 +12,22 @@ import type { PetKind, PetSpecies, PetRow } from "@/lib/types/database";
  * LISTAGEM PÚBLICA DE PETS
  *
  * Server Component — consulta o Supabase direto (SSR), sem fetch.
- * Lê filtros da URL (?kind=lost&species=dog&city=...).
+ * Lê filtros da URL (?kind=lost&species=dog&city=...&page=N).
  *
- * RLS: policy "pets_select_active" permite acesso anônimo a pets ativos.
+ * Paginação: offset-based via range(). Cada página mostra PAGE_SIZE pets.
+ * A view pets_public já filtra status='active' — anônimos enxergam normalmente.
  */
 
-// Evita cache estático — queremos sempre dados frescos no MVP
 export const dynamic = "force-dynamic";
+
+const PAGE_SIZE = 24;
 
 interface PageProps {
   searchParams: Promise<{
     kind?: string;
     species?: string;
     city?: string;
+    page?: string;
   }>;
 }
 
@@ -31,13 +35,18 @@ export default async function PetsPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const supabase = await createSupabaseServerClient();
 
-  // Constrói a query respeitando filtros
+  const page = Math.max(1, parseInt(params.page ?? "1", 10));
+  const from = (page - 1) * PAGE_SIZE;
+  const to = from + PAGE_SIZE - 1;
+
+  // IMPORTANTE: usa a view pets_public (não a tabela pets) para que
+  // visitantes não autenticados possam ver a listagem.
+  // count: "exact" retorna o total para calcular paginação.
   let query = supabase
-    .from("pets")
-    .select("*")
-    .eq("status", "active")
+    .from("pets_public")
+    .select("*", { count: "exact" })
     .order("created_at", { ascending: false })
-    .limit(48);
+    .range(from, to);
 
   if (params.kind === "lost" || params.kind === "found") {
     query = query.eq("kind", params.kind as PetKind);
@@ -53,7 +62,22 @@ export default async function PetsPage({ searchParams }: PageProps) {
     query = query.ilike("city", `%${params.city}%`);
   }
 
-  const { data: pets, error } = await query;
+  const { data: pets, count, error } = await query;
+
+  const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE);
+  const hasPrev = page > 1;
+  const hasNext = page < totalPages;
+
+  // Monta a query string preservando os filtros ao paginar
+  function buildPageUrl(targetPage: number) {
+    const qs = new URLSearchParams();
+    if (params.kind) qs.set("kind", params.kind);
+    if (params.species) qs.set("species", params.species);
+    if (params.city) qs.set("city", params.city);
+    if (targetPage > 1) qs.set("page", String(targetPage));
+    const s = qs.toString();
+    return `/pets${s ? `?${s}` : ""}`;
+  }
 
   return (
     <div className="min-h-screen bg-ink-800 bg-radial-brand">
@@ -70,7 +94,7 @@ export default async function PetsPage({ searchParams }: PageProps) {
             <p className="mt-1.5 flex items-center gap-2 text-sm text-fg-muted">
               <Radar className="h-4 w-4 text-cyan-400" strokeWidth={2} />
               <span>
-                {pets?.length ?? 0} pets ativos{" "}
+                {count ?? 0} pets ativos{" "}
                 {params.city ? `em ${params.city}` : "na rede"} agora
               </span>
             </p>
@@ -99,6 +123,51 @@ export default async function PetsPage({ searchParams }: PageProps) {
               <PetGrid pets={(pets ?? []) as unknown as PetRow[]} />
             )}
           </section>
+
+          {/* Paginação */}
+          {totalPages > 1 && (
+            <nav
+              aria-label="Paginação"
+              className="mt-10 flex items-center justify-center gap-3"
+            >
+              {hasPrev ? (
+                <Link
+                  href={buildPageUrl(page - 1)}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-ink-700/60 px-4 py-2 text-sm font-medium text-fg-muted transition-colors hover:bg-ink-600 hover:text-fg"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Anterior
+                </Link>
+              ) : (
+                <span className="inline-flex items-center gap-1.5 rounded-lg border border-white/5 px-4 py-2 text-sm text-fg-subtle opacity-40 cursor-not-allowed">
+                  <ChevronLeft className="h-4 w-4" />
+                  Anterior
+                </span>
+              )}
+
+              <span className="text-sm text-fg-muted">
+                Página{" "}
+                <strong className="text-fg">{page}</strong>{" "}
+                de{" "}
+                <strong className="text-fg">{totalPages}</strong>
+              </span>
+
+              {hasNext ? (
+                <Link
+                  href={buildPageUrl(page + 1)}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-ink-700/60 px-4 py-2 text-sm font-medium text-fg-muted transition-colors hover:bg-ink-600 hover:text-fg"
+                >
+                  Próxima
+                  <ChevronRight className="h-4 w-4" />
+                </Link>
+              ) : (
+                <span className="inline-flex items-center gap-1.5 rounded-lg border border-white/5 px-4 py-2 text-sm text-fg-subtle opacity-40 cursor-not-allowed">
+                  Próxima
+                  <ChevronRight className="h-4 w-4" />
+                </span>
+              )}
+            </nav>
+          )}
         </main>
 
         {/* CTA flutuante */}

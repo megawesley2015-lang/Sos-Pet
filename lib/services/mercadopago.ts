@@ -12,9 +12,10 @@
 
 const MP_BASE = "https://api.mercadopago.com";
 const ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN ?? "";
+// Prioridade: NEXT_PUBLIC_SITE_URL (setada na Vercel) > NEXT_PUBLIC_APP_URL (legado) > fallback local
 const APP_URL =
-  process.env.NEXT_PUBLIC_APP_URL ??
   process.env.NEXT_PUBLIC_SITE_URL ??
+  process.env.NEXT_PUBLIC_APP_URL ??
   "http://localhost:3000";
 
 // ─── Tipos ───────────────────────────────────────────────────

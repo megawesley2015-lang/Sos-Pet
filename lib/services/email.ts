@@ -14,8 +14,12 @@
  */
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const FROM = process.env.RESEND_FROM ?? "SOS Pet <noreply@project-uobep.vercel.app>";
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://project-uobep.vercel.app";
+const FROM = process.env.RESEND_FROM ?? "SOS Pet <noreply@sospet.com.br>";
+// Prioridade: NEXT_PUBLIC_SITE_URL (setada na Vercel) > NEXT_PUBLIC_BASE_URL (legado) > fallback local
+const BASE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  process.env.NEXT_PUBLIC_BASE_URL ??
+  "http://localhost:3000";
 
 function escapeHtml(value: string | null | undefined): string {
   return String(value ?? "")
