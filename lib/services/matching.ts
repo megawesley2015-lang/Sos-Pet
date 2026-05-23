@@ -98,13 +98,6 @@ const GEO_BONUS: Record<GeoPhase, number> = {
   none:     0,
 };
 
-const GEO_LABEL: Record<GeoPhase, string> = {
-  city:    (c: string) => `Mesma cidade (${c})`,
-  baixada: "Região da Baixada Santista",
-  state:   (s: string) => `Mesmo estado (${s})`,
-  none:    "",
-} as unknown as Record<GeoPhase, string>;
-
 function geoReason(phase: GeoPhase, pet: PetRow): string {
   if (phase === "city")    return `Mesma cidade (${pet.city})`;
   if (phase === "baixada") return "Região da Baixada Santista";

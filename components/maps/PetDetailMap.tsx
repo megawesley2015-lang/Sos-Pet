@@ -40,10 +40,8 @@ const RADIUS_BY_SPECIES = {
  *  - Painel "Meta Ads Ready" para o tutor copiar coords
  */
 export function PetDetailMap({
-  petId,
   petName,
   species,
-  kind,
   latitude,
   longitude,
   sightings,

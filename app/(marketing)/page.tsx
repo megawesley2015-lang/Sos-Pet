@@ -111,6 +111,7 @@ export default async function LandingPage() {
   };
 
   // Alfinetes — garante tipagem correta
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mapPets: PetMapPin[] = ((mapPetsResult.data ?? []) as any[]).map((p) => ({
     id: p.id,
     kind: p.kind as "lost" | "found",

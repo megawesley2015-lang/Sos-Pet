@@ -106,6 +106,7 @@ export default async function PetDetailPage({ params }: PageProps) {
 
   const healthRecords: PetSaudeRow[] = healthResult.records ?? [];
   const mapSightings: Array<{ lat: number; lng: number; description: string | null; created_at: string }> =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (sightingsResult.data ?? []).map((s: any) => ({
       lat: s.lat, lng: s.lng, description: s.description, created_at: s.created_at,
     }));
