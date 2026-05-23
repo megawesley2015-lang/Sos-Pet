@@ -64,14 +64,9 @@ jobs:
       - name: "Next.js: build"
         run: npm run build
 
-      # 7. Testes unitários (só roda se o script existir)
+      # 7. Testes unitários
       - name: "Vitest: testes unitários"
-        run: |
-          if npm run test --if-present 2>/dev/null; then
-            echo "✓ Testes passaram"
-          else
-            echo "ℹ Nenhum script de teste configurado ainda"
-          fi
+        run: npm run test
 
   # Job de resumo — aparece como check obrigatório na Vercel
   summary:
