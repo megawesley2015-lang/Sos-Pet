@@ -26,6 +26,12 @@ interface PetFormProps {
   onDelete?: () => void;
   /** Se true, mostra Turnstile (geralmente para cadastros anônimos) */
   showCaptcha?: boolean;
+  /**
+   * Tipo pré-selecionado ao abrir o formulário de cadastro (sem `initial`).
+   * Lido do searchParam ?kind=found na página /pets/novo.
+   * Padrão: "lost"
+   */
+  defaultKind?: "lost" | "found";
 }
 
 const today = new Date().toISOString().slice(0, 10);
@@ -45,6 +51,7 @@ export function PetForm({
   pendingLabel,
   onDelete,
   showCaptcha = false,
+  defaultKind = "lost",
 }: PetFormProps) {
   const [state, formAction] = useActionState(action, initialState);
   const e = state.errors ?? {};
@@ -68,14 +75,14 @@ export function PetForm({
             value="lost"
             label="Perdi meu pet"
             color="brand"
-            defaultChecked={initial?.kind === "lost" || !initial}
+            defaultChecked={initial ? initial.kind === "lost" : defaultKind === "lost"}
           />
           <KindRadio
             name="kind"
             value="found"
             label="Encontrei um pet"
             color="cyan"
-            defaultChecked={initial?.kind === "found"}
+            defaultChecked={initial ? initial.kind === "found" : defaultKind === "found"}
           />
         </div>
         {e.kind && (
@@ -243,7 +250,7 @@ export function PetForm({
           inputMode="tel"
           defaultValue={initial?.contact_phone ?? ""}
           error={e.contact_phone}
-          placeholder="(11) 99999-9999"
+          placeholder="(13) 99999-9999"
         />
 
         <label className="mt-1 flex items-center gap-2 text-sm text-fg">
@@ -259,14 +266,18 @@ export function PetForm({
 
       {/* Anti-spam: Turnstile para cadastros anônimos */}
       {showCaptcha && (
-        <div className="mt-6">
+        <div className="mt-6 rounded-xl border border-white/10 bg-ink-800/40 p-4 text-center">
+          <p className="mb-3 text-xs font-medium text-fg-muted">
+            Verificação rápida — geralmente automática, sem precisar de conta.
+          </p>
           <TurnstileWidget className="flex justify-center" />
-          <p className="mt-2 text-xs text-fg-muted text-center">
-            Protegido por{" "}
+          <p className="mt-2 text-[11px] text-fg-subtle">
+            Segurança por{" "}
             <a href="https://www.cloudflare.com/products/turnstile/" target="_blank" rel="noopener noreferrer"
-              className="text-brand-400 hover:underline">
+              className="text-fg-muted hover:underline">
               Cloudflare Turnstile
             </a>
+            {" "}— sem cookies, sem rastreamento.
           </p>
         </div>
       )}

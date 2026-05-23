@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Rede Sentinela | SOS Pet",
+  title: "Rede Sentinela",
   description:
     "Estabelecimentos parceiros da Rede Sentinela — pontos de apoio para localizar pets perdidos.",
 };

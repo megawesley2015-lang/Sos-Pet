@@ -61,7 +61,7 @@ export default async function PrestadoresPage({ searchParams }: PageProps) {
               <Stethoscope className="h-4 w-4 text-cyan-400" strokeWidth={2} />
               <span>
                 {providers.length}{" "}
-                {providers.length === 1 ? "prestador" : "prestadores"} ativos na rede
+                {providers.length === 1 ? "prestador ativo" : "prestadores ativos"} na rede
               </span>
             </p>
           </section>

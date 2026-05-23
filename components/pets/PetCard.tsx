@@ -10,10 +10,16 @@ interface PetCardProps {
 }
 
 export function PetCard({ pet }: PetCardProps) {
+  const isResolved = pet.status === "resolved";
+
   return (
     <Link
       href={`/pets/${pet.id}`}
-      className="group relative overflow-hidden rounded-xl border border-white/5 bg-ink-700/70 backdrop-blur-sm transition-all hover:border-brand-500/40 hover:shadow-glow-brand"
+      className={`group relative overflow-hidden rounded-xl border bg-ink-700/70 backdrop-blur-sm transition-all ${
+        isResolved
+          ? "border-green-500/20 opacity-70 hover:opacity-90 hover:border-green-500/40"
+          : "border-white/5 hover:border-brand-500/40 hover:shadow-glow-brand"
+      }`}
     >
       {/* Imagem */}
       <div className="relative h-40 bg-gradient-to-br from-ink-600 to-ink-900">
@@ -23,7 +29,7 @@ export function PetCard({ pet }: PetCardProps) {
             alt={pet.name ?? "Pet"}
             fill
             sizes="(max-width: 768px) 50vw, 300px"
-            className="object-cover"
+            className={`object-cover ${isResolved ? "grayscale-[40%]" : ""}`}
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
@@ -35,9 +41,16 @@ export function PetCard({ pet }: PetCardProps) {
         )}
         {/* Overlay sutil */}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-900/60 via-transparent to-transparent" />
-        {/* Badge */}
-        <div className="absolute left-2 top-2 z-10">
-          <SOSBadge kind={pet.kind} />
+
+        {/* Badges */}
+        <div className="absolute left-2 top-2 z-10 flex flex-col gap-1">
+          {isResolved ? (
+            <span className="inline-flex items-center gap-1 rounded-full bg-green-500/90 px-2 py-0.5 text-[10px] font-bold text-ink-900 backdrop-blur-sm">
+              ✓ Reencontrado
+            </span>
+          ) : (
+            <SOSBadge kind={pet.kind} />
+          )}
         </div>
       </div>
 
@@ -46,7 +59,9 @@ export function PetCard({ pet }: PetCardProps) {
         <div className="flex items-center gap-1.5">
           <span
             className={`h-1.5 w-1.5 rounded-full ${
-              pet.kind === "lost"
+              isResolved
+                ? "bg-green-500"
+                : pet.kind === "lost"
                 ? "bg-brand-500 shadow-glow-brand"
                 : "bg-cyan-500 shadow-glow-cyan"
             }`}

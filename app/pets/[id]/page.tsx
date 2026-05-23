@@ -12,6 +12,7 @@ import { SOSBadge } from "@/components/ui/SOSBadge";
 import { PetDetailMapClient } from "./PetDetailMapClient";
 import { CTAButton } from "@/components/ui/CTAButton";
 import SightingsList from "./SightingsList";
+import { ResolveButton, ReactivateButton } from "./ResolveButton";
 import { HealthTimeline } from "@/components/pets/HealthTimeline";
 import { listHealthRecords } from "@/lib/services/health";
 import { EmergencySafetyBanner } from "@/components/store/EmergencySafetyBanner";
@@ -65,35 +66,96 @@ export default async function PetDetailPage({ params }: PageProps) {
   const { id } = await params;
   const supabase = await createSupabaseServerClient();
 
-  const pet = await getPetById(id);
-  if (!pet || pet.status !== "active") notFound();
+  const [pet, user] = await Promise.all([
+    getPetById(id),
+    getUserSafe(supabase),
+  ]);
 
-  const user = await getUserSafe(supabase);
-  const isOwner = !!user && pet.owner_id === user.id;
+  const isOwner = !!user && !!pet && pet.owner_id === user.id;
+
+  // Pets removidos: ninguém vê (nem o dono)
+  if (!pet || pet.status === "removed") notFound();
+  // Pets resolvidos: só o dono vê (página especial abaixo)
+  if (pet.status !== "active" && !isOwner) notFound();
 
   const waMessage = `Oi! Vi o registro do pet ${
     pet.name ? pet.name : `(${KIND_LABEL[pet.kind].toLowerCase()})`
   } no SOS Pet e gostaria de ajudar.`;
 
-  let healthRecords: PetSaudeRow[] = [];
-  if (isOwner) {
-    const { records } = await listHealthRecords(pet.id);
-    healthRecords = records;
-  }
-
-  // latitude/longitude já estão no tipo PetRow — sem cast necessário
+  // Busca paralela: health records (owner), sightings (pet lost) e perfil público do owner
   const hasLocation = !!pet.latitude && !!pet.longitude;
-  let mapSightings: Array<{ lat: number; lng: number; description: string | null; created_at: string }> = [];
-  if (pet.kind === "lost" && hasLocation) {
-    const { data: sightingsData } = await supabase
-      .from("sightings")
-      .select("lat, lng, description, created_at")
-      .eq("pet_id", pet.id)
-      .order("created_at", { ascending: false })
-      .limit(50);
-    mapSightings = (sightingsData ?? []).map((s: any) => ({
+
+  const [healthResult, sightingsResult, ownerProfileResult] = await Promise.all([
+    isOwner ? listHealthRecords(pet.id) : Promise.resolve({ records: [] }),
+    pet.kind === "lost" && hasLocation
+      ? supabase
+          .from("sightings")
+          .select("lat, lng, description, created_at")
+          .eq("pet_id", pet.id)
+          .order("created_at", { ascending: false })
+          .limit(50)
+      : Promise.resolve({ data: null }),
+    pet.owner_id
+      ? supabase
+          .from("profiles")
+          .select("id, full_name, avatar_url")
+          .eq("id", pet.owner_id)
+          .maybeSingle()
+      : Promise.resolve({ data: null }),
+  ]);
+
+  const healthRecords: PetSaudeRow[] = healthResult.records ?? [];
+  const mapSightings: Array<{ lat: number; lng: number; description: string | null; created_at: string }> =
+    (sightingsResult.data ?? []).map((s: any) => ({
       lat: s.lat, lng: s.lng, description: s.description, created_at: s.created_at,
     }));
+  const ownerProfile = ownerProfileResult.data as
+    | { id: string; full_name: string | null; avatar_url: string | null }
+    | null;
+
+  // ── Pet resolvido: owner vê tela de celebração ──────────────
+  if (pet.status === "resolved") {
+    return (
+      <div className="min-h-screen bg-ink-800 bg-radial-brand">
+        <TopBar />
+        <main className="mx-auto max-w-2xl px-4 pb-16 pt-12 text-center">
+          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border-2 border-green-500/60 bg-green-500/10 text-5xl shadow-[0_0_24px_rgba(34,197,94,0.3)]">
+            🎉
+          </div>
+          <h1 className="font-display text-4xl font-black text-fg">
+            {pet.kind === "lost" ? "Que alegria!" : "Missão cumprida!"}
+          </h1>
+          <p className="mt-3 text-base text-fg-muted">
+            {pet.kind === "lost"
+              ? `${pet.name ? `${pet.name} voltou` : "Seu pet voltou"} para casa. Este registro foi marcado como resolvido e removido da listagem pública.`
+              : `${pet.name ? `${pet.name} foi devolvido` : "O pet foi devolvido"} ao tutor. Ótimo trabalho!`}
+          </p>
+
+          <div className="mt-6 rounded-2xl border border-white/10 bg-ink-700/60 p-5 text-left">
+            <p className="text-xs font-bold uppercase tracking-wide text-fg-subtle">Registro</p>
+            <p className="mt-1 text-sm font-medium text-fg">
+              {pet.name ?? "Sem nome"} · {SPECIES_LABEL[pet.species]}
+            </p>
+            <p className="mt-1 text-xs text-fg-muted">
+              {pet.neighborhood}, {pet.city} · {new Date(pet.event_date).toLocaleDateString("pt-BR")}
+            </p>
+          </div>
+
+          <div className="mt-8 flex flex-col items-center gap-3">
+            <Link
+              href="/meus-pets"
+              className="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-6 py-3 text-sm font-bold text-white shadow-glow-brand transition hover:bg-brand-400"
+            >
+              Ver meus registros
+            </Link>
+            <ReactivateButton petId={pet.id} />
+            <p className="text-xs text-fg-subtle">
+              Reativar republica o registro na listagem pública.
+            </p>
+          </div>
+        </main>
+      </div>
+    );
   }
 
   const jsonLd = petArticleJsonLd(pet, getBaseUrl());
@@ -109,7 +171,8 @@ export default async function PetDetailPage({ params }: PageProps) {
             Voltar para a listagem
           </Link>
           {isOwner && (
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <ResolveButton petId={pet.id} kind={pet.kind} />
               {pet.kind === "lost" && (
                 <Link
                   href={`/resgate?pet=${pet.id}`}
@@ -191,9 +254,32 @@ export default async function PetDetailPage({ params }: PageProps) {
 
             <section className="mt-8 rounded-xl border border-cyan-500/30 bg-cyan-500/5 p-4">
               <h2 className="text-sm font-bold uppercase tracking-wide text-cyan-300">Entre em contato</h2>
-              <p className="mt-1 text-sm text-fg">
-                {pet.contact_name} - {formatPhone(pet.contact_phone)}
-              </p>
+              <div className="mt-1 flex items-center justify-between gap-3">
+                <p className="text-sm text-fg">
+                  {pet.contact_name} - {formatPhone(pet.contact_phone)}
+                </p>
+                {ownerProfile && !isOwner && (
+                  <Link
+                    href={`/perfil/${ownerProfile.id}`}
+                    className="flex shrink-0 items-center gap-1.5 rounded-full border border-white/10 bg-ink-800/60 px-2.5 py-1 text-[11px] text-fg-muted transition hover:border-cyan-500/30 hover:text-fg"
+                  >
+                    {ownerProfile.avatar_url ? (
+                      <Image
+                        src={ownerProfile.avatar_url}
+                        alt={ownerProfile.full_name ?? ""}
+                        width={16}
+                        height={16}
+                        className="h-4 w-4 rounded-full object-cover"
+                      />
+                    ) : (
+                      <span className="flex h-4 w-4 items-center justify-center rounded-full bg-brand-500/20 text-[9px] font-bold text-brand-300">
+                        {(ownerProfile.full_name ?? "?")[0]?.toUpperCase()}
+                      </span>
+                    )}
+                    <span>{ownerProfile.full_name?.split(" ")[0] ?? "Ver perfil"}</span>
+                  </Link>
+                )}
+              </div>
               <div className="mt-4 flex flex-wrap gap-2">
                 {pet.contact_whatsapp && (
                   <CTAButton

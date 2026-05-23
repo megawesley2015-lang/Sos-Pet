@@ -5,7 +5,7 @@ import { ClubSOSBanner } from "@/components/store/ClubSOSBanner";
 import type { StoreProductRow } from "@/lib/types/database";
 
 export const metadata = {
-  title: "Loja · SOS Pet",
+  title: "Loja",
   description:
     "Produtos selecionados para segurança, saúde e bem-estar do seu pet. Curadoria especializada para tutores da Baixada Santista.",
 };

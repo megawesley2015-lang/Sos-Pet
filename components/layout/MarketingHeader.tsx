@@ -75,10 +75,10 @@ export async function MarketingHeader() {
             Dicas
           </Link>
           <Link
-            href="/parcerias"
-            className="text-sm font-medium text-ink-800 transition-colors hover:text-brand-600"
+            href="/sentinela"
+            className="text-sm font-medium text-cyan-600 transition-colors hover:text-cyan-700"
           >
-            Parcerias
+            📷 Sentinela
           </Link>
           <Link
             href="/loja"

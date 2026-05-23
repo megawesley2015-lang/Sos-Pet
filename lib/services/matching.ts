@@ -125,7 +125,8 @@ function geoReason(phase: GeoPhase, pet: PetRow): string {
  *   Sexo igual              +10
  *   Geo (3 fases)           +5 / +12 / +20
  */
-function calculateMatchScore(
+/** @internal Exportado apenas para testes unitários */
+export function calculateMatchScore(
   found: PetRow,
   lost: PetRow
 ): { score: number; reasons: string[]; geoPhase: GeoPhase } {

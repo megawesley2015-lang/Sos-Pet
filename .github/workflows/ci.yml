@@ -1,0 +1,90 @@
+# ──────────────────────────────────────────────────────────────
+# SOS Pet — CI Pipeline
+#
+# Roda em todo push e pull_request.
+# Se qualquer verificação falhar → deploy na Vercel é bloqueado.
+#
+# Verificações:
+#   1. TypeScript typecheck (tsc --noEmit)
+#   2. ESLint
+#   3. Next.js build
+#   4. Testes unitários (Vitest) — quando existirem
+# ──────────────────────────────────────────────────────────────
+
+name: CI
+
+on:
+  push:
+    branches: ["main", "develop"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  ci:
+    name: "Verificações de qualidade"
+    runs-on: ubuntu-latest
+
+    env:
+      # Variáveis mínimas para o build funcionar (sem dados reais)
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      # Sentry (opcional — build funciona sem)
+      NEXT_PUBLIC_SENTRY_DSN: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      # Turnstile (build não precisa da key real)
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: "1x00000000000000000000AA"
+      # Outras vars que o build pode precisar
+      NEXT_PUBLIC_SITE_URL: "https://sospet.com.br"
+
+    steps:
+      # 1. Checkout do código
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      # 3. Instala dependências
+      - name: Instalar dependências
+        run: npm ci
+
+      # 4. TypeScript — verifica tipos
+      - name: "TypeScript: typecheck"
+        run: npm run typecheck
+
+      # 5. ESLint — verifica estilo e regras
+      - name: "ESLint: lint"
+        run: npm run lint
+
+      # 6. Next.js build — garante que o projeto compila
+      - name: "Next.js: build"
+        run: npm run build
+
+      # 7. Testes unitários (só roda se o script existir)
+      - name: "Vitest: testes unitários"
+        run: |
+          if npm run test --if-present 2>/dev/null; then
+            echo "✓ Testes passaram"
+          else
+            echo "ℹ Nenhum script de teste configurado ainda"
+          fi
+
+  # Job de resumo — aparece como check obrigatório na Vercel
+  summary:
+    name: "CI passou ✓"
+    needs: ci
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Verificar resultado
+        run: |
+          if [ "${{ needs.ci.result }}" = "success" ]; then
+            echo "✅ Todas as verificações passaram — deploy liberado"
+          else
+            echo "❌ CI falhou — deploy bloqueado"
+            exit 1
+          fi

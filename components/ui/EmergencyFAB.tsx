@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { X, Siren, Search, PawPrint, MessageCircle } from "lucide-react";
+import { X, Siren, Search, PawPrint } from "lucide-react";
 
 /**
  * EmergencyFAB — Floating Action Button de ações rápidas.
@@ -46,14 +46,15 @@ const ACTIONS = [
     cls: "bg-cyan-500 hover:bg-cyan-600 shadow-glow-cyan",
     external: false,
   },
-  {
-    id: "whatsapp",
-    label: "Suporte",
-    Icon: MessageCircle,
-    href: "https://wa.me/5513999999999?text=Olá! Preciso de ajuda no SOS Pet",
-    cls: "bg-green-500 hover:bg-green-600",
-    external: true,
-  },
+  // TODO: Adicionar número real de suporte antes de ativar
+  // {
+  //   id: "whatsapp",
+  //   label: "Suporte",
+  //   Icon: MessageCircle,
+  //   href: "https://wa.me/55XXXXXXXXXXX?text=Olá! Preciso de ajuda no SOS Pet",
+  //   cls: "bg-green-500 hover:bg-green-600",
+  //   external: true,
+  // },
 ] as const;
 
 export default function EmergencyFAB() {

@@ -12,7 +12,7 @@ import {
   Eye,
   Users,
 } from "lucide-react";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/server";
 import CountUp from "@/components/ui/CountUp";
 import { HeroMap } from "@/components/maps/HeroMap";
 import type { PetMapPin } from "@/components/maps/PetAlertMap";
@@ -33,7 +33,12 @@ export const dynamic = "force-dynamic";
  * Server Component — busca stats reais do Supabase (count via head:true).
  */
 export default async function LandingPage() {
-  const supabase = await createSupabaseServerClient();
+  // createServiceClient bypassa RLS — necessário para contar todos os pets
+  // independentemente do estado de autenticação do visitante.
+  // As queries de count na homepage falhavam silenciosamente (retornavam 0)
+  // para usuários anônimos após a migration 20260504_hardening fechar SELECT
+  // direto na tabela pets.
+  const supabase = createServiceClient();
 
   // Stats reais — count(*) sem trazer linhas (head:true)
   const [
