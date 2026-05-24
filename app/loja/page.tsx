@@ -2,6 +2,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { ShoppingBag, Star, ExternalLink, Tag, Shield, Package, Stethoscope } from "lucide-react";
 import { ClubSOSBanner } from "@/components/store/ClubSOSBanner";
+import { ProductImage } from "@/components/store/ProductImage";
 import type { StoreProductRow } from "@/lib/types/database";
 
 export const metadata = {
@@ -229,12 +230,7 @@ function ProductCard({
       {/* Imagem */}
       <div className="relative aspect-square overflow-hidden bg-ink-600">
         {product.photo_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={product.photo_url}
-            alt={product.name}
-            className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-          />
+          <ProductImage src={product.photo_url} alt={product.name} fallbackIcon={cfg.icon} />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-5xl">
             {cfg.icon}

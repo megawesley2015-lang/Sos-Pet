@@ -4,7 +4,7 @@ import { Camera, ShieldCheck, MapPin } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Cadastrar na Rede Sentinela | SOS Pet",
+  title: "Cadastrar na Rede Sentinela",
   description:
     "Seja um ponto de apoio na Rede Sentinela do SOS Pet. Registre seu estabelecimento e ajude a localizar pets perdidos na sua região.",
 };

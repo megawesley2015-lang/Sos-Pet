@@ -14,6 +14,12 @@ import { getBaseUrl } from "@/lib/utils/url";
 
 export const dynamic = "force-dynamic";
 
+export const metadata = {
+  title: "Central de Resgate",
+  description: "Dispare um SOS para sua rede de contatos e monitore o histórico de alertas do seu pet.",
+  openGraph: { type: "website" as const },
+};
+
 interface PageProps {
   searchParams: Promise<{ pet?: string }>;
 }

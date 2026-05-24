@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import type { PrestadorRow } from "@/lib/types/database";
 import { CATEGORIA_LABEL } from "@/lib/services/providers";
+import { capitalizeWords } from "@/lib/utils/string";
 
 interface PrestadorCardProps {
   prestador: PrestadorRow;
@@ -75,7 +76,7 @@ export function PrestadorCard({ prestador }: PrestadorCardProps) {
       <div className="flex-1 p-3 pt-8">
         <div className="flex items-start justify-between gap-2">
           <h3 className="truncate font-display text-sm font-bold text-fg">
-            {prestador.nome}
+            {capitalizeWords(prestador.nome)}
           </h3>
           {prestador.total_avaliacoes > 0 && (
             <span className="flex shrink-0 items-center gap-0.5 text-xs text-fg-muted">
@@ -95,8 +96,8 @@ export function PrestadorCard({ prestador }: PrestadorCardProps) {
         <p className="mt-2 flex items-center gap-1 text-xs text-fg-muted">
           <MapPin className="h-3 w-3 text-brand-500" />
           <span className="truncate">
-            {prestador.bairro ? `${prestador.bairro}, ` : ""}
-            {prestador.cidade}
+            {prestador.bairro ? `${capitalizeWords(prestador.bairro)}, ` : ""}
+            {capitalizeWords(prestador.cidade)}
           </span>
         </p>
 

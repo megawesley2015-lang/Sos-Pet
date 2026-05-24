@@ -6,6 +6,12 @@ import { PrestadorForm } from "@/components/providers/PrestadorForm";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
 import { createProviderAction } from "./actions";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Cadastrar Prestador",
+  description: "Cadastre sua clínica veterinária, pet shop ou serviço de cuidados na rede SOS Pet.",
+};
 
 export default async function NovoPrestadorPage() {
   const supabase = await createSupabaseServerClient();

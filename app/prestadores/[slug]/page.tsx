@@ -35,6 +35,7 @@ import { listReviewsByProvider, getMyReview } from "@/lib/services/reviews";
 import { formatPhone } from "@/lib/utils/format";
 import { getBaseUrl } from "@/lib/utils/url";
 import { providerJsonLd } from "@/lib/utils/jsonld";
+import { capitalizeWords } from "@/lib/utils/string";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -57,10 +58,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const baseUrl = getBaseUrl();
   const url = `${baseUrl}/prestadores/${slug}`;
-  const title = `${prestador.nome} — ${CATEGORIA_LABEL[prestador.categoria]} em ${prestador.cidade}`;
+  const nomeFmt = capitalizeWords(prestador.nome);
+  const cidadeFmt = capitalizeWords(prestador.cidade);
+  const title = `${nomeFmt} — ${CATEGORIA_LABEL[prestador.categoria]} em ${cidadeFmt}`;
   const description =
     prestador.descricao?.trim() ||
-    `${prestador.nome} é ${CATEGORIA_LABEL[prestador.categoria]} em ${prestador.cidade}. Encontre contato, avaliações e horários no SOS Pet.`;
+    `${nomeFmt} é ${CATEGORIA_LABEL[prestador.categoria]} em ${cidadeFmt}. Encontre contato, avaliações e horários no SOS Pet.`;
 
   const ogImage = prestador.capa_url ?? prestador.logo_url;
   // Fallback para og:image do site quando o prestador não tem foto
@@ -164,7 +167,7 @@ export default async function PrestadorDetalhePage({ params }: PageProps) {
             <div className="min-w-0 flex-1 pt-12">
               <div className="flex flex-wrap items-center gap-2">
                 <h1 className="font-display text-2xl font-bold text-fg sm:text-3xl">
-                  {prestador.nome}
+                  {capitalizeWords(prestador.nome)}
                 </h1>
                 {prestador.verificado && (
                   <span
@@ -181,9 +184,9 @@ export default async function PrestadorDetalhePage({ params }: PageProps) {
               </p>
               <p className="mt-1 flex items-center gap-1.5 text-sm text-fg-muted">
                 <MapPin className="h-3.5 w-3.5 text-brand-500" />
-                {prestador.bairro ? `${prestador.bairro}, ` : ""}
-                {prestador.cidade}
-                {prestador.estado ? ` — ${prestador.estado}` : ""}
+                {prestador.bairro ? `${capitalizeWords(prestador.bairro)}, ` : ""}
+                {capitalizeWords(prestador.cidade)}
+                {prestador.estado ? ` — ${prestador.estado.toUpperCase()}` : ""}
               </p>
             </div>
 

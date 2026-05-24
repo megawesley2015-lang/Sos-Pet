@@ -12,9 +12,9 @@ export async function generateMetadata({
   const { id } = await params;
   const service = createServiceClient();
   const { data } = await service.from("store_products").select("name, description").eq("id", id).single();
-  if (!data) return { title: "Produto não encontrado · SOS Pet" };
+  if (!data) return { title: { absolute: "Produto não encontrado · SOS Pet" } };
   return {
-    title: `${data.name} · Loja SOS Pet`,
+    title: { absolute: `${data.name} · Loja SOS Pet` },
     description: data.description ?? undefined,
   };
 }
