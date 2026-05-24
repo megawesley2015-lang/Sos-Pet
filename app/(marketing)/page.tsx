@@ -224,7 +224,7 @@ function Hero({
                 </div>
 
                 <p className="mt-5 text-xs text-fg-subtle">
-                  100% gratuito · sem login pra cadastrar · você no controle
+                  100% gratuito · sem login · verificação anti-spam automática · você no controle
                 </p>
 
                 {/* Stats compactos embaixo do CTA (visíveis no desktop) */}
