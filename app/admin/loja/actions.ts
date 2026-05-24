@@ -46,10 +46,10 @@ export async function criarProdutoAction(formData: FormData) {
     const ext = photo.name.split(".").pop() ?? "jpg";
     const path = `store/${Date.now()}.${ext}`;
     const { error } = await service.storage
-      .from("pets")
+      .from("store-products")
       .upload(path, photo, { contentType: photo.type, upsert: false });
     if (!error) {
-      const { data: urlData } = service.storage.from("pets").getPublicUrl(path);
+      const { data: urlData } = service.storage.from("store-products").getPublicUrl(path);
       photoUrl = urlData.publicUrl;
     }
   }

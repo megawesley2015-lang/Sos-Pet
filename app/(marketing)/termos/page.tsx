@@ -2,9 +2,11 @@ import Link from "next/link";
 import { PageHeader } from "@/components/marketing/PageHeader";
 
 export const metadata = {
-  title: "Termos de Uso — SOS Pet",
+  title: "Termos de Uso",
   description:
     "Termos e condições de uso da plataforma SOS Pet — Achados e Perdidos.",
+  alternates: { canonical: "/termos" },
+  openGraph: { url: "/termos", type: "website" as const },
 };
 
 /**

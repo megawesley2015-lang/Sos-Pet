@@ -3,7 +3,7 @@ import { CheckCircle, QrCode, Package, ArrowRight, PawPrint } from "lucide-react
 import { TopBar } from "@/components/layout/TopBar";
 
 export const metadata = {
-  title: "Pedido confirmado! — SOS Pet",
+  title: "Pedido confirmado!",
 };
 
 /**

@@ -6,9 +6,23 @@ import { CTAButton } from "@/components/ui/CTAButton";
 import { PrestadorCard } from "@/components/providers/PrestadorCard";
 import { PrestadorFilters } from "@/components/providers/PrestadorFilters";
 import { listProviders } from "@/lib/services/providers";
+import type { Metadata } from "next";
 import type { PrestadorCategoria } from "@/lib/types/database";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Prestadores",
+  description:
+    "Encontre veterinários, pet shops e cuidadores parceiros da rede SOS Pet. Filtre por categoria, cidade e serviços de emergência.",
+  alternates: { canonical: "/prestadores" },
+  openGraph: {
+    title: "Prestadores Parceiros · SOS Pet",
+    description: "Rede de veterinários e pet shops verificados. Agende, veja avaliações e entre em contato.",
+    url: "/prestadores",
+    type: "website",
+  },
+};
 
 interface PageProps {
   searchParams: Promise<{

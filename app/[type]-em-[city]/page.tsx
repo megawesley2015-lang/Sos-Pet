@@ -38,7 +38,7 @@ export async function generateMetadata({
   const emoji = isFound ? "🐾" : "❤️";
 
   return {
-    title: `${emoji} ${typeLabel} em ${realCity} — SOS Pet`,
+    title: `${emoji} ${typeLabel} em ${realCity}`,
     description: `Todos os pets ${isFound ? "encontrados" : "perdidos"} em ${realCity}. Ajude a reunir animais com suas famílias ou compartilhe informações sobre achados.`,
     openGraph: {
       title: `${typeLabel} em ${realCity} — SOS Pet`,

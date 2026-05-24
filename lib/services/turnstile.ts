@@ -19,19 +19,31 @@ interface TurnstileResponse {
 export async function validateTurnstileToken(
   token: string | null
 ): Promise<{ valid: boolean; error: string | null }> {
+  const secretKey = process.env.TURNSTILE_SECRET_KEY;
+
+  // Bypass gracioso: chave não configurada.
+  // Em produção → bloqueia (configuração obrigatória).
+  // Em dev/staging → libera com aviso (facilita desenvolvimento local).
+  if (!secretKey) {
+    if (process.env.NODE_ENV === "production") {
+      console.error(
+        "[Turnstile] TURNSTILE_SECRET_KEY não configurada em produção — bloqueando cadastro anônimo."
+      );
+      return {
+        valid: false,
+        error: "Serviço de verificação temporariamente indisponível. Tente novamente mais tarde.",
+      };
+    }
+    console.warn(
+      "[Turnstile] TURNSTILE_SECRET_KEY ausente — bypass em desenvolvimento. Configure a chave para habilitar proteção em produção."
+    );
+    return { valid: true, error: null };
+  }
+
   if (!token || typeof token !== "string" || token.trim() === "") {
     return {
       valid: false,
-      error: "Token Turnstile ausente",
-    };
-  }
-
-  const secretKey = process.env.TURNSTILE_SECRET_KEY;
-  if (!secretKey) {
-    console.error("TURNSTILE_SECRET_KEY não configurada");
-    return {
-      valid: false,
-      error: "Erro na configuração do servidor",
+      error: "Verificação de segurança não concluída. Aguarde o captcha carregar e tente novamente.",
     };
   }
 

@@ -63,7 +63,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     `${prestador.nome} é ${CATEGORIA_LABEL[prestador.categoria]} em ${prestador.cidade}. Encontre contato, avaliações e horários no SOS Pet.`;
 
   const ogImage = prestador.capa_url ?? prestador.logo_url;
-  const images = ogImage ? [{ url: ogImage, alt: prestador.nome }] : undefined;
+  // Fallback para og:image do site quando o prestador não tem foto
+  const fallbackImage = `${getBaseUrl()}/opengraph-image`;
+  const images = [{ url: ogImage ?? fallbackImage, alt: prestador.nome }];
 
   return {
     title,

@@ -6,7 +6,21 @@ import { TopBar } from "@/components/layout/TopBar";
 import { PetFilters } from "@/components/pets/PetFilters";
 import { PetGrid } from "@/components/pets/PetGrid";
 import { CTAButton } from "@/components/ui/CTAButton";
+import type { Metadata } from "next";
 import type { PetKind, PetSpecies, PetRow } from "@/lib/types/database";
+
+export const metadata: Metadata = {
+  title: "Achados & Perdidos",
+  description:
+    "Veja todos os pets perdidos e encontrados cadastrados na rede SOS Pet. Filtre por espécie, tipo e cidade.",
+  alternates: { canonical: "/pets" },
+  openGraph: {
+    title: "Achados & Perdidos · SOS Pet",
+    description: "Pets perdidos e encontrados na sua região. Ajude a reencontrar quem se perdeu.",
+    url: "/pets",
+    type: "website",
+  },
+};
 
 /**
  * LISTAGEM PÚBLICA DE PETS

@@ -1,9 +1,11 @@
 import { PageHeader } from "@/components/marketing/PageHeader";
 
 export const metadata = {
-  title: "Política de Privacidade — SOS Pet",
+  title: "Política de Privacidade",
   description:
     "Como coletamos, usamos e protegemos seus dados na plataforma SOS Pet.",
+  alternates: { canonical: "/privacidade" },
+  openGraph: { url: "/privacidade", type: "website" as const },
 };
 
 /**

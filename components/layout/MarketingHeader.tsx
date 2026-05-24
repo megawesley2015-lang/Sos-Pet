@@ -63,6 +63,18 @@ export async function MarketingHeader() {
             Achados
           </Link>
           <Link
+            href="/mapa"
+            className="text-sm font-medium text-ink-800 transition-colors hover:text-brand-600"
+          >
+            Mapa
+          </Link>
+          <Link
+            href="/avistamentos"
+            className="text-sm font-medium text-ink-800 transition-colors hover:text-brand-600"
+          >
+            Avistamentos
+          </Link>
+          <Link
             href="/prestadores"
             className="text-sm font-medium text-ink-800 transition-colors hover:text-brand-600"
           >

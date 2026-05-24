@@ -3,7 +3,7 @@ import { Clock, QrCode, Package, ArrowRight, RefreshCw } from "lucide-react";
 import { TopBar } from "@/components/layout/TopBar";
 
 export const metadata = {
-  title: "Pagamento em processamento — SOS Pet",
+  title: "Pagamento em processamento",
 };
 
 /**

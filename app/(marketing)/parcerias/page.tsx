@@ -3,9 +3,11 @@ import { PageHeader } from "@/components/marketing/PageHeader";
 import { ParceriaForm } from "./ParceriaForm";
 
 export const metadata = {
-  title: "Parcerias — SOS Pet",
+  title: "Parcerias",
   description:
     "Empresas, ONGs e profissionais que querem ampliar a rede de resgate. Vamos conversar.",
+  alternates: { canonical: "/parcerias" },
+  openGraph: { url: "/parcerias", type: "website" as const },
 };
 
 const beneficios = [

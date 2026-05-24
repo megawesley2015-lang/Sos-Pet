@@ -3,6 +3,20 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { PetMapPin, SentinelPin, SightingPin } from "@/components/maps/PetAlertMap";
 import { MapaClient } from "./MapaClient";
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Mapa de Alertas",
+  description:
+    "Mapa em tempo real com pets perdidos e encontrados na sua região. Veja alfinetes de alertas ativos e câmeras da Rede Sentinela.",
+  alternates: { canonical: "/mapa" },
+  openGraph: {
+    title: "Mapa de Alertas · SOS Pet",
+    description: "Monitoramento em tempo real de pets perdidos e encontrados perto de você.",
+    url: "/mapa",
+    type: "website",
+  },
+};
 
 export const dynamic = "force-dynamic";
 

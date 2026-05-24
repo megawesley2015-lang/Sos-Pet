@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import {
   Building2,
   ChevronDown,
+  HeartHandshake,
   LogOut,
   PawPrint,
   Siren,
@@ -122,6 +123,16 @@ export function UserMenu({ email, fullName, avatarUrl, role }: UserMenuProps) {
           >
             <Siren className="h-4 w-4 text-brand-400" />
             Central de resgate
+          </Link>
+
+          <Link
+            href="/ong/dashboard"
+            role="menuitem"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-2 px-4 py-2.5 text-sm text-fg hover:bg-white/5"
+          >
+            <HeartHandshake className="h-4 w-4 text-green-400" />
+            Painel ONG
           </Link>
 
           <Link

@@ -49,7 +49,7 @@ const STATUS_CONFIG: Record<
   delivered:        { label: "Entregue", color: "text-green-400", icon: CheckCircle },
 };
 
-export const metadata = { title: "Plaquinhas — Admin · SOS Pet" };
+export const metadata = { title: "Plaquinhas — Admin" };
 
 export default async function AdminPlaquinhasPage() {
   const supabase = await createSupabaseServerClient();

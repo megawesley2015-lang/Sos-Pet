@@ -3,9 +3,15 @@ import { CheckoutForm } from "./CheckoutForm";
 import { ShieldCheck, Truck, QrCode, Siren } from "lucide-react";
 
 export const metadata = {
-  title: "Plaquinha de Identificação — SOS Pet",
+  title: "Plaquinha de Identificação",
   description:
     "Garanta a segurança do seu pet com uma plaquinha personalizada com QR code. Em caso de perda, qualquer pessoa pode escanear e entrar em contato com você.",
+  openGraph: {
+    title: "Plaquinha de Identificação QR Code · SOS Pet",
+    description:
+      "Plaquinha personalizada com QR code para seu pet. Em caso de perda, qualquer pessoa escaneia e entra em contato com você.",
+    type: "website" as const,
+  },
 };
 
 const FEATURES = [

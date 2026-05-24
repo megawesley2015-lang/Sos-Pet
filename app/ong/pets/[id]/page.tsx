@@ -16,21 +16,21 @@ const HEALTH_COLOR: Record<HealthStatus, string> = {
 };
 
 const HEALTH_LABEL: Record<HealthStatus, string> = {
-  healthy: "Saudavel",
-  recovering: "Em recuperacao",
-  critical: "Estado critico",
+  healthy: "Saudável",
+  recovering: "Em recuperação",
+  critical: "Estado crítico",
   treated: "Tratado",
 };
 
 const STATUS_LABEL: Record<ShelterPetStatus, string> = {
-  available: "Disponivel para adocao",
-  fostered: "Em lar temporario",
+  available: "Disponível para adoção",
+  fostered: "Em lar temporário",
   adopted: "Adotado",
   deceased: "Falecido",
 };
 
-const SEX_LABEL = { male: "Macho", female: "Femea", unknown: "Nao identificado" };
-const SIZE_LABEL = { small: "Pequeno", medium: "Medio", large: "Grande" };
+const SEX_LABEL = { male: "Macho", female: "Fêmea", unknown: "Não identificado" };
+const SIZE_LABEL = { small: "Pequeno", medium: "Médio", large: "Grande" };
 
 export default async function OngPetDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -81,13 +81,13 @@ export default async function OngPetDetailPage({ params }: { params: Promise<{ i
     surgery: "Cirurgia",
     exam: "Exame",
     treatment: "Tratamento",
-    observation: "Observacao",
+    observation: "Observação",
   };
 
   const quickLinks = [
-    { href: `/ong/pets/${id}/prontuario`, label: "Prontuario", icon: ClipboardList, count: recordCount },
+    { href: `/ong/pets/${id}/prontuario`, label: "Prontuário", icon: ClipboardList, count: recordCount },
     { href: `/ong/pets/${id}/vacinas`, label: "Vacinas", icon: Syringe, count: vaccineCount },
-    { href: `/ong/pets/${id}/medicacoes`, label: "Medicacoes", icon: Pill, count: activeMeds?.length },
+    { href: `/ong/pets/${id}/medicacoes`, label: "Medicações", icon: Pill, count: activeMeds?.length },
   ];
 
   return (
@@ -125,18 +125,18 @@ export default async function OngPetDetailPage({ params }: { params: Promise<{ i
         <div className="space-y-4 lg:col-span-2">
           <div className="rounded-xl border border-white/10 bg-ink-700/50 p-5">
             <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-fg-subtle">
-              Informacoes gerais
+              Informações gerais
             </h2>
             <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
               {[
-                ["Especie", pet.species === "dog" ? "Cao" : pet.species === "cat" ? "Gato" : "Outro"],
-                ["Raca", pet.breed ?? "Nao informada"],
+                ["Espécie", pet.species === "dog" ? "Cão" : pet.species === "cat" ? "Gato" : "Outro"],
+                ["Raça", pet.breed ?? "Não informada"],
                 ["Cor", pet.color],
                 ["Porte", SIZE_LABEL[pet.size as keyof typeof SIZE_LABEL]],
                 ["Sexo", SEX_LABEL[pet.sex as keyof typeof SEX_LABEL]],
-                ["Idade estimada", pet.estimated_age ?? "Nao informada"],
+                ["Idade estimada", pet.estimated_age ?? "Não informada"],
                 ["Data de resgate", new Date(pet.rescue_date).toLocaleDateString("pt-BR")],
-                ["Local do resgate", pet.rescue_location ?? "Nao informado"],
+                ["Local do resgate", pet.rescue_location ?? "Não informado"],
                 ["Status", STATUS_LABEL[pet.status as ShelterPetStatus]],
               ].map(([label, value]) => (
                 <div key={label}>
@@ -153,7 +153,7 @@ export default async function OngPetDetailPage({ params }: { params: Promise<{ i
             )}
             {pet.description && (
               <div className="mt-3 border-t border-white/5 pt-3">
-                <p className="text-xs text-fg-muted">Descricao</p>
+                <p className="text-xs text-fg-muted">Descrição</p>
                 <p className="mt-0.5 text-sm text-fg">{pet.description}</p>
               </div>
             )}
@@ -162,7 +162,7 @@ export default async function OngPetDetailPage({ params }: { params: Promise<{ i
           {(pet.weight_kg || pet.microchip || pet.is_castrated) && (
             <div className="rounded-xl border border-cyan-500/20 bg-ink-700/50 p-5">
               <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-fg-subtle">
-                Prontuario
+                Prontuário
               </h2>
               <div className="flex flex-wrap gap-4 text-sm">
                 {pet.weight_kg && (
@@ -190,7 +190,7 @@ export default async function OngPetDetailPage({ params }: { params: Promise<{ i
           {nextVaccine?.next_dose_date && new Date(nextVaccine.next_dose_date) <= new Date() && (
             <div className="rounded-xl border border-brand-500/30 bg-brand-500/10 px-4 py-3">
               <p className="text-sm text-brand-200">
-                Vacina <strong>{nextVaccine.vaccine_name}</strong> com proxima dose em atraso (
+                Vacina <strong>{nextVaccine.vaccine_name}</strong> com próxima dose em atraso (
                 {new Date(nextVaccine.next_dose_date).toLocaleDateString("pt-BR")}).
               </p>
             </div>
@@ -217,7 +217,7 @@ export default async function OngPetDetailPage({ params }: { params: Promise<{ i
       {lastRecord && (
         <div className="rounded-xl border border-white/10 bg-ink-700/30 p-4">
           <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-fg-subtle">
-            Ultimo registro no prontuario
+            Último registro no prontuário
           </p>
           <div className="flex items-start gap-2">
             <span className="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-2 py-0.5 text-xs font-bold text-cyan-300">
@@ -236,7 +236,7 @@ export default async function OngPetDetailPage({ params }: { params: Promise<{ i
       {activeMeds && activeMeds.length > 0 && (
         <div className="rounded-xl border border-white/10 bg-ink-700/30 p-4">
           <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-fg-subtle">
-            Medicacoes em curso ({activeMeds.length})
+            Medicações em curso ({activeMeds.length})
           </p>
           <div className="space-y-2">
             {activeMeds.map((med, i) => (
@@ -258,7 +258,7 @@ export default async function OngPetDetailPage({ params }: { params: Promise<{ i
           className="flex items-center justify-center gap-2 rounded-xl border border-brand-500/40 bg-brand-500/10 py-4 text-sm font-bold text-brand-200 transition hover:bg-brand-500/20 hover:shadow-glow-brand"
         >
           <Heart className="h-4 w-4" />
-          Registrar adocao
+          Registrar adoção
         </Link>
       )}
     </div>

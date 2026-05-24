@@ -6,7 +6,12 @@ import { listarAvistamentosRecentes } from "./actions";
 import { formatRelativeDate } from "@/lib/utils/format";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Avistamentos — SOS Pet" };
+export const metadata = {
+  title: "Avistamentos",
+  description: "Veja os avistamentos recentes de pets perdidos reportados pela comunidade SOS Pet.",
+  alternates: { canonical: "/avistamentos" },
+  openGraph: { url: "/avistamentos", type: "website" as const },
+};
 
 const SPECIES_EMOJI: Record<string, string> = { dog: "🐶", cat: "🐱", other: "🐾" };
 

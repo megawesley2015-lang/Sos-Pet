@@ -31,29 +31,18 @@ export async function createPetAction(
   const ownerId = user?.id ?? null;
 
   // 2. Turnstile: OBRIGATÓRIO para anônimos.
+  // validateTurnstileToken já trata: token ausente, chave não configurada (bypass em dev)
+  // e falha na API do Cloudflare. Usuários logados pulam a verificação.
   const turnstileToken = extractTurnstileToken(formData);
   if (!ownerId) {
-    if (!turnstileToken) {
+    const turnstileValidation = await validateTurnstileToken(turnstileToken);
+    if (!turnstileValidation.valid) {
       return {
         ok: false,
         message:
-          "Captcha obrigatório para cadastro sem conta. Recarregue a página e tente novamente.",
+          turnstileValidation.error ??
+          "Verificação de segurança falhou. Recarregue a página e tente novamente.",
       };
-    }
-    const turnstileValidation = await validateTurnstileToken(turnstileToken);
-    if (!turnstileValidation.valid) {
-      return {
-        ok: false,
-        message: turnstileValidation.error ?? "Falha na validação do captcha",
-      };
-    }
-  } else if (turnstileToken) {
-    const turnstileValidation = await validateTurnstileToken(turnstileToken);
-    if (!turnstileValidation.valid) {
-      console.warn(
-        "[createPetAction] Turnstile inválido para user logado — prosseguindo:",
-        turnstileValidation.error
-      );
     }
   }
 

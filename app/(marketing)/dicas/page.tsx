@@ -10,9 +10,11 @@ import {
 import { PageHeader } from "@/components/marketing/PageHeader";
 
 export const metadata = {
-  title: "Dicas para encontrar seu pet — SOS Pet",
+  title: "Dicas para encontrar seu pet",
   description:
     "Guia rápido com o que fazer nas primeiras horas após perder um pet, como cadastrar bem e como aumentar suas chances de reencontro.",
+  alternates: { canonical: "/dicas" },
+  openGraph: { url: "/dicas", type: "website" as const },
 };
 
 const tips = [
