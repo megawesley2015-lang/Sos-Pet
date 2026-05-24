@@ -904,6 +904,8 @@ export type Database = {
           p_description?: string | null;
           p_behavior?: string | null;
           p_photo_url?: string | null;
+          p_latitude?: number | null;
+          p_longitude?: number | null;
         };
         Returns: string; // uuid do novo pet
       };

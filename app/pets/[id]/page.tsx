@@ -38,7 +38,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const pet = await getPetById(id);
-  if (!pet) return { title: "Pet nao encontrado" };
+  if (!pet) return { title: "Pet não encontrado" };
 
   const verb = pet.kind === "lost" ? "Procura-se" : "Encontrado";
   const nome = pet.name ?? `${pet.species} ${pet.kind}`;
@@ -231,8 +231,8 @@ export default async function PetDetailPage({ params }: PageProps) {
             </p>
 
             <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
-              <Attr label="Especie" value={SPECIES_LABEL[pet.species]} />
-              {pet.breed && <Attr label="Raca" value={pet.breed} />}
+              <Attr label="Espécie" value={SPECIES_LABEL[pet.species]} />
+              {pet.breed && <Attr label="Raça" value={pet.breed} />}
               <Attr label="Cor" value={pet.color} />
               {pet.size && <Attr label="Porte" value={SIZE_LABEL[pet.size]} />}
               {pet.sex && <Attr label="Sexo" value={SEX_LABEL[pet.sex]} />}
@@ -241,7 +241,7 @@ export default async function PetDetailPage({ params }: PageProps) {
 
             {pet.description && (
               <section className="mt-6">
-                <h2 className="text-sm font-bold uppercase tracking-wide text-fg-muted">Descricao</h2>
+                <h2 className="text-sm font-bold uppercase tracking-wide text-fg-muted">Descrição</h2>
                 <p className="mt-1 text-sm leading-relaxed text-fg">{pet.description}</p>
               </section>
             )}
