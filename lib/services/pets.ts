@@ -212,7 +212,12 @@ export async function uploadPetPhoto(
   file: File,
   ownerId: string | null
 ): Promise<{ url: string | null; error: string | null }> {
-  const supabase = createServiceClient();
+  let supabase;
+  try {
+    supabase = createServiceClient();
+  } catch {
+    return { url: null, error: "Serviço de upload indisponível — tente sem foto ou contate o suporte." };
+  }
   const ext = (file.name.split(".").pop() ?? "jpg").toLowerCase();
   const folder = ownerId ?? "anon";
   const filename = `${folder}/${Date.now()}-${Math.random()
