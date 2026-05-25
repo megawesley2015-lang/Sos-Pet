@@ -66,7 +66,9 @@ describe("calculateMatchScore — algoritmo de compatibilidade", () => {
     const found = makePet({ kind: "found", species: "dog", city: "Santos" });
     const lost  = makePet({ kind: "lost",  species: "cat", city: "Santos" });
     const { score } = calculateMatchScore(found, lost);
-    expect(score).toBeLessThan(40); // sem espécie, só cor+porte+sexo+cidade
+    // cor(25) + porte(15) + sexo(10) + cidade(20) = 70; espécie(30) = 0
+    expect(score).toBe(70);
+    expect(score).toBeLessThan(71); // confirma que os 30pts de espécie não foram aplicados
   });
 
   it("cor fuzzy: 'caramelo escuro' bate com 'caramelo'", () => {

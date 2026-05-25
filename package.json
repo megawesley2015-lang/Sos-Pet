@@ -11,7 +11,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
-    "pre-deploy": "node scripts/pre-deploy.mjs"
+    "pre-deploy": "node scripts/pre-deploy.mjs",
+    "seed": "node scripts/seed-pets.mjs",
+    "seed:clear": "node scripts/seed-pets.mjs --clear"
   },
   "dependencies": {
     "@sentry/nextjs": "^10.51.0",
