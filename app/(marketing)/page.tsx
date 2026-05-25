@@ -14,8 +14,8 @@ import {
 } from "lucide-react";
 import { createServiceClient } from "@/lib/supabase/server";
 import CountUp from "@/components/ui/CountUp";
-import { MapContainer } from "@/components/maps/MapContainer";
-import type { PetMapPin } from "@/components/maps/PetAlertMap";
+import { PetAlertFeed } from "@/components/pets/PetAlertFeed";
+import type { AlertPet } from "@/components/pets/PetAlertFeed";
 
 export const dynamic = "force-dynamic";
 
@@ -49,8 +49,7 @@ export default async function LandingPage() {
     sightingsCount,
     prestadoresCount,
     totalPetsCount,
-    mapPetsResult,
-    locationLegendResult,
+    alertPetsResult,
   ] = await Promise.all([
     supabase
       .from("pets")
@@ -80,21 +79,13 @@ export default async function LandingPage() {
     supabase
       .from("pets")
       .select("*", { count: "exact", head: true }),
-    // Alfinetes do mapa — pets ativos com coordenadas
+    // Feed de alertas — pets ativos mais recentes (com ou sem coordenadas)
     supabase
       .from("pets")
-      .select("id, kind, name, species, color, photo_url, latitude, longitude, city, neighborhood, created_at")
+      .select("id, kind, name, species, color, photo_url, city, neighborhood, created_at")
       .eq("status", "active")
-      .not("latitude", "is", null)
-      .not("longitude", "is", null)
       .order("created_at", { ascending: false })
-      .limit(200),
-    // Legenda de localizações — todos os pets ativos (com ou sem coords)
-    supabase
-      .from("pets")
-      .select("city, kind")
-      .eq("status", "active")
-      .limit(500),
+      .limit(30),
   ]);
 
   const stats = {
@@ -110,41 +101,23 @@ export default async function LandingPage() {
     prestadores: prestadoresCount.count ?? 0,
   };
 
-  // Alfinetes — garante tipagem correta
+  // Feed de alertas — normaliza tipagem
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const mapPets: PetMapPin[] = ((mapPetsResult.data ?? []) as any[]).map((p) => ({
+  const alertPets: AlertPet[] = ((alertPetsResult.data ?? []) as any[]).map((p) => ({
     id: p.id,
     kind: p.kind as "lost" | "found",
     name: p.name ?? null,
     species: p.species ?? "other",
     color: p.color ?? "",
     photo_url: p.photo_url ?? null,
-    latitude: Number(p.latitude),
-    longitude: Number(p.longitude),
     city: p.city ?? "",
     neighborhood: p.neighborhood ?? "",
     created_at: p.created_at ?? "",
   }));
 
-  // Legenda: agrupa por cidade e conta perdidos/encontrados
-  type LocationStat = { city: string; lost: number; found: number; total: number };
-  const cityMap = new Map<string, LocationStat>();
-  for (const p of (locationLegendResult.data ?? []) as { city: string; kind: string }[]) {
-    const city = p.city?.trim();
-    if (!city) continue;
-    const entry = cityMap.get(city) ?? { city, lost: 0, found: 0, total: 0 };
-    if (p.kind === "lost") entry.lost++;
-    else if (p.kind === "found") entry.found++;
-    entry.total++;
-    cityMap.set(city, entry);
-  }
-  const locationStats = Array.from(cityMap.values())
-    .sort((a, b) => b.total - a.total)
-    .slice(0, 10);
-
   return (
     <main>
-      <Hero stats={stats} mapPets={mapPets} locationStats={locationStats} />
+      <Hero stats={stats} alertPets={alertPets} />
       <StatsBand stats={stats} />
       <HowItWorks />
       <StatsSection stats={richStats} />
@@ -156,18 +129,14 @@ export default async function LandingPage() {
 }
 
 // ============================================================
-// HERO — bloco híbrido: texto | mapa ao vivo | legenda de locais
+// HERO — bloco híbrido: texto + CTA | feed de alertas ao vivo
 // ============================================================
-type LocationStat = { city: string; lost: number; found: number; total: number };
-
 function Hero({
   stats,
-  mapPets,
-  locationStats,
+  alertPets,
 }: {
   stats: { active: number; lost: number; found: number };
-  mapPets: PetMapPin[];
-  locationStats: LocationStat[];
+  alertPets: AlertPet[];
 }) {
   return (
     <section className="relative overflow-hidden">
@@ -235,14 +204,14 @@ function Hero({
               </div>
             </div>
 
-            {/* ── Coluna 2: Mapa com Search Bar + Carousel ── */}
-            <div className="hidden lg:block">
-              <div className="relative">
+            {/* ── Coluna 2: Feed de alertas ao vivo ── */}
+            <div className="hidden lg:flex flex-col" style={{ height: "480px" }}>
+              <div className="relative flex-1">
                 {/* Glow de fundo */}
                 <div className="pointer-events-none absolute -inset-3 rounded-2xl bg-gradient-to-br from-brand-500/15 via-transparent to-cyan-500/15 blur-2xl" />
-
-                {/* Mapa integrado com search + carousel */}
-                <MapContainer pets={mapPets} locationStats={locationStats} />
+                <div className="relative h-full">
+                  <PetAlertFeed pets={alertPets} />
+                </div>
               </div>
             </div>
           </div>
