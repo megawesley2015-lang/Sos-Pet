@@ -1,5 +1,6 @@
 "use client";
 
+import { forwardRef } from "react";
 import dynamic from "next/dynamic";
 import type { PetMapPin } from "./PetAlertMap";
 
@@ -19,17 +20,17 @@ interface HeroMapProps {
   pets: PetMapPin[];
 }
 
-/**
- * Wrapper client-side do PetAlertMap para uso no Hero da landing.
- * Sem SSR (Leaflet é client-only). Sem controles de filtro.
- */
-export function HeroMap({ pets }: HeroMapProps) {
+export const HeroMap = forwardRef(function HeroMap(
+  { pets }: HeroMapProps,
+  ref
+) {
   return (
     <PetAlertMap
+      ref={ref}
       pets={pets}
       height="100%"
       zoom={11}
       showFilters={false}
     />
   );
-}
+});

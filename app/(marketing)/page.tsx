@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { createServiceClient } from "@/lib/supabase/server";
 import CountUp from "@/components/ui/CountUp";
-import { HeroMap } from "@/components/maps/HeroMap";
+import { MapContainer } from "@/components/maps/MapContainer";
 import type { PetMapPin } from "@/components/maps/PetAlertMap";
 
 export const dynamic = "force-dynamic";
@@ -180,183 +180,73 @@ function Hero({
         }}
       >
         <div className="bg-grid-subtle">
-          <div className="mx-auto max-w-7xl px-4 pt-16 pb-24 sm:pt-24 sm:pb-32">
-            {/* 3 colunas: texto | mapa | legenda */}
-            <div className="grid items-start gap-8 lg:grid-cols-[1fr_1.35fr_0.65fr]">
+          <div className="mx-auto max-w-7xl px-4 pt-16 pb-0 sm:pt-24">
+          <div className="grid items-start gap-8 lg:grid-cols-[1fr_1.5fr]">
+            {/* ── Coluna 1: Texto + CTAs ── */}
+            <div className="flex flex-col justify-center lg:pt-4">
+              <span className="inline-flex items-center gap-2 rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-cyan-300 w-fit">
+                <Sparkles className="h-3 w-3" />
+                Rede colaborativa de resgate
+              </span>
 
-              {/* ── Coluna 1: Texto + CTAs ── */}
-              <div className="flex flex-col justify-center lg:pt-4">
-                <span className="inline-flex items-center gap-2 rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-cyan-300 w-fit">
-                  <Sparkles className="h-3 w-3" />
-                  Rede colaborativa de resgate
+              <h1 className="mt-5 font-display text-4xl font-black leading-[1.05] sm:text-5xl lg:text-6xl">
+                Reencontre quem
+                <br />
+                <span className="text-brand-500 glow-text-brand">
+                  se perdeu.
                 </span>
+              </h1>
 
-                <h1 className="mt-5 font-display text-4xl font-black leading-[1.05] sm:text-5xl lg:text-6xl">
-                  Reencontre quem
-                  <br />
-                  <span className="text-brand-500 glow-text-brand">
-                    se perdeu.
-                  </span>
-                </h1>
+              <p className="mt-5 max-w-sm text-base text-fg-muted">
+                Cadastre seu pet desaparecido, dispare um alerta de resgate e
+                conte com a rede pra trazer ele de volta. Em segundos.
+              </p>
 
-                <p className="mt-5 max-w-sm text-base text-fg-muted">
-                  Cadastre seu pet desaparecido, dispare um alerta de resgate e
-                  conte com a rede pra trazer ele de volta. Em segundos.
-                </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link
+                  href="/pets/novo"
+                  className="group inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-white shadow-glow-brand-lg transition-all hover:bg-brand-400 active:scale-95"
+                >
+                  <Siren className="h-4 w-4" strokeWidth={2.5} />
+                  Cadastrar pet perdido
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                </Link>
 
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <Link
-                    href="/pets/novo"
-                    className="group inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-white shadow-glow-brand-lg transition-all hover:bg-brand-400 active:scale-95"
-                  >
-                    <Siren className="h-4 w-4" strokeWidth={2.5} />
-                    Cadastrar pet perdido
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                  </Link>
-
-                  <Link
-                    href="/pets"
-                    className="inline-flex items-center gap-2 rounded-xl border-2 border-cyan-500/60 bg-cyan-500/10 px-5 py-3 text-sm font-bold text-cyan-200 transition-all hover:bg-cyan-500/20 hover:shadow-glow-cyan active:scale-95"
-                  >
-                    <Search className="h-4 w-4" strokeWidth={2.5} />
-                    Ver pets na rede
-                  </Link>
-                </div>
-
-                <p className="mt-5 text-xs text-fg-subtle">
-                  100% gratuito · sem login · verificação anti-spam automática · você no controle
-                </p>
-
-                {/* Stats compactos embaixo do CTA (visíveis no desktop) */}
-                <div className="mt-8 hidden lg:flex items-center gap-5 border-t border-white/8 pt-6">
-                  <MiniStat label="Perdidos" value={stats.lost} color="brand" />
-                  <div className="h-6 w-px bg-white/10" />
-                  <MiniStat label="Encontrados" value={stats.found} color="cyan" />
-                  <div className="h-6 w-px bg-white/10" />
-                  <MiniStat label="Ativos" value={stats.active} color="white" />
-                </div>
+                <Link
+                  href="/pets"
+                  className="inline-flex items-center gap-2 rounded-xl border-2 border-cyan-500/60 bg-cyan-500/10 px-5 py-3 text-sm font-bold text-cyan-200 transition-all hover:bg-cyan-500/20 hover:shadow-glow-cyan active:scale-95"
+                >
+                  <Search className="h-4 w-4" strokeWidth={2.5} />
+                  Ver pets na rede
+                </Link>
               </div>
 
-              {/* ── Coluna 2: Mapa ao vivo ── */}
-              <div className="hidden lg:block">
-                <div className="relative">
-                  {/* Glow de fundo */}
-                  <div className="pointer-events-none absolute -inset-3 rounded-2xl bg-gradient-to-br from-brand-500/15 via-transparent to-cyan-500/15 blur-2xl" />
+              <p className="mt-5 text-xs text-fg-subtle">
+                100% gratuito · sem login · verificação anti-spam automática · você no controle
+              </p>
 
-                  <div className="relative overflow-hidden rounded-2xl border border-white/12 bg-ink-800">
-                    {/* Header do mapa */}
-                    <div className="flex items-center justify-between border-b border-white/8 px-4 py-2.5">
-                      <div className="flex items-center gap-2">
-                        <span className="relative flex h-2 w-2">
-                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-500 opacity-75" />
-                          <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-500" />
-                        </span>
-                        <span className="text-[11px] font-bold uppercase tracking-widest text-fg-muted">
-                          Ao vivo
-                        </span>
-                      </div>
-                      <Link
-                        href="/mapa"
-                        className="text-[11px] font-semibold text-cyan-400 hover:text-cyan-300"
-                      >
-                        Ver mapa completo →
-                      </Link>
-                    </div>
-
-                    {/* Mapa Leaflet */}
-                    <div style={{ height: "380px" }}>
-                      {mapPets.length > 0 ? (
-                        <HeroMap pets={mapPets} />
-                      ) : (
-                        <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
-                          <MapPin className="h-8 w-8 text-brand-500/40" />
-                          <p className="text-xs text-fg-subtle">
-                            Nenhum pet com localização ainda.
-                            <br />
-                            <Link href="/pets/novo" className="text-brand-400 hover:underline">
-                              Seja o primeiro a cadastrar!
-                            </Link>
-                          </p>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Legenda de pins embaixo do mapa */}
-                    <div className="flex items-center gap-4 border-t border-white/8 px-4 py-2.5">
-                      <span className="flex items-center gap-1.5 text-[11px] text-fg-muted">
-                        <span className="inline-block h-2.5 w-2.5 rounded-full bg-brand-500" />
-                        Perdido
-                      </span>
-                      <span className="flex items-center gap-1.5 text-[11px] text-fg-muted">
-                        <span className="inline-block h-2.5 w-2.5 rounded-full bg-cyan-400" />
-                        Encontrado
-                      </span>
-                      <span className="ml-auto text-[11px] text-fg-subtle">
-                        {mapPets.length} alfinete{mapPets.length !== 1 ? "s" : ""}
-                      </span>
-                    </div>
-                  </div>
-                </div>
+              {/* Stats compactos embaixo do CTA (visíveis no desktop) */}
+              <div className="mt-8 hidden lg:flex items-center gap-5 border-t border-white/8 pt-6">
+                <MiniStat label="Perdidos" value={stats.lost} color="brand" />
+                <div className="h-6 w-px bg-white/10" />
+                <MiniStat label="Encontrados" value={stats.found} color="cyan" />
+                <div className="h-6 w-px bg-white/10" />
+                <MiniStat label="Ativos" value={stats.active} color="white" />
               </div>
+            </div>
 
-              {/* ── Coluna 3: Legenda de cidades ── */}
-              <div className="hidden lg:block">
-                <div className="rounded-2xl border border-white/10 bg-ink-800/60 p-4 backdrop-blur-sm">
-                  <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-fg-subtle">
-                    Locais com registro
-                  </p>
+            {/* ── Coluna 2: Mapa com Search Bar + Carousel ── */}
+            <div className="hidden lg:block">
+              <div className="relative">
+                {/* Glow de fundo */}
+                <div className="pointer-events-none absolute -inset-3 rounded-2xl bg-gradient-to-br from-brand-500/15 via-transparent to-cyan-500/15 blur-2xl" />
 
-                  {locationStats.length === 0 ? (
-                    <p className="text-xs text-fg-subtle">
-                      Nenhum pet cadastrado ainda.
-                    </p>
-                  ) : (
-                    <ul className="space-y-2">
-                      {locationStats.map((loc) => (
-                        <li key={loc.city}>
-                          <Link
-                            href={`/pets?city=${encodeURIComponent(loc.city)}`}
-                            className="group flex items-start justify-between gap-2 rounded-lg px-2 py-1.5 transition hover:bg-white/5"
-                          >
-                            <span className="flex items-center gap-1.5 text-xs font-medium text-fg group-hover:text-brand-300 transition-colors truncate">
-                              <MapPin className="h-3 w-3 shrink-0 text-fg-subtle" />
-                              {loc.city}
-                            </span>
-                            <span className="flex shrink-0 items-center gap-1.5 text-[10px] font-bold tabular-nums">
-                              {loc.lost > 0 && (
-                                <span className="text-brand-400">{loc.lost}P</span>
-                              )}
-                              {loc.found > 0 && (
-                                <span className="text-cyan-400">{loc.found}E</span>
-                              )}
-                            </span>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-
-                  {/* Legenda das abreviações */}
-                  <div className="mt-4 flex gap-3 border-t border-white/8 pt-3">
-                    <span className="flex items-center gap-1 text-[10px] text-fg-subtle">
-                      <span className="font-bold text-brand-400">P</span> Perdido
-                    </span>
-                    <span className="flex items-center gap-1 text-[10px] text-fg-subtle">
-                      <span className="font-bold text-cyan-400">E</span> Encontrado
-                    </span>
-                  </div>
-
-                  <Link
-                    href="/pets"
-                    className="mt-3 flex items-center justify-center gap-1.5 rounded-lg border border-white/10 py-2 text-[11px] font-bold text-fg-muted transition hover:border-white/20 hover:text-fg"
-                  >
-                    Ver todos os pets
-                    <ArrowRight className="h-3 w-3" />
-                  </Link>
-                </div>
+                {/* Mapa integrado com search + carousel */}
+                <MapContainer pets={mapPets} locationStats={locationStats} />
               </div>
             </div>
           </div>
+        </div>
         </div>
       </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, forwardRef, useImperativeHandle } from "react";
 
 export interface PetMapPin {
   id: string;
@@ -77,15 +77,18 @@ const TYPE_LABEL: Record<string, string> = {
  *  - 📷 Sentinelas / câmeras parceiras (ícone câmera, cyan)
  *  - 🟡 Avistamentos (pequenos dots amarelos)
  */
-export function PetAlertMap({
-  pets,
-  sentinels = [],
-  sightings = [],
-  center,
-  zoom = 13,
-  height = "100%",
-  showFilters = true,
-}: Props) {
+export const PetAlertMap = forwardRef(function PetAlertMap(
+  {
+    pets,
+    sentinels = [],
+    sightings = [],
+    center,
+    zoom = 13,
+    height = "100%",
+    showFilters = true,
+  }: Props,
+  ref
+) {
   const mapRef = useRef<HTMLDivElement>(null);
   const leafletRef = useRef<any>(null);
   const mapInstanceRef = useRef<any>(null);
@@ -93,6 +96,22 @@ export function PetAlertMap({
 
   const [filter, setFilter] = useState<"all" | "lost" | "found" | "sentinels">("all");
   const [mounted, setMounted] = useState(false);
+
+  // Expõe método imperative para pan/zoom
+  useImperativeHandle(
+    ref,
+    () => ({
+      panToLocation: (lat: number, lng: number) => {
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.flyTo([lat, lng], 14, {
+            duration: 1,
+            easeLinearity: 0.5,
+          });
+        }
+      },
+    }),
+    []
+  );
 
   // Calcula centro automaticamente
   const computedCenter: [number, number] = center ?? (() => {
@@ -393,4 +412,4 @@ export function PetAlertMap({
       </div>
     </div>
   );
-}
+});
