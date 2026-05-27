@@ -687,6 +687,61 @@ export interface AdoptionInsert {
 
 export type AdoptionUpdate = Partial<Omit<AdoptionInsert, "pet_id" | "shelter_id">>;
 
+// ── achados e perdidos ──────────────────────────────────────
+export type AchadoTipo = "perdido" | "encontrado";
+export type AchadoStatus = "ativo" | "inativo" | "resolvido";
+export type AchadoEspecie = "cao" | "gato" | "outro";
+export type AchadoPorte = "pequeno" | "medio" | "grande";
+export type AchadoSexo = "macho" | "femea" | "desconhecido";
+
+export interface AchadoPerdidoRow {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  user_id: string | null;
+  tipo: AchadoTipo;
+  nome: string | null;
+  especie: AchadoEspecie;
+  raca: string | null;
+  cor: string;
+  porte: AchadoPorte | null;
+  sexo: AchadoSexo | null;
+  idade_aprox: string | null;
+  descricao: string | null;
+  comportamento: string | null;
+  bairro: string | null;
+  cidade: string;
+  data_ocorrencia: string;
+  foto_url: string | null;
+  contato: string;
+  status: AchadoStatus;
+}
+
+export interface AchadoPerdidoInsert {
+  id?: string;
+  created_at?: string;
+  updated_at?: string;
+  user_id?: string | null;
+  tipo: AchadoTipo;
+  nome?: string | null;
+  especie: AchadoEspecie;
+  raca?: string | null;
+  cor: string;
+  porte?: AchadoPorte | null;
+  sexo?: AchadoSexo | null;
+  idade_aprox?: string | null;
+  descricao?: string | null;
+  comportamento?: string | null;
+  bairro?: string | null;
+  cidade: string;
+  data_ocorrencia: string;
+  foto_url?: string | null;
+  contato: string;
+  status?: AchadoStatus;
+}
+
+export type AchadoPerdidoUpdate = Partial<Omit<AchadoPerdidoInsert, "user_id">>;
+
 // ============================================================
 // Database — formato canônico do supabase-js v2.50+
 // ============================================================
@@ -800,6 +855,12 @@ export type Database = {
         Row: DbRow<AdoptionRow>;
         Insert: DbInsert<AdoptionInsert>;
         Update: DbUpdate<AdoptionUpdate>;
+        Relationships: [];
+      };
+      achados_perdidos: {
+        Row: DbRow<AchadoPerdidoRow>;
+        Insert: DbInsert<AchadoPerdidoInsert>;
+        Update: DbUpdate<AchadoPerdidoUpdate>;
         Relationships: [];
       };
       sentinel_partners: {

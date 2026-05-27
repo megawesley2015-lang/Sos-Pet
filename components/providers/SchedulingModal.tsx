@@ -68,7 +68,7 @@ export function SchedulingModal({
     try {
       // Registrar clique via browser client (sem depender do server)
       const supabase = createClient();
-      await supabase.rpc("incrementar_clique_whatsapp", { p_id: prestadorId }).then(() => {});
+      await supabase.rpc("incrementar_clique_whatsapp", { p_id: prestadorId } as any).then(() => {});
 
       const dataFormatada = formData.data
         ? new Date(formData.data + "T12:00:00").toLocaleDateString("pt-BR")
