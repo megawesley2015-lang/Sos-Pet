@@ -2,23 +2,15 @@
 
 /* ============================================================
  * @theme — Tailwind v4 Design Tokens
- *
- * Este bloco registra os tokens no engine do Tailwind v4,
- * gerando automaticamente as classes utilitárias:
- *   bg-primary, text-primary, border-primary
- *   bg-accent, text-accent, border-accent
- *   bg-ink-800, text-ink-700, etc.
- *   shadow-glow-brand, shadow-glow-accent
- *
- * SEM este bloco, classes como bg-primary e text-accent
- * não são geradas e o design fica sem estilo.
+ * Registra tokens no engine — gera bg-primary, text-brand-500,
+ * bg-ink-800, shadow-glow-brand, etc. automaticamente.
  * ============================================================ */
 @theme {
-  /* ── Laranja principal ───────────────────────────────────── */
+  /* ── Laranja principal ─────────────────────────────────── */
   --color-primary:   #FF6B35;
-  --color-brand:     #FF6B35;   /* alias → border-brand, text-brand */
+  --color-brand:     #FF6B35;
 
-  /* ── Escala brand (text-brand-500, bg-brand-400, etc.) ── */
+  /* ── Escala brand ──────────────────────────────────────── */
   --color-brand-50:  #FFF0EB;
   --color-brand-100: #FFDCCC;
   --color-brand-200: #FFB99A;
@@ -30,11 +22,10 @@
   --color-brand-800: #A32E08;
   --color-brand-900: #7A1F02;
 
-  /* ── Ciano accent ──────────────────────────────────────── */
+  /* ── Ciano accent ─────────────────────────────────────── */
   --color-accent:    #00E5FF;
 
-  /* ── Escala ink (dark backgrounds) ────────────────────── */
-  /* bg-ink-900, bg-ink-800, bg-ink-700, text-ink-300, etc. */
+  /* ── Escala ink (dark backgrounds) ───────────────────── */
   --color-ink-900: #0A0A0F;
   --color-ink-800: #0F0F1A;
   --color-ink-700: #14141F;
@@ -46,14 +37,16 @@
   --color-ink-100: #C8CDD8;
   --color-ink-50:  #F0F2F5;
 
-  /* ── Sombras com glow ────────────────────────────────── */
-  /* shadow-glow-brand, shadow-glow-accent, shadow-glow-sm  */
-  --shadow-glow-brand: 0 0 20px rgb(255 107 53 / 0.3);
+  /* ── Sombras com glow ─────────────────────────────────── */
+  --shadow-glow-brand:  0 0 20px rgb(255 107 53 / 0.3);
   --shadow-glow-accent: 0 0 20px rgb(0 229 255 / 0.2);
-  --shadow-glow-sm:    0 0 10px rgb(255 107 53 / 0.2);
-  --shadow-glow-lg:    0 0 40px rgb(255 107 53 / 0.25);
+  --shadow-glow-sm:     0 0 10px rgb(255 107 53 / 0.2);
+  --shadow-glow-lg:     0 0 40px rgb(255 107 53 / 0.25);
 }
 
+/* ============================================================
+ * Scroll utilities
+ * ============================================================ */
 @layer utilities {
   .scrollbar-hide {
     -ms-overflow-style: none;
@@ -65,59 +58,41 @@
 }
 
 /* ============================================================
- * SOS Pet — Tokens semânticos (CSS variables)
- *
- * Formato: "R G B" (sem vírgulas, sem rgb()) para permitir
- * alpha dinâmico com Tailwind (bg-primary/50, text-fg/80, etc).
- *
- * Tema default = dark (aplicado no <html> via layout.tsx).
- * Para usar light-warm em uma rota específica:
- *   <html data-theme="light"> ou <div data-theme="light">
+ * CSS Variables — Tokens semânticos por tema
  * ============================================================ */
-
 :root,
 [data-theme="dark"] {
-  /* Fundos */
-  --color-bg: 15 15 26;
-  --color-bg-raised: 20 20 31;
-  --color-bg-overlay: 10 10 15;
-
-  /* Texto */
-  --color-fg: 255 255 255;
-  --color-fg-muted: 156 163 175;
-  --color-fg-subtle: 107 107 128;
-
-  /* Bordas */
-  --color-border: 255 255 255;
-  --color-border-strong: 255 255 255;
-  --color-border-brand: 255 107 53;
-  --color-border-cyan: 0 229 255;
-
-  /* Acentos */
-  --color-primary: 255 107 53;
-  --color-primary-fg: 255 255 255;
-  --color-accent: 0 229 255;
-  --color-accent-fg: 7 7 13;
+  --color-bg:             15 15 26;
+  --color-bg-raised:      20 20 31;
+  --color-bg-overlay:     10 10 15;
+  --color-fg:             255 255 255;
+  --color-fg-muted:       156 163 175;
+  --color-fg-subtle:      107 107 128;
+  --color-border:         255 255 255;
+  --color-border-strong:  255 255 255;
+  --color-border-brand:   255 107 53;
+  --color-border-cyan:    0 229 255;
+  --color-primary:        255 107 53;
+  --color-primary-fg:     255 255 255;
+  --color-accent:         0 229 255;
+  --color-accent-fg:      7 7 13;
 }
 
 [data-theme="light"] {
-  --color-bg: 255 248 243;
-  --color-bg-raised: 255 255 255;
-  --color-bg-overlay: 255 240 228;
-
-  --color-fg: 26 26 26;
-  --color-fg-muted: 122 62 24;
-  --color-fg-subtle: 156 163 175;
-
-  --color-border: 0 0 0;
-  --color-border-strong: 0 0 0;
-  --color-border-brand: 255 107 53;
-  --color-border-cyan: 0 184 212;
-
-  --color-primary: 255 107 53;
-  --color-primary-fg: 255 255 255;
-  --color-accent: 0 184 212;
-  --color-accent-fg: 255 255 255;
+  --color-bg:             255 248 243;
+  --color-bg-raised:      255 255 255;
+  --color-bg-overlay:     255 240 228;
+  --color-fg:             26 26 26;
+  --color-fg-muted:       122 62 24;
+  --color-fg-subtle:      156 163 175;
+  --color-border:         0 0 0;
+  --color-border-strong:  0 0 0;
+  --color-border-brand:   255 107 53;
+  --color-border-cyan:    0 184 212;
+  --color-primary:        255 107 53;
+  --color-primary-fg:     255 255 255;
+  --color-accent:         0 184 212;
+  --color-accent-fg:      255 255 255;
 }
 
 /* ============================================================
@@ -132,21 +107,32 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-[data-theme="dark"] ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-[data-theme="dark"] ::-webkit-scrollbar-track {
-  background: rgb(var(--color-bg));
-}
-[data-theme="dark"] ::-webkit-scrollbar-thumb {
-  background: rgba(255, 107, 53, 0.3);
-  border-radius: 8px;
-}
-[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 107, 53, 0.5);
+/* ── Headings: cor explícita + text-shadow para contraste ── */
+/* Fix para headings sobre backgrounds com gradiente laranja.
+   WCAG: white text + dark text-shadow garante ratio 4.5:1
+   mesmo sobre overlays warm/gradient.                        */
+h1, h2, h3, h4, h5, h6 {
+  color: rgb(var(--color-fg));
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.45),
+    0 3px 8px rgba(0, 0, 0, 0.25);
 }
 
+/* Headings no tema light não precisam de text-shadow */
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] h4 {
+  text-shadow: none;
+}
+
+/* Scrollbar dark */
+[data-theme="dark"] ::-webkit-scrollbar        { width: 10px; height: 10px; }
+[data-theme="dark"] ::-webkit-scrollbar-track  { background: rgb(var(--color-bg)); }
+[data-theme="dark"] ::-webkit-scrollbar-thumb  { background: rgba(255,107,53,0.3); border-radius: 8px; }
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: rgba(255,107,53,0.5); }
+
+/* Focus ring acessível */
 *:focus-visible {
   outline: 2px solid rgb(var(--color-primary));
   outline-offset: 2px;
@@ -157,6 +143,8 @@ body {
  * Utilities custom
  * ============================================================ */
 @layer utilities {
+
+  /* ── Gradiente de texto brand ──────────────────────────── */
   .text-gradient-brand {
     background: linear-gradient(
       90deg,
@@ -166,46 +154,56 @@ body {
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    /* Reset text-shadow no gradiente (não funciona com fill transparent) */
+    text-shadow: none;
+  }
+
+  /* ── Text shadows para headings em backgrounds dark ───── */
+  .text-shadow-dark {
+    text-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.5),
+      0 3px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Glow laranja para headings de destaque */
+  .text-shadow-brand {
+    text-shadow:
+      0 0 20px rgba(255, 107, 53, 0.5),
+      0 2px 6px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Glow ciano para headings de accent */
+  .text-shadow-accent {
+    text-shadow:
+      0 0 20px rgba(0, 229, 255, 0.4),
+      0 2px 6px rgba(0, 0, 0, 0.4);
   }
 
   .glow-text-brand {
     text-shadow: 0 0 16px rgba(255, 107, 53, 0.5);
   }
 
+  /* ── Backgrounds ──────────────────────────────────────── */
   .bg-grid-subtle {
-    background-image: linear-gradient(
-        rgba(255, 107, 53, 0.03) 1px,
-        transparent 1px
-      ),
-      linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+    background-image:
+      linear-gradient(rgba(255,107,53,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
     background-size: 28px 28px;
   }
 
   .bg-radial-brand {
-    background-image: radial-gradient(
-        circle at 50% 0%,
-        rgba(255, 107, 53, 0.08),
-        transparent 60%
-      ),
-      radial-gradient(
-        circle at 100% 100%,
-        rgba(0, 229, 255, 0.06),
-        transparent 50%
-      );
+    background-image:
+      radial-gradient(circle at 50% 0%, rgba(255,107,53,0.08), transparent 60%),
+      radial-gradient(circle at 100% 100%, rgba(0,229,255,0.06), transparent 50%);
   }
 
+  /* ── Animações ────────────────────────────────────────── */
   .animate-fade-in {
     animation: fade-in 0.4s ease-out;
   }
 
   @keyframes fade-in {
-    from {
-      opacity: 0;
-      transform: translateY(4px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 }
