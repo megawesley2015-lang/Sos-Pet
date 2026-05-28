@@ -1,5 +1,59 @@
 @import "tailwindcss";
 
+/* ============================================================
+ * @theme — Tailwind v4 Design Tokens
+ *
+ * Este bloco registra os tokens no engine do Tailwind v4,
+ * gerando automaticamente as classes utilitárias:
+ *   bg-primary, text-primary, border-primary
+ *   bg-accent, text-accent, border-accent
+ *   bg-ink-800, text-ink-700, etc.
+ *   shadow-glow-brand, shadow-glow-accent
+ *
+ * SEM este bloco, classes como bg-primary e text-accent
+ * não são geradas e o design fica sem estilo.
+ * ============================================================ */
+@theme {
+  /* ── Laranja principal ───────────────────────────────────── */
+  --color-primary:   #FF6B35;
+  --color-brand:     #FF6B35;   /* alias → border-brand, text-brand */
+
+  /* ── Escala brand (text-brand-500, bg-brand-400, etc.) ── */
+  --color-brand-50:  #FFF0EB;
+  --color-brand-100: #FFDCCC;
+  --color-brand-200: #FFB99A;
+  --color-brand-300: #FF9668;
+  --color-brand-400: #FF7F50;
+  --color-brand-500: #FF6B35;
+  --color-brand-600: #E65522;
+  --color-brand-700: #CC4012;
+  --color-brand-800: #A32E08;
+  --color-brand-900: #7A1F02;
+
+  /* ── Ciano accent ──────────────────────────────────────── */
+  --color-accent:    #00E5FF;
+
+  /* ── Escala ink (dark backgrounds) ────────────────────── */
+  /* bg-ink-900, bg-ink-800, bg-ink-700, text-ink-300, etc. */
+  --color-ink-900: #0A0A0F;
+  --color-ink-800: #0F0F1A;
+  --color-ink-700: #14141F;
+  --color-ink-600: #1A1A28;
+  --color-ink-500: #222235;
+  --color-ink-400: #2E2E45;
+  --color-ink-300: #6B6B80;
+  --color-ink-200: #9CA3AF;
+  --color-ink-100: #C8CDD8;
+  --color-ink-50:  #F0F2F5;
+
+  /* ── Sombras com glow ────────────────────────────────── */
+  /* shadow-glow-brand, shadow-glow-accent, shadow-glow-sm  */
+  --shadow-glow-brand: 0 0 20px rgb(255 107 53 / 0.3);
+  --shadow-glow-accent: 0 0 20px rgb(0 229 255 / 0.2);
+  --shadow-glow-sm:    0 0 10px rgb(255 107 53 / 0.2);
+  --shadow-glow-lg:    0 0 40px rgb(255 107 53 / 0.25);
+}
+
 @layer utilities {
   .scrollbar-hide {
     -ms-overflow-style: none;
@@ -24,33 +78,32 @@
 :root,
 [data-theme="dark"] {
   /* Fundos */
-  --color-bg: 15 15 26; /* ink.800 */
-  --color-bg-raised: 20 20 31; /* ink.700 */
-  --color-bg-overlay: 10 10 15; /* ink.900 */
+  --color-bg: 15 15 26;
+  --color-bg-raised: 20 20 31;
+  --color-bg-overlay: 10 10 15;
 
   /* Texto */
   --color-fg: 255 255 255;
-  --color-fg-muted: 156 163 175; /* gray-400 */
-  --color-fg-subtle: 107 107 128; /* ink.300 */
+  --color-fg-muted: 156 163 175;
+  --color-fg-subtle: 107 107 128;
 
   /* Bordas */
-  --color-border: 255 255 255; /* usado com opacidade baixa (/10) */
-  --color-border-strong: 255 255 255; /* usado com /20 */
+  --color-border: 255 255 255;
+  --color-border-strong: 255 255 255;
   --color-border-brand: 255 107 53;
   --color-border-cyan: 0 229 255;
 
   /* Acentos */
-  --color-primary: 255 107 53; /* laranja */
+  --color-primary: 255 107 53;
   --color-primary-fg: 255 255 255;
-  --color-accent: 0 229 255; /* ciano */
+  --color-accent: 0 229 255;
   --color-accent-fg: 7 7 13;
 }
 
 [data-theme="light"] {
-  /* Light-warm: landing, cadastro público, checkout */
-  --color-bg: 255 248 243; /* warm.50 */
+  --color-bg: 255 248 243;
   --color-bg-raised: 255 255 255;
-  --color-bg-overlay: 255 240 228; /* warm.100 */
+  --color-bg-overlay: 255 240 228;
 
   --color-fg: 26 26 26;
   --color-fg-muted: 122 62 24;
@@ -79,7 +132,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Scrollbar dark elegante */
 [data-theme="dark"] ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -95,7 +147,6 @@ body {
   background: rgba(255, 107, 53, 0.5);
 }
 
-/* Focus visível e acessível */
 *:focus-visible {
   outline: 2px solid rgb(var(--color-primary));
   outline-offset: 2px;
@@ -130,7 +181,6 @@ body {
     background-size: 28px 28px;
   }
 
-  /* Aura radial brand atrás do conteúdo (usado em listagem/detalhe/auth) */
   .bg-radial-brand {
     background-image: radial-gradient(
         circle at 50% 0%,
