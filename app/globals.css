@@ -2,59 +2,53 @@
 
 /* ============================================================
  * @theme — Tailwind v4 Design Tokens
- * Registra tokens no engine — gera bg-primary, text-brand-500,
- * bg-ink-800, shadow-glow-brand, etc. automaticamente.
+ * Paleta original: #FF851B (laranja âmbar) + #20B2AA (teal)
  * ============================================================ */
 @theme {
   /* ── Laranja principal ─────────────────────────────────── */
-  --color-primary:   #FF6B35;
-  --color-brand:     #FF6B35;
+  --color-primary:   #FF851B;
+  --color-brand:     #FF851B;
 
   /* ── Escala brand ──────────────────────────────────────── */
-  --color-brand-50:  #FFF0EB;
-  --color-brand-100: #FFDCCC;
-  --color-brand-200: #FFB99A;
-  --color-brand-300: #FF9668;
-  --color-brand-400: #FF7F50;
-  --color-brand-500: #FF6B35;
-  --color-brand-600: #E65522;
-  --color-brand-700: #CC4012;
-  --color-brand-800: #A32E08;
-  --color-brand-900: #7A1F02;
+  --color-brand-50:  #FFF4E8;
+  --color-brand-100: #FFE4C4;
+  --color-brand-200: #FFC98A;
+  --color-brand-300: #FFAD50;
+  --color-brand-400: #FF9933;
+  --color-brand-500: #FF851B;
+  --color-brand-600: #E06B08;
+  --color-brand-700: #B85500;
+  --color-brand-800: #8F4000;
+  --color-brand-900: #662E00;
 
-  /* ── Ciano accent ─────────────────────────────────────── */
-  --color-accent:    #00E5FF;
+  /* ── Teal accent (tech + segurança) ───────────────────── */
+  --color-accent:    #20B2AA;
 
   /* ── Escala ink (dark backgrounds) ───────────────────── */
-  --color-ink-900: #0A0A0F;
-  --color-ink-800: #0F0F1A;
-  --color-ink-700: #14141F;
-  --color-ink-600: #1A1A28;
-  --color-ink-500: #222235;
-  --color-ink-400: #2E2E45;
-  --color-ink-300: #6B6B80;
+  --color-ink-900: #0A0A0C;
+  --color-ink-800: #121214;
+  --color-ink-700: #1A1A1C;
+  --color-ink-600: #222226;
+  --color-ink-500: #2C2C32;
+  --color-ink-400: #3A3A42;
+  --color-ink-300: #6B7280;
   --color-ink-200: #9CA3AF;
-  --color-ink-100: #C8CDD8;
-  --color-ink-50:  #F0F2F5;
+  --color-ink-100: #D1D5DB;
+  --color-ink-50:  #F3F4F6;
 
   /* ── Sombras com glow ─────────────────────────────────── */
-  --shadow-glow-brand:  0 0 20px rgb(255 107 53 / 0.3);
-  --shadow-glow-accent: 0 0 20px rgb(0 229 255 / 0.2);
-  --shadow-glow-sm:     0 0 10px rgb(255 107 53 / 0.2);
-  --shadow-glow-lg:     0 0 40px rgb(255 107 53 / 0.25);
+  --shadow-glow-brand:  0 0 20px rgb(255 133 27 / 0.35);
+  --shadow-glow-accent: 0 0 20px rgb(32 178 170 / 0.3);
+  --shadow-glow-sm:     0 0 10px rgb(255 133 27 / 0.2);
+  --shadow-glow-lg:     0 0 40px rgb(255 133 27 / 0.3);
 }
 
-/* ============================================================
- * Scroll utilities
- * ============================================================ */
 @layer utilities {
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
 }
 
 /* ============================================================
@@ -62,44 +56,57 @@
  * ============================================================ */
 :root,
 [data-theme="dark"] {
-  --color-bg:             15 15 26;
-  --color-bg-raised:      20 20 31;
-  --color-bg-overlay:     10 10 15;
-  --color-fg:             255 255 255;
-  --color-fg-muted:       156 163 175;
-  --color-fg-subtle:      107 107 128;
-  --color-border:         255 255 255;
-  --color-border-strong:  255 255 255;
-  --color-border-brand:   255 107 53;
-  --color-border-cyan:    0 229 255;
-  --color-primary:        255 107 53;
-  --color-primary-fg:     255 255 255;
-  --color-accent:         0 229 255;
-  --color-accent-fg:      7 7 13;
+  /* Fundos — neutro grafite, sem tint azul */
+  --color-bg:            18 18 20;    /* #121214 */
+  --color-bg-raised:     26 26 28;    /* #1A1A1C */
+  --color-bg-overlay:    10 10 12;    /* #0A0A0C */
+
+  /* Texto */
+  --color-fg:            255 255 255;
+  --color-fg-muted:      156 163 175;
+  --color-fg-subtle:     107 114 128;
+
+  /* Bordas */
+  --color-border:        255 255 255;
+  --color-border-strong: 255 255 255;
+  --color-border-brand:  255 133 27;   /* #FF851B */
+  --color-border-cyan:   32 178 170;   /* #20B2AA */
+
+  /* Acentos */
+  --color-primary:       255 133 27;   /* #FF851B */
+  --color-primary-fg:    255 255 255;
+  --color-accent:        32 178 170;   /* #20B2AA */
+  --color-accent-fg:     255 255 255;
 }
 
 [data-theme="light"] {
-  --color-bg:             255 248 243;
-  --color-bg-raised:      255 255 255;
-  --color-bg-overlay:     255 240 228;
-  --color-fg:             26 26 26;
-  --color-fg-muted:       122 62 24;
-  --color-fg-subtle:      156 163 175;
-  --color-border:         0 0 0;
-  --color-border-strong:  0 0 0;
-  --color-border-brand:   255 107 53;
-  --color-border-cyan:    0 184 212;
-  --color-primary:        255 107 53;
-  --color-primary-fg:     255 255 255;
-  --color-accent:         0 184 212;
-  --color-accent-fg:      255 255 255;
+  /* Fundo neutro limpo — não compete com o laranja */
+  --color-bg:            248 249 250;  /* #F8F9FA */
+  --color-bg-raised:     255 255 255;
+  --color-bg-overlay:    241 242 243;  /* #F1F2F3 */
+
+  /* Texto */
+  --color-fg:            33 37 41;     /* #212529 — grafite industrial */
+  --color-fg-muted:      108 117 125;
+  --color-fg-subtle:     173 181 189;
+
+  /* Bordas */
+  --color-border:        33 37 41;
+  --color-border-strong: 33 37 41;
+  --color-border-brand:  255 133 27;
+  --color-border-cyan:   32 178 170;
+
+  /* Acentos — mesmos no light */
+  --color-primary:       255 133 27;
+  --color-primary-fg:    255 255 255;
+  --color-accent:        32 178 170;
+  --color-accent-fg:     255 255 255;
 }
 
 /* ============================================================
  * Reset / defaults
  * ============================================================ */
-html,
-body {
+html, body {
   min-height: 100vh;
   background-color: rgb(var(--color-bg));
   color: rgb(var(--color-fg));
@@ -107,10 +114,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Headings: cor explícita + text-shadow para contraste ── */
-/* Fix para headings sobre backgrounds com gradiente laranja.
-   WCAG: white text + dark text-shadow garante ratio 4.5:1
-   mesmo sobre overlays warm/gradient.                        */
+/* Headings: cor explícita + text-shadow para contraste WCAG */
 h1, h2, h3, h4, h5, h6 {
   color: rgb(var(--color-fg));
   text-shadow:
@@ -118,7 +122,6 @@ h1, h2, h3, h4, h5, h6 {
     0 3px 8px rgba(0, 0, 0, 0.25);
 }
 
-/* Headings no tema light não precisam de text-shadow */
 [data-theme="light"] h1,
 [data-theme="light"] h2,
 [data-theme="light"] h3,
@@ -126,13 +129,13 @@ h1, h2, h3, h4, h5, h6 {
   text-shadow: none;
 }
 
-/* Scrollbar dark */
+/* Scrollbar */
 [data-theme="dark"] ::-webkit-scrollbar        { width: 10px; height: 10px; }
 [data-theme="dark"] ::-webkit-scrollbar-track  { background: rgb(var(--color-bg)); }
-[data-theme="dark"] ::-webkit-scrollbar-thumb  { background: rgba(255,107,53,0.3); border-radius: 8px; }
-[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: rgba(255,107,53,0.5); }
+[data-theme="dark"] ::-webkit-scrollbar-thumb  { background: rgba(255,133,27,0.3); border-radius: 8px; }
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: rgba(255,133,27,0.5); }
 
-/* Focus ring acessível */
+/* Focus ring */
 *:focus-visible {
   outline: 2px solid rgb(var(--color-primary));
   outline-offset: 2px;
@@ -144,60 +147,56 @@ h1, h2, h3, h4, h5, h6 {
  * ============================================================ */
 @layer utilities {
 
-  /* ── Gradiente de texto brand ──────────────────────────── */
   .text-gradient-brand {
     background: linear-gradient(
       90deg,
-      rgb(var(--color-primary)),
-      rgb(var(--color-accent))
+      rgb(var(--color-primary)),   /* #FF851B laranja */
+      rgb(var(--color-accent))     /* #20B2AA teal    */
     );
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    /* Reset text-shadow no gradiente (não funciona com fill transparent) */
     text-shadow: none;
   }
 
-  /* ── Text shadows para headings em backgrounds dark ───── */
+  /* Text shadows para headings em backgrounds dark */
   .text-shadow-dark {
     text-shadow:
       0 1px 3px rgba(0, 0, 0, 0.5),
       0 3px 10px rgba(0, 0, 0, 0.3);
   }
 
-  /* Glow laranja para headings de destaque */
   .text-shadow-brand {
     text-shadow:
-      0 0 20px rgba(255, 107, 53, 0.5),
+      0 0 20px rgba(255, 133, 27, 0.5),
       0 2px 6px rgba(0, 0, 0, 0.4);
   }
 
-  /* Glow ciano para headings de accent */
   .text-shadow-accent {
     text-shadow:
-      0 0 20px rgba(0, 229, 255, 0.4),
+      0 0 20px rgba(32, 178, 170, 0.4),
       0 2px 6px rgba(0, 0, 0, 0.4);
   }
 
   .glow-text-brand {
-    text-shadow: 0 0 16px rgba(255, 107, 53, 0.5);
+    text-shadow: 0 0 16px rgba(255, 133, 27, 0.5);
   }
 
-  /* ── Backgrounds ──────────────────────────────────────── */
+  /* Backgrounds */
   .bg-grid-subtle {
     background-image:
-      linear-gradient(rgba(255,107,53,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+      linear-gradient(rgba(255,133,27,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(32,178,170,0.03) 1px, transparent 1px);
     background-size: 28px 28px;
   }
 
   .bg-radial-brand {
     background-image:
-      radial-gradient(circle at 50% 0%, rgba(255,107,53,0.08), transparent 60%),
-      radial-gradient(circle at 100% 100%, rgba(0,229,255,0.06), transparent 50%);
+      radial-gradient(circle at 50% 0%, rgba(255,133,27,0.1), transparent 60%),
+      radial-gradient(circle at 100% 100%, rgba(32,178,170,0.07), transparent 50%);
   }
 
-  /* ── Animações ────────────────────────────────────────── */
+  /* Animações */
   .animate-fade-in {
     animation: fade-in 0.4s ease-out;
   }
