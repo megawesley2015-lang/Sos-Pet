@@ -1,208 +1,228 @@
-@import "tailwindcss";
+/* ── Cores Brand (laranja) ── */
+:root {
+  --color-brand-300: #FFAA80;
+  --color-brand-400: #FF8A5C;
+  --color-brand-500: #FF6B35;
+  --color-brand-600: #E55520;
+  --color-brand-700: #C4431A;
 
-/* ============================================================
- * @theme — Tailwind v4 Design Tokens
- * Paleta original: #FF851B (laranja âmbar) + #20B2AA (teal)
- * ============================================================ */
-@theme {
-  /* ── Laranja principal ─────────────────────────────────── */
-  --color-primary:   #FF851B;
-  --color-brand:     #FF851B;
+  /* ── Cores Cyan/Teal (tech) ── */
+  --color-cyan-300:  #67E8F9;
+  --color-cyan-400:  #22D3EE;
+  --color-cyan-500:  #06B6D4;
+  --color-cyan-600:  #0891B2;
 
-  /* ── Escala brand ──────────────────────────────────────── */
-  --color-brand-50:  #FFF4E8;
-  --color-brand-100: #FFE4C4;
-  --color-brand-200: #FFC98A;
-  --color-brand-300: #FFAD50;
-  --color-brand-400: #FF9933;
-  --color-brand-500: #FF851B;
-  --color-brand-600: #E06B08;
-  --color-brand-700: #B85500;
-  --color-brand-800: #8F4000;
-  --color-brand-900: #662E00;
+  /* ── Fundos (warm light) ── */
+  --color-ink-600:   #FFF0D6;
+  --color-ink-700:   #FFF8EE;
+  --color-ink-800:   #FFF8EE;
+  --color-ink-900:   #FFF0D6;
 
-  /* ── Teal accent (tech + segurança) ───────────────────── */
-  --color-accent:    #20B2AA;
+  /* ── Texto ── */
+  --color-fg:        #1A1208;
+  --color-fg-muted:  #6B5A3E;
+  --color-fg-subtle: #A8926A;
 
-  /* ── Escala ink (dark backgrounds) ───────────────────── */
-  --color-ink-900: #0A0A0C;
-  --color-ink-800: #121214;
-  --color-ink-700: #1A1A1C;
-  --color-ink-600: #222226;
-  --color-ink-500: #2C2C32;
-  --color-ink-400: #3A3A42;
-  --color-ink-300: #6B7280;
-  --color-ink-200: #9CA3AF;
-  --color-ink-100: #D1D5DB;
-  --color-ink-50:  #F3F4F6;
+  /* ── Bordas ── */
+  --color-border:        #E8D5B0;
+  --color-border-strong: #C8B28A;
 
-  /* ── Sombras com glow ─────────────────────────────────── */
-  --shadow-glow-brand:  0 0 20px rgb(255 133 27 / 0.35);
-  --shadow-glow-accent: 0 0 20px rgb(32 178 170 / 0.3);
-  --shadow-glow-sm:     0 0 10px rgb(255 133 27 / 0.2);
-  --shadow-glow-lg:     0 0 40px rgb(255 133 27 / 0.3);
+  /* ── Semânticos ── */
+  --color-danger:    #E54B4B;
+  --color-danger-fg: #991B1B;
+  --color-success:   #3DAA6B;
+
+  /* ── Shadows ── */
+  --shadow-glow-brand:    0 0 20px rgba(255, 107, 53, 0.35);
+  --shadow-glow-brand-lg: 0 0 40px rgba(255, 107, 53, 0.45);
+  --shadow-glow-cyan:     0 0 20px rgba(6, 182, 212, 0.35);
+  --shadow-card-dark:     0 1px 3px rgba(26,18,8,0.06), 0 4px 12px rgba(26,18,8,0.04);
 }
 
+/* ── Dark mode override ── */
+[data-theme="dark"] {
+  --color-ink-600:   #231F14;
+  --color-ink-700:   #1A1810;
+  --color-ink-800:   #0F0E09;
+  --color-ink-900:   #0A0905;
+
+  --color-fg:        #F5EDD8;
+  --color-fg-muted:  #A89878;
+  --color-fg-subtle: #6B5E40;
+
+  --color-border:        #3A3420;
+  --color-border-strong: #50462A;
+
+  --color-danger-fg: #FCA5A5;
+}
+
+/* ============================================================
+   globals.css — SOS Pet Amigo
+   Nova Identidade Visual v3.0 — Sistema Híbrido Warm + Dark
+
+   FILOSOFIA:
+   - Warm Light é o padrão: aconchego para o tutor em momento de estresse
+   - Dark Mode disponível via [data-theme="dark"] no <html>
+   - Laranja #FF6B35 imutável: urgência + CTA em ambos os modos
+   - Teal #00B4A0: sinal de tecnologia (IA, agentes, status online)
+   - Todos os componentes existentes continuam funcionando sem alteração
+   ============================================================ */
+
+@import "tailwindcss";
+
+/* ── Variante dark mode via data-theme ──────────────────────── */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* ── Tokens Primitivos (valores brutos) ─────────────────────── */
+@theme {
+  /* Brand — imutável em ambos os modos */
+  --color-primary:       255 107 53;   /* #FF6B35 — laranja urgência */
+  --color-primary-light: 255 138 92;   /* #FF8A5C — hover / glow */
+  --color-primary-dark:  229 85 32;    /* #E55520 — pressed */
+  --color-accent:        0 180 160;    /* #00B4A0 — teal tecnologia */
+  --color-accent-light:  30 206 187;   /* #1ECEBB — hover accent */
+
+  /* Semânticos */
+  --color-success: 61 170 107;         /* #3DAA6B */
+  --color-warning: 245 166 35;         /* #F5A623 */
+  --color-danger:  229 75 75;          /* #E54B4B */
+
+  /* ── MODO LIGHT (padrão) ── */
+  --color-bg:            255 248 238;  /* #FFF8EE — creme quente */
+  --color-bg-raised:     255 251 245;  /* #FFFBF5 — superfície card */
+  --color-bg-overlay:    255 240 214;  /* #FFF0D6 — seção alternada */
+
+  --color-fg:            26 18 8;      /* #1A1208 — texto principal */
+  --color-fg-muted:      107 90 62;    /* #6B5A3E — texto secundário */
+  --color-fg-subtle:     168 146 106;  /* #A8926A — texto sutil */
+
+  --color-border:        232 213 176;  /* #E8D5B0 — borda padrão */
+  --color-border-strong: 200 178 138;  /* #C8B28A — borda ênfase */
+
+  /* Shadows — warm, não frios */
+  --shadow-card: 0 1px 3px rgba(26,18,8,0.06), 0 4px 12px rgba(26,18,8,0.04);
+  --shadow-hover: 0 0 0 1px rgba(255,107,53,0.25), 0 4px 16px rgba(255,107,53,0.08);
+}
+
+/* ── Override para DARK MODE ──────────────────────────────────── */
+[data-theme="dark"] {
+  --color-bg:            15 14 9;      /* #0F0E09 — quase-preto quente */
+  --color-bg-raised:     26 24 16;     /* #1A1810 — superfície dark */
+  --color-bg-overlay:    35 31 20;     /* #231F14 — overlay dark */
+
+  --color-fg:            245 237 216;  /* #F5EDD8 — texto warm white */
+  --color-fg-muted:      168 152 120;  /* #A89878 — muted warm */
+  --color-fg-subtle:     107 94 64;    /* #6B5E40 — subtle warm */
+
+  --color-border:        58 52 32;     /* #3A3420 — borda dark */
+  --color-border-strong: 80 70 42;     /* #50462A — borda forte dark */
+
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
+  --shadow-hover: 0 0 0 1px rgba(255,107,53,0.35), 0 4px 16px rgba(255,107,53,0.12);
+}
+
+/* ── Base ───────────────────────────────────────────────────── */
+@layer base {
+  html {
+    font-family: var(--font-sans, system-ui, sans-serif);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: rgb(var(--color-bg));
+    color: rgb(var(--color-fg));
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  /* Scrollbar warm */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: rgb(var(--color-bg-overlay)); }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--color-border-strong));
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: rgb(var(--color-fg-subtle)); }
+}
+
+/* ── Utilitários Custom ─────────────────────────────────────── */
 @layer utilities {
+
+  /* Text shadows — contraste WCAG garantido */
+  .text-shadow-warm {
+    text-shadow: 0 1px 2px rgba(26,18,8,0.15);
+  }
+  .text-shadow-dark {
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5), 0 3px 10px rgba(0,0,0,0.3);
+  }
+  .text-shadow-brand {
+    text-shadow:
+      0 0 20px rgba(255,107,53,0.4),
+      0 1px 3px rgba(0,0,0,0.3);
+  }
+  .text-shadow-accent {
+    text-shadow:
+      0 0 20px rgba(0,180,160,0.4),
+      0 1px 3px rgba(0,0,0,0.3);
+  }
+
+  /* Gradiente brand — APENAS em <span>, nunca em headings inteiros */
+  .text-gradient-brand {
+    background: linear-gradient(135deg, rgb(var(--color-primary)), rgb(var(--color-accent)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Backgrounds */
+  .bg-warm-grid {
+    background-image:
+      linear-gradient(rgba(255,107,53,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,107,53,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .bg-radial-warm {
+    background-image: radial-gradient(
+      ellipse 80% 60% at 50% -10%,
+      rgba(255,107,53,0.08) 0%,
+      transparent 70%
+    );
+  }
+
+  /* Ping — sinal de agente ativo */
+  .ping-teal {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ping-teal::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: rgb(var(--color-accent));
+    animation: ping-anim 1.5s ease-out infinite;
+    opacity: 0;
+  }
+  @keyframes ping-anim {
+    0% { transform: scale(0.8); opacity: 0.6; }
+    100% { transform: scale(2.2); opacity: 0; }
+  }
+
+  /* Fade in */
+  .animate-fade-in {
+    animation: fade-in 0.4s ease-out both;
+  }
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Scrollbar hide */
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
   .scrollbar-hide::-webkit-scrollbar { display: none; }
-}
-
-/* ============================================================
- * CSS Variables — Tokens semânticos por tema
- * ============================================================ */
-:root,
-[data-theme="dark"] {
-  /* Fundos — neutro grafite, sem tint azul */
-  --color-bg:            18 18 20;    /* #121214 */
-  --color-bg-raised:     26 26 28;    /* #1A1A1C */
-  --color-bg-overlay:    10 10 12;    /* #0A0A0C */
-
-  /* Texto */
-  --color-fg:            255 255 255;
-  --color-fg-muted:      156 163 175;
-  --color-fg-subtle:     107 114 128;
-
-  /* Bordas */
-  --color-border:        255 255 255;
-  --color-border-strong: 255 255 255;
-  --color-border-brand:  255 133 27;   /* #FF851B */
-  --color-border-cyan:   32 178 170;   /* #20B2AA */
-
-  /* Acentos */
-  --color-primary:       255 133 27;   /* #FF851B */
-  --color-primary-fg:    255 255 255;
-  --color-accent:        32 178 170;   /* #20B2AA */
-  --color-accent-fg:     255 255 255;
-}
-
-[data-theme="light"] {
-  /* Fundo neutro limpo — não compete com o laranja */
-  --color-bg:            248 249 250;  /* #F8F9FA */
-  --color-bg-raised:     255 255 255;
-  --color-bg-overlay:    241 242 243;  /* #F1F2F3 */
-
-  /* Texto */
-  --color-fg:            33 37 41;     /* #212529 — grafite industrial */
-  --color-fg-muted:      108 117 125;
-  --color-fg-subtle:     173 181 189;
-
-  /* Bordas */
-  --color-border:        33 37 41;
-  --color-border-strong: 33 37 41;
-  --color-border-brand:  255 133 27;
-  --color-border-cyan:   32 178 170;
-
-  /* Acentos — mesmos no light */
-  --color-primary:       255 133 27;
-  --color-primary-fg:    255 255 255;
-  --color-accent:        32 178 170;
-  --color-accent-fg:     255 255 255;
-}
-
-/* ============================================================
- * Reset / defaults
- * ============================================================ */
-html, body {
-  min-height: 100vh;
-  background-color: rgb(var(--color-bg));
-  color: rgb(var(--color-fg));
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Headings: cor explícita + text-shadow para contraste WCAG */
-h1, h2, h3, h4, h5, h6 {
-  color: rgb(var(--color-fg));
-  text-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.45),
-    0 3px 8px rgba(0, 0, 0, 0.25);
-}
-
-[data-theme="light"] h1,
-[data-theme="light"] h2,
-[data-theme="light"] h3,
-[data-theme="light"] h4 {
-  text-shadow: none;
-}
-
-/* Scrollbar */
-[data-theme="dark"] ::-webkit-scrollbar        { width: 10px; height: 10px; }
-[data-theme="dark"] ::-webkit-scrollbar-track  { background: rgb(var(--color-bg)); }
-[data-theme="dark"] ::-webkit-scrollbar-thumb  { background: rgba(255,133,27,0.3); border-radius: 8px; }
-[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: rgba(255,133,27,0.5); }
-
-/* Focus ring */
-*:focus-visible {
-  outline: 2px solid rgb(var(--color-primary));
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-/* ============================================================
- * Utilities custom
- * ============================================================ */
-@layer utilities {
-
-  .text-gradient-brand {
-    background: linear-gradient(
-      90deg,
-      rgb(var(--color-primary)),   /* #FF851B laranja */
-      rgb(var(--color-accent))     /* #20B2AA teal    */
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: none;
-  }
-
-  /* Text shadows para headings em backgrounds dark */
-  .text-shadow-dark {
-    text-shadow:
-      0 1px 3px rgba(0, 0, 0, 0.5),
-      0 3px 10px rgba(0, 0, 0, 0.3);
-  }
-
-  .text-shadow-brand {
-    text-shadow:
-      0 0 20px rgba(255, 133, 27, 0.5),
-      0 2px 6px rgba(0, 0, 0, 0.4);
-  }
-
-  .text-shadow-accent {
-    text-shadow:
-      0 0 20px rgba(32, 178, 170, 0.4),
-      0 2px 6px rgba(0, 0, 0, 0.4);
-  }
-
-  .glow-text-brand {
-    text-shadow: 0 0 16px rgba(255, 133, 27, 0.5);
-  }
-
-  /* Backgrounds */
-  .bg-grid-subtle {
-    background-image:
-      linear-gradient(rgba(255,133,27,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(32,178,170,0.03) 1px, transparent 1px);
-    background-size: 28px 28px;
-  }
-
-  .bg-radial-brand {
-    background-image:
-      radial-gradient(circle at 50% 0%, rgba(255,133,27,0.1), transparent 60%),
-      radial-gradient(circle at 100% 100%, rgba(32,178,170,0.07), transparent 50%);
-  }
-
-  /* Animações */
-  .animate-fade-in {
-    animation: fade-in 0.4s ease-out;
-  }
-
-  @keyframes fade-in {
-    from { opacity: 0; transform: translateY(4px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
 }
