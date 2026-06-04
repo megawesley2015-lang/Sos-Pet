@@ -10,9 +10,12 @@
     "deploy:check": "bash ./pre-deploy.sh"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.4.0",
     "@sentry/nextjs": "^10.54.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.90.0",
+    "@upstash/ratelimit": "^2.0.8",
+    "@upstash/redis": "^1.38.0",
     "clsx": "^2.1.1",
     "html-to-image": "^1.11.13",
     "leaflet": "^1.9.4",
@@ -20,8 +23,9 @@
     "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-hook-form": "^7.76.1",
     "tailwind-merge": "^3.6.0",
-    "zod": "^3.23.8"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

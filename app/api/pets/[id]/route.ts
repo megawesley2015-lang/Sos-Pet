@@ -1,128 +1,133 @@
-// src/app/api/pets/[id]/route.ts
-// GET    /api/pets/[id]  — detalhe completo (inclui contato)
-// PATCH  /api/pets/[id]  — atualização parcial (apenas dono autenticado)
-// DELETE /api/pets/[id]  — exclusão (apenas dono autenticado)
+// app/api/pets/[id]/route.ts
+// GET    /api/pets/[id] — detalhe com contato (apenas aqui)
+// PATCH  /api/pets/[id] — editar (apenas o dono logado)
+// DELETE /api/pets/[id] — soft delete via status='resolved' (apenas o dono)
 
-import { NextResponse }              from 'next/server'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
-import { PetUpdateSchema }           from '@/lib/schemas/pet'
+import { NextRequest, NextResponse }  from 'next/server'
+import { createSupabaseServerClient as createClient } from '@/lib/supabase/server'
+import { ok, fail }                 from '@/lib/api-response'
+import { Errors }                   from '@/lib/errors'
+import { petUpdateSchema }          from '@/lib/schemas/pet'
+import { PET_DETAIL_COLUMNS, type PetDetail } from '@/types/pets'
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 
 type RouteContext = { params: Promise<{ id: string }> }
 
-// ─── GET — Detalhe do pet (contato incluído aqui) ────────────────────────────
+// 20 req/min por IP — impede scraping em massa de contatos
+const GET_DETAIL_LIMIT = { limit: 20, windowMs: 60_000 }
 
-export async function GET(_req: Request, { params }: RouteContext) {
-  const { id } = await params
-
-  if (!id) {
-    return NextResponse.json({ error: 'ID não informado.' }, { status: 400 })
-  }
-
-  const supabase = await createSupabaseServerClient()
-
-  const { data, error } = await supabase
-    .from('achados_perdidos')
-    // Aqui inclui "contato" — somente na página de detalhe
-    .select('id, tipo, nome, especie, raca, cor, porte, sexo, idade_aprox, descricao, comportamento, bairro, cidade, data_ocorrencia, foto_url, contato, status, created_at')
-    .eq('id', id)
-    .single()
-
-  if (error) {
-    if (error.code === 'PGRST116') {
-      return NextResponse.json({ error: 'Registro não encontrado.' }, { status: 404 })
-    }
-    console.error('[GET /api/pets/[id]]', error.message)
-    return NextResponse.json({ error: 'Erro ao buscar registro.' }, { status: 500 })
-  }
-
-  return NextResponse.json(data)
-}
-
-// ─── PATCH — Atualização parcial ─────────────────────────────────────────────
-
-export async function PATCH(request: Request, { params }: RouteContext) {
-  const { id } = await params
-  const supabase = await createSupabaseServerClient()
-
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
-  if (authError || !user) {
-    return NextResponse.json({ error: 'Não autenticado.' }, { status: 401 })
-  }
-
-  let body: unknown
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json({ error: 'JSON inválido.' }, { status: 400 })
-  }
-
-  const parsed = PetUpdateSchema.safeParse(body)
-  if (!parsed.success) {
+// ── GET /api/pets/[id] ────────────────────────────────────────────────────────
+// Único endpoint que expõe dados de contato
+export async function GET(req: NextRequest, { params }: RouteContext) {
+  const rl = await checkRateLimit(`pets-detail:${getClientIp(req)}`, GET_DETAIL_LIMIT)
+  if (!rl.allowed) {
     return NextResponse.json(
-      { error: 'Dados inválidos', details: parsed.error.flatten() },
-      { status: 400 }
+      { success: false, error: 'Muitas requisições. Tente novamente em alguns instantes.' },
+      { status: 429, headers: { 'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } }
     )
   }
 
-  const { data, error } = await supabase
-    .from('achados_perdidos')
-    .update({ ...parsed.data, updated_at: new Date().toISOString() })
-    .eq('id', id)
-    .eq('user_id', user.id)   // double-check além do RLS
-    .select('id')
-    .single()
+  try {
+    const { id } = await params
+    const supabase = await createClient()
 
-  if (error) {
-    if (error.code === 'PGRST116') {
-      return NextResponse.json(
-        { error: 'Registro não encontrado ou sem permissão.' },
-        { status: 403 }
-      )
-    }
-    console.error('[PATCH /api/pets/[id]]', error.message)
-    return NextResponse.json({ error: 'Erro ao atualizar.' }, { status: 500 })
+    const { data, error } = await supabase
+      .from('pets')
+      .select(PET_DETAIL_COLUMNS)
+      .eq('id', id)
+      .eq('status', 'active')
+      .single()
+
+    if (error) return fail(error)
+    if (!data)  return fail(Errors.PET_NOT_FOUND)
+
+    return ok(data as unknown as PetDetail)
+
+  } catch (err) {
+    return fail(err)
   }
-
-  return NextResponse.json({ id: data.id })
 }
 
-// ─── DELETE ──────────────────────────────────────────────────────────────────
+// ── PATCH /api/pets/[id] ──────────────────────────────────────────────────────
+// Edição — apenas o dono autenticado
+export async function PATCH(req: NextRequest, { params }: RouteContext) {
+  try {
+    const { id } = await params
+    const supabase = await createClient()
 
-export async function DELETE(_req: Request, { params }: RouteContext) {
-  const { id } = await params
-  const supabase = await createSupabaseServerClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return fail(Errors.NOT_AUTHENTICATED)
 
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
-  if (authError || !user) {
-    return NextResponse.json({ error: 'Não autenticado.' }, { status: 401 })
-  }
+    const { data: existing, error: fetchErr } = await supabase
+      .from('pets')
+      .select('id, owner_id')
+      .eq('id', id)
+      .single()
 
-  // Busca a foto antes de deletar o registro
-  const { data: registro } = await supabase
-    .from('achados_perdidos')
-    .select('foto_url')
-    .eq('id', id)
-    .eq('user_id', user.id)
-    .single()
+    if (fetchErr || !existing) return fail(Errors.PET_NOT_FOUND)
+    if (existing.owner_id !== user.id) return fail(Errors.FORBIDDEN)
 
-  const { error } = await supabase
-    .from('achados_perdidos')
-    .delete()
-    .eq('id', id)
-    .eq('user_id', user.id)
+    let body: unknown
+    try { body = await req.json() } catch { return fail(Errors.INVALID_PAYLOAD) }
 
-  if (error) {
-    console.error('[DELETE /api/pets/[id]]', error.message)
-    return NextResponse.json({ error: 'Erro ao excluir.' }, { status: 500 })
-  }
-
-  // Remove imagem do storage
-  if (registro?.foto_url) {
-    const path = registro.foto_url.split('/pet-images/')[1]
-    if (path) {
-      await supabase.storage.from('pet-images').remove([path])
+    const parsed = petUpdateSchema.safeParse(body)
+    if (!parsed.success) {
+      const firstError = parsed.error.errors[0]
+      return fail(Object.assign(
+        Object.create(Errors.INVALID_PAYLOAD),
+        { message: firstError?.message ?? 'Dados inválidos' }
+      ))
     }
-  }
 
-  return new NextResponse(null, { status: 204 })
+    const updateData = Object.fromEntries(
+      Object.entries(parsed.data).filter(([, v]) => v !== undefined)
+    )
+
+    const { data: updated, error: updateErr } = await supabase
+      .from('pets')
+      .update(updateData as Record<string, unknown>)
+      .eq('id', id)
+      .select('id, kind, status, name, city, updated_at')
+      .single()
+
+    if (updateErr) return fail(updateErr)
+
+    return ok(updated)
+
+  } catch (err) {
+    return fail(err)
+  }
+}
+
+// ── DELETE /api/pets/[id] ─────────────────────────────────────────────────────
+// Soft delete via status='resolved' — histórico preservado
+export async function DELETE(_req: NextRequest, { params }: RouteContext) {
+  try {
+    const { id } = await params
+    const supabase = await createClient()
+
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return fail(Errors.NOT_AUTHENTICATED)
+
+    const { data: existing, error: fetchErr } = await supabase
+      .from('pets')
+      .select('id, owner_id')
+      .eq('id', id)
+      .single()
+
+    if (fetchErr || !existing) return fail(Errors.PET_NOT_FOUND)
+    if (existing.owner_id !== user.id) return fail(Errors.FORBIDDEN)
+
+    const { error: deleteErr } = await supabase
+      .from('pets')
+      .update({ status: 'resolved' })
+      .eq('id', id)
+
+    if (deleteErr) return fail(deleteErr)
+
+    return ok({ id, deleted: true })
+
+  } catch (err) {
+    return fail(err)
+  }
 }

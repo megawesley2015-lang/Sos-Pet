@@ -1,437 +1,299 @@
 "use client";
 
-import { useActionState } from "react";
-import { CTAButton } from "@/components/ui/CTAButton";
-import { FormField } from "@/components/auth/FormField";
-import { FormAlert } from "@/components/auth/FormAlert";
-import { SubmitButton } from "@/components/auth/SubmitButton";
-import { TurnstileWidget } from "@/components/ui/TurnstileWidget";
-import { PhotoUpload } from "./PhotoUpload";
-import { LocationPickerSection } from "@/components/maps/LocationPickerSection";
+import { useActionState, useRef, useState } from "react";
 import type { PetRow } from "@/lib/types/database";
+import { TurnstileWidget } from "@/components/ui/TurnstileWidget";
+
+// ── Tipos exportados (importados por actions) ─────────────────────────────────
 
 export interface PetFormState {
-  ok?: boolean;
-  errors?: Record<string, string>;
+  ok: boolean;
   message?: string;
+  errors?: Record<string, string>;
 }
 
-interface PetFormProps {
+export interface PetFormProps {
   action: (state: PetFormState, formData: FormData) => Promise<PetFormState>;
   initial?: PetRow;
-  /** Texto do botão principal — "Cadastrar pet" / "Salvar alterações" */
-  submitLabel: string;
+  submitLabel?: string;
   pendingLabel?: string;
-  /** Mostrar botão "Excluir registro" (só na edição) */
-  onDelete?: () => void;
-  /** Se true, mostra Turnstile (geralmente para cadastros anônimos) */
   showCaptcha?: boolean;
-  /**
-   * Tipo pré-selecionado ao abrir o formulário de cadastro (sem `initial`).
-   * Lido do searchParam ?kind=found na página /pets/novo.
-   * Padrão: "lost"
-   */
   defaultKind?: "lost" | "found";
+  onDelete?: () => void;
 }
 
-const today = new Date().toISOString().slice(0, 10);
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
-const initialState: PetFormState = {};
+const inputCls = (err?: string) =>
+  [
+    "w-full rounded-lg border px-3 py-2.5 text-sm bg-ink-600 text-fg",
+    "placeholder-fg-subtle focus:outline-none focus:ring-2 transition-colors duration-200",
+    err
+      ? "border-danger/60 focus:border-danger focus:ring-danger/20"
+      : "border-white/10 focus:border-cyan-500/60 focus:ring-cyan-500/20",
+  ].join(" ");
 
-/**
- * Form completo de pet — usado em /pets/novo e /pets/[id]/editar.
- *
- * Server Action recebe FormData; client só faz UX (preview, errors).
- * Validação real (Zod) acontece dentro da action.
- */
+function Field({
+  label,
+  required,
+  error,
+  children,
+}: {
+  label: string;
+  required?: boolean;
+  error?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-xs font-medium text-fg-muted">
+        {label}
+        {required && <span className="ml-1 text-danger">*</span>}
+      </label>
+      {children}
+      {error && <p className="text-xs text-danger">{error}</p>}
+    </div>
+  );
+}
+
+// ── Componente principal ──────────────────────────────────────────────────────
+
+const initialState: PetFormState = { ok: false };
+
 export function PetForm({
   action,
   initial,
-  submitLabel,
-  pendingLabel,
-  onDelete,
+  submitLabel = "Salvar",
+  pendingLabel = "Salvando…",
   showCaptcha = false,
   defaultKind = "lost",
+  onDelete,
 }: PetFormProps) {
-  const [state, formAction] = useActionState(action, initialState);
-  const e = state.errors ?? {};
+  const [state, formAction, isPending] = useActionState(action, initialState);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+
+  const [gpsCoords, setGpsCoords] = useState<{ lat: number; lng: number } | null>(() => {
+    const lat = def?.latitude != null ? Number(def.latitude) : null
+    const lng = def?.longitude != null ? Number(def.longitude) : null
+    return lat != null && lng != null && !isNaN(lat) && !isNaN(lng)
+      ? { lat, lng }
+      : null
+  })
+  const [gpsStatus, setGpsStatus] = useState<'idle' | 'loading' | 'denied' | 'error'>('idle')
+
+  function captureGps() {
+    if (!navigator.geolocation) { setGpsStatus('error'); return }
+    setGpsStatus('loading')
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setGpsCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude })
+        setGpsStatus('idle')
+      },
+      (err) => setGpsStatus(err.code === 1 ? 'denied' : 'error'),
+      { timeout: 10_000, maximumAge: 60_000 }
+    )
+  }
+
+  const e = (field: string) => state.errors?.[field];
+
+  // Valores iniciais para o modo de edição
+  const def = initial ?? null;
 
   return (
-    <form action={formAction} noValidate className="space-y-1">
-      <div style={{ position: "absolute", left: "-9999px", top: "auto", width: "1px", height: "1px", overflow: "hidden" }} aria-hidden="true">
-        <label htmlFor="website">Website</label>
-        <input id="website" name="website" type="text" autoComplete="off" tabIndex={-1} defaultValue="" />
-      </div>
-      {state.message && <FormAlert type="error" message={state.message} />}
+    <form action={formAction} className="space-y-5" noValidate>
 
-      {/* Tipo de registro: lost / found */}
-      <fieldset className="mb-5">
-        <legend className="mb-2 block text-xs font-bold uppercase tracking-wide text-fg-muted">
-          Tipo de registro
-        </legend>
-        <div className="grid grid-cols-2 gap-3">
-          <KindRadio
-            name="kind"
-            value="lost"
-            label="Perdi meu pet"
-            color="brand"
-            defaultChecked={initial ? initial.kind === "lost" : defaultKind === "lost"}
-          />
-          <KindRadio
-            name="kind"
-            value="found"
-            label="Encontrei um pet"
-            color="cyan"
-            defaultChecked={initial ? initial.kind === "found" : defaultKind === "found"}
-          />
+      {/* Captcha hidden field */}
+      {captchaToken && (
+        <input type="hidden" name="cf-turnstile-response" value={captchaToken} />
+      )}
+
+      {/* Mensagem de erro global */}
+      {state.message && !state.ok && (
+        <div className="rounded-lg border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger">
+          {state.message}
         </div>
-        {e.kind && (
-          <p className="mt-1 text-xs text-danger-fg">{e.kind}</p>
+      )}
+
+      {/* Tipo */}
+      <Field label="O que aconteceu?" required error={e("kind")}>
+        <div className="grid grid-cols-2 gap-3">
+          {(["lost", "found"] as const).map((k) => (
+            <label
+              key={k}
+              className={[
+                "flex items-center justify-center gap-2 rounded-lg border",
+                "px-4 py-2.5 text-sm font-medium cursor-pointer transition-all duration-200",
+              ].join(" ")}
+            >
+              <input
+                type="radio"
+                name="kind"
+                value={k}
+                defaultChecked={(def?.kind ?? defaultKind) === k}
+                className="sr-only"
+              />
+              {k === "lost" ? "🐾 Perdi meu pet" : "🔍 Encontrei um pet"}
+            </label>
+          ))}
+        </div>
+      </Field>
+
+      {/* Espécie + Porte */}
+      <div className="grid grid-cols-2 gap-4">
+        <Field label="Espécie" required error={e("species")}>
+          <select name="species" defaultValue={def?.species ?? "dog"} className={inputCls(e("species"))}>
+            <option value="dog">Cachorro</option>
+            <option value="cat">Gato</option>
+            <option value="other">Outro</option>
+          </select>
+        </Field>
+        <Field label="Porte" error={e("size")}>
+          <select name="size" defaultValue={def?.size ?? ""} className={inputCls(e("size"))}>
+            <option value="">Não sei</option>
+            <option value="small">Pequeno</option>
+            <option value="medium">Médio</option>
+            <option value="large">Grande</option>
+          </select>
+        </Field>
+      </div>
+
+      {/* Nome + Raça */}
+      <div className="grid grid-cols-2 gap-4">
+        <Field label="Nome do pet" error={e("name")}>
+          <input type="text" name="name" defaultValue={def?.name ?? ""} maxLength={60} placeholder="Ex: Rex, Mimi…" className={inputCls(e("name"))} />
+        </Field>
+        <Field label="Raça" error={e("breed")}>
+          <input type="text" name="breed" defaultValue={def?.breed ?? ""} maxLength={60} placeholder="Ex: SRD, Labrador…" className={inputCls(e("breed"))} />
+        </Field>
+      </div>
+
+      {/* Cor + Sexo */}
+      <div className="grid grid-cols-2 gap-4">
+        <Field label="Cor predominante" required error={e("color")}>
+          <input type="text" name="color" defaultValue={def?.color ?? ""} maxLength={60} placeholder="Ex: caramelo, preto…" className={inputCls(e("color"))} />
+        </Field>
+        <Field label="Sexo" error={e("sex")}>
+          <select name="sex" defaultValue={def?.sex ?? "unknown"} className={inputCls(e("sex"))}>
+            <option value="unknown">Não sei</option>
+            <option value="male">Macho</option>
+            <option value="female">Fêmea</option>
+          </select>
+        </Field>
+      </div>
+
+      {/* Idade */}
+      <Field label="Idade aproximada" error={e("age_approx")}>
+        <input type="text" name="age_approx" defaultValue={def?.age_approx ?? ""} maxLength={40} placeholder="Ex: filhote, 2 anos, adulto…" className={inputCls(e("age_approx"))} />
+      </Field>
+
+      {/* Descrição */}
+      <Field label="Descrição" error={e("description")}>
+        <textarea name="description" defaultValue={def?.description ?? ""} rows={4} maxLength={1000} placeholder="Características físicas, marcas especiais…" className={`${inputCls(e("description"))} resize-none`} />
+      </Field>
+
+      {/* Comportamento */}
+      <Field label="Comportamento" error={e("behavior")}>
+        <input type="text" name="behavior" defaultValue={def?.behavior ?? ""} maxLength={200} placeholder="Ex: dócil, arisco, machucado…" className={inputCls(e("behavior"))} />
+      </Field>
+
+      {/* Foto */}
+      <Field label="Foto do pet" error={e("photo")}>
+        {def?.photo_url && (
+          <div className="flex items-center gap-3 mb-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={def.photo_url} alt="Foto atual" className="h-16 w-16 rounded-lg object-cover" />
+            <label className="flex items-center gap-2 text-xs text-fg-muted cursor-pointer">
+              <input type="checkbox" name="photo_clear" value="1" className="accent-danger" />
+              Remover foto atual
+            </label>
+          </div>
         )}
-      </fieldset>
+        <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" className="block w-full text-sm text-fg-muted file:mr-3 file:rounded-lg file:border-0 file:bg-brand-500/10 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-brand-300 hover:file:bg-brand-500/20 cursor-pointer" />
+        <p className="text-xs text-fg-subtle">JPEG, PNG ou WebP · máx. 5 MB</p>
+      </Field>
 
-      <PhotoUpload
-        name="photo"
-        initialUrl={initial?.photo_url}
-        error={e.photo}
-      />
-
-      <FormField
-        name="name"
-        label="Nome do pet (opcional)"
-        defaultValue={initial?.name ?? ""}
-        error={e.name}
-        placeholder="Ex: Thor"
-      />
-
-      <div className="grid gap-3 sm:grid-cols-2">
-        <Select
-          name="species"
-          label="Espécie"
-          required
-          defaultValue={initial?.species ?? ""}
-          error={e.species}
-          options={[
-            { value: "", label: "Selecione…" },
-            { value: "dog", label: "Cão" },
-            { value: "cat", label: "Gato" },
-            { value: "other", label: "Outro" },
-          ]}
-        />
-
-        <FormField
-          name="breed"
-          label="Raça (opcional)"
-          defaultValue={initial?.breed ?? ""}
-          error={e.breed}
-          placeholder="Ex: SRD, Poodle"
-        />
+      {/* Localização */}
+      <div className="grid grid-cols-2 gap-4">
+        <Field label="Bairro" required error={e("neighborhood")}>
+          <input type="text" name="neighborhood" defaultValue={def?.neighborhood ?? ""} maxLength={80} placeholder="Ex: Centro, Gonzaga…" className={inputCls(e("neighborhood"))} />
+        </Field>
+        <Field label="Cidade" required error={e("city")}>
+          <input type="text" name="city" defaultValue={def?.city ?? ""} maxLength={80} placeholder="Ex: Santos, Guarujá…" className={inputCls(e("city"))} />
+        </Field>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
-        <FormField
-          name="color"
-          label="Cor predominante"
-          required
-          defaultValue={initial?.color ?? ""}
-          error={e.color}
-          placeholder="Ex: caramelo"
-        />
-
-        <Select
-          name="size"
-          label="Porte"
-          defaultValue={initial?.size ?? ""}
-          error={e.size}
-          options={[
-            { value: "", label: "—" },
-            { value: "small", label: "Pequeno" },
-            { value: "medium", label: "Médio" },
-            { value: "large", label: "Grande" },
-          ]}
-        />
-
-        <Select
-          name="sex"
-          label="Sexo"
-          defaultValue={initial?.sex ?? ""}
-          error={e.sex}
-          options={[
-            { value: "", label: "—" },
-            { value: "male", label: "Macho" },
-            { value: "female", label: "Fêmea" },
-            { value: "unknown", label: "Não sei" },
-          ]}
-        />
+      <div className="grid grid-cols-2 gap-4">
+        <Field label="Estado" error={e("state")}>
+          <input type="text" name="state" defaultValue={def?.state ?? ""} maxLength={2} placeholder="SP" className={inputCls(e("state"))} />
+        </Field>
+        <Field label="Data do evento" required error={e("event_date")}>
+          <input type="date" name="event_date" defaultValue={def?.event_date ?? ""} max={new Date().toISOString().split("T")[0]} className={inputCls(e("event_date"))} />
+        </Field>
       </div>
 
-      <FormField
-        name="age_approx"
-        label="Idade aproximada (opcional)"
-        defaultValue={initial?.age_approx ?? ""}
-        error={e.age_approx}
-        placeholder="Ex: filhote, ~2 anos, idoso"
-      />
-
-      <Textarea
-        name="description"
-        label="Descrição (opcional)"
-        defaultValue={initial?.description ?? ""}
-        error={e.description}
-        rows={3}
-        placeholder="Coleira, marcas, sinais distintivos…"
-      />
-
-      <FormField
-        name="behavior"
-        label="Comportamento (opcional)"
-        defaultValue={initial?.behavior ?? ""}
-        error={e.behavior}
-        placeholder="Ex: dócil, arisco, machucado"
-      />
-
-      <div className="grid gap-3 sm:grid-cols-3">
-        <FormField
-          name="neighborhood"
-          label="Bairro"
-          required
-          defaultValue={initial?.neighborhood ?? ""}
-          error={e.neighborhood}
-        />
-        <FormField
-          name="city"
-          label="Cidade"
-          required
-          defaultValue={initial?.city ?? ""}
-          error={e.city}
-        />
-        <FormField
-          name="state"
-          label="UF"
-          maxLength={2}
-          defaultValue={initial?.state ?? ""}
-          error={e.state}
-          placeholder="SP"
-        />
+      {/* GPS — captura de localização via navegador */}
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          onClick={captureGps}
+          disabled={gpsStatus === 'loading'}
+          className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-ink-600 px-3 py-2 text-xs font-medium text-fg-muted hover:border-brand-500/40 hover:text-brand-300 transition-all disabled:opacity-50"
+        >
+          {gpsStatus === 'loading' ? '⏳ Obtendo localização…' : '📍 Usar minha localização'}
+        </button>
+        {gpsCoords && (
+          <span className="text-xs text-emerald-400">✓ Coordenadas capturadas</span>
+        )}
+        {gpsStatus === 'denied' && (
+          <span className="text-xs text-danger">Permissão negada — verifique as configurações do navegador</span>
+        )}
+        {gpsStatus === 'error' && (
+          <span className="text-xs text-danger">Não foi possível obter a localização</span>
+        )}
       </div>
+      {gpsCoords && (
+        <>
+          <input type="hidden" name="latitude"  value={gpsCoords.lat} />
+          <input type="hidden" name="longitude" value={gpsCoords.lng} />
+        </>
+      )}
 
-      <FormField
-        name="event_date"
-        label="Data do desaparecimento ou encontro"
-        type="date"
-        required
-        defaultValue={initial?.event_date ?? today}
-        max={today}
-        error={e.event_date}
-      />
+      {/* Contato */}
+      <fieldset className="rounded-xl border border-white/10 bg-ink-700/40 p-4 space-y-4">
+        <legend className="px-1 text-xs font-semibold text-fg-muted uppercase tracking-wider">Contato</legend>
+        <p className="text-xs text-fg-subtle">Visível apenas na página de detalhes — não aparece na listagem.</p>
 
-      <LocationPickerSection
-        initialLat={initial?.latitude ?? undefined}
-        initialLng={initial?.longitude ?? undefined}
-      />
+        <Field label="Seu nome" required error={e("contact_name")}>
+          <input type="text" name="contact_name" defaultValue={def?.contact_name ?? ""} maxLength={80} placeholder="Como quer ser chamado…" className={inputCls(e("contact_name"))} />
+        </Field>
 
-      <fieldset className="mt-6 rounded-xl border border-cyan-500/30 bg-cyan-500/5 p-4">
-        <legend className="px-2 text-xs font-bold uppercase tracking-wide text-cyan-300">
-          Contato
-        </legend>
+        <Field label="Telefone / WhatsApp" required error={e("contact_phone")}>
+          <input type="tel" name="contact_phone" defaultValue={def?.contact_phone ?? ""} maxLength={20} placeholder="(13) 99999-9999" className={inputCls(e("contact_phone"))} />
+        </Field>
 
-        <FormField
-          name="contact_name"
-          label="Seu nome"
-          required
-          defaultValue={initial?.contact_name ?? ""}
-          error={e.contact_name}
-        />
-
-        <FormField
-          name="contact_phone"
-          label="Telefone / WhatsApp"
-          required
-          inputMode="tel"
-          defaultValue={initial?.contact_phone ?? ""}
-          error={e.contact_phone}
-          placeholder="(13) 99999-9999"
-        />
-
-        <label className="mt-1 flex items-center gap-2 text-sm text-fg">
-          <input
-            type="checkbox"
-            name="contact_whatsapp"
-            defaultChecked={initial?.contact_whatsapp ?? true}
-            className="h-4 w-4 rounded border-white/20 bg-ink-800 text-brand-500 focus:ring-brand-500/40"
-          />
+        <label className="flex items-center gap-2.5 cursor-pointer text-sm text-fg-muted">
+          <input type="checkbox" name="contact_whatsapp" value="on" defaultChecked={def?.contact_whatsapp ?? false} className="accent-brand-500 h-4 w-4" />
           Este número tem WhatsApp
         </label>
       </fieldset>
 
-      {/* Anti-spam: Turnstile para cadastros anônimos */}
+      {/* Turnstile — apenas para cadastros anônimos */}
       {showCaptcha && (
-        <div className="mt-6 rounded-xl border border-white/10 bg-ink-800/40 p-4 text-center">
-          <p className="mb-3 text-xs font-medium text-fg-muted">
-            Verificação rápida — geralmente automática, sem precisar de conta.
-          </p>
-          <TurnstileWidget className="flex justify-center" />
-          <p className="mt-2 text-[11px] text-fg-subtle">
-            Segurança por{" "}
-            <a href="https://www.cloudflare.com/products/turnstile/" target="_blank" rel="noopener noreferrer"
-              className="text-fg-muted hover:underline">
-              Cloudflare Turnstile
-            </a>
-            {" "}— sem cookies, sem rastreamento.
-          </p>
-        </div>
+        <TurnstileWidget onTokenChange={(t) => setCaptchaToken(t)} />
       )}
 
-      <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
-        {onDelete ? (
-          <DeleteConfirm onConfirm={onDelete} />
-        ) : (
-          <span />
-        )}
-        <SubmitButton pendingLabel={pendingLabel ?? "Salvando…"}>
-          {submitLabel}
-        </SubmitButton>
-      </div>
+      {/* Botão de delete (edição) */}
+      {onDelete && (
+        <button type="button" onClick={onDelete} disabled={isPending} className="w-full rounded-lg border border-danger/40 bg-danger/10 py-2.5 text-sm font-medium text-danger hover:bg-danger/20 transition-colors disabled:opacity-50">
+          Excluir este pet
+        </button>
+      )}
+
+      {/* Submit */}
+      <button type="submit" disabled={isPending || (showCaptcha && !captchaToken)} className="w-full rounded-xl bg-brand-500 py-3 text-sm font-bold text-white hover:bg-brand-600 active:scale-[0.99] transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+        {isPending ? pendingLabel : submitLabel}
+      </button>
+
     </form>
-  );
-}
-
-// ----- helpers internos -----
-
-function KindRadio({
-  name,
-  value,
-  label,
-  color,
-  defaultChecked,
-}: {
-  name: string;
-  value: string;
-  label: string;
-  color: "brand" | "cyan";
-  defaultChecked?: boolean;
-}) {
-  const ring =
-    color === "brand"
-      ? "peer-checked:border-brand-500 peer-checked:bg-brand-500/15 peer-checked:shadow-glow-brand peer-checked:text-brand-300"
-      : "peer-checked:border-cyan-500 peer-checked:bg-cyan-500/15 peer-checked:shadow-glow-cyan peer-checked:text-cyan-300";
-  return (
-    <label className="relative cursor-pointer">
-      <input
-        type="radio"
-        name={name}
-        value={value}
-        defaultChecked={defaultChecked}
-        className="peer sr-only"
-        required
-      />
-      <div
-        className={`rounded-xl border-2 border-white/10 bg-ink-800/50 px-4 py-3 text-center text-sm font-bold text-fg-muted transition-all hover:border-white/20 ${ring}`}
-      >
-        {label}
-      </div>
-    </label>
-  );
-}
-
-function Select({
-  name,
-  label,
-  options,
-  defaultValue,
-  error,
-  required,
-}: {
-  name: string;
-  label: string;
-  options: { value: string; label: string }[];
-  defaultValue?: string;
-  error?: string;
-  required?: boolean;
-}) {
-  return (
-    <div className="mb-4">
-      <label
-        htmlFor={name}
-        className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-fg-muted"
-      >
-        {label}
-      </label>
-      <select
-        id={name}
-        name={name}
-        defaultValue={defaultValue}
-        required={required}
-        aria-invalid={!!error}
-        className={`w-full rounded-lg border bg-ink-800/70 px-3 py-2.5 text-sm text-fg focus:outline-none focus:ring-2 focus:ring-brand-500/40 ${
-          error
-            ? "border-danger/60 focus:border-danger"
-            : "border-white/10 focus:border-brand-500/60"
-        }`}
-      >
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
-      {error && <p className="mt-1 text-xs text-danger-fg">{error}</p>}
-    </div>
-  );
-}
-
-function Textarea({
-  name,
-  label,
-  defaultValue,
-  error,
-  rows,
-  placeholder,
-}: {
-  name: string;
-  label: string;
-  defaultValue?: string;
-  error?: string;
-  rows?: number;
-  placeholder?: string;
-}) {
-  return (
-    <div className="mb-4">
-      <label
-        htmlFor={name}
-        className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-fg-muted"
-      >
-        {label}
-      </label>
-      <textarea
-        id={name}
-        name={name}
-        rows={rows ?? 3}
-        defaultValue={defaultValue}
-        placeholder={placeholder}
-        aria-invalid={!!error}
-        className={`w-full rounded-lg border bg-ink-800/70 px-3 py-2.5 text-sm text-fg placeholder:text-fg-subtle/70 focus:outline-none focus:ring-2 focus:ring-brand-500/40 ${
-          error
-            ? "border-danger/60 focus:border-danger"
-            : "border-white/10 focus:border-brand-500/60"
-        }`}
-      />
-      {error && <p className="mt-1 text-xs text-danger-fg">{error}</p>}
-    </div>
-  );
-}
-
-function DeleteConfirm({ onConfirm }: { onConfirm: () => void }) {
-  return (
-    <CTAButton
-      variant="ghost"
-      onClick={() => {
-        if (confirm("Excluir este registro? Esta ação não pode ser desfeita.")) {
-          onConfirm();
-        }
-      }}
-    >
-      Excluir registro
-    </CTAButton>
   );
 }
