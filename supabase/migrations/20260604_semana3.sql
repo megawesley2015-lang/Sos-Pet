@@ -89,7 +89,17 @@ $$;
 GRANT EXECUTE ON FUNCTION public.get_pets_by_radius(NUMERIC, NUMERIC, NUMERIC, TEXT, TEXT, INTEGER)
   TO anon, authenticated;
 
--- ── 4. RPC: prestadores por raio (mesmo padrão Haversine) ───
+-- ── 4. prestadores: colunas de geolocalização próprias ──────
+
+ALTER TABLE public.prestadores
+  ADD COLUMN IF NOT EXISTS latitude  NUMERIC(10,7),
+  ADD COLUMN IF NOT EXISTS longitude NUMERIC(10,7);
+
+CREATE INDEX IF NOT EXISTS idx_prestadores_location
+  ON public.prestadores (latitude, longitude)
+  WHERE latitude IS NOT NULL AND longitude IS NOT NULL;
+
+-- ── 5. RPC: prestadores por raio (Haversine, lat/lng próprios) ──
 
 CREATE OR REPLACE FUNCTION public.get_prestadores_by_radius(
   p_lat        NUMERIC,
@@ -100,17 +110,17 @@ CREATE OR REPLACE FUNCTION public.get_prestadores_by_radius(
   p_limit      INTEGER DEFAULT 20
 )
 RETURNS TABLE (
-  id           UUID,
-  slug         TEXT,
-  nome         TEXT,
-  categoria    TEXT,
-  plan         TEXT,
-  cidade       TEXT,
-  bairro       TEXT,
-  logo_url     TEXT,
-  emergencia24h BOOLEAN,
+  id               UUID,
+  slug             TEXT,
+  nome             TEXT,
+  categoria        TEXT,
+  plan             TEXT,
+  cidade           TEXT,
+  bairro           TEXT,
+  logo_url         TEXT,
+  emergencia24h    BOOLEAN,
   media_avaliacoes NUMERIC,
-  distance_km  NUMERIC
+  distance_km      NUMERIC
 )
 LANGUAGE SQL STABLE SECURITY DEFINER SET search_path = public AS $$
   WITH candidates AS (
@@ -119,21 +129,21 @@ LANGUAGE SQL STABLE SECURITY DEFINER SET search_path = public AS $$
       pr.cidade, pr.bairro, pr.logo_url, pr.emergencia24h, pr.media_avaliacoes,
       ROUND((
         6371.0 * 2.0 * ASIN(SQRT(
-          POWER(SIN(RADIANS((sp.latitude  - p_lat) / 2.0)), 2) +
-          COS(RADIANS(p_lat)) * COS(RADIANS(sp.latitude)) *
-          POWER(SIN(RADIANS((sp.longitude - p_lng) / 2.0)), 2)
+          POWER(SIN(RADIANS((pr.latitude  - p_lat) / 2.0)), 2) +
+          COS(RADIANS(p_lat)) * COS(RADIANS(pr.latitude)) *
+          POWER(SIN(RADIANS((pr.longitude - p_lng) / 2.0)), 2)
         ))
       )::NUMERIC, 2) AS distance_km
     FROM public.prestadores pr
-    JOIN public.sentinel_partners sp ON sp.nome = pr.nome -- join por localização registrada
     WHERE
-      pr.status = 'ativo'
+      pr.status    = 'ativo'
+      AND pr.latitude  IS NOT NULL
+      AND pr.longitude IS NOT NULL
       AND (p_categoria IS NULL OR pr.categoria = p_categoria)
       AND (p_plan      IS NULL OR pr.plan      = p_plan)
-      AND sp.latitude  IS NOT NULL
-      AND sp.latitude  BETWEEN p_lat - (p_radius_km / 111.0)
+      AND pr.latitude  BETWEEN p_lat - (p_radius_km / 111.0)
                            AND p_lat + (p_radius_km / 111.0)
-      AND sp.longitude BETWEEN p_lng - (p_radius_km / (111.0 * COS(RADIANS(p_lat))))
+      AND pr.longitude BETWEEN p_lng - (p_radius_km / (111.0 * COS(RADIANS(p_lat))))
                            AND p_lng + (p_radius_km / (111.0 * COS(RADIANS(p_lat))))
   )
   SELECT * FROM candidates
@@ -142,7 +152,6 @@ LANGUAGE SQL STABLE SECURITY DEFINER SET search_path = public AS $$
   LIMIT  p_limit;
 $$;
 
--- TODO: quando prestadores tiver próprias colunas lat/lng, remover o JOIN
 GRANT EXECUTE ON FUNCTION public.get_prestadores_by_radius(NUMERIC, NUMERIC, NUMERIC, TEXT, TEXT, INTEGER)
   TO anon, authenticated;
 
