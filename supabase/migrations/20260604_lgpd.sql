@@ -80,7 +80,7 @@ GRANT EXECUTE ON FUNCTION public.export_user_data() TO authenticated;
 -- Como aplicar
 -- ============================================================
 -- 1. Supabase Dashboard → SQL Editor → cole este arquivo → Run
--- 2. Rode: npx supabase gen types typescript --project-id odrybnjjpdxqjofgewam > lib/types/database.ts
+-- 2. Rode: npx supabase gen types typescript --project-id enpgqgqinbdbvkqtnria > lib/types/database.ts
 -- 3. Confirme no Dashboard:
 --    - Database → Tables → pets: coluna deleted_at presente
 --    - Database → Tables → profiles: coluna consent_at presente

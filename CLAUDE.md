@@ -528,7 +528,7 @@ COMO TRABALHAR COM ESTE PROJETO:
 [ ] Matching automático via IA → mês 3
 [ ] Notificação push (PWA) → pós-MVP
 [ ] Tipos RPC Supabase (incrementar_clique_whatsapp) → regenerar com:
-    npx supabase gen types typescript --project-id odrybnjjpdxqjofgewam > lib/types/database.ts
+    npx supabase gen types typescript --project-id enpgqgqinbdbvkqtnria > lib/types/database.ts
 ```
 
 ---

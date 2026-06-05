@@ -160,7 +160,7 @@ GRANT EXECUTE ON FUNCTION public.get_prestadores_by_radius(NUMERIC, NUMERIC, NUM
 -- ============================================================
 -- 1. Supabase Dashboard → SQL Editor → cole este arquivo → Run
 -- 2. Regenerar tipos:
---    npx supabase gen types typescript --project-id odrybnjjpdxqjofgewam > lib/types/database.ts
+--    npx supabase gen types typescript --project-id enpgqgqinbdbvkqtnria > lib/types/database.ts
 -- 3. Confirmar:
 --    - Database → Tables → prestadores: coluna plan presente (default 'free')
 --    - Database → Tables → profiles: coluna feature_flags presente (default '{}')
