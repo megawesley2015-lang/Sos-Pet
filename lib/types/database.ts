@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -807,6 +807,8 @@ export type Database = {
       prestadores: {
         Row: {
           agendamento_online: boolean
+          dias_atendimento: Json | null
+          horarios_disponiveis: Json | null
           bairro: string | null
           capa_url: string | null
           categoria: string
@@ -826,8 +828,6 @@ export type Database = {
           longitude: number | null
           media_avaliacoes: number
           nome: string
-          dias_atendimento:     Json | null
-          horarios_disponiveis: Json | null
           plan: string
           site: string | null
           slug: string
@@ -1061,6 +1061,57 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      sentinel_partners: {
+        Row: {
+          address: string | null
+          city: string
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string
+          has_cameras: boolean
+          id: string
+          is_active: boolean
+          latitude: number
+          longitude: number
+          name: string
+          neighborhood: string | null
+          type: string
+          verified: boolean
+        }
+        Insert: {
+          address?: string | null
+          city: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          has_cameras?: boolean
+          id?: string
+          is_active?: boolean
+          latitude: number
+          longitude: number
+          name: string
+          neighborhood?: string | null
+          type: string
+          verified?: boolean
+        }
+        Update: {
+          address?: string | null
+          city?: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          has_cameras?: boolean
+          id?: string
+          is_active?: boolean
+          latitude?: number
+          longitude?: number
+          name?: string
+          neighborhood?: string | null
+          type?: string
+          verified?: boolean
+        }
+        Relationships: []
       }
       shelter_pets: {
         Row: {
@@ -1383,99 +1434,6 @@ export type Database = {
           },
         ]
       }
-      pet_saude: {
-        Row: {
-          id:              string
-          created_at:      string
-          updated_at?:     string | null
-          pet_id:          string
-          user_id?:        string | null
-          tipo:            string
-          nome?:           string | null
-          data_aplicacao:  string
-          proxima_dose?:   string | null
-          notificar?:      boolean | null
-          observacoes?:    string | null
-        }
-        Insert: {
-          id?:             string
-          created_at?:     string
-          updated_at?:     string | null
-          pet_id:          string
-          user_id?:        string | null
-          tipo:            string
-          nome?:           string | null
-          data_aplicacao:  string
-          proxima_dose?:   string | null
-          notificar?:      boolean | null
-          observacoes?:    string | null
-        }
-        Update: {
-          id?:             string
-          created_at?:     string
-          updated_at?:     string | null
-          pet_id?:         string
-          user_id?:        string | null
-          tipo?:           string
-          nome?:           string | null
-          data_aplicacao?: string
-          proxima_dose?:   string | null
-          notificar?:      boolean | null
-          observacoes?:    string | null
-        }
-        Relationships: []
-      }
-      sentinel_partners: {
-        Row: {
-          id:            string
-          name:          string
-          type:          string
-          has_cameras:   boolean
-          latitude:      number
-          longitude:     number
-          address:       string | null
-          city:          string
-          neighborhood:  string | null
-          contact_phone: string | null
-          contact_email: string | null
-          is_active:     boolean
-          verified:      boolean
-          created_at:    string
-        }
-        Insert: {
-          id?:            string
-          name:           string
-          type:           string
-          has_cameras?:   boolean
-          latitude:       number
-          longitude:      number
-          address?:       string | null
-          city:           string
-          neighborhood?:  string | null
-          contact_phone?: string | null
-          contact_email?: string | null
-          is_active?:     boolean
-          verified?:      boolean
-          created_at?:    string
-        }
-        Update: {
-          id?:            string
-          name?:          string
-          type?:          string
-          has_cameras?:   boolean
-          latitude?:      number
-          longitude?:     number
-          address?:       string | null
-          city?:          string
-          neighborhood?:  string | null
-          contact_phone?: string | null
-          contact_email?: string | null
-          is_active?:     boolean
-          verified?:      boolean
-          created_at?:    string
-        }
-        Relationships: []
-      }
     }
     Views: {
       pets_public: {
@@ -1585,6 +1543,14 @@ export type Database = {
         Returns: undefined
       }
       export_user_data: { Args: never; Returns: Json }
+      get_pet_contact: {
+        Args: { pet_id: string }
+        Returns: {
+          contact_name: string
+          contact_phone: string
+          contact_whatsapp: boolean
+        }[]
+      }
       get_pets_by_radius: {
         Args: {
           p_kind?: string
@@ -1779,51 +1745,43 @@ export const Constants = {
 } as const
 
 // ── Row type aliases — compatibilidade com código existente ──────────────────
-export type PetRow            = Tables<'pets'>
-export type PrestadorRow      = Tables<'prestadores'>
-export type PrestadorStatsRow = Tables<'prestador_stats'>
-export type ParceiroRow       = Tables<'parceiros'>
-export type SightingRow       = Tables<'sightings'>
-export type ProfileRow        = Tables<'profiles'>
-export type StoreProductRow   = Tables<'store_products'>
-export type AlertSosRow       = Tables<'alertas_sos'>
-export type AvaliacaoRow      = Tables<'avaliacoes'>
-export type AvisoRow          = Tables<'avisos'>
-export type ProfileUpdate     = TablesUpdate<'profiles'>
-export type PetUpdate         = TablesUpdate<'pets'>
-export type PrestadorUpdate   = TablesUpdate<'prestadores'>
+export type PetRow              = Tables<'pets'>
+export type PrestadorRow        = Tables<'prestadores'>
+export type PrestadorStatsRow   = Tables<'prestador_stats'>
+export type ParceiroRow         = Tables<'parceiros'>
+export type SightingRow         = Tables<'sightings'>
+export type ProfileRow          = Tables<'profiles'>
+export type StoreProductRow     = Tables<'store_products'>
+export type AlertSosRow         = Tables<'alertas_sos'>
+export type AvaliacaoRow        = Tables<'avaliacoes'>
+export type AvisoRow            = Tables<'avisos'>
+export type SentinelPartnerRow  = Tables<'sentinel_partners'>
+export type SentinelPartnerInsert = TablesInsert<'sentinel_partners'>
+export type ProfileUpdate       = TablesUpdate<'profiles'>
+export type PetUpdate           = TablesUpdate<'pets'>
+export type PrestadorUpdate     = TablesUpdate<'prestadores'>
 
 // pet_saude não está no schema gerado — tipo manual até tabela ser criada
 export type PetSaudeTipo = string
 export interface PetSaudeRow {
   id:              string
+  created_at:      string
+  updated_at?:     string | null
   pet_id:          string
   user_id?:        string | null
   tipo:            PetSaudeTipo
-  titulo?:         string | null
   nome?:           string | null
-  descricao?:      string | null
-  data?:           string | null
-  data_aplicacao?: string | null
+  data_aplicacao:  string
   proxima_dose?:   string | null
-  observacoes?:    string | null
   notificar?:      boolean | null
-  created_at:      string
+  observacoes?:    string | null
 }
 export type PetSaudeInsert = Omit<PetSaudeRow, 'id' | 'created_at'>
 
 // ── Enum aliases ─────────────────────────────────────────────────────────────
-export type PetKind           = 'lost' | 'found'
-export type PetSpecies        = 'dog' | 'cat' | 'other'
-export type AdoptionStatus    = string
-export type HealthStatus      = string
-export type ShelterPetStatus  = string
-export type PrestadorCategoria    = string
-export type SentinelPartnerRow    = Tables<'sentinel_partners'>
-export type SentinelPartnerInsert = TablesInsert<'sentinel_partners'>
-
-// Funções não presentes no schema gerado (aplicar migrations pendentes)
-// Stub para compatibilidade com lib/services/pets.ts até o DB ser sincronizado
-declare module './database' {
-  // intencional vazio — apenas para documentar RPCs pendentes
-}
+export type PetKind            = 'lost' | 'found'
+export type PetSpecies         = 'dog' | 'cat' | 'other'
+export type AdoptionStatus     = string
+export type HealthStatus       = string
+export type ShelterPetStatus   = string
+export type PrestadorCategoria = string
