@@ -48,7 +48,7 @@ export async function listPets(filters: PetFilters = {}): Promise<{
   if (filters.ownerId) {
     let q = supabase
       .from("pets")
-      .select("*")
+      .select("id, created_at, updated_at, owner_id, kind, name, species, breed, color, size, sex, age_approx, description, behavior, neighborhood, city, state, event_date, photo_url, contact_name, contact_phone, contact_whatsapp, status, latitude, longitude")
       .order("created_at", { ascending: false })
       .limit(filters.limit ?? 48)
       .eq("owner_id", filters.ownerId);
@@ -66,7 +66,7 @@ export async function listPets(filters: PetFilters = {}): Promise<{
 
   let q = supabase
     .from("pets_public")
-    .select("*")
+    .select("id, created_at, updated_at, owner_id, kind, name, species, breed, color, size, sex, age_approx, description, behavior, neighborhood, city, state, event_date, photo_url, status, latitude, longitude")
     .order("created_at", { ascending: false })
     .limit(filters.limit ?? 48)
     .eq("status", "active");
@@ -110,15 +110,16 @@ export const getPetById = cache(async (id: string): Promise<PetRow | null> => {
   // Caminho rápido: owner/admin acessa tabela direto
   const { data: ownerRow } = await supabase
     .from("pets")
-    .select("*")
+    .select("id, created_at, updated_at, owner_id, kind, name, species, breed, color, size, sex, age_approx, description, behavior, neighborhood, city, state, event_date, photo_url, contact_name, contact_phone, contact_whatsapp, status, latitude, longitude")
     .eq("id", id)
     .maybeSingle();
   if (ownerRow) return ownerRow as PetRow;
 
   // Anônimo: monta a partir da view pública + RPC de contato
   const [pubRes, contactRes] = await Promise.all([
-    supabase.from("pets_public").select("*").eq("id", id).maybeSingle(),
-    supabase
+    supabase.from("pets_public").select("id, created_at, updated_at, owner_id, kind, name, species, breed, color, size, sex, age_approx, description, behavior, neighborhood, city, state, event_date, photo_url, status, latitude, longitude").eq("id", id).maybeSingle(),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase as any)
       .rpc("get_pet_contact", { pet_id: id })
       .maybeSingle(),
   ]);
@@ -147,7 +148,8 @@ export async function getPetContact(id: string): Promise<{
   contact_whatsapp: boolean;
 } | null> {
   const supabase = await createSupabaseServerClient();
-  const { data } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data } = await (supabase as any)
     .rpc("get_pet_contact", { pet_id: id })
     .maybeSingle();
   return (data as {
@@ -169,7 +171,7 @@ export async function getPetForOwner(
   const supabase = await createSupabaseServerClient();
   const { data } = await supabase
     .from("pets")
-    .select("*")
+    .select("id, created_at, updated_at, owner_id, kind, name, species, breed, color, size, sex, age_approx, description, behavior, neighborhood, city, state, event_date, photo_url, contact_name, contact_phone, contact_whatsapp, status, latitude, longitude")
     .eq("id", id)
     .eq("owner_id", userId)
     .maybeSingle();

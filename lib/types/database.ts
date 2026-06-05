@@ -1,976 +1,1726 @@
-/**
- * Database types — espelha o schema SQL em supabase/schema.sql
- *
- * Em projetos maduros, gere este arquivo automaticamente via:
- *   npx supabase gen types typescript --project-id <ID> > lib/types/database.ts
- *
- * Para o MVP, mantemos manual para evitar dependência do Supabase CLI.
- *
- * IMPORTANTE: Database é declarado como `type` (não `interface`) e usa
- *   { [_ in string]: never }
- * em vez de `Record<string, never>` pra Views/Enums. Isso é necessário pro
- * supabase-js v2.50+ inferir corretamente — caso contrário, todas as queries
- * retornam `never` e quebram o typecheck.
- */
-
-export type PetKind = "lost" | "found";
-export type PetSpecies = "dog" | "cat" | "other";
-export type PetSize = "small" | "medium" | "large";
-export type PetSex = "male" | "female" | "unknown";
-export type PetStatus = "draft" | "active" | "resolved" | "removed";
-export type ProfileRole = "tutor" | "provider" | "admin";
-export type Json =
+﻿export type Json =
   | string
   | number
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[];
-export type JsonObject = { [key: string]: Json | undefined };
-type DbRow<T> = T & Record<string, unknown>;
-type DbInsert<T> = T & Record<string, unknown>;
-type DbUpdate<T> = T & Record<string, unknown>;
+  | Json[]
 
-export interface ProfileRow {
-  id: string;
-  created_at: string;
-  updated_at: string;
-  full_name: string | null;
-  phone: string | null;
-  avatar_url: string | null;
-  role: ProfileRole;
-}
-
-// Insert explícito (evita Pick & Partial encadeado, que confunde inferência)
-export interface ProfileInsert {
-  id: string;
-  created_at?: string;
-  updated_at?: string;
-  full_name?: string | null;
-  phone?: string | null;
-  avatar_url?: string | null;
-  role?: ProfileRole;
-}
-
-export type ProfileUpdate = Partial<
-  Omit<ProfileRow, "id" | "created_at" | "updated_at">
->;
-
-// ----- avisos -----
-export interface AvisoRow {
-  id: string;
-  created_at: string;
-  mensagem: string;
-  emoji: string | null;
-  link: string | null;
-  prioridade: number;
-  ativo: boolean;
-  expires_at: string | null;
-}
-
-export interface AvisoInsert {
-  id?: string;
-  created_at?: string;
-  mensagem: string;
-  emoji?: string | null;
-  link?: string | null;
-  prioridade?: number;
-  ativo?: boolean;
-  expires_at?: string | null;
-}
-
-// ----- parceiros -----
-export type ParceiroStatus = "pendente" | "aprovado" | "rejeitado";
-
-export interface ParceiroRow {
-  id: string;
-  created_at: string;
-  nome: string;
-  email: string;
-  empresa: string | null;
-  mensagem: string | null;
-  status: ParceiroStatus;
-}
-
-export interface ParceiroInsert {
-  id?: string;
-  created_at?: string;
-  nome: string;
-  email: string;
-  empresa?: string | null;
-  mensagem?: string | null;
-  status?: ParceiroStatus;
-}
-
-// ----- prestadores -----
-export type PrestadorCategoria =
-  | "veterinario"
-  | "petshop"
-  | "adestrador"
-  | "hospedagem"
-  | "banho_tosa"
-  | "outro";
-
-export type PrestadorStatus = "ativo" | "pausado" | "pendente_aprovacao";
-
-export interface PrestadorRow {
-  id: string;
-  created_at: string;
-  updated_at: string;
-  user_id: string | null;
-  slug: string;
-  nome: string;
-  descricao: string | null;
-  categoria: PrestadorCategoria;
-  telefone: string | null;
-  whatsapp: string | null;
-  email: string | null;
-  instagram: string | null;
-  site: string | null;
-  cidade: string;
-  bairro: string | null;
-  estado: string | null;
-  endereco: string | null;
-  logo_url: string | null;
-  capa_url: string | null;
-  emergencia24h: boolean;
-  delivery: boolean;
-  agendamento_online: boolean;
-  verificado: boolean;
-  destaque: boolean;
-  media_avaliacoes: number;
-  total_avaliacoes: number;
-  dias_atendimento: JsonObject | null;
-  horarios_disponiveis: JsonObject | null;
-  status: PrestadorStatus;
-}
-
-export interface PrestadorInsert {
-  id?: string;
-  created_at?: string;
-  updated_at?: string;
-  user_id?: string | null;
-  slug: string;
-  nome: string;
-  descricao?: string | null;
-  categoria: PrestadorCategoria;
-  telefone?: string | null;
-  whatsapp?: string | null;
-  email?: string | null;
-  instagram?: string | null;
-  site?: string | null;
-  cidade: string;
-  bairro?: string | null;
-  estado?: string | null;
-  endereco?: string | null;
-  logo_url?: string | null;
-  capa_url?: string | null;
-  emergencia24h?: boolean;
-  delivery?: boolean;
-  agendamento_online?: boolean;
-  verificado?: boolean;
-  destaque?: boolean;
-  media_avaliacoes?: number;
-  total_avaliacoes?: number;
-  dias_atendimento?: JsonObject | null;
-  horarios_disponiveis?: JsonObject | null;
-  status?: PrestadorStatus;
-}
-
-export type PrestadorUpdate = Partial<PrestadorInsert>;
-
-// ----- avaliacoes -----
-export interface AvaliacaoRow {
-  id: string;
-  created_at: string;
-  prestador_id: string;
-  user_id: string;
-  nota: number;
-  comentario: string | null;
-}
-
-export interface AvaliacaoInsert {
-  id?: string;
-  created_at?: string;
-  prestador_id: string;
-  user_id: string;
-  nota: number;
-  comentario?: string | null;
-}
-
-export type AvaliacaoUpdate = Partial<
-  Pick<AvaliacaoRow, "nota" | "comentario">
->;
-
-// ----- prestador_stats -----
-export interface PrestadorStatsRow {
-  prestador_id: string;
-  visualizacoes: number;
-  cliques_whatsapp: number;
-  cliques_telefone: number;
-  updated_at: string;
-}
-
-export interface PrestadorStatsInsert {
-  prestador_id: string;
-  visualizacoes?: number;
-  cliques_whatsapp?: number;
-  cliques_telefone?: number;
-  updated_at?: string;
-}
-
-// ----- alertas_sos -----
-export type AlertStatus = "ativo" | "resolvido" | "cancelado";
-
-export interface AlertSosRow {
-  id: string;
-  created_at: string;
-  pet_id: string;
-  user_id: string;
-  raio_km: number;
-  imagem_url: string | null;
-  mensagem: string | null;
-  status: AlertStatus;
-}
-
-export interface AlertSosInsert {
-  id?: string;
-  created_at?: string;
-  pet_id: string;
-  user_id: string;
-  raio_km?: number;
-  imagem_url?: string | null;
-  mensagem?: string | null;
-  status?: AlertStatus;
-}
-
-export type AlertSosUpdate = Partial<AlertSosInsert>;
-
-// ----- pet_saude -----
-export type PetSaudeTipo = "vacina" | "medicamento" | "exame" | "outro";
-
-export interface PetSaudeRow {
-  id: string;
-  created_at: string;
-  updated_at: string;
-  pet_id: string;
-  user_id: string;
-  tipo: PetSaudeTipo;
-  nome: string;
-  data_aplicacao: string; // "YYYY-MM-DD"
-  proxima_dose: string | null; // "YYYY-MM-DD"
-  notificar: boolean;
-  observacoes: string | null;
-}
-
-export interface PetSaudeInsert {
-  id?: string;
-  created_at?: string;
-  updated_at?: string;
-  pet_id: string;
-  user_id: string;
-  tipo: PetSaudeTipo;
-  nome: string;
-  data_aplicacao: string;
-  proxima_dose?: string | null;
-  notificar?: boolean;
-  observacoes?: string | null;
-}
-
-export type PetSaudeUpdate = Partial<PetSaudeInsert>;
-
-// ----- pets -----
-export interface PetRow {
-  id: string;
-  created_at: string;
-  updated_at: string;
-  owner_id: string | null;
-  kind: PetKind;
-  name: string | null;
-  species: PetSpecies;
-  breed: string | null;
-  color: string;
-  size: PetSize | null;
-  sex: PetSex | null;
-  age_approx: string | null;
-  description: string | null;
-  behavior: string | null;
-  neighborhood: string;
-  city: string;
-  state: string | null;
-  event_date: string; // "YYYY-MM-DD"
-  photo_url: string | null;
-  contact_name: string;
-  contact_phone: string;
-  contact_whatsapp: boolean;
-  status: PetStatus;
-  latitude: number | null;
-  longitude: number | null;
-}
-
-export interface PetInsert {
-  id?: string;
-  created_at?: string;
-  updated_at?: string;
-  owner_id?: string | null;
-  kind: PetKind;
-  name?: string | null;
-  species: PetSpecies;
-  breed?: string | null;
-  color: string;
-  size?: PetSize | null;
-  sex?: PetSex | null;
-  age_approx?: string | null;
-  description?: string | null;
-  behavior?: string | null;
-  neighborhood: string;
-  city: string;
-  state?: string | null;
-  event_date: string;
-  photo_url?: string | null;
-  contact_name: string;
-  contact_phone: string;
-  contact_whatsapp?: boolean;
-  status?: PetStatus;
-  latitude?: number | null;
-  longitude?: number | null;
-}
-
-export type PetUpdate = Partial<PetInsert>;
-
-// ----- sightings (avistamentos) -----
-export interface SightingRow {
-  id: string;
-  created_at: string;
-  pet_id: string;
-  lat: number;
-  lng: number;
-  address: string | null;
-  photo_url: string | null;
-  description: string | null;
-  reporter_name: string | null;
-}
-
-export interface SightingInsert {
-  id?: string;
-  created_at?: string;
-  pet_id: string;
-  lat: number;
-  lng: number;
-  address?: string | null;
-  photo_url?: string | null;
-  description?: string | null;
-  reporter_name?: string | null;
-}
-
-export type SightingUpdate = Partial<SightingInsert>;
-
-// ----- loja / catálogo de produtos -----
-export type CheckoutType = "external" | "internal";
-
-export interface StoreProductRow {
-  id: string;
-  created_at: string;
-  updated_at: string;
-  name: string;
-  description: string | null;
-  price_cents: number;
-  original_price_cents: number | null;
-  photo_url: string | null;
-  supplier_name: string | null;
-  category: string;
-  checkout_type: CheckoutType;
-  external_url: string | null;
-  active: boolean;
-  featured: boolean;
-  sort_order: number;
-}
-
-export interface StoreProductInsert {
-  id?: string;
-  created_at?: string;
-  updated_at?: string;
-  name: string;
-  description?: string | null;
-  price_cents: number;
-  original_price_cents?: number | null;
-  photo_url?: string | null;
-  supplier_name?: string | null;
-  category?: string;
-  checkout_type?: CheckoutType;
-  external_url?: string | null;
-  active?: boolean;
-  featured?: boolean;
-  sort_order?: number;
-}
-
-export type StoreProductUpdate = Partial<StoreProductInsert>;
-
-// ----- plaquinhas / pedidos -----
-export type PaymentStatus =
-  | "pending_payment"
-  | "paid"
-  | "failed"
-  | "refunded"
-  | "cancelled";
-
-export type SupplierStatus =
-  | "awaiting_payment"
-  | "queued"
-  | "sent_to_supplier"
-  | "in_production"
-  | "shipped"
-  | "delivered";
-
-export interface ShippingAddress {
-  cep: string;
-  logradouro: string;
-  numero: string;
-  complemento: string | null;
-  bairro: string;
-  cidade: string;
-  estado: string;
-}
-
-export interface PetTagOrderRow {
-  id: string;
-  pet_id: string;
-  user_id: string | null;
-  payment_provider: string;
-  payment_id: string | null;
-  preference_id: string | null;
-  payment_status: PaymentStatus;
-  amount_cents: number;
-  tag_type: string;
-  shipping_name: string;
-  shipping_address: ShippingAddress;
-  tag_contact_phone: string;
-  supplier_status: SupplierStatus;
-  supplier_notified_at: string | null;
-  tracking_code: string | null;
-  shipped_at: string | null;
-  delivered_at: string | null;
-  notes: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface PetTagOrderInsert {
-  id?: string;
-  pet_id: string;
-  user_id?: string | null;
-  payment_provider?: string;
-  payment_id?: string | null;
-  preference_id?: string | null;
-  payment_status?: PaymentStatus;
-  amount_cents: number;
-  tag_type?: string;
-  shipping_name: string;
-  shipping_address: ShippingAddress;
-  tag_contact_phone: string;
-  supplier_status?: SupplierStatus;
-  supplier_notified_at?: string | null;
-  tracking_code?: string | null;
-  shipped_at?: string | null;
-  delivered_at?: string | null;
-  notes?: string | null;
-  created_at?: string;
-  updated_at?: string;
-}
-
-export type PetTagOrderUpdate = Partial<PetTagOrderInsert>;
-
-// ============================================================
-// Módulo ONG — Gestão para ONGs e Protetores
-// ============================================================
-
-export type ShelterType = "ong" | "protetor";
-export type ShelterPetStatus = "available" | "fostered" | "adopted" | "deceased";
-export type HealthStatus = "healthy" | "recovering" | "critical" | "treated";
-export type MedicalRecordType = "consultation" | "surgery" | "exam" | "treatment" | "observation";
-export type AdoptionStatus = "active" | "returned" | "deceased" | "transferred";
-
-export interface ShelterRow {
-  id: string;
-  user_id: string;
-  name: string;
-  type: ShelterType;
-  cnpj: string | null;
-  phone: string;
-  email: string | null;
-  city: string;
-  neighborhood: string | null;
-  description: string | null;
-  logo_url: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface ShelterInsert {
-  id?: string;
-  user_id: string;
-  name: string;
-  type: ShelterType;
-  cnpj?: string | null;
-  phone: string;
-  email?: string | null;
-  city: string;
-  neighborhood?: string | null;
-  description?: string | null;
-  logo_url?: string | null;
-}
-
-export type ShelterUpdate = Partial<Omit<ShelterInsert, "user_id">>;
-
-export interface ShelterPetRow {
-  id: string;
-  shelter_id: string;
-  name: string | null;
-  species: PetSpecies;
-  breed: string | null;
-  color: string;
-  size: PetSize;
-  sex: PetSex;
-  estimated_age: string | null;
-  rescue_date: string;
-  rescue_location: string | null;
-  health_status: HealthStatus;
-  behavior: string | null;
-  description: string | null;
-  photo_url: string | null;
-  status: ShelterPetStatus;
-  // Prontuário — dados fixos do pet
-  weight_kg: number | null;
-  microchip: string | null;
-  is_castrated: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface ShelterPetInsert {
-  id?: string;
-  shelter_id: string;
-  name?: string | null;
-  species: PetSpecies;
-  breed?: string | null;
-  color: string;
-  size: PetSize;
-  sex: PetSex;
-  estimated_age?: string | null;
-  rescue_date: string;
-  rescue_location?: string | null;
-  health_status?: HealthStatus;
-  behavior?: string | null;
-  description?: string | null;
-  photo_url?: string | null;
-  status?: ShelterPetStatus;
-  weight_kg?: number | null;
-  microchip?: string | null;
-  is_castrated?: boolean;
-}
-
-export type ShelterPetUpdate = Partial<Omit<ShelterPetInsert, "shelter_id">>;
-
-export interface MedicalRecordRow {
-  id: string;
-  pet_id: string;
-  record_date: string;
-  type: MedicalRecordType;
-  description: string;
-  vet_name: string | null;
-  weight_kg: number | null;
-  notes: string | null;
-  created_by: string | null;
-  created_at: string;
-}
-
-export interface MedicalRecordInsert {
-  id?: string;
-  pet_id: string;
-  record_date?: string;
-  type: MedicalRecordType;
-  description: string;
-  vet_name?: string | null;
-  weight_kg?: number | null;
-  notes?: string | null;
-  created_by?: string | null;
-}
-
-export interface VaccinationRow {
-  id: string;
-  pet_id: string;
-  vaccine_name: string;
-  applied_date: string;
-  next_dose_date: string | null;
-  vet_name: string | null;
-  batch: string | null;
-  notes: string | null;
-  created_at: string;
-}
-
-export interface VaccinationInsert {
-  id?: string;
-  pet_id: string;
-  vaccine_name: string;
-  applied_date: string;
-  next_dose_date?: string | null;
-  vet_name?: string | null;
-  batch?: string | null;
-  notes?: string | null;
-}
-
-export interface MedicationRow {
-  id: string;
-  pet_id: string;
-  medication_name: string;
-  dosage: string;
-  frequency: string;
-  start_date: string;
-  end_date: string | null;
-  is_ongoing: boolean;
-  reason: string | null;
-  notes: string | null;
-  created_at: string;
-}
-
-export interface MedicationInsert {
-  id?: string;
-  pet_id: string;
-  medication_name: string;
-  dosage: string;
-  frequency: string;
-  start_date: string;
-  end_date?: string | null;
-  is_ongoing?: boolean;
-  reason?: string | null;
-  notes?: string | null;
-}
-
-export type MedicationUpdate = Partial<Omit<MedicationInsert, "pet_id">>;
-
-export interface AdoptionRow {
-  id: string;
-  pet_id: string;
-  shelter_id: string;
-  adopter_name: string;
-  adopter_phone: string;
-  adopter_email: string | null;
-  adopter_city: string;
-  adopter_neighborhood: string | null;
-  adoption_date: string;
-  // Acompanhamento pós-adoção em dois checkpoints (30 e 90 dias)
-  follow_up_30_date: string | null;
-  follow_up_30_notes: string | null;
-  follow_up_90_date: string | null;
-  follow_up_90_notes: string | null;
-  status: AdoptionStatus;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface AdoptionInsert {
-  id?: string;
-  pet_id: string;
-  shelter_id: string;
-  adopter_name: string;
-  adopter_phone: string;
-  adopter_email?: string | null;
-  adopter_city: string;
-  adopter_neighborhood?: string | null;
-  adoption_date: string;
-  follow_up_30_date?: string | null;
-  follow_up_30_notes?: string | null;
-  follow_up_90_date?: string | null;
-  follow_up_90_notes?: string | null;
-  status?: AdoptionStatus;
-}
-
-export type AdoptionUpdate = Partial<Omit<AdoptionInsert, "pet_id" | "shelter_id">>;
-
-// ── achados e perdidos ──────────────────────────────────────
-export type AchadoTipo = "perdido" | "encontrado";
-export type AchadoStatus = "ativo" | "inativo" | "resolvido";
-export type AchadoEspecie = "cao" | "gato" | "outro";
-export type AchadoPorte = "pequeno" | "medio" | "grande";
-export type AchadoSexo = "macho" | "femea" | "desconhecido";
-
-export interface AchadoPerdidoRow {
-  id: string;
-  created_at: string;
-  updated_at: string;
-  user_id: string | null;
-  tipo: AchadoTipo;
-  nome: string | null;
-  especie: AchadoEspecie;
-  raca: string | null;
-  cor: string;
-  porte: AchadoPorte | null;
-  sexo: AchadoSexo | null;
-  idade_aprox: string | null;
-  descricao: string | null;
-  comportamento: string | null;
-  bairro: string | null;
-  cidade: string;
-  data_ocorrencia: string;
-  foto_url: string | null;
-  contato: string;
-  status: AchadoStatus;
-}
-
-export interface AchadoPerdidoInsert {
-  id?: string;
-  created_at?: string;
-  updated_at?: string;
-  user_id?: string | null;
-  tipo: AchadoTipo;
-  nome?: string | null;
-  especie: AchadoEspecie;
-  raca?: string | null;
-  cor: string;
-  porte?: AchadoPorte | null;
-  sexo?: AchadoSexo | null;
-  idade_aprox?: string | null;
-  descricao?: string | null;
-  comportamento?: string | null;
-  bairro?: string | null;
-  cidade: string;
-  data_ocorrencia: string;
-  foto_url?: string | null;
-  contato: string;
-  status?: AchadoStatus;
-}
-
-export type AchadoPerdidoUpdate = Partial<Omit<AchadoPerdidoInsert, "user_id">>;
-
-// ============================================================
-// Database — formato canônico do supabase-js v2.50+
-// ============================================================
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.5"
+  }
   public: {
     Tables: {
-      pet_saude: {
-        Row: DbRow<PetSaudeRow>;
-        Insert: DbInsert<PetSaudeInsert>;
-        Update: DbUpdate<PetSaudeUpdate>;
-        Relationships: [];
-      };
-      pets: {
-        Row: DbRow<PetRow>;
-        Insert: DbInsert<PetInsert>;
-        Update: DbUpdate<PetUpdate>;
-        Relationships: [];
-      };
-      profiles: {
-        Row: DbRow<ProfileRow>;
-        Insert: DbInsert<ProfileInsert>;
-        Update: DbUpdate<ProfileUpdate>;
-        Relationships: [];
-      };
-      alertas_sos: {
-        Row: DbRow<AlertSosRow>;
-        Insert: DbInsert<AlertSosInsert>;
-        Update: DbUpdate<AlertSosUpdate>;
-        Relationships: [];
-      };
-      prestadores: {
-        Row: DbRow<PrestadorRow>;
-        Insert: DbInsert<PrestadorInsert>;
-        Update: DbUpdate<PrestadorUpdate>;
-        Relationships: [];
-      };
-      avaliacoes: {
-        Row: DbRow<AvaliacaoRow>;
-        Insert: DbInsert<AvaliacaoInsert>;
-        Update: DbUpdate<AvaliacaoUpdate>;
-        Relationships: [];
-      };
-      prestador_stats: {
-        Row: DbRow<PrestadorStatsRow>;
-        Insert: DbInsert<PrestadorStatsInsert>;
-        Update: DbUpdate<Partial<PrestadorStatsInsert>>;
-        Relationships: [];
-      };
-      avisos: {
-        Row: DbRow<AvisoRow>;
-        Insert: DbInsert<AvisoInsert>;
-        Update: DbUpdate<Partial<AvisoInsert>>;
-        Relationships: [];
-      };
-      parceiros: {
-        Row: DbRow<ParceiroRow>;
-        Insert: DbInsert<ParceiroInsert>;
-        Update: DbUpdate<Partial<ParceiroInsert>>;
-        Relationships: [];
-      };
-      store_products: {
-        Row: DbRow<StoreProductRow>;
-        Insert: DbInsert<StoreProductInsert>;
-        Update: DbUpdate<StoreProductUpdate>;
-        Relationships: [];
-      };
-      pet_tag_orders: {
-        Row: DbRow<PetTagOrderRow>;
-        Insert: DbInsert<PetTagOrderInsert>;
-        Update: DbUpdate<PetTagOrderUpdate>;
-        Relationships: [];
-      };
-      sightings: {
-        Row: DbRow<SightingRow>;
-        Insert: DbInsert<SightingInsert>;
-        Update: DbUpdate<SightingUpdate>;
-        Relationships: [];
-      };
-      // ── ONG module ──────────────────────────────────────
-      shelters: {
-        Row: DbRow<ShelterRow>;
-        Insert: DbInsert<ShelterInsert>;
-        Update: DbUpdate<ShelterUpdate>;
-        Relationships: [];
-      };
-      shelter_pets: {
-        Row: DbRow<ShelterPetRow>;
-        Insert: DbInsert<ShelterPetInsert>;
-        Update: DbUpdate<ShelterPetUpdate>;
-        Relationships: [];
-      };
-      medical_records: {
-        Row: DbRow<MedicalRecordRow>;
-        Insert: DbInsert<MedicalRecordInsert>;
-        Update: DbUpdate<Partial<MedicalRecordInsert>>;
-        Relationships: [];
-      };
-      vaccinations: {
-        Row: DbRow<VaccinationRow>;
-        Insert: DbInsert<VaccinationInsert>;
-        Update: DbUpdate<Partial<VaccinationInsert>>;
-        Relationships: [];
-      };
-      medications: {
-        Row: DbRow<MedicationRow>;
-        Insert: DbInsert<MedicationInsert>;
-        Update: DbUpdate<MedicationUpdate>;
-        Relationships: [];
-      };
-      adoptions: {
-        Row: DbRow<AdoptionRow>;
-        Insert: DbInsert<AdoptionInsert>;
-        Update: DbUpdate<AdoptionUpdate>;
-        Relationships: [];
-      };
       achados_perdidos: {
-        Row: DbRow<AchadoPerdidoRow>;
-        Insert: DbInsert<AchadoPerdidoInsert>;
-        Update: DbUpdate<AchadoPerdidoUpdate>;
-        Relationships: [];
-      };
-      sentinel_partners: {
-        Row: DbRow<{
-          id: string;
-          name: string;
-          type: string;
-          address: string | null;
-          neighborhood: string | null;
-          city: string;
-          contact_phone: string | null;
-          contact_email: string | null;
-          has_cameras: boolean;
-          latitude: number | null;
-          longitude: number | null;
-          verified: boolean;
-          is_active: boolean;
-          created_at: string;
-        }>;
-        Insert: DbInsert<{
-          id?: string;
-          name: string;
-          type: string;
-          address?: string | null;
-          neighborhood?: string | null;
-          city: string;
-          contact_phone?: string | null;
-          contact_email?: string | null;
-          has_cameras?: boolean;
-          latitude?: number | null;
-          longitude?: number | null;
-          verified?: boolean;
-          is_active?: boolean;
-          created_at?: string;
-        }>;
-        Update: DbUpdate<{
-          name?: string;
-          type?: string;
-          address?: string | null;
-          neighborhood?: string | null;
-          city?: string;
-          contact_phone?: string | null;
-          contact_email?: string | null;
-          has_cameras?: boolean;
-          latitude?: number | null;
-          longitude?: number | null;
-          verified?: boolean;
-          is_active?: boolean;
-        }>;
-        Relationships: [];
-      };
-    };
+        Row: {
+          bairro: string | null
+          cidade: string
+          comportamento: string | null
+          contato: string
+          cor: string
+          created_at: string
+          data_ocorrencia: string
+          descricao: string | null
+          especie: string
+          foto_url: string | null
+          id: string
+          idade_aprox: string | null
+          nome: string | null
+          porte: string | null
+          raca: string | null
+          sexo: string | null
+          status: string
+          tipo: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          bairro?: string | null
+          cidade: string
+          comportamento?: string | null
+          contato: string
+          cor: string
+          created_at?: string
+          data_ocorrencia: string
+          descricao?: string | null
+          especie: string
+          foto_url?: string | null
+          id?: string
+          idade_aprox?: string | null
+          nome?: string | null
+          porte?: string | null
+          raca?: string | null
+          sexo?: string | null
+          status?: string
+          tipo: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          bairro?: string | null
+          cidade?: string
+          comportamento?: string | null
+          contato?: string
+          cor?: string
+          created_at?: string
+          data_ocorrencia?: string
+          descricao?: string | null
+          especie?: string
+          foto_url?: string | null
+          id?: string
+          idade_aprox?: string | null
+          nome?: string | null
+          porte?: string | null
+          raca?: string | null
+          sexo?: string | null
+          status?: string
+          tipo?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      adocoes: {
+        Row: {
+          acompanhamento_30d: boolean | null
+          acompanhamento_30d_em: string | null
+          acompanhamento_90d: boolean | null
+          acompanhamento_90d_em: string | null
+          adotante_cpf: string | null
+          adotante_email: string | null
+          adotante_nome: string
+          adotante_telefone: string
+          created_at: string | null
+          data_adocao: string
+          id: string
+          observacoes: string | null
+          ong_id: string
+          pet_id: string
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          acompanhamento_30d?: boolean | null
+          acompanhamento_30d_em?: string | null
+          acompanhamento_90d?: boolean | null
+          acompanhamento_90d_em?: string | null
+          adotante_cpf?: string | null
+          adotante_email?: string | null
+          adotante_nome: string
+          adotante_telefone: string
+          created_at?: string | null
+          data_adocao: string
+          id?: string
+          observacoes?: string | null
+          ong_id: string
+          pet_id: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          acompanhamento_30d?: boolean | null
+          acompanhamento_30d_em?: string | null
+          acompanhamento_90d?: boolean | null
+          acompanhamento_90d_em?: string | null
+          adotante_cpf?: string | null
+          adotante_email?: string | null
+          adotante_nome?: string
+          adotante_telefone?: string
+          created_at?: string | null
+          data_adocao?: string
+          id?: string
+          observacoes?: string | null
+          ong_id?: string
+          pet_id?: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "adocoes_ong_id_fkey"
+            columns: ["ong_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "adocoes_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "adocoes_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      adoptions: {
+        Row: {
+          adopter_city: string
+          adopter_email: string | null
+          adopter_name: string
+          adopter_neighborhood: string | null
+          adopter_phone: string
+          adoption_date: string
+          created_at: string
+          follow_up_30_date: string | null
+          follow_up_30_notes: string | null
+          follow_up_90_date: string | null
+          follow_up_90_notes: string | null
+          follow_up_date: string | null
+          follow_up_notes: string | null
+          id: string
+          pet_id: string
+          shelter_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          adopter_city: string
+          adopter_email?: string | null
+          adopter_name: string
+          adopter_neighborhood?: string | null
+          adopter_phone: string
+          adoption_date?: string
+          created_at?: string
+          follow_up_30_date?: string | null
+          follow_up_30_notes?: string | null
+          follow_up_90_date?: string | null
+          follow_up_90_notes?: string | null
+          follow_up_date?: string | null
+          follow_up_notes?: string | null
+          id?: string
+          pet_id: string
+          shelter_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          adopter_city?: string
+          adopter_email?: string | null
+          adopter_name?: string
+          adopter_neighborhood?: string | null
+          adopter_phone?: string
+          adoption_date?: string
+          created_at?: string
+          follow_up_30_date?: string | null
+          follow_up_30_notes?: string | null
+          follow_up_90_date?: string | null
+          follow_up_90_notes?: string | null
+          follow_up_date?: string | null
+          follow_up_notes?: string | null
+          id?: string
+          pet_id?: string
+          shelter_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "adoptions_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "shelter_pets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "adoptions_shelter_id_fkey"
+            columns: ["shelter_id"]
+            isOneToOne: false
+            referencedRelation: "shelters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      alertas_sos: {
+        Row: {
+          created_at: string
+          id: string
+          imagem_url: string | null
+          mensagem: string | null
+          pet_id: string
+          raio_km: number
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          imagem_url?: string | null
+          mensagem?: string | null
+          pet_id: string
+          raio_km?: number
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          imagem_url?: string | null
+          mensagem?: string | null
+          pet_id?: string
+          raio_km?: number
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alertas_sos_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "alertas_sos_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      avaliacoes: {
+        Row: {
+          comentario: string | null
+          created_at: string
+          id: string
+          nota: number
+          prestador_id: string
+          user_id: string
+        }
+        Insert: {
+          comentario?: string | null
+          created_at?: string
+          id?: string
+          nota: number
+          prestador_id: string
+          user_id: string
+        }
+        Update: {
+          comentario?: string | null
+          created_at?: string
+          id?: string
+          nota?: number
+          prestador_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "avaliacoes_prestador_id_fkey"
+            columns: ["prestador_id"]
+            isOneToOne: false
+            referencedRelation: "prestadores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      avisos: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          emoji: string | null
+          expires_at: string | null
+          id: string
+          link: string | null
+          mensagem: string
+          prioridade: number
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          emoji?: string | null
+          expires_at?: string | null
+          id?: string
+          link?: string | null
+          mensagem: string
+          prioridade?: number
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          emoji?: string | null
+          expires_at?: string | null
+          id?: string
+          link?: string | null
+          mensagem?: string
+          prioridade?: number
+        }
+        Relationships: []
+      }
+      medicacoes: {
+        Row: {
+          ativa: boolean | null
+          created_at: string | null
+          data_fim: string | null
+          data_inicio: string
+          dosagem: string | null
+          frequencia: string | null
+          id: string
+          nome: string
+          observacao: string | null
+          prontuario_id: string
+        }
+        Insert: {
+          ativa?: boolean | null
+          created_at?: string | null
+          data_fim?: string | null
+          data_inicio: string
+          dosagem?: string | null
+          frequencia?: string | null
+          id?: string
+          nome: string
+          observacao?: string | null
+          prontuario_id: string
+        }
+        Update: {
+          ativa?: boolean | null
+          created_at?: string | null
+          data_fim?: string | null
+          data_inicio?: string
+          dosagem?: string | null
+          frequencia?: string | null
+          id?: string
+          nome?: string
+          observacao?: string | null
+          prontuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medicacoes_prontuario_id_fkey"
+            columns: ["prontuario_id"]
+            isOneToOne: false
+            referencedRelation: "prontuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      medical_records: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string
+          id: string
+          notes: string | null
+          pet_id: string
+          record_date: string
+          type: string
+          vet_name: string | null
+          weight_kg: number | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description: string
+          id?: string
+          notes?: string | null
+          pet_id: string
+          record_date?: string
+          type: string
+          vet_name?: string | null
+          weight_kg?: number | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          notes?: string | null
+          pet_id?: string
+          record_date?: string
+          type?: string
+          vet_name?: string | null
+          weight_kg?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medical_records_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "shelter_pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      medications: {
+        Row: {
+          created_at: string
+          dosage: string
+          end_date: string | null
+          frequency: string
+          id: string
+          is_ongoing: boolean
+          medication_name: string
+          notes: string | null
+          pet_id: string
+          reason: string | null
+          start_date: string
+        }
+        Insert: {
+          created_at?: string
+          dosage: string
+          end_date?: string | null
+          frequency: string
+          id?: string
+          is_ongoing?: boolean
+          medication_name: string
+          notes?: string | null
+          pet_id: string
+          reason?: string | null
+          start_date: string
+        }
+        Update: {
+          created_at?: string
+          dosage?: string
+          end_date?: string | null
+          frequency?: string
+          id?: string
+          is_ongoing?: boolean
+          medication_name?: string
+          notes?: string | null
+          pet_id?: string
+          reason?: string | null
+          start_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medications_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "shelter_pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ong_details: {
+        Row: {
+          aprovado: boolean | null
+          cidade: string | null
+          cnpj: string | null
+          created_at: string | null
+          descricao: string | null
+          logo_url: string | null
+          nome_ong: string
+          profile_id: string
+          telefone: string | null
+        }
+        Insert: {
+          aprovado?: boolean | null
+          cidade?: string | null
+          cnpj?: string | null
+          created_at?: string | null
+          descricao?: string | null
+          logo_url?: string | null
+          nome_ong: string
+          profile_id: string
+          telefone?: string | null
+        }
+        Update: {
+          aprovado?: boolean | null
+          cidade?: string | null
+          cnpj?: string | null
+          created_at?: string | null
+          descricao?: string | null
+          logo_url?: string | null
+          nome_ong?: string
+          profile_id?: string
+          telefone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ong_details_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      parceiros: {
+        Row: {
+          ativo: boolean | null
+          categoria_parceiro: string | null
+          cidade: string | null
+          created_at: string
+          email: string
+          empresa: string | null
+          id: string
+          logo_url: string | null
+          mensagem: string | null
+          nome: string
+          site_url: string | null
+          status: string
+          verificado: boolean | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          categoria_parceiro?: string | null
+          cidade?: string | null
+          created_at?: string
+          email: string
+          empresa?: string | null
+          id?: string
+          logo_url?: string | null
+          mensagem?: string | null
+          nome: string
+          site_url?: string | null
+          status?: string
+          verificado?: boolean | null
+        }
+        Update: {
+          ativo?: boolean | null
+          categoria_parceiro?: string | null
+          cidade?: string | null
+          created_at?: string
+          email?: string
+          empresa?: string | null
+          id?: string
+          logo_url?: string | null
+          mensagem?: string | null
+          nome?: string
+          site_url?: string | null
+          status?: string
+          verificado?: boolean | null
+        }
+        Relationships: []
+      }
+      pet_tag_orders: {
+        Row: {
+          amount_cents: number
+          created_at: string | null
+          delivered_at: string | null
+          id: string
+          notes: string | null
+          payment_id: string | null
+          payment_provider: string
+          payment_status: string
+          pet_id: string
+          preference_id: string | null
+          shipped_at: string | null
+          shipping_address: Json
+          shipping_name: string
+          supplier_notified_at: string | null
+          supplier_status: string
+          tag_contact_phone: string
+          tag_type: string
+          tracking_code: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string | null
+          delivered_at?: string | null
+          id?: string
+          notes?: string | null
+          payment_id?: string | null
+          payment_provider?: string
+          payment_status?: string
+          pet_id: string
+          preference_id?: string | null
+          shipped_at?: string | null
+          shipping_address: Json
+          shipping_name: string
+          supplier_notified_at?: string | null
+          supplier_status?: string
+          tag_contact_phone: string
+          tag_type?: string
+          tracking_code?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string | null
+          delivered_at?: string | null
+          id?: string
+          notes?: string | null
+          payment_id?: string | null
+          payment_provider?: string
+          payment_status?: string
+          pet_id?: string
+          preference_id?: string | null
+          shipped_at?: string | null
+          shipping_address?: Json
+          shipping_name?: string
+          supplier_notified_at?: string | null
+          supplier_status?: string
+          tag_contact_phone?: string
+          tag_type?: string
+          tracking_code?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pet_tag_orders_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pet_tag_orders_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pets: {
+        Row: {
+          age_approx: string | null
+          behavior: string | null
+          breed: string | null
+          city: string
+          color: string
+          contact_name: string
+          contact_phone: string
+          contact_whatsapp: boolean
+          created_at: string
+          data_desaparecimento: string | null
+          data_reencontro: string | null
+          deleted_at: string | null
+          depoimento: string | null
+          description: string | null
+          event_date: string | null
+          id: string
+          kind: string
+          latitude: number | null
+          longitude: number | null
+          name: string | null
+          neighborhood: string
+          owner_id: string | null
+          photo_url: string | null
+          sex: string | null
+          size: string | null
+          species: string
+          state: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          age_approx?: string | null
+          behavior?: string | null
+          breed?: string | null
+          city: string
+          color: string
+          contact_name: string
+          contact_phone: string
+          contact_whatsapp?: boolean
+          created_at?: string
+          data_desaparecimento?: string | null
+          data_reencontro?: string | null
+          deleted_at?: string | null
+          depoimento?: string | null
+          description?: string | null
+          event_date?: string | null
+          id?: string
+          kind: string
+          latitude?: number | null
+          longitude?: number | null
+          name?: string | null
+          neighborhood: string
+          owner_id?: string | null
+          photo_url?: string | null
+          sex?: string | null
+          size?: string | null
+          species: string
+          state?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          age_approx?: string | null
+          behavior?: string | null
+          breed?: string | null
+          city?: string
+          color?: string
+          contact_name?: string
+          contact_phone?: string
+          contact_whatsapp?: boolean
+          created_at?: string
+          data_desaparecimento?: string | null
+          data_reencontro?: string | null
+          deleted_at?: string | null
+          depoimento?: string | null
+          description?: string | null
+          event_date?: string | null
+          id?: string
+          kind?: string
+          latitude?: number | null
+          longitude?: number | null
+          name?: string | null
+          neighborhood?: string
+          owner_id?: string | null
+          photo_url?: string | null
+          sex?: string | null
+          size?: string | null
+          species?: string
+          state?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      prestador_stats: {
+        Row: {
+          cliques_telefone: number
+          cliques_whatsapp: number
+          prestador_id: string
+          updated_at: string
+          visualizacoes: number
+        }
+        Insert: {
+          cliques_telefone?: number
+          cliques_whatsapp?: number
+          prestador_id: string
+          updated_at?: string
+          visualizacoes?: number
+        }
+        Update: {
+          cliques_telefone?: number
+          cliques_whatsapp?: number
+          prestador_id?: string
+          updated_at?: string
+          visualizacoes?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prestador_stats_prestador_id_fkey"
+            columns: ["prestador_id"]
+            isOneToOne: true
+            referencedRelation: "prestadores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prestadores: {
+        Row: {
+          agendamento_online: boolean
+          bairro: string | null
+          capa_url: string | null
+          categoria: string
+          cidade: string
+          created_at: string
+          delivery: boolean
+          descricao: string | null
+          destaque: boolean
+          email: string | null
+          emergencia24h: boolean
+          endereco: string | null
+          estado: string | null
+          id: string
+          instagram: string | null
+          latitude: number | null
+          logo_url: string | null
+          longitude: number | null
+          media_avaliacoes: number
+          nome: string
+          plan: string
+          site: string | null
+          slug: string
+          status: string
+          telefone: string | null
+          total_avaliacoes: number
+          updated_at: string
+          user_id: string | null
+          verificado: boolean
+          whatsapp: string | null
+        }
+        Insert: {
+          agendamento_online?: boolean
+          bairro?: string | null
+          capa_url?: string | null
+          categoria: string
+          cidade: string
+          created_at?: string
+          delivery?: boolean
+          descricao?: string | null
+          destaque?: boolean
+          email?: string | null
+          emergencia24h?: boolean
+          endereco?: string | null
+          estado?: string | null
+          id?: string
+          instagram?: string | null
+          latitude?: number | null
+          logo_url?: string | null
+          longitude?: number | null
+          media_avaliacoes?: number
+          nome: string
+          plan?: string
+          site?: string | null
+          slug: string
+          status?: string
+          telefone?: string | null
+          total_avaliacoes?: number
+          updated_at?: string
+          user_id?: string | null
+          verificado?: boolean
+          whatsapp?: string | null
+        }
+        Update: {
+          agendamento_online?: boolean
+          bairro?: string | null
+          capa_url?: string | null
+          categoria?: string
+          cidade?: string
+          created_at?: string
+          delivery?: boolean
+          descricao?: string | null
+          destaque?: boolean
+          email?: string | null
+          emergencia24h?: boolean
+          endereco?: string | null
+          estado?: string | null
+          id?: string
+          instagram?: string | null
+          latitude?: number | null
+          logo_url?: string | null
+          longitude?: number | null
+          media_avaliacoes?: number
+          nome?: string
+          plan?: string
+          site?: string | null
+          slug?: string
+          status?: string
+          telefone?: string | null
+          total_avaliacoes?: number
+          updated_at?: string
+          user_id?: string | null
+          verificado?: boolean
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          active: boolean | null
+          category: string | null
+          color: string | null
+          compare_price: number | null
+          created_at: string | null
+          description: string | null
+          id: string
+          image_url: string | null
+          last_synced_at: string | null
+          model: string | null
+          name: string
+          price: number | null
+          region_tag: string | null
+          source_url: string | null
+          supplier: string | null
+          supplier_sku: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          category?: string | null
+          color?: string | null
+          compare_price?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          last_synced_at?: string | null
+          model?: string | null
+          name: string
+          price?: number | null
+          region_tag?: string | null
+          source_url?: string | null
+          supplier?: string | null
+          supplier_sku?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          category?: string | null
+          color?: string | null
+          compare_price?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          last_synced_at?: string | null
+          model?: string | null
+          name?: string
+          price?: number | null
+          region_tag?: string | null
+          source_url?: string | null
+          supplier?: string | null
+          supplier_sku?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          consent_at: string | null
+          created_at: string
+          feature_flags: Json
+          full_name: string | null
+          id: string
+          phone: string | null
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          consent_at?: string | null
+          created_at?: string
+          feature_flags?: Json
+          full_name?: string | null
+          id: string
+          phone?: string | null
+          role?: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          consent_at?: string | null
+          created_at?: string
+          feature_flags?: Json
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          role?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      prontuarios: {
+        Row: {
+          castrado: boolean | null
+          created_at: string | null
+          data_resgate: string
+          id: string
+          microchip: string | null
+          observacoes: string | null
+          ong_id: string
+          peso_kg: number | null
+          pet_id: string
+          situacao_saude: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          castrado?: boolean | null
+          created_at?: string | null
+          data_resgate: string
+          id?: string
+          microchip?: string | null
+          observacoes?: string | null
+          ong_id: string
+          peso_kg?: number | null
+          pet_id: string
+          situacao_saude?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          castrado?: boolean | null
+          created_at?: string | null
+          data_resgate?: string
+          id?: string
+          microchip?: string | null
+          observacoes?: string | null
+          ong_id?: string
+          peso_kg?: number | null
+          pet_id?: string
+          situacao_saude?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prontuarios_ong_id_fkey"
+            columns: ["ong_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prontuarios_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prontuarios_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shelter_pets: {
+        Row: {
+          behavior: string | null
+          breed: string | null
+          color: string
+          created_at: string
+          description: string | null
+          estimated_age: string | null
+          health_status: string
+          id: string
+          is_castrated: boolean
+          microchip: string | null
+          name: string | null
+          photo_url: string | null
+          rescue_date: string
+          rescue_location: string | null
+          sex: string
+          shelter_id: string
+          size: string
+          species: string
+          status: string
+          updated_at: string
+          weight_kg: number | null
+        }
+        Insert: {
+          behavior?: string | null
+          breed?: string | null
+          color: string
+          created_at?: string
+          description?: string | null
+          estimated_age?: string | null
+          health_status?: string
+          id?: string
+          is_castrated?: boolean
+          microchip?: string | null
+          name?: string | null
+          photo_url?: string | null
+          rescue_date?: string
+          rescue_location?: string | null
+          sex: string
+          shelter_id: string
+          size: string
+          species: string
+          status?: string
+          updated_at?: string
+          weight_kg?: number | null
+        }
+        Update: {
+          behavior?: string | null
+          breed?: string | null
+          color?: string
+          created_at?: string
+          description?: string | null
+          estimated_age?: string | null
+          health_status?: string
+          id?: string
+          is_castrated?: boolean
+          microchip?: string | null
+          name?: string | null
+          photo_url?: string | null
+          rescue_date?: string
+          rescue_location?: string | null
+          sex?: string
+          shelter_id?: string
+          size?: string
+          species?: string
+          status?: string
+          updated_at?: string
+          weight_kg?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shelter_pets_shelter_id_fkey"
+            columns: ["shelter_id"]
+            isOneToOne: false
+            referencedRelation: "shelters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shelters: {
+        Row: {
+          city: string
+          cnpj: string | null
+          created_at: string
+          description: string | null
+          email: string | null
+          id: string
+          logo_url: string | null
+          name: string
+          neighborhood: string | null
+          phone: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          city: string
+          cnpj?: string | null
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          id?: string
+          logo_url?: string | null
+          name: string
+          neighborhood?: string | null
+          phone: string
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          city?: string
+          cnpj?: string | null
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          id?: string
+          logo_url?: string | null
+          name?: string
+          neighborhood?: string | null
+          phone?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      sightings: {
+        Row: {
+          address: string | null
+          created_at: string
+          description: string | null
+          id: string
+          lat: number
+          lng: number
+          pet_id: string
+          photo_url: string | null
+          reporter_name: string | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          lat: number
+          lng: number
+          pet_id: string
+          photo_url?: string | null
+          reporter_name?: string | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          lat?: number
+          lng?: number
+          pet_id?: string
+          photo_url?: string | null
+          reporter_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sightings_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sightings_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      store_products: {
+        Row: {
+          active: boolean | null
+          category: string | null
+          checkout_type: string | null
+          created_at: string | null
+          description: string | null
+          external_url: string | null
+          featured: boolean | null
+          id: string
+          name: string
+          original_price_cents: number | null
+          photo_url: string | null
+          price_cents: number
+          sort_order: number | null
+          supplier_name: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          category?: string | null
+          checkout_type?: string | null
+          created_at?: string | null
+          description?: string | null
+          external_url?: string | null
+          featured?: boolean | null
+          id?: string
+          name: string
+          original_price_cents?: number | null
+          photo_url?: string | null
+          price_cents: number
+          sort_order?: number | null
+          supplier_name?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          category?: string | null
+          checkout_type?: string | null
+          created_at?: string | null
+          description?: string | null
+          external_url?: string | null
+          featured?: boolean | null
+          id?: string
+          name?: string
+          original_price_cents?: number | null
+          photo_url?: string | null
+          price_cents?: number
+          sort_order?: number | null
+          supplier_name?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      vaccinations: {
+        Row: {
+          applied_date: string
+          batch: string | null
+          created_at: string
+          id: string
+          next_dose_date: string | null
+          notes: string | null
+          pet_id: string
+          vaccine_name: string
+          vet_name: string | null
+        }
+        Insert: {
+          applied_date: string
+          batch?: string | null
+          created_at?: string
+          id?: string
+          next_dose_date?: string | null
+          notes?: string | null
+          pet_id: string
+          vaccine_name: string
+          vet_name?: string | null
+        }
+        Update: {
+          applied_date?: string
+          batch?: string | null
+          created_at?: string
+          id?: string
+          next_dose_date?: string | null
+          notes?: string | null
+          pet_id?: string
+          vaccine_name?: string
+          vet_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vaccinations_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "shelter_pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vacinas: {
+        Row: {
+          created_at: string | null
+          data_aplicacao: string
+          id: string
+          lote: string | null
+          nome: string
+          observacao: string | null
+          prontuario_id: string
+          proxima_dose: string | null
+          veterinario: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          data_aplicacao: string
+          id?: string
+          lote?: string | null
+          nome: string
+          observacao?: string | null
+          prontuario_id: string
+          proxima_dose?: string | null
+          veterinario?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          data_aplicacao?: string
+          id?: string
+          lote?: string | null
+          nome?: string
+          observacao?: string | null
+          prontuario_id?: string
+          proxima_dose?: string | null
+          veterinario?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vacinas_prontuario_id_fkey"
+            columns: ["prontuario_id"]
+            isOneToOne: false
+            referencedRelation: "prontuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+    }
     Views: {
-      // Definida na migration 20260504_hardening — listagem pública de pets
-      // ATIVOS sem campos de contato (anti-scraping de telefones).
       pets_public: {
-        Row: Omit<PetRow, "contact_name" | "contact_phone" | "contact_whatsapp">;
-        Relationships: [];
-      };
-    };
+        Row: {
+          age_approx: string | null
+          behavior: string | null
+          breed: string | null
+          city: string | null
+          color: string | null
+          created_at: string | null
+          description: string | null
+          event_date: string | null
+          id: string | null
+          kind: string | null
+          latitude: number | null
+          longitude: number | null
+          name: string | null
+          neighborhood: string | null
+          owner_id: string | null
+          photo_url: string | null
+          sex: string | null
+          size: string | null
+          species: string | null
+          state: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          age_approx?: string | null
+          behavior?: string | null
+          breed?: string | null
+          city?: string | null
+          color?: string | null
+          created_at?: string | null
+          description?: string | null
+          event_date?: string | null
+          id?: string | null
+          kind?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          name?: string | null
+          neighborhood?: string | null
+          owner_id?: string | null
+          photo_url?: string | null
+          sex?: string | null
+          size?: string | null
+          species?: string | null
+          state?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          age_approx?: string | null
+          behavior?: string | null
+          breed?: string | null
+          city?: string | null
+          color?: string | null
+          created_at?: string | null
+          description?: string | null
+          event_date?: string | null
+          id?: string | null
+          kind?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          name?: string | null
+          neighborhood?: string | null
+          owner_id?: string | null
+          photo_url?: string | null
+          sex?: string | null
+          size?: string | null
+          species?: string | null
+          state?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+    }
     Functions: {
-      incrementar_visualizacao_prestador: {
-        Args: Record<string, unknown> | never;
-        Returns: unknown;
-      };
-      incrementar_clique_whatsapp: {
-        Args: Record<string, unknown> | never;
-        Returns: unknown;
-      };
-      incrementar_clique_telefone: {
-        Args: Record<string, unknown> | never;
-        Returns: unknown;
-      };
-      // RPC para detalhe expor contato sob demanda (B-05).
-      get_pet_contact: {
-        Args: { pet_id: string };
-        Returns: {
-          contact_name: string;
-          contact_phone: string;
-          contact_whatsapp: boolean;
-        };
-      };
-      // RPC para Server Action criar pet anônimo (B-08).
-      // Anônimos não inserem direto na tabela `pets` — RLS bloqueia.
       create_pet_anon: {
         Args: {
-          p_kind: PetKind;
-          p_species: PetSpecies;
-          p_color: string;
-          p_neighborhood: string;
-          p_city: string;
-          p_state: string | null;
-          p_event_date: string;
-          p_contact_name: string;
-          p_contact_phone: string;
-          p_contact_whatsapp: boolean;
-          p_name?: string | null;
-          p_breed?: string | null;
-          p_size?: PetSize | null;
-          p_sex?: PetSex | null;
-          p_age_approx?: string | null;
-          p_description?: string | null;
-          p_behavior?: string | null;
-          p_photo_url?: string | null;
-          p_latitude?: number | null;
-          p_longitude?: number | null;
-        };
-        Returns: string; // uuid do novo pet
-      };
-    };
-    Enums: { [_ in string]: never };
-  };
-};
+          p_age_approx?: string
+          p_behavior?: string
+          p_breed?: string
+          p_city: string
+          p_color: string
+          p_contact_name: string
+          p_contact_phone: string
+          p_contact_whatsapp: boolean
+          p_description?: string
+          p_event_date: string
+          p_kind: string
+          p_latitude?: number
+          p_longitude?: number
+          p_name?: string
+          p_neighborhood: string
+          p_photo_url?: string
+          p_sex?: string
+          p_size?: string
+          p_species: string
+          p_state: string
+        }
+        Returns: string
+      }
+      erase_pet_personal_data: {
+        Args: { p_pet_id: string }
+        Returns: undefined
+      }
+      export_user_data: { Args: never; Returns: Json }
+      get_pets_by_radius: {
+        Args: {
+          p_kind?: string
+          p_lat: number
+          p_limit?: number
+          p_lng: number
+          p_radius_km?: number
+          p_species?: string
+        }
+        Returns: {
+          city: string
+          color: string
+          created_at: string
+          distance_km: number
+          id: string
+          kind: string
+          name: string
+          neighborhood: string
+          photo_url: string
+          species: string
+          status: string
+        }[]
+      }
+      get_prestadores_by_radius: {
+        Args: {
+          p_categoria?: string
+          p_lat: number
+          p_limit?: number
+          p_lng: number
+          p_plan?: string
+          p_radius_km?: number
+        }
+        Returns: {
+          bairro: string
+          categoria: string
+          cidade: string
+          distance_km: number
+          emergencia24h: boolean
+          id: string
+          logo_url: string
+          media_avaliacoes: number
+          nome: string
+          plan: string
+          slug: string
+        }[]
+      }
+      incrementar_clique_telefone: {
+        Args: { p_id: string }
+        Returns: undefined
+      }
+      incrementar_clique_whatsapp: {
+        Args: { p_id: string }
+        Returns: undefined
+      }
+      incrementar_visualizacao_prestador: {
+        Args: { p_id: string }
+        Returns: undefined
+      }
+      is_pet_owner: { Args: { p_pet_id: string }; Returns: boolean }
+      is_shelter_owner: { Args: { p_shelter_id: string }; Returns: boolean }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+}
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {},
+  },
+} as const
+
+// ── Row type aliases — compatibilidade com código existente ──────────────────
+export type PetRow            = Tables<'pets'>
+export type PrestadorRow      = Tables<'prestadores'>
+export type PrestadorStatsRow = Tables<'prestador_stats'>
+export type ParceiroRow       = Tables<'parceiros'>
+export type SightingRow       = Tables<'sightings'>
+export type ProfileRow        = Tables<'profiles'>
+export type StoreProductRow   = Tables<'store_products'>
+export type AlertSosRow       = Tables<'alertas_sos'>
+export type AvaliacaoRow      = Tables<'avaliacoes'>
+export type AvisoRow          = Tables<'avisos'>
+export type ProfileUpdate     = TablesUpdate<'profiles'>
+export type PetUpdate         = TablesUpdate<'pets'>
+export type PrestadorUpdate   = TablesUpdate<'prestadores'>
+
+// pet_saude não está no schema gerado — tipo manual até tabela ser criada
+export type PetSaudeTipo = string
+export interface PetSaudeRow {
+  id:          string
+  pet_id:      string
+  tipo:        PetSaudeTipo
+  titulo:      string
+  descricao:   string | null
+  data:        string
+  created_at:  string
+}
+export type PetSaudeInsert = Omit<PetSaudeRow, 'id' | 'created_at'>
+
+// ── Enum aliases ─────────────────────────────────────────────────────────────
+export type PetKind           = 'lost' | 'found'
+export type PetSpecies        = 'dog' | 'cat' | 'other'
+export type AdoptionStatus    = string
+export type HealthStatus      = string
+export type ShelterPetStatus  = string
+export type PrestadorCategoria = string
+
+// Funções não presentes no schema gerado (aplicar migrations pendentes)
+// Stub para compatibilidade com lib/services/pets.ts até o DB ser sincronizado
+declare module './database' {
+  // intencional vazio — apenas para documentar RPCs pendentes
+}

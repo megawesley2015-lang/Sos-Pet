@@ -85,7 +85,8 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
 
     const { data: updated, error: updateErr } = await supabase
       .from('pets')
-      .update(updateData as Record<string, unknown>)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .update(updateData as any)
       .eq('id', id)
       .select('id, kind, status, name, city, updated_at')
       .single()

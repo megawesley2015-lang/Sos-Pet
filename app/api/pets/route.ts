@@ -129,16 +129,15 @@ export async function POST(req: NextRequest) {
       state:            data.state            || null,
       latitude:         data.latitude  ?? null,
       longitude:        data.longitude ?? null,
-      contact_name:     data.contact_name,
-      contact_phone:    data.contact_phone    || null,
+      contact_name:     data.contact_name     ?? '',
+      contact_phone:    data.contact_phone    ?? '',
       contact_whatsapp: data.contact_whatsapp,
       event_date:       data.event_date       || null,
     }
 
     const { data: pet, error } = await supabase
       .from('pets')
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .insert(payload as any)
+      .insert(payload as any) // eslint-disable-line @typescript-eslint/no-explicit-any
       .select('id, kind, name, city, created_at')
       .single()
 

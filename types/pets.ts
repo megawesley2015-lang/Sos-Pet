@@ -1,40 +1,16 @@
-// types/pets.ts — alinhado com schema real da tabela pets no Supabase
+// types/pets.ts — derivado do schema gerado em lib/types/database.ts
 
+import type { Tables, TablesInsert } from '@/lib/types/database'
+
+// Narrow string literals para helpers de UI/validação
 export type PetKind    = 'lost' | 'found'
 export type PetSpecies = 'dog' | 'cat' | 'other'
 export type PetSize    = 'small' | 'medium' | 'large'
 export type PetSex     = 'male' | 'female' | 'unknown'
 export type PetStatus  = 'active' | 'resolved' | 'expired' | 'draft' | 'removed'
 
-export interface Pet {
-  id:               string
-  owner_id:         string | null       // null = cadastro anônimo (MVP)
-  kind:             PetKind
-  status:           PetStatus
-  name:             string | null
-  species:          string
-  breed:            string | null
-  color:            string | null
-  size:             PetSize | null
-  sex:              PetSex | null
-  age_approx:       string | null
-  description:      string | null
-  behavior:         string | null
-  photo_url:        string | null
-  neighborhood:     string | null
-  city:             string | null
-  state:            string | null
-  latitude:         number | null
-  longitude:        number | null
-  // Contato — NUNCA expor na listagem, apenas em /pets/[id]
-  contact_name:     string | null
-  contact_phone:    string | null
-  contact_whatsapp: boolean
-  event_date:       string | null       // YYYY-MM-DD
-  created_at:       string
-  updated_at:       string
-  deleted_at?:      string | null       // ISO string quando dados pessoais foram apagados (LGPD)
-}
+// Pet é o Row completo do banco — usa string para campos que podem variar
+export type Pet = Tables<'pets'>
 
 // Para listagem pública — sem dados de contato nem owner_id
 export type PetPublic = Omit<Pet,
@@ -45,7 +21,7 @@ export type PetPublic = Omit<Pet,
 export type PetDetail = Omit<Pet, 'owner_id'>
 
 // Para INSERT — banco gera id, created_at, updated_at, deleted_at
-export type InsertPet = Omit<Pet, 'id' | 'created_at' | 'updated_at' | 'deleted_at'>
+export type InsertPet = Omit<TablesInsert<'pets'>, 'id' | 'created_at' | 'updated_at' | 'deleted_at'>
 
 // Para UPDATE — apenas campos editáveis
 export type UpdatePet = Partial<
