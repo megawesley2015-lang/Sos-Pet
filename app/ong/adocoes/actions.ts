@@ -108,7 +108,8 @@ export async function updateFollowUp(
 
   const { error } = await supabase
     .from("adoptions")
-    .update(updatePayload)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .update(updatePayload as any)
     .eq("id", adoptionId)
     .eq("shelter_id", shelter.id);
 

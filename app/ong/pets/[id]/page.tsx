@@ -46,7 +46,6 @@ export default async function OngPetDetailPage({ params }: { params: Promise<{ i
 
   if (!pet) notFound();
 
-  // @ts-expect-error join returns nested object
   if (pet.shelters.user_id !== user.id) notFound();
 
   const [

@@ -31,7 +31,7 @@
 
 import { createServiceClient } from "@/lib/supabase/server";
 import { notificarMatchPet } from "./email";
-import type { PetRow } from "@/lib/types/database";
+import type { PetRow, PetKind } from "@/lib/types/database";
 
 // ── Constantes ────────────────────────────────────────────────────────────────
 
@@ -145,7 +145,7 @@ export function calculateMatchScore(
   if (found.size && lost.size && found.size === lost.size) {
     score += 15;
     const sizeMap = { small: "Pequeno", medium: "Médio", large: "Grande" };
-    reasons.push(`Porte ${sizeMap[found.size] ?? found.size}`);
+    reasons.push(`Porte ${sizeMap[found.size as keyof typeof sizeMap] ?? found.size}`);
   }
 
   // Sexo (ignora "unknown" em ambos os lados)
@@ -195,7 +195,7 @@ async function findCandidates(found: PetRow): Promise<PetRow[]> {
 
   const { data, error } = await supabase
     .from("pets")
-    .select("*")
+    .select("id, kind, status, name, species, color, size, sex, city, state, owner_id")
     .eq("kind", "lost")      // só perdidos
     .eq("status", "active")
     .neq("id", found.id)
@@ -255,7 +255,7 @@ export async function triggerPetMatching(newPetId: string): Promise<void> {
 
     const { data: petData, error: petError } = await supabase
       .from("pets")
-      .select("*")
+      .select("id, kind, status, name, species, color, size, sex, city, state, owner_id")
       .eq("id", newPetId)
       .single();
 
@@ -318,7 +318,7 @@ export async function triggerPetMatching(newPetId: string): Promise<void> {
         await notificarMatchPet({
           recipientEmail: email,
           matchScore: match.matchScore,
-          newPetKind: found.kind,
+          newPetKind: found.kind as PetKind,
           newPetName: found.name ?? "um pet",
           newPetCity: found.city,
           matchReasons: match.matchReasons,

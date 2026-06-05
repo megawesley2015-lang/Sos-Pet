@@ -252,7 +252,7 @@ export default async function OngPetsPage({
               {/* Topo: emoji + nome + badges */}
               <div className="flex items-start gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink-600 text-xl">
-                  {SPECIES_ICON[pet.species]}
+                  {SPECIES_ICON[pet.species as PetSpecies] ?? "🐾"}
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-semibold text-fg">

@@ -33,7 +33,7 @@ export async function addMedicalRecord(
     .maybeSingle();
 
   if (!pet) return { error: "Pet não encontrado." };
-  // @ts-expect-error join
+  
   if (pet.shelters.user_id !== user.id) return { error: "Sem permissão." };
 
   const raw: Record<string, unknown> = Object.fromEntries(

@@ -50,7 +50,10 @@ export async function renotificarFornecedorAction(formData: FormData) {
   const petName = pet?.name ?? "Sem nome";
   const petUrl = `${APP_URL}/pets/${pet?.id}`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(petUrl)}`;
-  const addr = order.shipping_address;
+  const addr = order.shipping_address as {
+    logradouro: string; numero: string; bairro: string;
+    cidade: string; estado: string; cep: string
+  } | null;
 
   await sendEmail({
     to: SUPPLIER_EMAIL,
@@ -64,7 +67,7 @@ export async function renotificarFornecedorAction(formData: FormData) {
         <div style="text-align:center;margin:20px 0">
           <img src="${qrUrl}" width="200" height="200" style="border-radius:10px;background:#fff;padding:6px;" />
         </div>
-        <p style="color:#9A8F8A">Endereço: ${addr.logradouro}, ${addr.numero} — ${addr.bairro}, ${addr.cidade}/${addr.estado} · CEP ${addr.cep}</p>
+        <p style="color:#9A8F8A">Endereço: ${addr?.logradouro}, ${addr?.numero} — ${addr?.bairro}, ${addr?.cidade}/${addr?.estado} · CEP ${addr?.cep}</p>
         <p style="color:#9A8F8A">Destinatário: ${order.shipping_name}</p>
       </div>
     `,

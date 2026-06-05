@@ -23,7 +23,7 @@ export default async function EditarPetPage({
 
   if (!pet) notFound();
 
-  // @ts-expect-error — join retorna objeto aninhado
+  
   if (pet.shelters.user_id !== user.id) notFound();
 
   // Normaliza rescue_date para yyyy-MM-dd (input[type=date] exige esse formato)

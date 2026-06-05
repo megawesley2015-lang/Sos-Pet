@@ -28,7 +28,7 @@ async function assertPetOwner(
     .select("id, shelters!inner(user_id)")
     .eq("id", petId)
     .maybeSingle();
-  // @ts-expect-error join
+  
   return data && data.shelters.user_id === userId;
 }
 

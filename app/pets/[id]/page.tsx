@@ -5,7 +5,7 @@ import { ArrowLeft, MapPin, Phone, MessageCircle, PawPrint, Pencil, Siren } from
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
 import { getPetById } from "@/lib/services/pets";
-import type { PetSaudeRow } from "@/lib/types/database";
+import type { PetSaudeRow, PetKind } from "@/lib/types/database";
 import { TopBar } from "@/components/layout/TopBar";
 import { SOSBadge } from "@/components/ui/SOSBadge";
 
@@ -138,7 +138,7 @@ export default async function PetDetailPage({ params }: PageProps) {
               {pet.name ?? "Sem nome"} · {SPECIES_LABEL[pet.species]}
             </p>
             <p className="mt-1 text-xs text-fg-muted">
-              {pet.neighborhood}, {pet.city} · {new Date(pet.event_date).toLocaleDateString("pt-BR")}
+              {pet.neighborhood}, {pet.city} · {pet.event_date ? new Date(pet.event_date).toLocaleDateString("pt-BR") : ''}
             </p>
           </div>
 
@@ -173,7 +173,7 @@ export default async function PetDetailPage({ params }: PageProps) {
           </Link>
           {isOwner && (
             <div className="flex flex-wrap items-center gap-2">
-              <ResolveButton petId={pet.id} kind={pet.kind} />
+              <ResolveButton petId={pet.id} kind={pet.kind as PetKind} />
               {pet.kind === "lost" && (
                 <Link
                   href={`/resgate?pet=${pet.id}`}
@@ -211,7 +211,7 @@ export default async function PetDetailPage({ params }: PageProps) {
               </div>
             )}
             <div className="absolute left-3 top-3 z-10">
-              <SOSBadge kind={pet.kind} />
+              <SOSBadge kind={pet.kind as PetKind} />
             </div>
           </div>
 
@@ -226,7 +226,7 @@ export default async function PetDetailPage({ params }: PageProps) {
             </p>
             <p className="mt-1 text-xs text-fg-subtle">
               {pet.kind === "lost" ? "Desaparecido" : "Encontrado"} em{" "}
-              {new Date(pet.event_date).toLocaleDateString("pt-BR")} -{" "}
+              {pet.event_date ? new Date(pet.event_date).toLocaleDateString("pt-BR") : ''} -{" "}
               {formatRelativeDate(pet.created_at)}
             </p>
 

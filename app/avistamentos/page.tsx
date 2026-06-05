@@ -71,7 +71,6 @@ export default async function AvistamentosPage() {
         ) : (
           <div className="space-y-3">
             {avistamentos.map((a) => {
-              // @ts-expect-error join
               const pet = a.pets as { id: string; name: string | null; species: string; photo_url: string | null; city: string; neighborhood: string | null } | null;
               const emoji = SPECIES_EMOJI[pet?.species ?? "other"];
 

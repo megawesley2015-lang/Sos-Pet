@@ -200,7 +200,7 @@ export default async function CentralDeResgatePage({ searchParams }: PageProps) 
                         {pet.neighborhood}, {pet.city}
                       </p>
                       <p className="mt-0.5 text-[10px] uppercase tracking-wide text-fg-subtle">
-                        Perdido {formatRelativeDate(pet.event_date)}
+                        Perdido {formatRelativeDate(pet.event_date ?? '')}
                       </p>
                     </div>
                     <Siren className="h-5 w-5 shrink-0 text-brand-400" />

@@ -220,7 +220,7 @@ function ProductCard({
         )
       : null;
 
-  const cfg = CATEGORIA_CONFIG[product.category] ?? CATEGORIA_CONFIG.geral;
+  const cfg = CATEGORIA_CONFIG[product.category ?? 'geral'] ?? CATEGORIA_CONFIG.geral;
 
   return (
     <Link

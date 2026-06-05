@@ -114,9 +114,9 @@ export default async function AdocoesPage({
           {adoptions.map((adoption) => {
             const cfg = STATUS_CONFIG[adoption.status as AdoptionStatus];
             const Icon = cfg.icon;
-            // @ts-expect-error join
+            
             const petName = adoption.shelter_pets?.name ?? "Sem nome";
-            // @ts-expect-error join
+            
             const petSpecies = adoption.shelter_pets?.species;
             const emoji = petSpecies === "dog" ? "🐶" : petSpecies === "cat" ? "🐱" : "🐾";
             const f30 = adoption.follow_up_30_date;

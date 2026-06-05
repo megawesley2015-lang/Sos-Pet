@@ -22,7 +22,7 @@ export default async function MedicacoesPage({ params }: { params: Promise<{ id:
     .maybeSingle();
 
   if (!pet) notFound();
-  // @ts-expect-error join
+  
   if (pet.shelters.user_id !== user.id) notFound();
 
   const { data: medications } = await supabase

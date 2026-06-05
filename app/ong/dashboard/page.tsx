@@ -282,7 +282,7 @@ export default async function OngDashboardPage() {
             </div>
             <div className="space-y-2.5">
               {vaccinesDue.map((v) => {
-                // @ts-expect-error join
+                
                 const petName = v.shelter_pets?.name ?? "Sem nome";
                 const isOverdue = v.next_dose_date! <= today;
                 return (
@@ -317,9 +317,9 @@ export default async function OngDashboardPage() {
             </div>
             <div className="grid gap-2.5 sm:grid-cols-2">
               {followUpDue.map((adoption) => {
-                // @ts-expect-error join
+                
                 const petName = adoption.shelter_pets?.name ?? "Sem nome";
-                // @ts-expect-error join
+                
                 const petSpecies = adoption.shelter_pets?.species;
                 const emoji = petSpecies === "dog" ? "🐶" : petSpecies === "cat" ? "🐱" : "🐾";
                 const f30overdue = adoption.follow_up_30_date && adoption.follow_up_30_date <= today;

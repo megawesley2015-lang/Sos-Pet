@@ -37,7 +37,7 @@ export default async function ProntuarioPage({ params }: { params: Promise<{ id:
     .maybeSingle();
 
   if (!pet) notFound();
-  // @ts-expect-error join
+  
   if (pet.shelters.user_id !== user.id) notFound();
 
   const { data: records } = await supabase

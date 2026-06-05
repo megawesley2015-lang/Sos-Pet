@@ -208,7 +208,7 @@ export const SOSAlertCard = forwardRef<HTMLDivElement, SOSAlertCardProps>(
             {pet.state ? ` — ${pet.state}` : ""}
           </div>
           <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", marginTop: 2 }}>
-            em {new Date(pet.event_date).toLocaleDateString("pt-BR")}
+            em {pet.event_date ? new Date(pet.event_date).toLocaleDateString("pt-BR") : ''}
           </div>
         </div>
 

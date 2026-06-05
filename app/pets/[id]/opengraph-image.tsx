@@ -182,7 +182,7 @@ export default async function PetOpengraphImage({ params }: Props) {
                 {pet.state ? ` — ${pet.state}` : ""}
               </span>
               <span style={{ fontSize: 16, color: "rgba(255,255,255,0.5)" }}>
-                em {new Date(pet.event_date).toLocaleDateString("pt-BR")}
+                em {pet.event_date ? new Date(pet.event_date).toLocaleDateString("pt-BR") : ''}
               </span>
             </div>
           </div>

@@ -7,7 +7,7 @@ import { createSupabaseServerClient, createServiceClient } from "@/lib/supabase/
 import { TopBar } from "@/components/layout/TopBar";
 import { SOSBadge } from "@/components/ui/SOSBadge";
 import { formatRelativeDate, SPECIES_LABEL } from "@/lib/utils/format";
-import type { PetRow, ProfileRow } from "@/lib/types/database";
+import type { PetRow, ProfileRow, PetKind } from "@/lib/types/database";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -211,7 +211,7 @@ function ProfilePetCard({ pet }: { pet: PetRow }) {
         )}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-900/60 via-transparent to-transparent" />
         <div className="absolute left-2 top-2">
-          <SOSBadge kind={pet.kind} />
+          <SOSBadge kind={pet.kind as PetKind} />
         </div>
       </div>
 
@@ -230,7 +230,7 @@ function ProfilePetCard({ pet }: { pet: PetRow }) {
           </span>
         </div>
         <p className="mt-0.5 text-[10px] text-fg-subtle">
-          {formatRelativeDate(pet.event_date)}
+          {formatRelativeDate(pet.event_date ?? '')}
         </p>
       </div>
     </Link>

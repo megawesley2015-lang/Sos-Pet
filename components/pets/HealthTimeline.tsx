@@ -43,12 +43,12 @@ export function HealthTimeline({ petId, initialRecords, isOwner }: HealthTimelin
         (payload) => {
           if (payload.eventType === "INSERT") {
             const newRecord = payload.new as PetSaudeRow;
-            setRecords((prev) => [newRecord, ...prev].sort((a, b) => new Date(b.data_aplicacao).getTime() - new Date(a.data_aplicacao).getTime()));
+            setRecords((prev) => [newRecord, ...prev].sort((a, b) => new Date(b.data_aplicacao ?? '').getTime() - new Date(a.data_aplicacao ?? '').getTime()));
           } else if (payload.eventType === "DELETE") {
             setRecords((prev) => prev.filter((r) => r.id !== payload.old.id));
           } else if (payload.eventType === "UPDATE") {
             const updated = payload.new as PetSaudeRow;
-            setRecords((prev) => prev.map((r) => r.id === updated.id ? updated : r).sort((a, b) => new Date(b.data_aplicacao).getTime() - new Date(a.data_aplicacao).getTime()));
+            setRecords((prev) => prev.map((r) => r.id === updated.id ? updated : r).sort((a, b) => new Date(b.data_aplicacao ?? '').getTime() - new Date(a.data_aplicacao ?? '').getTime()));
           }
         }
       )
@@ -198,7 +198,7 @@ export function HealthTimeline({ petId, initialRecords, isOwner }: HealthTimelin
                     <div>
                       <h3 className="font-bold text-fg">{record.nome}</h3>
                       <p className="text-xs text-fg-muted">
-                        Aplicado em {new Date(record.data_aplicacao).toLocaleDateString("pt-BR")}
+                        Aplicado em {record.data_aplicacao ? new Date(record.data_aplicacao).toLocaleDateString("pt-BR") : ''}
                       </p>
                       
                       {record.proxima_dose && (

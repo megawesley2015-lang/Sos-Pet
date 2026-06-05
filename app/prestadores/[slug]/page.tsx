@@ -285,8 +285,8 @@ export default async function PrestadorDetalhePage({ params }: PageProps) {
                 prestadorId={prestador.id}
                 phone={prestador.whatsapp}
                 prestadorNome={prestador.nome}
-                horarios={prestador.horarios_disponiveis}
-                dias={prestador.dias_atendimento}
+                horarios={prestador.horarios_disponiveis as Record<string, unknown> | null}
+                dias={prestador.dias_atendimento as Record<string, unknown> | null}
               />
             )}
             {prestador.whatsapp && !prestador.agendamento_online && (

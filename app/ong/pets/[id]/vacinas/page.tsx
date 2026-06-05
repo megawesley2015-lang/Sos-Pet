@@ -22,7 +22,7 @@ export default async function VacinasPage({ params }: { params: Promise<{ id: st
     .maybeSingle();
 
   if (!pet) notFound();
-  // @ts-expect-error join
+  
   if (pet.shelters.user_id !== user.id) notFound();
 
   const { data: vaccines } = await supabase
