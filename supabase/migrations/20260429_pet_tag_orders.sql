@@ -76,6 +76,7 @@ begin
 end;
 $$;
 
+drop trigger if exists pet_tag_orders_updated_at on pet_tag_orders;
 create trigger pet_tag_orders_updated_at
   before update on pet_tag_orders
   for each row execute procedure set_updated_at();
@@ -84,16 +85,19 @@ create trigger pet_tag_orders_updated_at
 alter table pet_tag_orders enable row level security;
 
 -- Dono vê seus pedidos
+drop policy if exists "owner_select" on pet_tag_orders;
 create policy "owner_select"
   on pet_tag_orders for select
   using (auth.uid() = user_id);
 
 -- Dono cria seus pedidos
+drop policy if exists "owner_insert" on pet_tag_orders;
 create policy "owner_insert"
   on pet_tag_orders for insert
   with check (auth.uid() = user_id);
 
 -- Pedidos anônimos (sem login) — user_id null
+drop policy if exists "anon_insert" on pet_tag_orders;
 create policy "anon_insert"
   on pet_tag_orders for insert
   with check (user_id is null);

@@ -47,11 +47,13 @@ create trigger store_products_updated_at
 alter table store_products enable row level security;
 
 -- Leitura pública: apenas produtos ativos
+drop policy if exists "store_products_public_select" on store_products;
 create policy "store_products_public_select"
   on store_products for select
   using (active = true);
 
 -- Admin: acesso total
+drop policy if exists "store_products_admin_all" on store_products;
 create policy "store_products_admin_all"
   on store_products for all
   using (

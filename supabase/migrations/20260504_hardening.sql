@@ -108,6 +108,7 @@ grant execute on function public.get_pet_contact(uuid) to anon, authenticated;
 -- Listagem/detalhe pública migra pra view `pets_public`.
 drop policy if exists "pets_select_active" on public.pets;
 drop policy if exists "pets_admin_select_all" on public.pets;
+drop policy if exists "pets_select_owner_or_admin" on public.pets;
 create policy "pets_select_owner_or_admin"
   on public.pets for select
   using (
@@ -129,6 +130,7 @@ create policy "pets_select_owner_or_admin"
 -- ============================================================
 
 drop policy if exists "pets_insert_any" on public.pets;
+drop policy if exists "pets_insert_authed" on public.pets;
 create policy "pets_insert_authed"
   on public.pets for insert
   with check (auth.uid() is not null and owner_id = auth.uid());
