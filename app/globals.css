@@ -1,127 +1,110 @@
-/* ── Cores Brand (laranja) ── */
-:root {
-  --color-brand-300: #FFAA80;
-  --color-brand-400: #FF8A5C;
-  --color-brand-500: #FF6B35;
-  --color-brand-600: #E55520;
-  --color-brand-700: #C4431A;
-
-  /* ── Cores Cyan/Teal (tech) ── */
-  --color-cyan-300:  #67E8F9;
-  --color-cyan-400:  #22D3EE;
-  --color-cyan-500:  #06B6D4;
-  --color-cyan-600:  #0891B2;
-
-  /* ── Fundos (warm light) ── */
-  --color-ink-600:   #FFF0D6;
-  --color-ink-700:   #FFF8EE;
-  --color-ink-800:   #FFF8EE;
-  --color-ink-900:   #FFF0D6;
-
-  /* ── Texto ── */
-  --color-fg:        #1A1208;
-  --color-fg-muted:  #6B5A3E;
-  --color-fg-subtle: #A8926A;
-
-  /* ── Bordas ── */
-  --color-border:        #E8D5B0;
-  --color-border-strong: #C8B28A;
-
-  /* ── Semânticos ── */
-  --color-danger:    #E54B4B;
-  --color-danger-fg: #991B1B;
-  --color-success:   #3DAA6B;
-
-  /* ── Shadows ── */
-  --shadow-glow-brand:    0 0 20px rgba(255, 107, 53, 0.35);
-  --shadow-glow-brand-lg: 0 0 40px rgba(255, 107, 53, 0.45);
-  --shadow-glow-cyan:     0 0 20px rgba(6, 182, 212, 0.35);
-  --shadow-card-dark:     0 1px 3px rgba(26,18,8,0.06), 0 4px 12px rgba(26,18,8,0.04);
-}
-
-/* ── Dark mode override ── */
-[data-theme="dark"] {
-  --color-ink-600:   #231F14;
-  --color-ink-700:   #1A1810;
-  --color-ink-800:   #0F0E09;
-  --color-ink-900:   #0A0905;
-
-  --color-fg:        #F5EDD8;
-  --color-fg-muted:  #A89878;
-  --color-fg-subtle: #6B5E40;
-
-  --color-border:        #3A3420;
-  --color-border-strong: #50462A;
-
-  --color-danger-fg: #FCA5A5;
-}
-
-/* ============================================================
-   globals.css — SOS Pet Amigo
-   Nova Identidade Visual v3.0 — Sistema Híbrido Warm + Dark
-
-   FILOSOFIA:
-   - Warm Light é o padrão: aconchego para o tutor em momento de estresse
-   - Dark Mode disponível via [data-theme="dark"] no <html>
-   - Laranja #FF6B35 imutável: urgência + CTA em ambos os modos
-   - Teal #00B4A0: sinal de tecnologia (IA, agentes, status online)
-   - Todos os componentes existentes continuam funcionando sem alteração
-   ============================================================ */
-
 @import "tailwindcss";
 
-/* ── Variante dark mode via data-theme ──────────────────────── */
+/* ── Variante dark mode via data-theme ──────────────────────────── */
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
-/* ── Tokens Primitivos (valores brutos) ─────────────────────── */
+/* ── Tokens Primitivos (fonte única de verdade para utilities) ───── */
 @theme {
-  /* Brand — imutável em ambos os modos */
-  --color-primary:       255 107 53;   /* #FF6B35 — laranja urgência */
-  --color-primary-light: 255 138 92;   /* #FF8A5C — hover / glow */
-  --color-primary-dark:  229 85 32;    /* #E55520 — pressed */
-  --color-accent:        0 180 160;    /* #00B4A0 — teal tecnologia */
-  --color-accent-light:  30 206 187;   /* #1ECEBB — hover accent */
+  /* Brand — laranja urgência (imutável em ambos os modos) */
+  --color-brand-300: 255 170 128;  /* #FFAA80 */
+  --color-brand-400: 255 138 92;   /* #FF8A5C */
+  --color-brand-500: 255 107 53;   /* #FF6B35 */
+  --color-brand-600: 229 85 32;    /* #E55520 */
+  --color-brand-700: 196 67 26;    /* #C4431A */
+
+  /* Primary + Accent */
+  --color-primary:       255 107 53;
+  --color-primary-light: 255 138 92;
+  --color-primary-dark:  229 85 32;
+  --color-accent:        0 180 160;    /* #00B4A0 teal */
+  --color-accent-light:  30 206 187;
 
   /* Semânticos */
-  --color-success: 61 170 107;         /* #3DAA6B */
-  --color-warning: 245 166 35;         /* #F5A623 */
-  --color-danger:  229 75 75;          /* #E54B4B */
+  --color-success: 61 170 107;
+  --color-warning: 245 166 35;
+  --color-danger:  229 75 75;
+
+  /* Cyan scale */
+  --color-cyan-300: 103 232 249;
+  --color-cyan-400: 34 211 238;
+  --color-cyan-500: 6 182 212;
+  --color-cyan-600: 8 145 178;
 
   /* ── MODO LIGHT (padrão) ── */
-  --color-bg:            255 248 238;  /* #FFF8EE — creme quente */
-  --color-bg-raised:     255 251 245;  /* #FFFBF5 — superfície card */
-  --color-bg-overlay:    255 240 214;  /* #FFF0D6 — seção alternada */
+  --color-bg:            255 248 238;
+  --color-bg-raised:     255 251 245;
+  --color-bg-overlay:    255 240 214;
+  --color-fg:            26 18 8;
+  --color-fg-muted:      107 90 62;
+  --color-fg-subtle:     168 146 106;
+  --color-border:        232 213 176;
+  --color-border-strong: 200 178 138;
 
-  --color-fg:            26 18 8;      /* #1A1208 — texto principal */
-  --color-fg-muted:      107 90 62;    /* #6B5A3E — texto secundário */
-  --color-fg-subtle:     168 146 106;  /* #A8926A — texto sutil */
+  /* Ink scale — light mode: warm cream surfaces */
+  --color-ink-50:  255 253 250;
+  --color-ink-100: 255 251 245;
+  --color-ink-200: 255 248 238;
+  --color-ink-300: 255 244 228;
+  --color-ink-400: 255 240 214;
+  --color-ink-500: 248 230 195;
+  --color-ink-600: 255 240 214;   /* #FFF0D6 */
+  --color-ink-700: 255 248 238;   /* #FFF8EE */
+  --color-ink-800: 255 251 245;
+  --color-ink-900: 255 253 250;
 
-  --color-border:        232 213 176;  /* #E8D5B0 — borda padrão */
-  --color-border-strong: 200 178 138;  /* #C8B28A — borda ênfase */
-
-  /* Shadows — warm, não frios */
-  --shadow-card: 0 1px 3px rgba(26,18,8,0.06), 0 4px 12px rgba(26,18,8,0.04);
-  --shadow-hover: 0 0 0 1px rgba(255,107,53,0.25), 0 4px 16px rgba(255,107,53,0.08);
+  /* Shadows */
+  --shadow-glow-brand:    0 0 20px rgba(255,107,53,0.35);
+  --shadow-glow-brand-lg: 0 0 40px rgba(255,107,53,0.45);
+  --shadow-glow-cyan:     0 0 20px rgba(6,182,212,0.35);
+  --shadow-card:          0 1px 3px rgba(26,18,8,0.06), 0 4px 12px rgba(26,18,8,0.04);
+  --shadow-card-dark:     0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
+  --shadow-hover:         0 0 0 1px rgba(255,107,53,0.25), 0 4px 16px rgba(255,107,53,0.08);
 }
 
-/* ── Override para DARK MODE ──────────────────────────────────── */
+/* ── Dark mode — ÚNICO bloco (sem duplicação) ────────────────────── */
 [data-theme="dark"] {
-  --color-bg:            15 14 9;      /* #0F0E09 — quase-preto quente */
-  --color-bg-raised:     26 24 16;     /* #1A1810 — superfície dark */
-  --color-bg-overlay:    35 31 20;     /* #231F14 — overlay dark */
+  --color-bg:            15 14 9;
+  --color-bg-raised:     26 24 16;
+  --color-bg-overlay:    35 31 20;
+  --color-fg:            245 237 216;   /* #F5EDD8 warm white */
+  --color-fg-muted:      168 152 120;   /* #A89878 */
+  --color-fg-subtle:     107 94 64;     /* #6B5E40 */
+  --color-border:        58 52 32;      /* #3A3420 */
+  --color-border-strong: 80 70 42;      /* #50462A */
+  --color-accent:        0 229 255;     /* cyan mais vibrante no dark */
+  --color-danger-fg:     252 165 165;   /* #FCA5A5 */
 
-  --color-fg:            245 237 216;  /* #F5EDD8 — texto warm white */
-  --color-fg-muted:      168 152 120;  /* #A89878 — muted warm */
-  --color-fg-subtle:     107 94 64;    /* #6B5E40 — subtle warm */
+  /* Ink scale — dark mode: warm dark surfaces */
+  --color-ink-50:  35 31 20;
+  --color-ink-100: 26 24 16;
+  --color-ink-200: 20 18 12;
+  --color-ink-300: 15 14 9;
+  --color-ink-400: 12 11 7;
+  --color-ink-500: 10 9 5;
+  --color-ink-600: 35 31 20;    /* #231F14 */
+  --color-ink-700: 26 24 16;    /* #1A1810 */
+  --color-ink-800: 15 14 9;     /* #0F0E09 */
+  --color-ink-900: 10 9 5;      /* #0A0905 */
 
-  --color-border:        58 52 32;     /* #3A3420 — borda dark */
-  --color-border-strong: 80 70 42;     /* #50462A — borda forte dark */
-
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
+  --shadow-card:  0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
   --shadow-hover: 0 0 0 1px rgba(255,107,53,0.35), 0 4px 16px rgba(255,107,53,0.12);
 }
 
-/* ── Base ───────────────────────────────────────────────────── */
+/* ── Light mode — ajustes finos de fg/bg/border ──────────────────── */
+:root,
+[data-theme="light"] {
+  --color-fg:            15 15 15;
+  --color-fg-muted:      75 75 85;
+  --color-fg-subtle:     120 120 135;
+  --color-bg:            255 248 243;
+  --color-bg-raised:     255 255 255;
+  --color-bg-overlay:    243 240 235;
+  --color-border:        220 213 205;
+  --color-border-strong: 180 170 158;
+  --color-danger-fg:     153 27 27;    /* #991B1B */
+}
+
+/* ── Base ────────────────────────────────────────────────────────── */
 @layer base {
   html {
     font-family: var(--font-sans, system-ui, sans-serif);
@@ -145,7 +128,7 @@
   ::-webkit-scrollbar-thumb:hover { background: rgb(var(--color-fg-subtle)); }
 }
 
-/* ── Utilitários Custom ─────────────────────────────────────── */
+/* ── Utilitários Custom ──────────────────────────────────────────── */
 @layer utilities {
 
   /* Text shadows — contraste WCAG garantido */
@@ -166,7 +149,7 @@
       0 1px 3px rgba(0,0,0,0.3);
   }
 
-  /* Gradiente brand — APENAS em <span>, nunca em headings inteiros */
+  /* Gradiente brand — APENAS em <span> */
   .text-gradient-brand {
     background: linear-gradient(135deg, rgb(var(--color-primary)), rgb(var(--color-accent)));
     -webkit-background-clip: text;
@@ -188,6 +171,13 @@
       transparent 70%
     );
   }
+  .bg-radial-brand {
+    background-image: radial-gradient(
+      ellipse 80% 60% at 50% -10%,
+      rgba(255,107,53,0.12) 0%,
+      transparent 70%
+    );
+  }
 
   /* Ping — sinal de agente ativo */
   .ping-teal {
@@ -206,7 +196,7 @@
     opacity: 0;
   }
   @keyframes ping-anim {
-    0% { transform: scale(0.8); opacity: 0.6; }
+    0%   { transform: scale(0.8); opacity: 0.6; }
     100% { transform: scale(2.2); opacity: 0; }
   }
 
@@ -225,39 +215,4 @@
     scrollbar-width: none;
   }
   .scrollbar-hide::-webkit-scrollbar { display: none; }
-}
-
-/* ── Tema LIGHT (padrão: data-theme="light" ou sem atributo) ─── */
-:root,
-[data-theme="light"] {
-  --color-fg:         15 15 15;
-  --color-fg-muted:   75 75 85;
-  --color-fg-subtle:  120 120 135;
-
-  --color-bg:         255 248 243;
-  --color-bg-raised:  255 255 255;
-  --color-bg-overlay: 243 240 235;
-
-  --color-border:        220 213 205;
-  --color-border-strong: 180 170 158;
-
-  --color-primary: 255 107 53;
-  --color-accent:  0 180 160;
-}
-
-/* ── Tema DARK (data-theme="dark") ───────────────────────────── */
-[data-theme="dark"] {
-  --color-fg:         255 255 255;
-  --color-fg-muted:   156 163 175;
-  --color-fg-subtle:  107 107 128;
-
-  --color-bg:         15 15 26;
-  --color-bg-raised:  20 20 31;
-  --color-bg-overlay: 10 10 15;
-
-  --color-border:        255 255 255;
-  --color-border-strong: 200 200 220;
-
-  --color-primary: 255 107 53;
-  --color-accent:  0 229 255;
 }
