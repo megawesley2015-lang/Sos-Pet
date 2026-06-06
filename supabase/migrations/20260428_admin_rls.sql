@@ -68,8 +68,8 @@ create policy "pets_admin_select_all"
   on public.pets
   for select
   using (
-    status = 'active'
-    or user_id = auth.uid()
+    status != 'resolvido'
+    or owner_id = auth.uid()
     or auth.uid() in (
       select id from public.profiles where role = 'admin'
     )
