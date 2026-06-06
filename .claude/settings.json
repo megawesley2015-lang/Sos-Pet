@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "(?i)(bug|erro|error|problema|segurança|seguranca|vulnerabilidade|monitora|monitor|check|diagnóstico|diagnostico|está quebrado|nao funciona|não funciona)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '🩺 Iniciando diagnóstico automático do projeto...' && bash scripts/monitor.sh . 2>&1 | head -80"
+          }
+        ]
+      }
+    ]
+  }
+}

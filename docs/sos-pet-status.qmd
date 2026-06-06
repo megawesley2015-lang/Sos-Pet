@@ -1,0 +1,314 @@
+---
+title: "SOS Pet Amigo — Estado do Projeto"
+subtitle: "Arquitetura, Harness, Specs e Roadmap"
+author: "Wes"
+date: today
+lang: pt-BR
+
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-title: "Conteúdo"
+    theme: darkly
+    code-fold: true
+    code-summary: "Ver código"
+    smooth-scroll: true
+    embed-resources: true
+  pdf:
+    documentclass: article
+    geometry: margin=2.5cm
+    toc: true
+    number-sections: true
+
+execute:
+  echo: false
+  warning: false
+---
+
+# Visão Geral
+
+**SOS Pet Amigo** é uma plataforma SaaS para localização de pets perdidos e conexão com
+prestadores de serviços pet na Baixada Santista (Santos, Guarujá, São Vicente e região).
+
+**Modelo de negócio:** Gratuito para tutores + monetização B2B/Premium (loja de plaquinhas,
+destaque de prestadores, módulo ONG).
+
+**Público:** Tutores, protetores, voluntários, clínicas, pet shops, ONGs.
+
+---
+
+# Stack Técnica
+
+| Camada | Tecnologia | Versão |
+|---|---|---|
+| Frontend | Next.js App Router | 16.1.1 |
+| Runtime | React | 19.2.3 |
+| Estilos | Tailwind CSS | 4.x |
+| Banco | Supabase (PostgreSQL) | — |
+| Auth | Supabase Auth (PKCE) | — |
+| Storage | Supabase Storage | — |
+| Validação | Zod | 3.25.x |
+| Testes | Vitest | 4.1.x |
+| Observabilidade | Sentry | 10.54.x |
+| Deploy | Vercel (CI/CD via main) | — |
+| Automação | n8n + Claude (Anthropic) | — |
+
+: Stack completa do projeto {.striped}
+
+---
+
+# Harness de Desenvolvimento
+
+O projeto utiliza **Harness Engineering** — scaffolding estruturado que torna o trabalho
+com agentes de IA previsível e confiável.
+
+## Context Delivery
+
+Três arquivos formam o sistema de memória do projeto:
+
+```
+AGENTS.md       → mapa curto (~80 linhas) — lido primeiro por qualquer agente
+CLAUDE.md       → contrato completo: schema SQL, rotas, padrões de código, RLS
+ARCHITECTURE.md → decisões técnicas e estrutura de diretórios
+```
+
+A regra: **AGENTS.md é o mapa, não a enciclopédia**. O agente lê o mapa e segue
+os ponteiros para as fontes de verdade.
+
+## Verification Loop
+
+Toda mudança passa pelo seguinte pipeline antes de chegar em produção:
+
+```{mermaid}
+flowchart LR
+  A[commit] --> B[TypeScript\ntypecheck]
+  B --> C[ESLint]
+  C --> D[Next.js\nbuild]
+  D --> E[Vitest\ntestes]
+  E --> F{CI passa?}
+  F -->|sim| G[Deploy\nVercel]
+  F -->|não| H[❌ bloqueado]
+```
+
+## Cobertura de Testes
+
+| Suítes | Total | Passando | Falhando |
+|:---:|:---:|:---:|:---:|
+| 19 | 73 | **73** | 0 |
+
+: Resultado atual dos testes (Vitest) {.striped}
+
+## Sandboxes
+
+| Ambiente | Propósito |
+|---|---|
+| `localhost:3000` | Desenvolvimento local |
+| Vercel Preview | Cada PR gera URL de preview |
+| Supabase Branch | Banco isolado para features destrutivas |
+| `main` → Vercel Prod | Único path para produção |
+
+---
+
+# Módulos do Sistema
+
+## Estado atual por módulo
+
+```{mermaid}
+%%{init: {"theme": "dark"}}%%
+mindmap
+  root((SOS Pet))
+    ✅ Achados e Perdidos
+      Listagem com filtros
+      Cadastro com upload
+      Turnstile anti-spam
+      Soft delete
+    ✅ Auth
+      Login e Registro
+      PKCE flow
+      Middleware de proteção
+      Reset de senha
+    ✅ Prestadores
+      Listagem e filtros
+      Detalhe por slug
+      Stats e avaliações
+      Dashboard do prestador
+    ✅ Loja
+      Catálogo Printful
+      Checkout Mercado Pago
+      Admin da loja
+    ✅ Admin
+      Painel de moderação
+      Gestão de parceiros
+      Sentinela de alertas
+    🔧 ONG
+      Código criado
+      Migration pendente
+    📋 Matching IA
+      Planejado mês 3
+    📋 Notificações
+      Planejado semana 1
+```
+
+---
+
+# Specs Ativas
+
+As specs vivem em `.claude/specs/<feature>/` e seguem o padrão
+**Spec-Driven Development (SDD)**: requirements → design → tasks.
+
+## Achados e Perdidos
+
+**Status:** ✅ Implementado — melhorias pendentes
+
+Pendente:
+
+- SEO dinâmico por página de detalhe (`generateMetadata` + og:image)
+- Sitemap dinâmico listando pets ativos
+- Paginação na listagem (atualmente carrega tudo)
+- Cache com `revalidate` no Server Component
+
+## Auth
+
+**Status:** ✅ Implementado e robusto
+
+Inclui: PKCE flow, `handleAuthError` para tokens corrompidos, `getSessionSafe`,
+`getBaseUrl()` dinâmico, trigger de criação de `profiles`.
+
+## Prestadores
+
+**Status:** ✅ Implementado
+
+Pendente:
+
+- Fluxo de aprovação para badge "verificado" (flag existe no banco, UI existe, processo manual falta)
+
+## Módulo ONG {#sec-ong}
+
+**Status:** ⚠️ Bloqueado — migration não aplicada
+
+O código de `app/ong/` está completo (cadastro, dashboard, pets, adoções, prontuários).
+A migration `supabase/migrations/001_ong_module.sql` **não foi aplicada** no banco de produção.
+
+Tabelas que serão criadas após a migration:
+
+| Tabela | Descrição |
+|---|---|
+| `shelters` | ONGs e protetores cadastrados |
+| `shelter_pets` | Pets sob responsabilidade da ONG |
+| `medical_records` | Prontuários veterinários |
+| `vaccinations` | Histórico de vacinas |
+| `medications` | Medicamentos em curso |
+| `adoptions` | Processo de adoção com follow-up |
+
+## Loja
+
+**Status:** ✅ Integração ativa (Printful + Mercado Pago)
+
+Pendente:
+
+- Email de rastreamento pós-compra
+- Página de acompanhamento de pedido para o comprador
+
+---
+
+# Migrations do Banco
+
+| Arquivo | Data | Descrição |
+|---|---|---|
+| `001_ong_module.sql` | — | Módulo ONG (⚠️ pendente de aplicação) |
+| `20260428_admin_rls.sql` | 28/04 | RLS para o painel admin |
+| `20260428_sightings.sql` | 28/04 | Tabela de avistamentos |
+| `20260429_pet_tag_orders.sql` | 29/04 | Pedidos de plaquinhas |
+| `20260429_store_products.sql` | 29/04 | Produtos da loja |
+| `20260504_hardening.sql` | 04/05 | Endurecimento de segurança |
+| `20260517_geolocation.sql` | 17/05 | Suporte a geolocalização |
+| `20260522_storage_buckets.sql` | 22/05 | Buckets de Storage |
+
+: Histórico de migrations {.striped}
+
+---
+
+# Regras Invioláveis
+
+::: {.callout-warning}
+## Segurança — jamais violar
+
+- Campo `contato` do tutor **nunca** aparece na listagem. Apenas em `/achados-e-perdidos/[id]`.
+- Nenhuma tabela sem `ENABLE ROW LEVEL SECURITY`.
+- `service_role key` nunca no cliente ou em variáveis `NEXT_PUBLIC_*`.
+- IDs sempre UUID `gen_random_uuid()` — nunca SERIAL/INTEGER.
+:::
+
+::: {.callout-important}
+## Código — padrões obrigatórios
+
+- `cookies()` e `params` sempre com `await` (Next.js 16+)
+- Imports sempre com alias `@/` (nunca caminhos relativos longos)
+- Encoding UTF-8 — acentos diretos no código, nunca entidades HTML
+- `select()` sempre com colunas explícitas — nunca `select('*')`
+:::
+
+---
+
+# Roadmap de Agentes n8n
+
+Os agentes de IA rodam via n8n e interagem com o Supabase via REST API.
+Todos usam **Tools Agent** com temperature 0.3.
+
+| Agente | Gatilho | Status |
+|---|---|---|
+| Notificação | INSERT em `pets` | Semana 1 |
+| Conteúdo | `status` → `resolvido` | Mês 1 |
+| Moderação | INSERT em `pets` | Mês 2 |
+| Matching IA | CRON diário | Mês 3 |
+
+: Pipeline de automação planejado {.striped}
+
+---
+
+# Dívidas Técnicas
+
+| Item | Risco | Esforço |
+|---|---|---|
+| Rate limiting nas rotas `/api` | Alto — vetor de spam | Médio (Upstash) |
+| Paginação na listagem de pets | Médio — performance em escala | Baixo |
+| Meta tags OG por página de pet | Médio — SEO e compartilhamento | Baixo |
+| Migration ONG não aplicada | Alto — módulo inativo | Baixo (SQL pronto) |
+| Monitoramento de falhas n8n | Médio — falha silenciosa | Médio |
+| Tipos Supabase desatualizados | Baixo — TypeScript impreciso | Baixo |
+
+: Dívidas técnicas priorizadas {.striped}
+
+---
+
+# Como Renderizar este Documento
+
+```bash
+# Instalar Quarto (se necessário)
+# https://quarto.org/docs/get-started/
+
+# Renderiza HTML (standalone, abre no browser)
+quarto render docs/sos-pet-status.qmd --to html
+
+# Renderiza PDF
+quarto render docs/sos-pet-status.qmd --to pdf
+
+# Preview com hot reload
+quarto preview docs/sos-pet-status.qmd
+
+# Renderiza todos os formatos definidos no YAML
+quarto render docs/sos-pet-status.qmd
+```
+
+::: {.callout-note}
+## Manter atualizado
+
+Este documento deve ser atualizado após cada sprint ou mudança estrutural.
+A fonte de verdade do schema é `CLAUDE.md` e `supabase/migrations/`.
+Este QMD é a camada de publicação — não duplicar, referenciar.
+:::
+
+---
+
+*Gerado em `{r Sys.Date()}` · SOS Pet Amigo · Baixada Santista*
