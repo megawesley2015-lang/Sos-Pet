@@ -35,7 +35,7 @@ create policy "prestadores_admin_select"
   for select
   using (
     status = 'ativo'
-    or owner_id = auth.uid()
+    or user_id = auth.uid()
     or auth.uid() in (
       select id from public.profiles where role = 'admin'
     )
@@ -69,7 +69,7 @@ create policy "pets_admin_select_all"
   for select
   using (
     status = 'active'
-    or owner_id = auth.uid()
+    or user_id = auth.uid()
     or auth.uid() in (
       select id from public.profiles where role = 'admin'
     )
