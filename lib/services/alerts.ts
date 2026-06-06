@@ -42,7 +42,7 @@ export async function createAlert(
       mensagem: input.mensagem,
       imagem_url: imagemUrl,
     })
-    .select("*")
+    .select("id, created_at, pet_id, user_id, raio_km, imagem_url, mensagem, status")
     .single();
 
   if (error || !data) {
@@ -55,7 +55,7 @@ export const listAlertsByPet = cache(async (petId: string): Promise<AlertSosRow[
   const supabase = await createSupabaseServerClient();
   const { data } = await supabase
     .from("alertas_sos")
-    .select("*")
+    .select("id, created_at, pet_id, user_id, raio_km, imagem_url, mensagem, status")
     .eq("pet_id", petId)
     .order("created_at", { ascending: false })
     .limit(20);
@@ -68,7 +68,7 @@ export async function listMyAlerts(): Promise<AlertSosRow[]> {
   if (!user) return [];
   const { data } = await supabase
     .from("alertas_sos")
-    .select("*")
+    .select("id, created_at, pet_id, user_id, raio_km, imagem_url, mensagem, status")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
     .limit(50);

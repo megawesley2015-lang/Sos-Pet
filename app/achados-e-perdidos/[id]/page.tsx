@@ -1,136 +1,225 @@
-// src/app/achados-e-perdidos/[id]/page.tsx
-// Detalhe do pet — ÚNICO lugar onde o contato é exibido
+// app/achados-e-perdidos/[id]/page.tsx — detalhe do pet, único lugar com contato
 
 import { notFound }     from 'next/navigation'
 import Link             from 'next/link'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
+import Image            from 'next/image'
+import { createSupabaseServerClient as createClient } from '@/lib/supabase/server'
+import { ShareButton }  from '@/components/pets/ShareButton'
+import { PET_DETAIL_COLUMNS, type PetDetail } from '@/types/pets'
 
-interface PageProps {
-  params: { id: string }
-}
+const SPECIES_LABEL: Record<string, string> = { dog: 'Cachorro', cat: 'Gato', other: 'Animal' }
+const SIZE_LABEL:    Record<string, string> = { small: 'Pequeno', medium: 'Médio', large: 'Grande' }
+const SEX_LABEL:     Record<string, string> = { male: 'Macho', female: 'Fêmea', unknown: 'Não informado' }
 
-export default async function DetalhesPetPage({ params }: PageProps) {
-  const supabase = await createSupabaseServerClient()
+// Next.js 15+: params é Promise
+type PageParams = { params: Promise<{ id: string }>; searchParams: Promise<{ novo?: string }> }
 
-  // Aqui incluímos "contato" — apenas na página de detalhe
-  const { data: pet, error } = await supabase
-    .from('achados_perdidos')
-    .select('id, tipo, nome, especie, raca, cor, porte, sexo, idade_aprox, descricao, comportamento, bairro, cidade, data_ocorrencia, foto_url, contato, status, created_at')
-    .eq('id', params.id)
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id }   = await params
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('pets')
+    .select('name, species, city, kind, photo_url')
+    .eq('id', id)
     .single()
 
-  if (error || !pet) {
-    notFound()
-  }
+  if (!data) return { title: 'Pet não encontrado — SOS Pet' }
 
-  const isPerdido   = pet.tipo === 'perdido'
-  const whatsappUrl = `https://wa.me/55${pet.contato.replace(/\D/g, '')}?text=${encodeURIComponent(
-    `Olá! Vi seu anúncio no SOS Pet sobre um ${pet.especie} ${isPerdido ? 'perdido' : 'encontrado'}. Posso ajudar!`
-  )}`
+  const kind    = data.kind === 'lost' ? 'Perdido' : 'Encontrado'
+  const species = SPECIES_LABEL[data.species] ?? 'Pet'
+  const name    = data.name ?? species
+
+  return {
+    title:       `${kind}: ${name} em ${data.city} — SOS Pet`,
+    description: `${kind}: ${name} (${species}) em ${data.city}. Ajude a encontrar!`,
+    openGraph:   {
+      title:  `${kind}: ${name} — SOS Pet`,
+      images: data.photo_url ? [data.photo_url] : [],
+    },
+  }
+}
+
+function Tag({ label, value }: { label: string; value: string }) {
+  return (
+    <span className="inline-flex flex-col rounded-lg border border-[rgb(var(--color-border))] bg-[rgb(var(--color-bg-raised))] px-3 py-2 text-center">
+      <span className="text-[10px] text-[rgb(var(--color-fg-subtle))] uppercase tracking-wider">{label}</span>
+      <span className="mt-0.5 text-sm font-medium text-[rgb(var(--color-fg))]">{value}</span>
+    </span>
+  )
+}
+
+export default async function PetDetailPage({ params, searchParams }: PageParams) {
+  const { id }  = await params
+  const { novo } = await searchParams
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('pets')
+    .select(PET_DETAIL_COLUMNS)
+    .eq('id', id)
+    .single()
+
+  if (error || !data) notFound()
+
+  const pet          = data as unknown as PetDetail
+  const isLost       = pet.kind === 'lost'
+  const speciesLabel = SPECIES_LABEL[pet.species] ?? 'Animal'
+  const displayName  = pet.name ?? speciesLabel
+
+  const whatsappLink = pet.contact_whatsapp && pet.contact_phone
+    ? `https://wa.me/55${pet.contact_phone.replace(/\D/g, '')}?text=${encodeURIComponent(
+        `Olá! Vi o alerta do SOS Pet sobre ${isLost ? 'o pet perdido' : 'o pet encontrado'} "${displayName}" e tenho informações!`
+      )}`
+    : null
 
   return (
-    <main className="max-w-2xl mx-auto px-4 py-8">
+    <main className="mx-auto max-w-2xl px-4 py-8">
+      {/* Breadcrumb */}
+      <nav className="mb-6 flex items-center gap-2 text-xs text-[rgb(var(--color-fg-subtle))]">
+        <Link href="/achados-e-perdidos" className="hover:text-[rgb(var(--color-primary))] transition-colors">
+          Achados & Perdidos
+        </Link>
+        <span aria-hidden="true">/</span>
+        <span className="text-[rgb(var(--color-fg-muted))]">{displayName}</span>
+      </nav>
 
-      {/* Voltar */}
-      <Link
-        href="/achados-e-perdidos"
-        className="text-sm text-[#20B2AA] hover:underline mb-6 inline-block"
-      >
-        ← Voltar para listagem
-      </Link>
-
-      {/* Badge de status */}
-      <span
-        className={`inline-block text-sm font-bold px-3 py-1 rounded-full mb-4
-          ${isPerdido ? 'bg-[#FF6B35]/10 text-[#FF6B35]' : 'bg-[#20B2AA]/10 text-[#20B2AA]'}`}
-      >
-        {isPerdido ? '🔍 Perdido' : '✅ Encontrado'}
-      </span>
+      {/* Banner de sucesso */}
+      {novo === 'true' && (
+        <div className="mb-6 rounded-xl border border-[rgb(var(--color-accent))]/30 bg-[rgb(var(--color-accent))]/10 p-4">
+          <p className="text-sm font-medium text-[rgb(var(--color-accent))]">
+            ✓ Alerta cadastrado com sucesso! Compartilhe para aumentar as chances de reencontro.
+          </p>
+        </div>
+      )}
 
       {/* Foto */}
-      {pet.foto_url && (
-        <div className="rounded-xl overflow-hidden mb-6 aspect-video bg-gray-50">
-          <img
-            src={pet.foto_url}
-            alt={pet.nome ?? `${pet.especie} ${pet.tipo}`}
-            className="w-full h-full object-cover"
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-[rgb(var(--color-bg-overlay))]">
+        {pet.photo_url ? (
+          <Image
+            src={pet.photo_url}
+            alt={`Foto de ${displayName}`}
+            fill
+            sizes="(max-width: 768px) 100vw, 672px"
+            className="object-cover"
+            priority
           />
-        </div>
-      )}
-
-      {/* Nome */}
-      <h1 className="text-2xl font-bold text-gray-800 mb-2">
-        {pet.nome ?? `${pet.especie === 'cao' ? 'Cão' : pet.especie === 'gato' ? 'Gato' : 'Pet'} sem nome`}
-      </h1>
-
-      {/* Localização e data */}
-      <p className="text-gray-500 mb-6">
-        📍 {pet.bairro ? `${pet.bairro}, ` : ''}{pet.cidade} ·{' '}
-        📅 {new Date(pet.data_ocorrencia).toLocaleDateString('pt-BR')}
-      </p>
-
-      {/* Características */}
-      <section className="grid grid-cols-2 gap-4 mb-6">
-        {[
-          { label: 'Espécie',  value: pet.especie === 'cao' ? 'Cão' : pet.especie === 'gato' ? 'Gato' : 'Outro' },
-          { label: 'Raça',     value: pet.raca },
-          { label: 'Cor',      value: pet.cor },
-          { label: 'Porte',    value: pet.porte },
-          { label: 'Sexo',     value: pet.sexo },
-          { label: 'Idade',    value: pet.idade_aprox },
-        ]
-          .filter((item) => item.value)
-          .map(({ label, value }) => (
-            <div key={label} className="bg-gray-50 rounded-lg px-4 py-3">
-              <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold">{label}</p>
-              <p className="text-gray-700 font-medium capitalize mt-0.5">{value}</p>
-            </div>
-          ))
-        }
-      </section>
-
-      {/* Descrição */}
-      {pet.descricao && (
-        <div className="mb-4">
-          <h2 className="font-semibold text-gray-700 mb-1">Descrição</h2>
-          <p className="text-gray-600 text-sm leading-relaxed">{pet.descricao}</p>
-        </div>
-      )}
-
-      {/* Comportamento */}
-      {pet.comportamento && (
-        <div className="mb-6">
-          <h2 className="font-semibold text-gray-700 mb-1">Comportamento</h2>
-          <p className="text-gray-600 text-sm leading-relaxed">{pet.comportamento}</p>
-        </div>
-      )}
-
-      {/* CONTATO — exibido apenas aqui */}
-      <div className="border border-[#20B2AA]/30 bg-[#20B2AA]/5 rounded-xl p-5">
-        <h2 className="font-bold text-gray-800 mb-3">📞 Entrar em Contato</h2>
-        <p className="text-gray-600 text-sm mb-4">
-          Telefone / WhatsApp: <span className="font-semibold text-gray-800">{pet.contato}</span>
-        </p>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 bg-[#25D366] hover:bg-[#1ebe58] text-white font-semibold
-                       text-center py-3 rounded-lg transition-colors duration-200"
-          >
-            💬 Chamar no WhatsApp
-          </a>
-          <a
-            href={`tel:${pet.contato.replace(/\D/g, '')}`}
-            className="flex-1 bg-[#20B2AA] hover:bg-[#1A9E97] text-white font-semibold
-                       text-center py-3 rounded-lg transition-colors duration-200"
-          >
-            📱 Ligar agora
-          </a>
-        </div>
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-7xl" aria-hidden="true">
+            {pet.species === 'dog' ? '🐶' : pet.species === 'cat' ? '🐱' : '🐾'}
+          </div>
+        )}
       </div>
 
+      <div className="mt-6 flex flex-col gap-5">
+        {/* Badge + data */}
+        <div className="flex items-center gap-3">
+          <span className={`
+            inline-flex items-center gap-1.5 rounded-full px-3 py-1 border
+            text-xs font-bold uppercase tracking-wider
+            ${isLost
+              ? 'bg-[rgb(var(--color-primary))]/15 border-[rgb(var(--color-primary))]/30 text-[rgb(var(--color-primary))]'
+              : 'bg-[rgb(var(--color-accent))]/15 border-[rgb(var(--color-accent))]/30 text-[rgb(var(--color-accent))]'}
+          `}>
+            <span className={`h-1.5 w-1.5 rounded-full animate-pulse ${isLost ? 'bg-[rgb(var(--color-primary))]' : 'bg-[rgb(var(--color-accent))]'}`} />
+            {isLost ? 'Perdido' : 'Encontrado'}
+          </span>
+          <span className="text-xs text-[rgb(var(--color-fg-subtle))]">
+            {new Date(pet.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
+          </span>
+        </div>
+
+        <h1 className="text-2xl font-black text-[rgb(var(--color-fg))]">
+          {displayName}
+          {pet.breed && <span className="ml-2 text-lg font-normal text-[rgb(var(--color-fg-muted))]">· {pet.breed}</span>}
+        </h1>
+
+        {/* Tags de características */}
+        <div className="flex flex-wrap gap-2">
+          <Tag label="Espécie" value={speciesLabel} />
+          {pet.color && <Tag label="Cor"   value={pet.color} />}
+          {pet.size  && <Tag label="Porte" value={SIZE_LABEL[pet.size]  ?? pet.size} />}
+          {pet.sex   && <Tag label="Sexo"  value={SEX_LABEL[pet.sex]    ?? pet.sex} />}
+          {pet.age_approx && <Tag label="Idade" value={pet.age_approx} />}
+        </div>
+
+        {pet.description && (
+          <div>
+            <p className="mb-2 text-xs font-medium uppercase tracking-wider text-[rgb(var(--color-fg-subtle))]">Descrição</p>
+            <p className="text-sm leading-relaxed text-[rgb(var(--color-fg-muted))]">{pet.description}</p>
+          </div>
+        )}
+
+        {pet.behavior && (
+          <div>
+            <p className="mb-2 text-xs font-medium uppercase tracking-wider text-[rgb(var(--color-fg-subtle))]">Comportamento</p>
+            <p className="text-sm text-[rgb(var(--color-fg-muted))]">{pet.behavior}</p>
+          </div>
+        )}
+
+        {/* Localização */}
+        <div>
+          <p className="mb-1 text-xs font-medium uppercase tracking-wider text-[rgb(var(--color-fg-subtle))]">
+            {isLost ? 'Última localização' : 'Onde foi encontrado'}
+          </p>
+          <p className="text-sm text-[rgb(var(--color-fg))]">
+            {[pet.neighborhood, pet.city, pet.state].filter(Boolean).join(', ')}
+          </p>
+          {pet.event_date && (
+            <p className="mt-0.5 text-xs text-[rgb(var(--color-fg-subtle))]">
+              {isLost ? 'Desapareceu em' : 'Encontrado em'}{' '}
+              {new Date(pet.event_date + 'T12:00:00').toLocaleDateString('pt-BR')}
+            </p>
+          )}
+        </div>
+
+        {/* Contato — único lugar da aplicação com esses dados */}
+        <div className="rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-bg-raised))] p-5 flex flex-col gap-4">
+          <p className="text-xs font-medium uppercase tracking-wider text-[rgb(var(--color-fg-subtle))]">
+            Entrar em contato
+          </p>
+
+          {pet.contact_name && (
+            <p className="text-sm text-[rgb(var(--color-fg))]">
+              <span className="text-[rgb(var(--color-fg-muted))]">Nome: </span>
+              {pet.contact_name}
+            </p>
+          )}
+
+          {pet.contact_phone && (
+            <a
+              href={`tel:${pet.contact_phone}`}
+              className="
+                flex items-center justify-center gap-2 rounded-full
+                border border-[rgb(var(--color-border))] bg-[rgb(var(--color-bg-overlay))]
+                px-6 py-3 text-sm font-medium text-[rgb(var(--color-fg))]
+                hover:border-[rgb(var(--color-border-strong))] transition-colors
+              "
+            >
+              📞 Ligar: {pet.contact_phone}
+            </a>
+          )}
+
+          {whatsappLink && (
+            <a
+              href={whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 rounded-full bg-[#25D366] text-white px-6 py-3 text-sm font-semibold hover:bg-[#22c55e] transition-colors"
+            >
+              💬 Chamar no WhatsApp
+            </a>
+          )}
+        </div>
+
+        <ShareButton petName={displayName} />
+
+        <Link
+          href="/achados-e-perdidos"
+          className="text-center text-xs text-[rgb(var(--color-fg-subtle))] hover:text-[rgb(var(--color-primary))] transition-colors"
+        >
+          ← Ver todos os alertas
+        </Link>
+      </div>
     </main>
   )
 }

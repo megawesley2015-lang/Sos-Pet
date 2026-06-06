@@ -28,7 +28,7 @@ export const listReviewsByProvider = cache(async (
   const supabase = await createSupabaseServerClient();
   const { data: rowsRaw } = await supabase
     .from("avaliacoes")
-    .select("*")
+    .select("id, created_at, prestador_id, user_id, nota, comentario")
     .eq("prestador_id", prestadorId)
     .order("created_at", { ascending: false })
     .limit(limit);
@@ -78,7 +78,7 @@ export async function getMyReview(
   if (!user) return null;
   const { data } = await supabase
     .from("avaliacoes")
-    .select("*")
+    .select("id, created_at, prestador_id, user_id, nota, comentario")
     .eq("prestador_id", prestadorId)
     .eq("user_id", user.id)
     .maybeSingle();

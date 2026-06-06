@@ -115,8 +115,8 @@ export async function iniciarCheckoutPlaquinha(formData: FormData) {
     .single();
 
   if (orderError || !order) {
-    // Limpar pet criado
-    await serviceClient.from("pets").delete().eq("id", pet.id as string);
+    // Soft delete — preserva histórico (evita exclusão física em rollback)
+    await serviceClient.from("pets").update({ status: "removed" }).eq("id", pet.id);
     throw new Error(`Erro ao criar pedido: ${orderError?.message}`);
   }
 

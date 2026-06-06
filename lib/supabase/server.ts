@@ -12,7 +12,7 @@
  * Como o schema é mantido manualmente, mantemos os tipos no `lib/types/database`.
  */
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { createClient as createSupabaseClient, type SupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import type { Database } from "@/lib/types/database";
 
@@ -56,7 +56,7 @@ export function createServiceClient(): SupabaseClient<Database, "public"> {
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
     throw new Error("SUPABASE_SERVICE_ROLE_KEY não configurada");
   }
-  return createClient<Database, "public">(
+  return createSupabaseClient<Database, "public">(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY,
     {

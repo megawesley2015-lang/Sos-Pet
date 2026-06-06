@@ -52,7 +52,7 @@ export async function getUserWithProfile(supabase: AnySupabaseClient) {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("*")
+    .select("id, created_at, updated_at, full_name, phone, avatar_url, role")
     .eq("id", user.id)
     .maybeSingle();
 

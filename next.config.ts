@@ -68,6 +68,12 @@ const nextConfig: NextConfig = {
         hostname: "*.supabase.co",
         pathname: "/storage/v1/object/public/**",
       },
+      // Unsplash — usado nos mocks do Hall de Reencontros
+      // (substitui quando tutores enviarem fotos reais via Storage)
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
     ],
   },
 };

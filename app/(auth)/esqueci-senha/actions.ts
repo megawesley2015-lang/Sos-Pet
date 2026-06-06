@@ -26,9 +26,12 @@ export async function forgotPasswordAction(
   const supabase = await createSupabaseServerClient();
   // Usamos o callback padrão com next=/redefinir-senha. 
   // O Supabase adicionará o 'code' automaticamente.
+  // type=recovery garante detecção no callback mesmo sem allowlist do Supabase
+  // Configurar também: Authentication > URL Configuration > Redirect URLs
+  //   Adicionar: http://localhost:3000/** (dev) e https://seu-dominio.vercel.app/** (prod)
   const { error } = await supabase.auth.resetPasswordForEmail(
     parsed.data.email,
-    { redirectTo: `${getBaseUrl()}/auth/callback?next=/redefinir-senha` }
+    { redirectTo: `${getBaseUrl()}/auth/callback?type=recovery&next=/redefinir-senha` }
   );
 
   // Por segurança (anti-enum), respondemos sucesso mesmo se o email não existir.

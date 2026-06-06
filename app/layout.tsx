@@ -5,6 +5,7 @@ import PWAInstaller from "@/components/pwa/PWAInstaller";
 import EmergencyFAB from "@/components/ui/EmergencyFAB";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { getBaseUrl } from "@/lib/utils/url";
+import { themeScript } from "@/lib/theme-script";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -64,8 +65,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0F0F1A" }, // ink-800
-    { media: "(prefers-color-scheme: light)", color: "#FFF8F3" }, // warm-50
+    { media: "(prefers-color-scheme: dark)", color: "#0F0E09" },  // warm dark bg
+    { media: "(prefers-color-scheme: light)", color: "#FFF8EE" }, // warm light bg
   ],
   colorScheme: "dark light",
   width: "device-width",
@@ -79,10 +80,14 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      data-theme="dark"
+      data-theme="light"
+      suppressHydrationWarning
       className={`${inter.variable} ${spaceGrotesk.variable}`}
     >
-      <body className="min-h-screen bg-ink-800 font-sans antialiased">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body className="min-h-screen font-sans antialiased">
         {children}
         <EmergencyFAB />
         <PWAInstaller />

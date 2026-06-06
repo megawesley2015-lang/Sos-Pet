@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import {
   ArrowRight,
   HeartHandshake,
@@ -16,6 +17,9 @@ import { createServiceClient } from "@/lib/supabase/server";
 import CountUp from "@/components/ui/CountUp";
 import { PetAlertFeed } from "@/components/pets/PetAlertFeed";
 import type { AlertPet } from "@/components/pets/PetAlertFeed";
+import HallRreencontrosServer from "@/components/HallRreencontros.server";
+import HeroSectionServer from "@/components/HeroSection.server";
+import FaixaParceirosServer from "@/components/FaixaParceiros.server";
 
 export const dynamic = "force-dynamic";
 
@@ -117,11 +121,30 @@ export default async function LandingPage() {
 
   return (
     <main>
-      <Hero stats={stats} alertPets={alertPets} />
+      {/* 1. Hero — dark gradient → warm */}
+      <Suspense fallback={<div className="min-h-[70vh] bg-[rgb(var(--color-bg))]" />}>
+        <HeroSectionServer />
+      </Suspense>
+
+      {/* 2. Hall de Reencontros — prova social logo após o Hero */}
+      <Suspense fallback={null}>
+        <HallRreencontrosServer limite={5} resolvedCount={richStats.resolved} />
+      </Suspense>
+
+      {/* 3. Stats band (mobile only) */}
       <StatsBand stats={stats} />
+
+      {/* 4–6. Como funciona → métricas → Central de Resgate */}
       <HowItWorks />
       <StatsSection stats={richStats} />
       <RescueHighlight />
+
+      {/* 7. Parceiros locais */}
+      <Suspense fallback={null}>
+        <FaixaParceirosServer />
+      </Suspense>
+
+      {/* 8–9. Confiança + CTA final */}
       <Trust />
       <FinalCTA />
     </main>

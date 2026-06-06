@@ -45,19 +45,19 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(dest);
   }
 
-  // Detecta fluxo de recuperação de senha:
-  // 1. via param ?type=recovery ou ?next=/redefinir-senha (quando NEXT_PUBLIC_SITE_URL correto)
-  // 2. fallback: recovery_sent_at recente (<15min) — cobre caso de allowlist faltando no Supabase
-  let isRecovery = type === "recovery" || next === "/redefinir-senha";
-  if (!isRecovery) {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user?.recovery_sent_at) {
-      const ageMs = Date.now() - new Date(user.recovery_sent_at).getTime();
-      if (ageMs < 15 * 60 * 1000) isRecovery = true; // janela de 15 minutos
-    }
-  }
+  // Detecta fluxo de recuperação de senha com 3 sinais independentes:
+  // 1. ?type=recovery na URL (quando Supabase respeita o redirectTo)
+  // 2. ?next=/redefinir-senha na URL (quando redirectTo chega completo)
+  // 3. user.recovery_sent_at recente (funciona mesmo quando Supabase ignora a URL
+  //    por falta do domínio no allowlist → Authentication > URL Configuration)
+  const isRecoveryByUrl = type === "recovery" || next === "/redefinir-senha";
 
-  if (isRecovery) {
+  // Sempre busca o user após o exchange — o metadata confirma o tipo do fluxo
+  const { data: { user } } = await supabase.auth.getUser();
+  const isRecoveryByMeta = !!user?.recovery_sent_at
+    && (Date.now() - new Date(user.recovery_sent_at).getTime()) < 15 * 60 * 1000;
+
+  if (isRecoveryByUrl || isRecoveryByMeta) {
     return NextResponse.redirect(new URL("/redefinir-senha", url.origin));
   }
 

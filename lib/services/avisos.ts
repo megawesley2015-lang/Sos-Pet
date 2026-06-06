@@ -2,6 +2,8 @@ import { cache } from "react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { AvisoRow } from "@/lib/types/database";
 
+const AVISO_COLS = "id, created_at, mensagem, emoji, link, prioridade, ativo, expires_at";
+
 /**
  * Top 5 avisos ativos não expirados, ordenados por prioridade desc.
  * Usado pelo AvisosTicker no topo da landing.
@@ -10,7 +12,7 @@ export const listAvisosAtivos = cache(async (): Promise<AvisoRow[]> => {
   const supabase = await createSupabaseServerClient();
   const { data } = await supabase
     .from("avisos")
-    .select("*")
+    .select(AVISO_COLS)
     .eq("ativo", true)
     .or(`expires_at.is.null,expires_at.gt.${new Date().toISOString()}`)
     .order("prioridade", { ascending: false })
