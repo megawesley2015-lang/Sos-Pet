@@ -75,6 +75,7 @@ create policy "pet_photos_service_role_update"
 -- ============================================================
 
 -- View pública sem contact_*
+drop view if exists public.pets_public;
 create or replace view public.pets_public as
   select id, created_at, updated_at, owner_id,
          kind, name, species, breed, color, size, sex, age_approx,
