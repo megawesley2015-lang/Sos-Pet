@@ -80,7 +80,7 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      data-theme="light"
+      data-theme="dark"
       suppressHydrationWarning
       className={`${inter.variable} ${spaceGrotesk.variable}`}
     >

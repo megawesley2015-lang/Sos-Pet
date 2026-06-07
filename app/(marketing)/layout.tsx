@@ -6,11 +6,7 @@ import { listAvisosAtivos } from "@/lib/services/avisos";
 
 /**
  * Layout do grupo (marketing) — landing pública e páginas estáticas.
- *
- * Usa data-theme="light" no wrapper pra ativar a paleta warm
- * (CSS vars trocam dinamicamente via globals.css).
- *
- * O app autenticado e a listagem /pets continuam dark.
+ * Herda o tema do root (dark por padrão, togglável pelo usuário).
  */
 export default async function MarketingLayout({
   children,
@@ -20,7 +16,7 @@ export default async function MarketingLayout({
   const avisos = await listAvisosAtivos();
 
   return (
-    <div data-theme="light" className="min-h-screen bg-warm-50 text-ink-900">
+    <div className="min-h-screen">
       <AvisosTicker avisos={avisos} />
       <MarketingHeader />
       {children}

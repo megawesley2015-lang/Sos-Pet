@@ -7,10 +7,10 @@ export const themeScript = `
   try {
     var saved = localStorage.getItem('sos-theme');
     var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var theme = saved || (prefersDark ? 'dark' : 'light');
+    var theme = saved || 'dark';
     document.documentElement.setAttribute('data-theme', theme);
   } catch(e) {
-    document.documentElement.setAttribute('data-theme', 'light');
+    document.documentElement.setAttribute('data-theme', 'dark');
   }
 })();
 `.trim()
