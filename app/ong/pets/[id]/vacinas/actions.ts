@@ -3,16 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
-import { z } from "zod";
-
-const VaccinationSchema = z.object({
-  vaccine_name: z.string().min(1, "Nome da vacina obrigatorio").max(100),
-  applied_date: z.string().min(1, "Data de aplicacao obrigatoria"),
-  next_dose_date: z.string().optional(),
-  vet_name: z.string().max(100).optional(),
-  batch: z.string().max(60).optional(),
-  notes: z.string().max(500).optional(),
-});
+import { VaccinationSchema } from "@/lib/validation/ong";
 
 export type VaccineState = { error?: string; fieldErrors?: Record<string, string[]>; success?: boolean };
 

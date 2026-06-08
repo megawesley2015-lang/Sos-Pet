@@ -3,18 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
-import { z } from "zod";
-
-const MedicationSchema = z.object({
-  medication_name: z.string().min(1, "Nome do medicamento obrigatório").max(150),
-  dosage: z.string().min(1, "Dosagem obrigatória").max(100),
-  frequency: z.string().min(1, "Frequência obrigatória").max(100),
-  start_date: z.string().min(1, "Data de início obrigatória"),
-  end_date: z.string().optional(),
-  is_ongoing: z.coerce.boolean().default(false),
-  reason: z.string().max(300).optional(),
-  notes: z.string().max(500).optional(),
-});
+import { MedicationSchema } from "@/lib/validation/ong";
 
 export type MedState = { error?: string; fieldErrors?: Record<string, string[]>; success?: boolean };
 

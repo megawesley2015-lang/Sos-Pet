@@ -4,23 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
-import { z } from "zod";
-
-const AdoptionSchema = z.object({
-  pet_id: z.string().uuid("Pet inválido"),
-  adopter_name: z.string().min(2, "Nome do adotante obrigatório").max(150),
-  adopter_phone: z.string().min(10, "Telefone inválido").max(20),
-  adopter_email: z.string().email().optional().or(z.literal("")),
-  adopter_city: z.string().min(2, "Cidade obrigatória").max(100),
-  adopter_neighborhood: z.string().max(100).optional(),
-  adoption_date: z.string().min(1, "Data de adoção obrigatória"),
-  // Acompanhamento pós-adoção em dois checkpoints
-  follow_up_30_date: z.string().optional(),
-  follow_up_30_notes: z.string().max(1000).optional(),
-  follow_up_90_date: z.string().optional(),
-  follow_up_90_notes: z.string().max(1000).optional(),
-  status: z.enum(["active", "returned", "deceased", "transferred"]).default("active"),
-});
+import { AdoptionSchema } from "@/lib/validation/ong";
 
 export type AdoptionFormState = {
   error?: string;

@@ -4,18 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
-import { z } from "zod";
-
-const ShelterSchema = z.object({
-  name: z.string().min(2, "Nome obrigatório").max(150),
-  type: z.enum(["ong", "protetor"]),
-  cnpj: z.string().max(20).optional(),
-  phone: z.string().min(10, "Telefone inválido").max(20),
-  email: z.string().email().optional().or(z.literal("")),
-  city: z.string().min(2, "Cidade obrigatória").max(100),
-  neighborhood: z.string().max(100).optional(),
-  description: z.string().max(500).optional(),
-});
+import { ShelterSchema } from "@/lib/validation/ong";
 
 export type ShelterState = {
   error?: string;

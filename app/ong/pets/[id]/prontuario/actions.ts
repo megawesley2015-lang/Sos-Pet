@@ -3,16 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
-import { z } from "zod";
-
-const MedicalRecordSchema = z.object({
-  record_date: z.string().min(1),
-  type: z.enum(["consultation", "surgery", "exam", "treatment", "observation"]),
-  description: z.string().min(1, "Descrição obrigatória").max(2000),
-  vet_name: z.string().max(100).optional(),
-  weight_kg: z.coerce.number().min(0).max(200).optional(),
-  notes: z.string().max(1000).optional(),
-});
+import { MedicalRecordSchema } from "@/lib/validation/ong";
 
 export type MedRecordState = { error?: string; fieldErrors?: Record<string, string[]>; success?: boolean };
 
