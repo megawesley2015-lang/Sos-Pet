@@ -5,6 +5,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
 import { AddVaccineForm } from "./AddVaccineForm";
 import { deleteVaccination } from "./actions";
+import { calcVaccineBadge } from "@/lib/validation/ong";
 
 export const revalidate = 0;
 export const metadata = { title: "Vacinas — Painel ONG" };
@@ -57,25 +58,37 @@ export default async function VacinasPage({ params }: { params: Promise<{ id: st
             Histórico ({vaccines.length} vacina{vaccines.length !== 1 ? "s" : ""})
           </h2>
           {vaccines.map((v) => {
-            const isOverdue = v.next_dose_date && v.next_dose_date <= today;
+            const badge = calcVaccineBadge(v.next_dose_date ?? null, today);
+            const daysUntil = v.next_dose_date
+              ? Math.ceil((new Date(v.next_dose_date).getTime() - new Date(today).getTime()) / 86_400_000)
+              : null;
             return (
               <div
                 key={v.id}
                 className={`rounded-xl border p-4 ${
-                  isOverdue
-                    ? "border-brand-500/30 bg-brand-500/10"
-                    : "border-white/10 bg-ink-700/40"
+                  badge === "overdue"  ? "border-danger/30 bg-danger/10" :
+                  badge === "warning"  ? "border-brand-500/30 bg-brand-500/10" :
+                  "border-white/10 bg-ink-700/40"
                 }`}
               >
                 <div className="flex items-start gap-3">
-                  <Syringe className={`mt-0.5 h-5 w-5 shrink-0 ${isOverdue ? "text-brand-400" : "text-cyan-400"}`} />
+                  <Syringe className={`mt-0.5 h-5 w-5 shrink-0 ${
+                    badge === "overdue" ? "text-danger" :
+                    badge === "warning" ? "text-brand-400" : "text-cyan-400"
+                  }`} />
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-semibold text-fg">{v.vaccine_name}</p>
-                      {isOverdue && (
+                      {badge === "overdue" && (
+                        <span className="flex items-center gap-1 rounded-full border border-danger/40 bg-danger/10 px-2 py-0.5 text-[10px] font-bold text-danger">
+                          <AlertCircle className="h-3 w-3" />
+                          🔴 Atrasada
+                        </span>
+                      )}
+                      {badge === "warning" && daysUntil !== null && (
                         <span className="flex items-center gap-1 rounded-full border border-brand-500/40 bg-brand-500/10 px-2 py-0.5 text-[10px] font-bold text-brand-300">
                           <AlertCircle className="h-3 w-3" />
-                          Dose atrasada
+                          ⚠️ Vence em {daysUntil} dia{daysUntil !== 1 ? "s" : ""}
                         </span>
                       )}
                     </div>
@@ -84,7 +97,7 @@ export default async function VacinasPage({ params }: { params: Promise<{ id: st
                         Aplicada: {new Date(v.applied_date).toLocaleDateString("pt-BR")}
                       </span>
                       {v.next_dose_date && (
-                        <span className={isOverdue ? "font-bold text-brand-300" : ""}>
+                        <span className={badge ? "font-bold text-fg-muted" : ""}>
                           Próxima dose: {new Date(v.next_dose_date).toLocaleDateString("pt-BR")}
                         </span>
                       )}

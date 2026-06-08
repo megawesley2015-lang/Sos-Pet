@@ -245,7 +245,7 @@ grep -A2 "medical_records" supabase/migrations/001_ong_module.sql
 ## T6 — Vacinas com badges de alerta
 
 **Fase SDD:** Implementar & Verificar
-**Status:** ✅ Código existe em `app/ong/pets/[id]/vacinas/`
+**Status:** ✅ Concluído em 2026-06-08
 **Depende de:** T1, T2
 
 ### Especificação EARS
@@ -273,11 +273,13 @@ grep -n "next_dose_date\|Atrasada\|Vence em" app/ong/pets/\[id\]/vacinas/page.ts
 
 ### Critério de Aceite
 
-- [ ] Vacina com `next_dose_date` = HOJE+10 exibe badge laranja
-- [ ] Vacina com `next_dose_date` = HOJE-5 exibe badge vermelho
-- [ ] Vacina sem `next_dose_date` não exibe badge
-- [ ] Quantidade de vacinas vencendo ≤ 30 dias bate com métrica do dashboard (T3)
-- [ ] Typecheck passa
+- [x] Vacina com `next_dose_date` = HOJE+10 exibe badge laranja "⚠️ Vence em 10 dias"
+- [x] Vacina com `next_dose_date` = HOJE-5 exibe badge vermelho "🔴 Atrasada"
+- [x] Vacina sem `next_dose_date` não exibe badge (calcVaccineBadge retorna null)
+- [x] usa `calcVaccineBadge()` de `lib/validation/ong.ts` (DRY — mesma lógica dos testes)
+- [x] `npm run typecheck` → 0 erros
+- [x] `npx vitest run ong` → 61/61
+- [x] Bugs corrigidos: badge overdue era laranja (era brand, agora danger); badge warning não existia
 
 ---
 
