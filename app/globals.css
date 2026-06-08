@@ -52,6 +52,23 @@
   --color-ink-800: #FFFBF5;
   --color-ink-900: #FFFDFA;
 
+  /* Badge status — semântico (light-mode base) */
+  --color-badge-lost-bg:       #FFF4E8;
+  --color-badge-lost-fg:       #B85500;
+  --color-badge-lost-ring:     #FF9933;
+  --color-badge-found-bg:      #E1F5EE;
+  --color-badge-found-fg:      #0F6E56;
+  --color-badge-found-ring:    #20B2AA;
+  --color-badge-verify-bg:     #E6F1FB;
+  --color-badge-verify-fg:     #185FA5;
+  --color-badge-verify-ring:   #378ADD;
+  --color-badge-inactive-bg:   #F1EFE8;
+  --color-badge-inactive-fg:   #444441;
+  --color-badge-inactive-ring: #B4B2A9;
+  --color-badge-urgent-bg:     #FCEBEB;
+  --color-badge-urgent-fg:     #A32D2D;
+  --color-badge-urgent-ring:   #E24B4A;
+
   /* Shadows */
   --shadow-glow-brand:    0 0 20px rgba(255,133,27,0.35);
   --shadow-glow-brand-lg: 0 0 40px rgba(255,133,27,0.45);
@@ -64,7 +81,7 @@
 /* ── Dark mode — ÚNICO bloco (sem duplicação) ────────────────────── */
 [data-theme="dark"] {
   --color-bg:            #121214;
-  --color-bg-raised:     #1C1C1F;
+  --color-bg-raised:     #1A1A1C;
   --color-bg-overlay:    #252528;
   --color-fg:            #F2F2F4;
   --color-fg-muted:      #A8A8B0;
@@ -76,26 +93,43 @@
 
   /* Ink scale — dark mode */
   --color-ink-50:  #252528;
-  --color-ink-100: #1C1C1F;
+  --color-ink-100: #1A1A1C;
   --color-ink-200: #18181B;
   --color-ink-300: #121214;
   --color-ink-400: #0E0E10;
   --color-ink-500: #0A0A0C;
   --color-ink-600: #252528;
-  --color-ink-700: #1C1C1F;
+  --color-ink-700: #1A1A1C;
   --color-ink-800: #121214;
   --color-ink-900: #0A0A0C;
 
   --shadow-card:  0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
   --shadow-hover: 0 0 0 1px rgba(255,133,27,0.35), 0 4px 16px rgba(255,133,27,0.12);
+
+  /* Badge status — override dark mode */
+  --color-badge-lost-bg:       rgba(255,133,27,0.15);
+  --color-badge-lost-fg:       #FFC28D;
+  --color-badge-lost-ring:     rgba(255,133,27,0.5);
+  --color-badge-found-bg:      rgba(32,178,170,0.15);
+  --color-badge-found-fg:      #3DCFC7;
+  --color-badge-found-ring:    rgba(32,178,170,0.5);
+  --color-badge-verify-bg:     rgba(55,138,221,0.15);
+  --color-badge-verify-fg:     #7EB8F7;
+  --color-badge-verify-ring:   rgba(55,138,221,0.5);
+  --color-badge-inactive-bg:   rgba(180,178,169,0.12);
+  --color-badge-inactive-fg:   #A0A0A8;
+  --color-badge-inactive-ring: rgba(180,178,169,0.4);
+  --color-badge-urgent-bg:     rgba(226,75,74,0.15);
+  --color-badge-urgent-fg:     #FCA5A5;
+  --color-badge-urgent-ring:   rgba(226,75,74,0.5);
 }
 
 /* ── Light mode — ajustes finos ──────────────────────────────────── */
 :root,
 [data-theme="light"] {
-  --color-fg:            #0F0F0F;
-  --color-fg-muted:      #4B4B55;
-  --color-fg-subtle:     #787887;
+  --color-fg:            #212529;
+  --color-fg-muted:      #6C757D;
+  --color-fg-subtle:     #9B8E82;
   --color-bg:            #FFF8F3;
   --color-bg-raised:     #FFFFFF;
   --color-bg-overlay:    #F3F0EB;

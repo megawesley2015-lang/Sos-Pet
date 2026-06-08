@@ -22,14 +22,14 @@ export default function Icon() {
           justifyContent: "center",
           background: "#0A0A0F",
           borderRadius: 6,
-          border: "2px solid #FF6B35",
+          border: "2px solid #FF851B",
         }}
       >
         <svg
           width="20"
           height="20"
           viewBox="0 0 24 24"
-          fill="#FF6B35"
+          fill="#FF851B"
           xmlns="http://www.w3.org/2000/svg"
         >
           {/* Paw print simplificada — 4 dedinhos + palma */}

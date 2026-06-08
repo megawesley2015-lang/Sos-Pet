@@ -55,14 +55,14 @@ export const SOSAlertCard = forwardRef<HTMLDivElement, SOSAlertCardProps>(
         >
           <div
             style={{
-              background: "#FF6B35",
+              background: "#FF851B",
               color: "#fff",
               padding: "7px 14px",
               borderRadius: 999,
               fontSize: 13,
               fontWeight: 800,
               letterSpacing: 2,
-              boxShadow: "0 0 24px rgba(255,107,53,0.6)",
+              boxShadow: "0 0 24px rgba(255,133,27,0.6)",
             }}
           >
             URGENTE • SOS
@@ -88,7 +88,7 @@ export const SOSAlertCard = forwardRef<HTMLDivElement, SOSAlertCardProps>(
             borderRadius: 14,
             overflow: "hidden",
             background: "#1F1F2E",
-            border: "3px solid rgba(255,107,53,0.4)",
+            border: "3px solid rgba(255,133,27,0.4)",
           }}
         >
           {pet.photo_url ? (
@@ -112,7 +112,7 @@ export const SOSAlertCard = forwardRef<HTMLDivElement, SOSAlertCardProps>(
                 alignItems: "center",
                 justifyContent: "center",
                 fontSize: 80,
-                color: "rgba(255,107,53,0.3)",
+                color: "rgba(255,133,27,0.3)",
               }}
             >
               ?
@@ -128,8 +128,8 @@ export const SOSAlertCard = forwardRef<HTMLDivElement, SOSAlertCardProps>(
               lineHeight: 1,
               fontWeight: 900,
               margin: 0,
-              color: "#FF6B35",
-              textShadow: "0 0 24px rgba(255,107,53,0.5)",
+              color: "#FF851B",
+              textShadow: "0 0 24px rgba(255,133,27,0.5)",
               letterSpacing: -1,
             }}
           >
@@ -215,11 +215,11 @@ export const SOSAlertCard = forwardRef<HTMLDivElement, SOSAlertCardProps>(
         {/* Contato — sempre visível, sem marginTop auto que pode empurrar */}
         <div
           style={{
-            background: "linear-gradient(135deg, #FF6B35 0%, #FF8B5C 100%)",
+            background: "linear-gradient(135deg, #FF851B 0%, #FF8B5C 100%)",
             padding: "16px 18px",
             borderRadius: 14,
             color: "#fff",
-            boxShadow: "0 8px 32px rgba(255,107,53,0.4)",
+            boxShadow: "0 8px 32px rgba(255,133,27,0.4)",
             flexShrink: 0,
           }}
         >

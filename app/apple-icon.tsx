@@ -29,7 +29,7 @@ export default function AppleIcon() {
             width: 140,
             height: 140,
             borderRadius: 999,
-            border: "4px solid rgba(255,107,53,0.3)",
+            border: "4px solid rgba(255,133,27,0.3)",
           }}
         />
         <div
@@ -38,11 +38,11 @@ export default function AppleIcon() {
             width: 110,
             height: 110,
             borderRadius: 999,
-            background: "#FF6B35",
+            background: "#FF851B",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            boxShadow: "0 0 60px rgba(255,107,53,0.6)",
+            boxShadow: "0 0 60px rgba(255,133,27,0.6)",
           }}
         >
           <svg

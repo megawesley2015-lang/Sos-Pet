@@ -20,7 +20,7 @@ export default function OpengraphImage() {
           justifyContent: "space-between",
           background: "#0A0A0F",
           backgroundImage:
-            "radial-gradient(circle at 25% 30%, rgba(255,107,53,0.25) 0%, transparent 50%), radial-gradient(circle at 75% 70%, rgba(0,229,255,0.18) 0%, transparent 50%)",
+            "radial-gradient(circle at 25% 30%, rgba(255,133,27,0.25) 0%, transparent 50%), radial-gradient(circle at 75% 70%, rgba(32,178,170,0.18) 0%, transparent 50%)",
           padding: 64,
           fontFamily:
             "system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
@@ -34,11 +34,11 @@ export default function OpengraphImage() {
               width: 64,
               height: 64,
               borderRadius: 999,
-              background: "#FF6B35",
+              background: "#FF851B",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: "0 0 40px rgba(255,107,53,0.5)",
+              boxShadow: "0 0 40px rgba(255,133,27,0.5)",
             }}
           >
             <svg
@@ -57,7 +57,7 @@ export default function OpengraphImage() {
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <span style={{ fontSize: 32, fontWeight: 800 }}>
-              SOS <span style={{ color: "#FF6B35" }}>Pet</span>
+              SOS <span style={{ color: "#FF851B" }}>Pet</span>
             </span>
             <span
               style={{
@@ -87,8 +87,8 @@ export default function OpengraphImage() {
             <br />
             <span
               style={{
-                color: "#FF6B35",
-                textShadow: "0 0 32px rgba(255,107,53,0.6)",
+                color: "#FF851B",
+                textShadow: "0 0 32px rgba(255,133,27,0.6)",
               }}
             >
               se perdeu.
@@ -122,26 +122,26 @@ export default function OpengraphImage() {
           >
             <span
               style={{
-                background: "rgba(255,107,53,0.15)",
+                background: "rgba(255,133,27,0.15)",
                 color: "#FFA06B",
                 padding: "10px 18px",
                 borderRadius: 999,
                 fontSize: 16,
                 fontWeight: 700,
-                border: "1px solid rgba(255,107,53,0.3)",
+                border: "1px solid rgba(255,133,27,0.3)",
               }}
             >
               Cadastre seu pet
             </span>
             <span
               style={{
-                background: "rgba(0,229,255,0.12)",
+                background: "rgba(32,178,170,0.12)",
                 color: "#7FF0FF",
                 padding: "10px 18px",
                 borderRadius: 999,
                 fontSize: 16,
                 fontWeight: 700,
-                border: "1px solid rgba(0,229,255,0.3)",
+                border: "1px solid rgba(32,178,170,0.3)",
               }}
             >
               Encontre prestadores

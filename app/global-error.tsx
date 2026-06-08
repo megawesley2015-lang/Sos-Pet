@@ -23,7 +23,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
         style={{
           margin: 0,
           minHeight: "100vh",
-          backgroundColor: "#0F0F1A",
+          backgroundColor: "#121214",
           color: "white",
           fontFamily:
             "system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
@@ -47,7 +47,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
               marginTop: 20,
               padding: "12px 24px",
               borderRadius: 12,
-              background: "#FF6B35",
+              background: "#FF851B",
               color: "white",
               fontWeight: 700,
               border: "none",

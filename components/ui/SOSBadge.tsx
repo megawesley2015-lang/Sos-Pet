@@ -8,27 +8,37 @@ interface SOSBadgeProps {
 
 /**
  * Badge de status do pet.
- * - "lost"  → laranja com pulse (urgência SOS)
- * - "found" → ciano estático (neutro, acolhedor)
+ * - "lost"  → laranja âmbar com pulse (urgência SOS)
+ * - "found" → teal estático (resolução, alívio)
+ * Cores via CSS vars — adaptam automaticamente a light/dark mode.
  */
 export function SOSBadge({ kind, className }: SOSBadgeProps) {
   const isLost = kind === "lost";
+
+  const spanStyle = isLost
+    ? {
+        background:  "var(--color-badge-lost-bg)",
+        color:       "var(--color-badge-lost-fg)",
+        borderColor: "var(--color-badge-lost-ring)",
+      }
+    : {
+        background:  "var(--color-badge-found-bg)",
+        color:       "var(--color-badge-found-fg)",
+        borderColor: "var(--color-badge-found-ring)",
+      };
 
   return (
     <span
       className={cn(
         "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide",
-        isLost
-          ? "animate-pulse-brand border-brand-500/60 bg-brand-500/20 text-brand-200"
-          : "border-cyan-500/60 bg-cyan-500/15 text-cyan-200 shadow-glow-cyan",
+        isLost && "animate-pulse-brand",
         className
       )}
+      style={spanStyle}
     >
       <span
-        className={cn(
-          "h-1.5 w-1.5 rounded-full",
-          isLost ? "bg-brand-500 shadow-glow-brand" : "bg-cyan-500 shadow-glow-cyan"
-        )}
+        className="h-1.5 w-1.5 rounded-full"
+        style={{ backgroundColor: isLost ? "var(--color-badge-lost-fg)" : "var(--color-badge-found-fg)" }}
       />
       {isLost ? "SOS Perdido" : "Encontrado"}
     </span>

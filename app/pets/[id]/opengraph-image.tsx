@@ -46,10 +46,10 @@ export default async function PetOpengraphImage({ params }: Props) {
   }
 
   const isLost = pet.kind === "lost";
-  const accent = isLost ? "#FF6B35" : "#00E5FF";
+  const accent = isLost ? "#FF851B" : "#20B2AA";
   const accentSoft = isLost
-    ? "rgba(255,107,53,0.5)"
-    : "rgba(0,229,255,0.5)";
+    ? "rgba(255,133,27,0.5)"
+    : "rgba(32,178,170,0.5)";
 
   return new ImageResponse(
     (

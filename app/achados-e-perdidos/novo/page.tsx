@@ -259,7 +259,7 @@ export default function NovoPetPage() {
         <button
           type="submit"
           disabled={pending || uploading}
-          className="w-full bg-[#FF6B35] hover:bg-[#E85A2A] disabled:opacity-50
+          className="w-full bg-brand-500 hover:bg-brand-600 disabled:opacity-50
                      text-white font-bold py-3.5 rounded-lg transition-colors
                      duration-200 text-base"
         >

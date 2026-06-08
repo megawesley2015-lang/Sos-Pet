@@ -42,7 +42,12 @@ export function PrestadorCard({ prestador }: PrestadorCardProps) {
           {prestador.verificado && (
             <span
               title="Prestador verificado"
-              className="flex items-center gap-1 rounded-full bg-cyan-500/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-ink-900 shadow-glow-cyan"
+              className="flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide"
+              style={{
+                background:  "var(--color-badge-verify-bg)",
+                color:       "var(--color-badge-verify-fg)",
+                borderColor: "var(--color-badge-verify-ring)",
+              }}
             >
               <ShieldCheck className="h-3 w-3" />
               Verificado
