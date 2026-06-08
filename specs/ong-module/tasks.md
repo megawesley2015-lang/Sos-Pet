@@ -122,7 +122,7 @@ SQL
 ## T3 — Dashboard operacional com métricas reais
 
 **Fase SDD:** Implementar & Verificar
-**Status:** ✅ Código existe em `app/ong/dashboard/page.tsx`
+**Status:** ✅ Concluído em 2026-06-08
 **Depende de:** T1, T2
 
 ### Especificação EARS
@@ -153,11 +153,13 @@ npm run build
 
 ### Critério de Aceite
 
-- [ ] Métricas carregam com dados reais após T1 aplicada
-- [ ] Skeleton aparece durante carregamento (testar com `?delay=true` ou network throttle)
-- [ ] Estado vazio mostra CTA quando shelter não tem pets
-- [ ] Nenhum dado de outro shelter aparece para usuário diferente
-- [ ] Build passa sem warnings
+- [x] Métricas carregam com dados reais após T1 aplicada (smoke test 2026-06-08)
+- [x] Skeleton `loading.tsx` com 6 placeholders animados (animate-pulse)
+- [x] Estado vazio mostra CTA "Cadastrar primeiro pet" → `/ong/pets/novo`
+- [x] Nenhum dado de outro shelter aparece (RLS via is_shelter_owner — smoke test)
+- [x] Bug corrigido: query follow-ups usava campo de conclusão em vez de adoption_date
+- [x] `npm run typecheck` → 0 erros
+- [x] `npm run build` → ✓ Compiled in 2.2min
 
 ---
 

@@ -214,6 +214,23 @@ export default async function OngDashboardPage() {
         </div>
       )}
 
+      {/* Estado vazio — nenhum pet cadastrado */}
+      {(totalPets ?? 0) === 0 && (adoptedPets ?? 0) === 0 && (
+        <div className="rounded-xl border border-brand-500/30 bg-brand-500/5 p-6 text-center">
+          <p className="text-2xl">🐾</p>
+          <p className="mt-2 font-display text-lg font-bold text-fg">Nenhum pet cadastrado ainda</p>
+          <p className="mt-1 text-sm text-fg-muted">
+            Comece registrando os animais do seu abrigo para acompanhar saúde, vacinas e adoções.
+          </p>
+          <Link
+            href="/ong/pets/novo"
+            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-bold text-white hover:bg-brand-600"
+          >
+            + Cadastrar primeiro pet
+          </Link>
+        </div>
+      )}
+
       {/* Cards de métricas */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map(({ label, value, sub, icon: Icon, color, bg, alert, href }) => (
