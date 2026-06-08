@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
 import { z } from "zod";
@@ -55,5 +56,5 @@ export async function upsertShelter(
 
   revalidatePath("/ong/cadastro");
   revalidatePath("/ong/dashboard");
-  return { success: true };
+  redirect("/ong/dashboard");
 }
