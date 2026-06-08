@@ -3,6 +3,7 @@
 import { useActionState, useRef, useState } from "react";
 import type { PetRow } from "@/lib/types/database";
 import { TurnstileWidget } from "@/components/ui/TurnstileWidget";
+import { MascotFormGuide } from "@/components/ui/MascotFormGuide";
 
 // ── Tipos exportados (importados por actions) ─────────────────────────────────
 
@@ -71,6 +72,12 @@ export function PetForm({
 }: PetFormProps) {
   const [state, formAction, isPending] = useActionState(action, initialState);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [mascotSpecies, setMascotSpecies] = useState<'dog' | 'cat' | 'other'>(
+    (initial?.species as 'dog' | 'cat' | 'other') ?? 'dog'
+  );
+  const [mascotSection, setMascotSection] = useState<
+    'welcome' | 'photo' | 'location' | 'description' | 'contact' | 'success' | 'error'
+  >('welcome');
 
   const [gpsCoords, setGpsCoords] = useState<{ lat: number; lng: number } | null>(() => {
     const lat = def?.latitude != null ? Number(def.latitude) : null
@@ -99,8 +106,22 @@ export function PetForm({
   // Valores iniciais para o modo de edição
   const def = initial ?? null;
 
+  // Sincroniza seção do mascote com resultado do envio
+  const currentSection = state.ok
+    ? 'success'
+    : state.message && !state.ok && !isPending
+    ? 'error'
+    : mascotSection;
+
   return (
     <form action={formAction} className="space-y-5" noValidate>
+
+      {/* Mascote guia contextual */}
+      <MascotFormGuide
+        species={mascotSpecies}
+        section={currentSection}
+        className="mb-1"
+      />
 
       {/* Captcha hidden field */}
       {captchaToken && (
@@ -141,7 +162,12 @@ export function PetForm({
       {/* Espécie + Porte */}
       <div className="grid grid-cols-2 gap-4">
         <Field label="Espécie" required error={e("species")}>
-          <select name="species" defaultValue={def?.species ?? "dog"} className={inputCls(e("species"))}>
+          <select
+            name="species"
+            defaultValue={def?.species ?? "dog"}
+            className={inputCls(e("species"))}
+            onChange={(ev) => setMascotSpecies(ev.target.value as 'dog' | 'cat' | 'other')}
+          >
             <option value="dog">Cachorro</option>
             <option value="cat">Gato</option>
             <option value="other">Outro</option>
@@ -188,7 +214,7 @@ export function PetForm({
 
       {/* Descrição */}
       <Field label="Descrição" error={e("description")}>
-        <textarea name="description" defaultValue={def?.description ?? ""} rows={4} maxLength={1000} placeholder="Características físicas, marcas especiais…" className={`${inputCls(e("description"))} resize-none`} />
+        <textarea name="description" defaultValue={def?.description ?? ""} rows={4} maxLength={1000} placeholder="Características físicas, marcas especiais…" className={`${inputCls(e("description"))} resize-none`} onFocus={() => setMascotSection('description')} />
       </Field>
 
       {/* Comportamento */}
@@ -208,14 +234,14 @@ export function PetForm({
             </label>
           </div>
         )}
-        <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" className="block w-full text-sm text-fg-muted file:mr-3 file:rounded-lg file:border-0 file:bg-brand-500/10 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-brand-300 hover:file:bg-brand-500/20 cursor-pointer" />
+        <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" className="block w-full text-sm text-fg-muted file:mr-3 file:rounded-lg file:border-0 file:bg-brand-500/10 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-brand-300 hover:file:bg-brand-500/20 cursor-pointer" onFocus={() => setMascotSection('photo')} />
         <p className="text-xs text-fg-subtle">JPEG, PNG ou WebP · máx. 5 MB</p>
       </Field>
 
       {/* Localização */}
       <div className="grid grid-cols-2 gap-4">
         <Field label="Bairro" required error={e("neighborhood")}>
-          <input type="text" name="neighborhood" defaultValue={def?.neighborhood ?? ""} maxLength={80} placeholder="Ex: Centro, Gonzaga…" className={inputCls(e("neighborhood"))} />
+          <input type="text" name="neighborhood" defaultValue={def?.neighborhood ?? ""} maxLength={80} placeholder="Ex: Centro, Gonzaga…" className={inputCls(e("neighborhood"))} onFocus={() => setMascotSection('location')} />
         </Field>
         <Field label="Cidade" required error={e("city")}>
           <input type="text" name="city" defaultValue={def?.city ?? ""} maxLength={80} placeholder="Ex: Santos, Guarujá…" className={inputCls(e("city"))} />
