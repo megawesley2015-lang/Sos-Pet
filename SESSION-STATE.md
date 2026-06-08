@@ -1,70 +1,55 @@
 # SESSION-STATE.md — SOS Pet Amigo
 # WAL (Write-Ahead Log) de estado da sessão atual
-# Atualizar ANTES de qualquer decisão de código ou arquitetura.
 # ─────────────────────────────────────────────────────────────
 # REGRA /dream: A cada 5 sessões, consolidar este arquivo → MEMORY.md
 # Última consolidação: 2026-06-08 (sessão atual)
 # ─────────────────────────────────────────────────────────────
 
-## Estado em: 2026-06-08
+## Estado em: 2026-06-08 (continuação — dream consolidado)
 
 ### Objetivo da sessão
-Estruturar o tripé SDD + Harness + Highermind e desbloquear módulo ONG.
+SDD + Highermind operacional. Executar T1–T5 do módulo ONG.
 
-### O que foi feito (concluído hoje)
+### Concluído nesta sessão
 
-#### SDD / Constituição
-- [x] `CLAUDE.md`: cabeçalho Constituição Técnica adicionado (Passo 1)
-- [x] `.specify/memory/constitution.md`: constituição técnica formal criada
-- [x] `specs/index.md`: registry de módulos + instruções Highermind
+#### Tripé SDD
+- [x] CLAUDE.md: Constituição Técnica no topo
+- [x] `.claude/settings.json`: hook PostToolUse → tsc --noEmit
+- [x] `specs/ong-module/`: spec.md + data-model.md + contracts.md + tasks.md
+- [x] `specs/index.md`: registry de módulos
+- [x] `.specify/memory/constitution.md`: constituição formal
+- [x] `SESSION-STATE.md`: WAL atualizado
 
-#### Specs ONG (Passo 3)
-- [x] `specs/ong-module/spec.md`: requisitos EARS completos
-- [x] `specs/ong-module/data-model.md`: schema + relacionamentos
-- [x] `specs/ong-module/contracts.md`: payloads de API
-- [x] `specs/ong-module/tasks.md`: 10 tarefas T1–T10 com harness
+#### Highermind
+- [x] `sos-pet-orchestrator-v2` skill configurado com Security Gate + pipeline EARS
+- [x] Baseado em Highermind (rodrigohighermind/highermind-code-skills)
 
-#### Harness (Passo 2)
-- [x] `.claude/settings.json`: hook PostToolUse adicionado — `tsc --noEmit` após Write/Edit
+#### Tasks ONG concluídas
+- [x] T1 — Migration aplicada (6 tabelas + RLS + funções helper)
+- [x] T2 — RLS verificado (policies DROP+CREATE idempotentes)
+- [x] T3 — Dashboard: bug follow-up corrigido + empty state CTA adicionado
+- [x] T4 — Pets: gate adoção obrigatória antes de status=adopted
+- [x] T5 — Prontuário: código OK sem changes (listagem DESC, 404, preserve)
+- [x] T10 — Tipos TypeScript regenerados + 20 aliases
 
-#### Highermind (Passo 4)
-- [x] `CLAUDE.md`: seção HIGHERMIND documentada com instruções de invocação
+#### Infra / Qualidade
+- [x] `lib/validation/ong.ts`: 6 schemas Zod extraídos + calcVaccineBadge + isFollowUp30Overdue
+- [x] `__tests__/ong/validation.test.ts`: 61 testes, 61 passando
+- [x] Smoke test autenticado via Playwright (Chromium headless)
+- [x] `scripts/create-test-user.mjs`: Admin API para criar user pré-confirmado
 
-#### Infra / Migration ONG (T1 + T2)
-- [x] `supabase/migrations/001_ong_module.sql`: aplicada no Supabase (6 tabelas criadas)
-- [x] `lib/types/database.ts`: regenerado + bloco de aliases customizados adicionado
-- [x] TypeScript: 0 erros após regeneração de tipos
-
-#### Bugs corrigidos
-- [x] `app/ong/dashboard/page.tsx`: query de follow-ups corrigida
-  (filtrava `follow_up_date.lte` em vez de `adoption_date.lte` + `is.null`)
-
-### Bloqueadores ativos
-- Nenhum bloqueador crítico
-
-### Módulo ONG — Status das Tasks
-| Task | Status |
-|------|--------|
-| T1 — Migration | ✅ Aplicada |
-| T2 — RLS verify | ✅ (migration idempotente com DROP+CREATE policies) |
-| T3 — Dashboard | ✅ Código correto (bug corrigido) |
-| T4 — Pets | ✅ Código correto |
-| T5 — Prontuário | ✅ Código correto |
-| T6 — Vacinas | ✅ Código correto |
-| T7 — Medicações | ✅ Código correto |
-| T8 — Adoções | ✅ Código correto |
-| T9 — Follow-up | ✅ Código correto |
-| T10 — Tipos TS | ✅ Gerados |
+### Decisões técnicas consolidadas (para MEMORY.md)
+- `pet_saude`: tabela pendente de migration — `PetSaudeRow` é interface manual
+- `prestadores.horarios_disponiveis` e `dias_atendimento`: colunas no código mas não no DB
+- Supabase MCP conectado ao projeto "Soberano de Trading" → migrations via Dashboard
+- `/ong/pets/novo` e rotas 3+ níveis deep retornam 404 no Turbopack dev (não afeta prod)
+- `/registro` requer email confirmation → usar Admin API para testes
 
 ### Próxima sessão — o que fazer primeiro
-1. Teste smoke do módulo ONG no browser (`/ong/cadastro` → `/ong/dashboard`)
-2. Criar spec para `pet_saude` (tabela ainda sem migration)
-3. Rate limiting com Upstash (dívida técnica prioritária do CLAUDE.md)
-
-### Decisões abertas
-- `pet_saude`: tabela referenciada no código mas migration não existe ainda
-- `prestadores`: colunas `horarios_disponiveis` e `dias_atendimento` no código mas não no DB → migration pendente
-- Supabase MCP conectado ao projeto "Soberano de Trading" (não ao SOS Pet) — migrations via Dashboard
+1. T6 — Vacinas com badges (calcVaccineBadge já implementada e testada)
+2. T7 — Medicações
+3. T8 — Adoções + webhook n8n
+4. T9 — Follow-up
 
 ---
 
@@ -73,4 +58,4 @@ Estruturar o tripé SDD + Harness + Highermind e desbloquear módulo ONG.
 - REGRA 2: Se um erro ocorrer 2 vezes → registrar em MEMORY.md
 - REGRA 3: Nunca ignorar políticas de RLS em novas tabelas
 - REGRA 4: Commits atômicos — não misturar contextos diferentes
-- REGRA /dream: A cada 5 sessões → rodar `/dream` para consolidar para MEMORY.md
+- REGRA /dream: A cada 5 sessões → consolidar para MEMORY.md

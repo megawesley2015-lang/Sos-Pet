@@ -204,7 +204,7 @@ grep -r "z.object" app/ong/pets/ --include="*.ts"
 ## T5 — Prontuário veterinário (medical_records)
 
 **Fase SDD:** Implementar & Verificar
-**Status:** ✅ Código existe em `app/ong/pets/[id]/prontuario/`
+**Status:** ✅ Concluído em 2026-06-08
 **Depende de:** T1, T2
 
 ### Especificação EARS
@@ -233,11 +233,12 @@ grep -A2 "medical_records" supabase/migrations/001_ong_module.sql
 
 ### Critério de Aceite
 
-- [ ] Listagem mostra registros ordenados por data DESC
-- [ ] Novo registro aparece imediatamente após submit (revalidatePath)
-- [ ] Pet com status `adopted` ainda exibe seu prontuário
-- [ ] Acesso a `pet_id` de outro shelter retorna 404
-- [ ] Typecheck passa
+- [x] Listagem ordenada por `record_date DESC` (`.order("record_date", { ascending: false })`)
+- [x] revalidatePath após submit (`/ong/pets/[id]/prontuario` + `/ong/pets/[id]`)
+- [x] Pet adotado exibe prontuário — sem check de status na página, ON DELETE CASCADE é de row deletion
+- [x] Acesso de outro shelter retorna `notFound()` (linha 41: `pet.shelters.user_id !== user.id`)
+- [x] `npm run typecheck` → 0 erros
+- [x] `npx vitest run ong` → 61/61
 
 ---
 
