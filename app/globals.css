@@ -136,6 +136,36 @@
   --color-border:        #DCD5CD;
   --color-border-strong: #B4AA9E;
   --color-danger-fg:     #991B1B;
+
+  /*
+   * CONVENÇÃO INTENCIONAL — ink scale no light mode é invertida:
+   * ink-50=mais escuro (#212529), ink-900=mais claro (#FAFAFA).
+   * Motivo: 482 usages em 112 arquivos usam ink-* como escala de texto/superfície.
+   * No dark mode, o bloco [data-theme="dark"] acima define seus próprios valores.
+   * NÃO alterar sem entender ambos os blocos.
+   */
+  --color-ink-50:  #212529;
+  --color-ink-100: #343A40;
+  --color-ink-200: #495057;
+  --color-ink-300: #6C757D;
+  --color-ink-400: #868E96;
+  --color-ink-500: #ADB5BD;
+  --color-ink-600: #CED4DA;
+  --color-ink-700: #DEE2E6;
+  --color-ink-800: #E9ECEF;
+  --color-ink-900: #F8F9FA;
+
+  /* Escala warm — backgrounds quentes no light mode */
+  --color-warm-50:  #FFFDFB;
+  --color-warm-100: #FFF8F3;
+  --color-warm-200: #FFF0E6;
+  --color-warm-300: #FFE4CC;
+  --color-warm-400: #FFD4A8;
+  --color-warm-500: #FFC285;
+  --color-warm-600: #FFAA54;
+  --color-warm-700: #FF9230;
+  --color-warm-800: #E07000;
+  --color-warm-900: #B85500;
 }
 
 /* ── Base ────────────────────────────────────────────────────────── */
