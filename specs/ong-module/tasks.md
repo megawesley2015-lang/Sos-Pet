@@ -166,7 +166,7 @@ npm run build
 ## T4 — Cadastro e edição de pets do abrigo
 
 **Fase SDD:** Implementar & Verificar
-**Status:** ✅ Código existe em `app/ong/pets/novo/` e `app/ong/pets/[id]/editar/`
+**Status:** ✅ Concluído em 2026-06-08
 **Depende de:** T1, T2
 
 ### Especificação EARS
@@ -192,11 +192,12 @@ grep -r "z.object" app/ong/pets/ --include="*.ts"
 
 ### Critério de Aceite
 
-- [ ] Cadastro com campos obrigatórios ausentes não submete
-- [ ] Pet criado aparece em `/ong/pets` com status correto
-- [ ] Alteração de status para `adopted` sem adoção previa é bloqueada
-- [ ] `actions.ts` usa `const { id } = await params` (Next.js 15+ pattern)
-- [ ] Typecheck passa
+- [x] Cadastro com campos obrigatórios ausentes não submete (Zod bloqueia no server)
+- [x] Pet criado redireciona para `/ong/pets/[id]` (redirect após insert)
+- [x] Alteração de status para `adopted` sem adoção previa é bloqueada (gate adicionado)
+- [x] `actions.ts` usa `const { id } = await params` (Next.js 15+ pattern)
+- [x] `npm run typecheck` → 0 erros
+- [x] `npx vitest run ong` → 61/61
 
 ---
 

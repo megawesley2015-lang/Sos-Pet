@@ -52,7 +52,7 @@ export async function editarShelterPet(
   // Verifica que o pet pertence ao shelter
   const { data: pet } = await supabase
     .from("shelter_pets")
-    .select("id")
+    .select("id, status")
     .eq("id", petId)
     .eq("shelter_id", shelter.id)
     .maybeSingle();
@@ -64,6 +64,18 @@ export async function editarShelterPet(
   const parsed = EditShelterPetSchema.safeParse(raw);
   if (!parsed.success) {
     return { fieldErrors: parsed.error.flatten().fieldErrors };
+  }
+
+  // T4 gate: mudança para 'adopted' exige adoção registrada
+  if (parsed.data.status === "adopted" && pet.status !== "adopted") {
+    const { data: adoption } = await supabase
+      .from("adoptions")
+      .select("id")
+      .eq("pet_id", petId)
+      .maybeSingle();
+    if (!adoption) {
+      return { error: "Registre a adoção antes de marcar o pet como adotado." };
+    }
   }
 
   const { weight_kg, microchip, is_castrated, ...rest } = parsed.data;
