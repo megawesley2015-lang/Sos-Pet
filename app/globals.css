@@ -5,19 +5,19 @@
 
 /* ── Design tokens — valores hex válidos para Tailwind v4 ───────── */
 @theme {
-  /* Brand — laranja urgência */
-  --color-brand-300: #FFAA80;
-  --color-brand-400: #FF8A5C;
-  --color-brand-500: #FF6B35;
-  --color-brand-600: #E55520;
-  --color-brand-700: #C4431A;
+  /* Brand — laranja âmbar urgência */
+  --color-brand-300: #FFC28D;
+  --color-brand-400: #FFA354;
+  --color-brand-500: #FF851B;
+  --color-brand-600: #E06A00;
+  --color-brand-700: #BD5400;
 
   /* Primary + Accent */
-  --color-primary:       #FF6B35;
-  --color-primary-light: #FF8A5C;
-  --color-primary-dark:  #E55520;
-  --color-accent:        #00B4A0;
-  --color-accent-light:  #1ECEBB;
+  --color-primary:       #FF851B;
+  --color-primary-light: #FFA354;
+  --color-primary-dark:  #E06A00;
+  --color-accent:        #20B2AA;
+  --color-accent-light:  #3DCFC7;
 
   /* Semânticos */
   --color-success: #3DAA6B;
@@ -53,41 +53,41 @@
   --color-ink-900: #FFFDFA;
 
   /* Shadows */
-  --shadow-glow-brand:    0 0 20px rgba(255,107,53,0.35);
-  --shadow-glow-brand-lg: 0 0 40px rgba(255,107,53,0.45);
-  --shadow-glow-cyan:     0 0 20px rgba(6,182,212,0.35);
+  --shadow-glow-brand:    0 0 20px rgba(255,133,27,0.35);
+  --shadow-glow-brand-lg: 0 0 40px rgba(255,133,27,0.45);
+  --shadow-glow-cyan:     0 0 20px rgba(32,178,170,0.35);
   --shadow-card:          0 1px 3px rgba(26,18,8,0.06), 0 4px 12px rgba(26,18,8,0.04);
   --shadow-card-dark:     0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
-  --shadow-hover:         0 0 0 1px rgba(255,107,53,0.25), 0 4px 16px rgba(255,107,53,0.08);
+  --shadow-hover:         0 0 0 1px rgba(255,133,27,0.25), 0 4px 16px rgba(255,133,27,0.08);
 }
 
 /* ── Dark mode — ÚNICO bloco (sem duplicação) ────────────────────── */
 [data-theme="dark"] {
-  --color-bg:            #0F0E09;
-  --color-bg-raised:     #1A1810;
-  --color-bg-overlay:    #231F14;
-  --color-fg:            #F5EDD8;
-  --color-fg-muted:      #A89878;
-  --color-fg-subtle:     #6B5E40;
-  --color-border:        #3A3420;
-  --color-border-strong: #50462A;
-  --color-accent:        #00E5FF;
+  --color-bg:            #121214;
+  --color-bg-raised:     #1C1C1F;
+  --color-bg-overlay:    #252528;
+  --color-fg:            #F2F2F4;
+  --color-fg-muted:      #A8A8B0;
+  --color-fg-subtle:     #6B6B78;
+  --color-border:        #2D2D32;
+  --color-border-strong: #404047;
+  --color-accent:        #20B2AA;
   --color-danger-fg:     #FCA5A5;
 
   /* Ink scale — dark mode */
-  --color-ink-50:  #231F14;
-  --color-ink-100: #1A1810;
-  --color-ink-200: #14120C;
-  --color-ink-300: #0F0E09;
-  --color-ink-400: #0C0B07;
-  --color-ink-500: #0A0905;
-  --color-ink-600: #231F14;
-  --color-ink-700: #1A1810;
-  --color-ink-800: #0F0E09;
-  --color-ink-900: #0A0905;
+  --color-ink-50:  #252528;
+  --color-ink-100: #1C1C1F;
+  --color-ink-200: #18181B;
+  --color-ink-300: #121214;
+  --color-ink-400: #0E0E10;
+  --color-ink-500: #0A0A0C;
+  --color-ink-600: #252528;
+  --color-ink-700: #1C1C1F;
+  --color-ink-800: #121214;
+  --color-ink-900: #0A0A0C;
 
   --shadow-card:  0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
-  --shadow-hover: 0 0 0 1px rgba(255,107,53,0.35), 0 4px 16px rgba(255,107,53,0.12);
+  --shadow-hover: 0 0 0 1px rgba(255,133,27,0.35), 0 4px 16px rgba(255,133,27,0.12);
 }
 
 /* ── Light mode — ajustes finos ──────────────────────────────────── */
@@ -140,12 +140,12 @@
   }
   .text-shadow-brand {
     text-shadow:
-      0 0 20px rgba(255,107,53,0.4),
+      0 0 20px rgba(255,133,27,0.4),
       0 1px 3px rgba(0,0,0,0.3);
   }
   .text-shadow-accent {
     text-shadow:
-      0 0 20px rgba(0,180,160,0.4),
+      0 0 20px rgba(32,178,170,0.4),
       0 1px 3px rgba(0,0,0,0.3);
   }
 
@@ -160,21 +160,21 @@
   /* Backgrounds */
   .bg-warm-grid {
     background-image:
-      linear-gradient(rgba(255,107,53,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,107,53,0.04) 1px, transparent 1px);
+      linear-gradient(rgba(255,133,27,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,133,27,0.04) 1px, transparent 1px);
     background-size: 40px 40px;
   }
   .bg-radial-warm {
     background-image: radial-gradient(
       ellipse 80% 60% at 50% -10%,
-      rgba(255,107,53,0.08) 0%,
+      rgba(255,133,27,0.08) 0%,
       transparent 70%
     );
   }
   .bg-radial-brand {
     background-image: radial-gradient(
       ellipse 80% 60% at 50% -10%,
-      rgba(255,107,53,0.12) 0%,
+      rgba(255,133,27,0.12) 0%,
       transparent 70%
     );
   }

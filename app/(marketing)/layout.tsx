@@ -16,7 +16,7 @@ export default async function MarketingLayout({
   const avisos = await listAvisosAtivos();
 
   return (
-    <div className="min-h-screen">
+    <div data-theme="light" className="min-h-screen">
       <AvisosTicker avisos={avisos} />
       <MarketingHeader />
       {children}

@@ -67,7 +67,7 @@ export async function TopBar() {
           <Link
             href="/login"
             aria-label="Entrar"
-            className="flex h-9 items-center gap-1.5 rounded-full border-2 border-cyan-500/60 bg-ink-600 px-3 text-xs font-bold text-cyan-300 shadow-glow-cyan transition-all hover:bg-cyan-500/10"
+            className="flex h-9 items-center gap-1.5 rounded-full border-2 border-brand-500 bg-brand-500/10 px-3 text-xs font-bold text-brand-600 transition-all hover:bg-brand-500/20 dark:border-cyan-500/60 dark:bg-ink-600 dark:text-cyan-300 dark:shadow-glow-cyan dark:hover:bg-cyan-500/10"
           >
             <UserRound className="h-3.5 w-3.5" strokeWidth={2.5} />
             Entrar
