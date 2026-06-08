@@ -25,6 +25,9 @@ export default async function OngDashboardPage() {
   const thirtyDaysLater = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
     .toISOString()
     .split("T")[0];
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
 
   const [
     { count: totalPets },
@@ -87,16 +90,15 @@ export default async function OngDashboardPage() {
       .order("next_dose_date", { ascending: true })
       .limit(10),
 
-    // Acompanhamentos pós-adoção pendentes nos próximos 30 dias ou vencidos
+    // Acompanhamentos pós-adoção pendentes: adoção tem 30+ dias E pelo menos um follow-up não registrado
     supabase
       .from("adoptions")
       .select("id, adopter_name, adoption_date, follow_up_30_date, follow_up_90_date, status, shelter_pets!inner(name, species)")
       .eq("shelter_id", shelterId)
       .eq("status", "active")
-      .or(
-        `follow_up_30_date.lte.${thirtyDaysLater},follow_up_90_date.lte.${thirtyDaysLater}`
-      )
-      .order("follow_up_30_date", { ascending: true })
+      .lte("adoption_date", thirtyDaysAgo)
+      .or("follow_up_30_date.is.null,follow_up_90_date.is.null")
+      .order("adoption_date", { ascending: true })
       .limit(8),
   ]);
 

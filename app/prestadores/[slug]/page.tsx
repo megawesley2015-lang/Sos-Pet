@@ -60,10 +60,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const url = `${baseUrl}/prestadores/${slug}`;
   const nomeFmt = capitalizeWords(prestador.nome);
   const cidadeFmt = capitalizeWords(prestador.cidade);
-  const title = `${nomeFmt} — ${CATEGORIA_LABEL[prestador.categoria]} em ${cidadeFmt}`;
+  const title = `${nomeFmt} — ${CATEGORIA_LABEL[prestador.categoria as import("@/lib/types/database").PrestadorCategoria]} em ${cidadeFmt}`;
   const description =
     prestador.descricao?.trim() ||
-    `${nomeFmt} é ${CATEGORIA_LABEL[prestador.categoria]} em ${cidadeFmt}. Encontre contato, avaliações e horários no SOS Pet.`;
+    `${nomeFmt} é ${CATEGORIA_LABEL[prestador.categoria as import("@/lib/types/database").PrestadorCategoria]} em ${cidadeFmt}. Encontre contato, avaliações e horários no SOS Pet.`;
 
   const ogImage = prestador.capa_url ?? prestador.logo_url;
   // Fallback para og:image do site quando o prestador não tem foto
@@ -180,7 +180,7 @@ export default async function PrestadorDetalhePage({ params }: PageProps) {
                 )}
               </div>
               <p className="mt-0.5 text-xs uppercase tracking-wide text-cyan-400">
-                {CATEGORIA_LABEL[prestador.categoria]}
+                {CATEGORIA_LABEL[prestador.categoria as import("@/lib/types/database").PrestadorCategoria]}
               </p>
               <p className="mt-1 flex items-center gap-1.5 text-sm text-fg-muted">
                 <MapPin className="h-3.5 w-3.5 text-brand-500" />

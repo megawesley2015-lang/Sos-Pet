@@ -1,6 +1,11 @@
+# CONSTITUIÇÃO TÉCNICA — SOS Pet Amigo
+# Nível SDD: Spec-anchored
+# Harness: TypeScript + ESLint + Build + Vitest
+# Highermind: .claude/skills/sos-pet-orchestrator-v2
+# ─────────────────────────────────────────────────────────────────────────────
 # CLAUDE.md — SOS Pet Amigo
 # Contrato de Contexto entre Claude Code e o Projeto
-# Versão: 1.0.0 | Atualizado: 2026-05-28
+# Versão: 1.1.0 | Atualizado: 2026-06-08
 # ─────────────────────────────────────────────────────────────────────────────
 # INSTRUÇÕES PARA O CLAUDE:
 # Este arquivo é lido automaticamente pelo Claude Code a cada sessão.
@@ -460,6 +465,27 @@ COMPONENTES UI:
 
 ---
 
+## MEMORY — RESISTÊNCIA À DEGRADAÇÃO DE CONTEXTO
+
+```
+WAL ATIVO:    SESSION-STATE.md  (atualizar ao início e fim de cada sessão)
+MEMÓRIA:      ~/.claude/projects/.../memory/MEMORY.md  (persiste entre sessões)
+CONSOLIDAÇÃO: A cada 5 sessões → /dream consolida SESSION-STATE → MEMORY.md
+
+REGRA /dream:
+  1. Ler SESSION-STATE.md
+  2. Extrair decisões não-óbvias → salvar em memory/*.md
+  3. Limpar SESSION-STATE.md → manter apenas próxima sessão
+  4. Atualizar MEMORY.md index
+
+QUANDO INICIAR UMA SESSÃO:
+  ✓ Ler SESSION-STATE.md ("Próxima sessão — o que fazer primeiro")
+  ✓ Confirmar estado com: npm run typecheck
+  ✓ Atualizar data e objetivo em SESSION-STATE.md
+```
+
+---
+
 ## SESSÕES DE CLAUDE CODE — PROTOCOLO
 
 ```
@@ -533,9 +559,32 @@ COMO TRABALHAR COM ESTE PROJETO:
 
 ---
 
+## HIGHERMIND — ORQUESTRADOR DE SPECS
+
+```
+INVOCAR:  /sos-pet-orchestrator-v2 spec=specs/<módulo>/tasks.md
+REGISTRY: specs/index.md  (lista todos os módulos + status)
+
+PIPELINE POR TAREFA:
+  1. Lê tasks.md → identifica próxima tarefa pendente
+  2. Executa seguindo notação EARS da spec
+  3. Gate: npm run typecheck && npm run build
+  4. Marca tarefa concluída no tasks.md
+
+MÓDULOS ATIVOS:
+  ong-module → specs/ong-module/tasks.md  (T3–T9 pendentes)
+
+HARNESS GLOBAL:
+  npm run typecheck  → obrigatório após Edit/Write (hook PostToolUse ativo)
+  npm run build      → obrigatório pré-commit
+```
+
+---
+
 ## SKILLS DISPONÍVEIS (Claude Code pode acionar)
 
 ```
+sos-pet-orchestrator-v2   → Highermind — executa tasks.md com harness gate
 manifesto-de-contexto     → Este arquivo + contexto completo do projeto
 supabase-architect        → Gerar SQL completo + RLS + tipos TypeScript
 n8n-agent-blueprint       → Configurar agentes n8n completos

@@ -807,8 +807,6 @@ export type Database = {
       prestadores: {
         Row: {
           agendamento_online: boolean
-          dias_atendimento: Json | null
-          horarios_disponiveis: Json | null
           bairro: string | null
           capa_url: string | null
           categoria: string
@@ -1513,31 +1511,55 @@ export type Database = {
       }
     }
     Functions: {
-      create_pet_anon: {
-        Args: {
-          p_age_approx?: string
-          p_behavior?: string
-          p_breed?: string
-          p_city: string
-          p_color: string
-          p_contact_name: string
-          p_contact_phone: string
-          p_contact_whatsapp: boolean
-          p_description?: string
-          p_event_date: string
-          p_kind: string
-          p_latitude?: number
-          p_longitude?: number
-          p_name?: string
-          p_neighborhood: string
-          p_photo_url?: string
-          p_sex?: string
-          p_size?: string
-          p_species: string
-          p_state: string
-        }
-        Returns: string
-      }
+      create_pet_anon:
+        | {
+            Args: {
+              p_age_approx?: string
+              p_behavior?: string
+              p_breed?: string
+              p_city: string
+              p_color: string
+              p_contact_name: string
+              p_contact_phone: string
+              p_contact_whatsapp: boolean
+              p_description?: string
+              p_event_date: string
+              p_kind: string
+              p_name?: string
+              p_neighborhood: string
+              p_photo_url?: string
+              p_sex?: string
+              p_size?: string
+              p_species: string
+              p_state: string
+            }
+            Returns: string
+          }
+        | {
+            Args: {
+              p_age_approx?: string
+              p_behavior?: string
+              p_breed?: string
+              p_city: string
+              p_color: string
+              p_contact_name: string
+              p_contact_phone: string
+              p_contact_whatsapp: boolean
+              p_description?: string
+              p_event_date: string
+              p_kind: string
+              p_latitude?: number
+              p_longitude?: number
+              p_name?: string
+              p_neighborhood: string
+              p_photo_url?: string
+              p_sex?: string
+              p_size?: string
+              p_species: string
+              p_state: string
+            }
+            Returns: string
+          }
       erase_pet_personal_data: {
         Args: { p_pet_id: string }
         Returns: undefined
@@ -1572,6 +1594,22 @@ export type Database = {
           photo_url: string
           species: string
           status: string
+        }[]
+      }
+      get_pets_for_map: {
+        Args: never
+        Returns: {
+          city: string
+          color: string
+          created_at: string
+          id: string
+          kind: string
+          latitude: number
+          longitude: number
+          name: string
+          neighborhood: string
+          photo_url: string
+          species: string
         }[]
       }
       get_prestadores_by_radius: {
@@ -1744,44 +1782,73 @@ export const Constants = {
   },
 } as const
 
-// ── Row type aliases — compatibilidade com código existente ──────────────────
-export type PetRow              = Tables<'pets'>
-export type PrestadorRow        = Tables<'prestadores'>
-export type PrestadorStatsRow   = Tables<'prestador_stats'>
-export type ParceiroRow         = Tables<'parceiros'>
-export type SightingRow         = Tables<'sightings'>
-export type ProfileRow          = Tables<'profiles'>
-export type StoreProductRow     = Tables<'store_products'>
-export type AlertSosRow         = Tables<'alertas_sos'>
-export type AvaliacaoRow        = Tables<'avaliacoes'>
-export type AvisoRow            = Tables<'avisos'>
-export type SentinelPartnerRow  = Tables<'sentinel_partners'>
-export type SentinelPartnerInsert = TablesInsert<'sentinel_partners'>
-export type ProfileUpdate       = TablesUpdate<'profiles'>
-export type PetUpdate           = TablesUpdate<'pets'>
-export type PrestadorUpdate     = TablesUpdate<'prestadores'>
+// ─────────────────────────────────────────────────────────────────────────────
+// CUSTOM TYPE ALIASES — derivados do Database gerado acima.
+// Ao regenerar tipos com `npx supabase gen types typescript`, re-appende este bloco.
+// ─────────────────────────────────────────────────────────────────────────────
 
-// pet_saude não está no schema gerado — tipo manual até tabela ser criada
-export type PetSaudeTipo = string
-export interface PetSaudeRow {
-  id:              string
-  created_at:      string
-  updated_at?:     string | null
-  pet_id:          string
-  user_id?:        string | null
-  tipo:            PetSaudeTipo
-  nome?:           string | null
-  data_aplicacao:  string
-  proxima_dose?:   string | null
-  notificar?:      boolean | null
-  observacoes?:    string | null
+// ── Pets (achados e perdidos públicos) ────────────────────────────────────────
+export type PetRow    = Database['public']['Tables']['pets']['Row']
+export type PetInsert = Database['public']['Tables']['pets']['Insert']
+export type PetUpdate = Database['public']['Tables']['pets']['Update']
+export type PetKind    = 'lost' | 'found'
+export type PetSpecies = 'dog' | 'cat' | 'other'
+
+// ── Profiles ──────────────────────────────────────────────────────────────────
+export type ProfileRow    = Database['public']['Tables']['profiles']['Row']
+export type ProfileInsert = Database['public']['Tables']['profiles']['Insert']
+export type ProfileUpdate = Database['public']['Tables']['profiles']['Update']
+
+// ── Prestadores ───────────────────────────────────────────────────────────────
+// Extendido com colunas legadas ainda pendentes de migration
+export type PrestadorRow = Database['public']['Tables']['prestadores']['Row'] & {
+  horarios_disponiveis?: string | null
+  dias_atendimento?: string[] | null
 }
-export type PetSaudeInsert = Omit<PetSaudeRow, 'id' | 'created_at'>
+export type PrestadorInsert = Database['public']['Tables']['prestadores']['Insert']
+export type PrestadorUpdate = Database['public']['Tables']['prestadores']['Update']
+export type PrestadorCategoria = 'veterinario' | 'petshop' | 'adestrador' | 'hospedagem' | 'banho_tosa' | 'outro'
+export type PrestadorStatsRow = Database['public']['Tables']['prestador_stats']['Row']
 
-// ── Enum aliases ─────────────────────────────────────────────────────────────
-export type PetKind            = 'lost' | 'found'
-export type PetSpecies         = 'dog' | 'cat' | 'other'
-export type AdoptionStatus     = string
-export type HealthStatus       = string
-export type ShelterPetStatus   = string
-export type PrestadorCategoria = string
+// ── Avaliações ────────────────────────────────────────────────────────────────
+export type AvaliacaoRow    = Database['public']['Tables']['avaliacoes']['Row']
+export type AvaliacaoInsert = Database['public']['Tables']['avaliacoes']['Insert']
+
+// ── Parceiros ─────────────────────────────────────────────────────────────────
+export type ParceiroRow = Database['public']['Tables']['parceiros']['Row']
+
+// ── Avistamentos (sightings) ──────────────────────────────────────────────────
+export type SightingRow = Database['public']['Tables']['sightings']['Row']
+
+// ── Loja (store_products) ─────────────────────────────────────────────────────
+export type StoreProductRow = Database['public']['Tables']['store_products']['Row']
+
+// ── Avisos ────────────────────────────────────────────────────────────────────
+export type AvisoRow = Database['public']['Tables']['avisos']['Row']
+
+// ── Alertas SOS ───────────────────────────────────────────────────────────────
+export type AlertSosRow = Database['public']['Tables']['alertas_sos']['Row']
+
+// ── ONG — string union types ──────────────────────────────────────────────────
+export type ShelterPetStatus = 'available' | 'fostered' | 'adopted' | 'deceased'
+export type HealthStatus     = 'healthy' | 'recovering' | 'critical' | 'treated'
+export type AdoptionStatus   = 'active' | 'returned' | 'deceased' | 'transferred'
+
+// ── Pet Saúde (tabela pet_saude — migration pendente) ─────────────────────────
+export type PetSaudeTipo = 'vacina' | 'vermifugo' | 'consulta' | 'medicamento' | 'cirurgia' | 'exame' | 'outro'
+
+export interface PetSaudeRow {
+  id: string
+  created_at: string
+  updated_at: string | null
+  pet_id: string
+  user_id: string
+  tipo: PetSaudeTipo
+  nome: string
+  data_aplicacao: string
+  proxima_dose: string | null
+  notificar: boolean
+  observacoes: string | null
+}
+
+export type PetSaudeInsert = Omit<PetSaudeRow, 'id' | 'created_at' | 'updated_at'>

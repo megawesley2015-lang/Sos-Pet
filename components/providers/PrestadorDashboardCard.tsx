@@ -56,7 +56,7 @@ export function PrestadorDashboardCard({ prestador, stats }: Props) {
             )}
           </div>
           <p className="text-[11px] uppercase tracking-wide text-cyan-400">
-            {CATEGORIA_LABEL[prestador.categoria]}
+            {CATEGORIA_LABEL[prestador.categoria as import("@/lib/types/database").PrestadorCategoria]}
           </p>
         </div>
 

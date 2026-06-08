@@ -10,6 +10,17 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"C:/Users/wesley/Documents/Claude/Projects/sos-pet\" && npx tsc --noEmit 2>&1 | tail -10"
+          }
+        ]
+      }
     ]
   }
 }

@@ -95,7 +95,7 @@ export function PrestadorCard({ prestador }: PrestadorCardProps) {
         </div>
 
         <p className="mt-0.5 text-[11px] uppercase tracking-wide text-cyan-400">
-          {CATEGORIA_LABEL[prestador.categoria]}
+          {CATEGORIA_LABEL[prestador.categoria as import("@/lib/types/database").PrestadorCategoria]}
         </p>
 
         <p className="mt-2 flex items-center gap-1 text-xs text-fg-muted">
