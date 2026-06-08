@@ -19,7 +19,7 @@
 ## T1 — Aplicar migration ONG no Supabase [BLOQUEADOR]
 
 **Fase SDD:** Implementar & Verificar
-**Status:** ⚠️ Pendente
+**Status:** ✅ Concluído em 2026-06-08
 **Arquivo:** `supabase/migrations/001_ong_module.sql`
 
 ### Especificação EARS
@@ -67,11 +67,15 @@ SQL
 
 ### Critério de Aceite
 
-- [ ] 6 tabelas retornadas na query de verificação
-- [ ] `is_shelter_owner` presente em `pg_proc`
-- [ ] `relrowsecurity = true` para todas as 6 tabelas
-- [ ] `supabase db push` retorna sem erros
-- [ ] TypeScript: `npx supabase gen types typescript --project-id enpgqgqinbdbvkqtnria > lib/types/database.ts` gera sem erro
+- [x] 6 tabelas retornadas na query de verificação
+- [x] `is_shelter_owner` presente em `pg_proc`
+- [x] `relrowsecurity = true` para todas as 6 tabelas
+- [x] `supabase db push` retorna sem erros
+- [x] TypeScript: `npx supabase gen types typescript --project-id enpgqgqinbdbvkqtnria > lib/types/database.ts` gera sem erro
+- [x] `npm run typecheck` → 0 erros
+- [x] `npm run build` → ✓ Compiled in 2.2min, 50 páginas, exit 0
+- [x] `npx vitest run ong` → ✅ 61/61 testes passando (`__tests__/ong/validation.test.ts`)
+- [x] `SELECT COUNT(*) FROM shelters` → 0 rows sem erro (confirmado via smoke test)
 
 ---
 
