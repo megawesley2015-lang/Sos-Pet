@@ -2,54 +2,57 @@
 # WAL (Write-Ahead Log) de estado da sessão atual
 # ─────────────────────────────────────────────────────────────
 # REGRA /dream: A cada 5 sessões, consolidar este arquivo → MEMORY.md
-# Última consolidação: 2026-06-08 (sessão atual)
+# Última consolidação: 2026-06-08
 # ─────────────────────────────────────────────────────────────
 
-## Estado em: 2026-06-08 (continuação — dream consolidado)
+## Estado em: 2026-06-08 — MÓDULO ONG 100% CONCLUÍDO
 
 ### Objetivo da sessão
-SDD + Highermind operacional. Executar T1–T5 do módulo ONG.
+Executar T1–T9 do módulo ONG via pipeline SDD + Highermind.
 
 ### Concluído nesta sessão
 
-#### Tripé SDD
-- [x] CLAUDE.md: Constituição Técnica no topo
-- [x] `.claude/settings.json`: hook PostToolUse → tsc --noEmit
-- [x] `specs/ong-module/`: spec.md + data-model.md + contracts.md + tasks.md
-- [x] `specs/index.md`: registry de módulos
-- [x] `.specify/memory/constitution.md`: constituição formal
-- [x] `SESSION-STATE.md`: WAL atualizado
-
-#### Highermind
-- [x] `sos-pet-orchestrator-v2` skill configurado com Security Gate + pipeline EARS
-- [x] Baseado em Highermind (rodrigohighermind/highermind-code-skills)
-
-#### Tasks ONG concluídas
-- [x] T1 — Migration aplicada (6 tabelas + RLS + funções helper)
-- [x] T2 — RLS verificado (policies DROP+CREATE idempotentes)
-- [x] T3 — Dashboard: bug follow-up corrigido + empty state CTA adicionado
+#### Módulo ONG — todas as tasks
+- [x] T1 — Migration (6 tabelas + RLS + helpers)
+- [x] T2 — RLS verificado
+- [x] T3 — Dashboard: empty state CTA + bug follow-up corrigido
 - [x] T4 — Pets: gate adoção obrigatória antes de status=adopted
-- [x] T5 — Prontuário: código OK sem changes (listagem DESC, 404, preserve)
-- [x] T10 — Tipos TypeScript regenerados + 20 aliases
+- [x] T5 — Prontuário: auditado, sem changes
+- [x] T6 — Vacinas: badges corretos (danger=atrasada, warning=vence em X dias)
+- [x] T7 — Medicações: badge "Contínua" para end_date NULL
+- [x] T8 — Adoções: webhook n8n fire-and-forget + badge follow-up corrigido
+- [x] T9 — Follow-up: badges Pendente/Atrasado/Realizado no detalhe
+- [x] T10 — Tipos TypeScript regenerados
 
 #### Infra / Qualidade
-- [x] `lib/validation/ong.ts`: 6 schemas Zod extraídos + calcVaccineBadge + isFollowUp30Overdue
-- [x] `__tests__/ong/validation.test.ts`: 61 testes, 61 passando
-- [x] Smoke test autenticado via Playwright (Chromium headless)
-- [x] `scripts/create-test-user.mjs`: Admin API para criar user pré-confirmado
+- [x] `lib/validation/ong.ts`: 6 schemas + calcVaccineBadge + isFollowUp30/90Overdue
+- [x] `__tests__/ong/validation.test.ts`: 66 testes, 66 passando
+- [x] `scripts/smoke-ong.mjs` + `scripts/create-test-user.mjs`: smoke test Playwright
+- [x] `sos-pet-orchestrator-v2` skill: Security Gate + pipeline EARS
 
-### Decisões técnicas consolidadas (para MEMORY.md)
-- `pet_saude`: tabela pendente de migration — `PetSaudeRow` é interface manual
-- `prestadores.horarios_disponiveis` e `dias_atendimento`: colunas no código mas não no DB
-- Supabase MCP conectado ao projeto "Soberano de Trading" → migrations via Dashboard
-- `/ong/pets/novo` e rotas 3+ níveis deep retornam 404 no Turbopack dev (não afeta prod)
-- `/registro` requer email confirmation → usar Admin API para testes
+#### Bugs encontrados e corrigidos durante auditoria
+- T3: query follow-ups dashboard usava campo de conclusão (NULL = nunca encontrado)
+- T3: empty state CTA ausente
+- T4: editar pet aceitava status=adopted sem adoção registrada
+- T4: /ong/cadastro não redirecionava após sucesso
+- T6: badge overdue laranja (brand) em vez de vermelho (danger); badge warning ausente
+- T7: label "Contínua" ausente em medicações sem end_date
+- T8: webhook n8n ausente; badge follow-up atrasado com lógica errada na listagem
+- T9: mesma lógica errada no detalhe; badges Pendente/Atrasado/Realizado ausentes
 
 ### Próxima sessão — o que fazer primeiro
-1. T6 — Vacinas com badges (calcVaccineBadge já implementada e testada)
-2. T7 — Medicações
-3. T8 — Adoções + webhook n8n
-4. T9 — Follow-up
+1. **Rate limiting** (Upstash) — dívida técnica prioritária do CLAUDE.md
+2. **Paginação** em /achados-e-perdidos e /ong/pets — mencionada no status.qmd
+3. **pet_saude migration** — tabela referenciada no código mas sem migration
+4. **Spec rate-limiting** com notação EARS (usar SDD manual)
+5. Considerar `/hm-security` audit no módulo ONG antes de produção B2B
+
+### Estado do repositório
+- Branch: main
+- Último commit: c642a97 (playwright + scripts de smoke test)
+- TypeScript: 0 erros
+- Testes: 66/66 passando
+- Build: ✓ Compiled (2.2min, 50 páginas)
 
 ---
 
