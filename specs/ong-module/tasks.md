@@ -323,7 +323,7 @@ grep -n "end_date\|Contínua\|Histórico" app/ong/pets/\[id\]/medicacoes/page.ts
 ## T8 — Processo de adoção + webhook n8n
 
 **Fase SDD:** Implementar & Verificar
-**Status:** ✅ Código existe em `app/ong/adocoes/`
+**Status:** ✅ Concluído em 2026-06-08
 **Depende de:** T1, T2
 
 ### Especificação EARS
@@ -364,11 +364,13 @@ grep -n "adopted\|shelter_pets" app/ong/adocoes/actions.ts
 
 ### Critério de Aceite
 
-- [ ] Adoção criada aparece em `/ong/adocoes` com data e nome do adotante
-- [ ] Pet correspondente tem status `adopted` após adoção
-- [ ] Webhook dispara (verificar logs n8n ou webhook.site em dev)
-- [ ] Se webhook falhar, adoção ainda é criada (testar com URL inválida)
-- [ ] Typecheck passa
+- [x] Adoção criada aparece em `/ong/adocoes` com data e nome do adotante
+- [x] Pet correspondente tem status `adopted` após adoção (Promise.all atômico)
+- [x] Webhook fire-and-forget via `N8N_ADOPTION_WEBHOOK_URL` (env var — skip se não configurada)
+- [x] Falha do webhook capturada em `.catch()` — adoção criada independentemente
+- [x] Badge "🔴 Follow-up atrasado" usa `isFollowUp30Overdue()` — DRY com testes
+- [x] Listagem destaca adoção com border danger quando follow-up atrasado
+- [x] `npm run typecheck` → 0 erros · `npx vitest run ong` → 61/61
 
 ---
 

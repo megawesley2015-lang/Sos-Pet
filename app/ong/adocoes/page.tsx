@@ -4,6 +4,7 @@ import { Heart, Plus, CheckCircle2, RotateCcw, Skull, ArrowRightLeft } from "luc
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
 import type { AdoptionStatus } from "@/lib/types/database";
+import { isFollowUp30Overdue } from "@/lib/validation/ong";
 
 export const revalidate = 0;
 export const metadata = { title: "Adoções — Painel ONG" };
@@ -121,14 +122,24 @@ export default async function AdocoesPage({
             const emoji = petSpecies === "dog" ? "🐶" : petSpecies === "cat" ? "🐱" : "🐾";
             const f30 = adoption.follow_up_30_date;
             const f90 = adoption.follow_up_90_date;
-            const f30overdue = f30 && f30 <= today && adoption.status === "active";
-            const f90overdue = f90 && f90 <= today && adoption.status === "active";
+            // follow-up atrasado = não registrado E adoção tem N+ dias
+            const f30overdue = adoption.status === "active" &&
+              isFollowUp30Overdue(adoption.adoption_date, f30 ?? null, today);
+            const f90overdue = adoption.status === "active" && !f90 && (() => {
+              const due = new Date(adoption.adoption_date);
+              due.setDate(due.getDate() + 90);
+              return due.toISOString().split("T")[0] <= today;
+            })();
 
             return (
               <Link
                 key={adoption.id}
                 href={`/ong/adocoes/${adoption.id}`}
-                className="flex items-center gap-4 rounded-xl border border-white/5 bg-ink-700/50 p-4 transition hover:border-brand-500/30 hover:shadow-glow-brand"
+                className={`flex items-center gap-4 rounded-xl border p-4 transition hover:border-brand-500/30 hover:shadow-glow-brand ${
+                  f30overdue || f90overdue
+                    ? "border-danger/20 bg-danger/5"
+                    : "border-white/5 bg-ink-700/50"
+                }`}
               >
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink-600 text-xl">
                   {emoji}
@@ -142,15 +153,17 @@ export default async function AdocoesPage({
                   <div className="mt-0.5 flex flex-wrap gap-3 text-xs text-fg-muted">
                     <span>{adoption.adopter_city}</span>
                     <span>{new Date(adoption.adoption_date).toLocaleDateString("pt-BR")}</span>
-                    {f30 && (
-                      <span className={f30overdue ? "font-bold text-brand-300" : ""}>
-                        {f30overdue ? "⚠️ " : ""}30d: {new Date(f30).toLocaleDateString("pt-BR")}
-                      </span>
+                    {f30overdue && (
+                      <span className="font-bold text-danger">🔴 Follow-up 30d atrasado</span>
                     )}
-                    {f90 && (
-                      <span className={f90overdue ? "font-bold text-brand-300" : ""}>
-                        {f90overdue ? "⚠️ " : ""}90d: {new Date(f90).toLocaleDateString("pt-BR")}
-                      </span>
+                    {f90overdue && !f30overdue && (
+                      <span className="font-bold text-danger">🔴 Follow-up 90d atrasado</span>
+                    )}
+                    {f30 && !f30overdue && (
+                      <span>30d: {new Date(f30).toLocaleDateString("pt-BR")} ✓</span>
+                    )}
+                    {f90 && !f90overdue && (
+                      <span>90d: {new Date(f90).toLocaleDateString("pt-BR")} ✓</span>
                     )}
                   </div>
                 </div>

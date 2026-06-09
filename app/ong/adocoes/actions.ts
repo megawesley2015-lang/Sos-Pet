@@ -57,6 +57,36 @@ export async function createAdoption(
   revalidatePath("/ong/adocoes");
   revalidatePath("/ong/pets");
   revalidatePath("/ong/dashboard");
+
+  // Fire-and-forget — não bloqueia redirect nem falha se n8n estiver indisponível
+  const webhookUrl = process.env.N8N_ADOPTION_WEBHOOK_URL;
+  if (webhookUrl && adoptError === undefined) {
+    const adoptionId = (await supabase
+      .from("adoptions")
+      .select("id")
+      .eq("pet_id", parsed.data.pet_id)
+      .eq("shelter_id", shelter.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle()).data?.id;
+
+    fetch(webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event: "adoption_created",
+        adoption_id: adoptionId ?? null,
+        pet_id: parsed.data.pet_id,
+        shelter_id: shelter.id,
+        adopter_contact: parsed.data.adopter_phone,
+        adoption_date: parsed.data.adoption_date,
+      }),
+      signal: AbortSignal.timeout(5000),
+    }).catch((err: unknown) => {
+      console.error("[adoption webhook]", err instanceof Error ? err.message : err);
+    });
+  }
+
   redirect("/ong/adocoes");
 }
 
