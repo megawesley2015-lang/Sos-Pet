@@ -92,14 +92,33 @@ export function calcVaccineBadge(
   return null;
 }
 
-/** Verifica se uma adoção tem follow-up 30d atrasado. */
+/** Verifica se uma adoção tem follow-up de N dias atrasado. */
+function isFollowUpOverdue(
+  adoption_date: string,
+  follow_up_date: string | null,
+  days: number,
+  today: string
+): boolean {
+  if (follow_up_date) return false;
+  const due = new Date(adoption_date);
+  due.setDate(due.getDate() + days);
+  return due.toISOString().split("T")[0] <= today;
+}
+
+/** Follow-up 30d atrasado: não registrado E adoção tem 30+ dias. */
 export function isFollowUp30Overdue(
   adoption_date: string,
   follow_up_30_date: string | null,
   today: string
 ): boolean {
-  if (follow_up_30_date) return false;
-  const due = new Date(adoption_date);
-  due.setDate(due.getDate() + 30);
-  return due.toISOString().split("T")[0] <= today;
+  return isFollowUpOverdue(adoption_date, follow_up_30_date, 30, today);
+}
+
+/** Follow-up 90d atrasado: não registrado E adoção tem 90+ dias. */
+export function isFollowUp90Overdue(
+  adoption_date: string,
+  follow_up_90_date: string | null,
+  today: string
+): boolean {
+  return isFollowUpOverdue(adoption_date, follow_up_90_date, 90, today);
 }

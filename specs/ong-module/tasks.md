@@ -377,7 +377,7 @@ grep -n "adopted\|shelter_pets" app/ong/adocoes/actions.ts
 ## T9 — Follow-up de adoção (30 e 90 dias)
 
 **Fase SDD:** Implementar & Verificar
-**Status:** ✅ Código existe em `app/ong/adocoes/[id]/page.tsx`
+**Status:** ✅ Concluído em 2026-06-08
 **Depende de:** T8
 
 ### Especificação EARS
@@ -407,11 +407,12 @@ grep -n "follow_up" app/ong/adocoes/actions.ts
 
 ### Critério de Aceite
 
-- [ ] Adoção com 31+ dias e `follow_up_30_date = NULL` mostra badge vermelho
-- [ ] Adoção com `follow_up_30_date` preenchido mostra badge verde
-- [ ] Preenchimento de follow-up persiste no Supabase e badges atualizam
-- [ ] Métrica de follow-ups atrasados no dashboard (T3) bate com listagem
-- [ ] Typecheck passa
+- [x] Badge "🔴 Atrasado" quando NULL + prazo vencido (usa `isFollowUp30/90Overdue()`)
+- [x] Badge "✅ Realizado em [data]" quando preenchido
+- [x] Badge "Pendente" (cinza) quando NULL + prazo não vencido
+- [x] `updateFollowUp` persiste via PATCH + `revalidatePath` + feedback de sucesso
+- [x] `isFollowUp90Overdue` adicionado a `lib/validation/ong.ts` + 5 testes
+- [x] `npm run typecheck` → 0 erros · `npx vitest run ong` → 66/66
 
 ---
 

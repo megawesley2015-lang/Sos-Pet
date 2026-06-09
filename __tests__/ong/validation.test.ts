@@ -17,6 +17,7 @@ import {
   MedicationSchema,
   calcVaccineBadge,
   isFollowUp30Overdue,
+  isFollowUp90Overdue,
 } from "@/lib/validation/ong";
 
 // ── Helpers ───────────────────────────────────────────────────
@@ -343,5 +344,29 @@ describe("isFollowUp30Overdue — follow-up 30 dias atrasado", () => {
 
   it("retorna false quando follow_up registrado mesmo com adoção antiga", () => {
     expect(isFollowUp30Overdue("2026-01-01", "2026-02-15", TODAY)).toBe(false);
+  });
+});
+
+// ── isFollowUp90Overdue ──────────────────────────────────────
+
+describe("isFollowUp90Overdue — follow-up 90 dias atrasado", () => {
+  it("retorna false quando follow_up_90_date já foi registrado", () => {
+    expect(isFollowUp90Overdue("2026-01-01", "2026-04-05", TODAY)).toBe(false);
+  });
+
+  it("retorna false quando adoção tem menos de 90 dias", () => {
+    expect(isFollowUp90Overdue("2026-05-01", null, TODAY)).toBe(false);
+  });
+
+  it("retorna true quando adoção tem exatamente 90 dias", () => {
+    expect(isFollowUp90Overdue("2026-03-10", null, TODAY)).toBe(true);
+  });
+
+  it("retorna true quando adoção tem mais de 90 dias", () => {
+    expect(isFollowUp90Overdue("2026-01-01", null, TODAY)).toBe(true);
+  });
+
+  it("retorna false quando adoção tem 89 dias (um dia antes)", () => {
+    expect(isFollowUp90Overdue("2026-03-11", null, TODAY)).toBe(false);
   });
 });

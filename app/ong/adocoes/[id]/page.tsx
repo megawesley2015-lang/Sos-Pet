@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { updateFollowUp } from "../actions";
 import type { AdoptionFormState } from "../actions";
+import { isFollowUp30Overdue, isFollowUp90Overdue } from "@/lib/validation/ong";
 
 const STATUS_CONFIG = {
   active:      { label: "Ativo",       color: "border-success/40 bg-success/10 text-success",        icon: CheckCircle2 },
@@ -102,8 +103,18 @@ export default function AdocaoDetailPage({
   const StatusIcon = cfg.icon;
   const emoji = SPECIES_EMOJI[adoption.shelter_pets?.species ?? "other"];
   const today = new Date().toISOString().split("T")[0];
-  const f30overdue = adoption.follow_up_30_date && adoption.follow_up_30_date <= today && adoption.status === "active";
-  const f90overdue = adoption.follow_up_90_date && adoption.follow_up_90_date <= today && adoption.status === "active";
+  const isActive = adoption.status === "active";
+  // badge30/badge90: "overdue" | "done" | "pending"
+  const badge30 = adoption.follow_up_30_date
+    ? "done"
+    : isActive && isFollowUp30Overdue(adoption.adoption_date, null, today)
+      ? "overdue"
+      : "pending";
+  const badge90 = adoption.follow_up_90_date
+    ? "done"
+    : isActive && isFollowUp90Overdue(adoption.adoption_date, null, today)
+      ? "overdue"
+      : "pending";
 
   return (
     <div className="space-y-6">
@@ -210,9 +221,24 @@ export default function AdocaoDetailPage({
 
           {/* 30 dias */}
           <div className="rounded-lg border border-white/5 bg-ink-600/40 p-4">
-            <p className={`mb-3 text-xs font-bold uppercase tracking-wide ${f30overdue ? "text-brand-300" : "text-fg-muted"}`}>
-              {f30overdue ? "⚠️ " : ""}Checkpoint 30 dias
-            </p>
+            <div className="mb-3 flex items-center gap-2">
+              <p className="text-xs font-bold uppercase tracking-wide text-fg-muted">Checkpoint 30 dias</p>
+              {badge30 === "done" && (
+                <span className="rounded-full border border-success/40 bg-success/10 px-2 py-0.5 text-[10px] font-bold text-success">
+                  ✅ Realizado em {new Date(adoption.follow_up_30_date!).toLocaleDateString("pt-BR")}
+                </span>
+              )}
+              {badge30 === "overdue" && (
+                <span className="rounded-full border border-danger/40 bg-danger/10 px-2 py-0.5 text-[10px] font-bold text-danger">
+                  🔴 Atrasado
+                </span>
+              )}
+              {badge30 === "pending" && (
+                <span className="rounded-full border border-white/10 bg-ink-600/50 px-2 py-0.5 text-[10px] font-bold text-fg-subtle">
+                  Pendente
+                </span>
+              )}
+            </div>
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-fg-muted">Data</label>
@@ -238,9 +264,24 @@ export default function AdocaoDetailPage({
 
           {/* 90 dias */}
           <div className="rounded-lg border border-white/5 bg-ink-600/40 p-4">
-            <p className={`mb-3 text-xs font-bold uppercase tracking-wide ${f90overdue ? "text-brand-300" : "text-fg-muted"}`}>
-              {f90overdue ? "⚠️ " : ""}Checkpoint 90 dias
-            </p>
+            <div className="mb-3 flex items-center gap-2">
+              <p className="text-xs font-bold uppercase tracking-wide text-fg-muted">Checkpoint 90 dias</p>
+              {badge90 === "done" && (
+                <span className="rounded-full border border-success/40 bg-success/10 px-2 py-0.5 text-[10px] font-bold text-success">
+                  ✅ Realizado em {new Date(adoption.follow_up_90_date!).toLocaleDateString("pt-BR")}
+                </span>
+              )}
+              {badge90 === "overdue" && (
+                <span className="rounded-full border border-danger/40 bg-danger/10 px-2 py-0.5 text-[10px] font-bold text-danger">
+                  🔴 Atrasado
+                </span>
+              )}
+              {badge90 === "pending" && (
+                <span className="rounded-full border border-white/10 bg-ink-600/50 px-2 py-0.5 text-[10px] font-bold text-fg-subtle">
+                  Pendente
+                </span>
+              )}
+            </div>
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-fg-muted">Data</label>
