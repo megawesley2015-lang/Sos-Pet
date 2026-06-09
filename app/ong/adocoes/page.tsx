@@ -43,7 +43,7 @@ export default async function AdocoesPage({
   let query = supabase
     .from("adoptions")
     .select(`
-      id, adopter_name, adopter_city, adopter_phone, adoption_date,
+      id, adopter_name, adopter_city, adoption_date,
       follow_up_30_date, follow_up_90_date, status, created_at,
       shelter_pets(name, species)
     `)

@@ -24,8 +24,8 @@ export async function addVaccination(
 ): Promise<VaccineState> {
   const supabase = await createSupabaseServerClient();
   const user = await getUserSafe(supabase);
-  if (!user) return { error: "Nao autenticado." };
-  if (!(await assertPetOwner(supabase, petId, user.id))) return { error: "Sem permissao." };
+  if (!user) return { error: "Não autenticado." };
+  if (!(await assertPetOwner(supabase, petId, user.id))) return { error: "Sem permissão." };
 
   const raw = Object.fromEntries([...formData.entries()].filter(([, v]) => v !== ""));
   const parsed = VaccinationSchema.safeParse(raw);

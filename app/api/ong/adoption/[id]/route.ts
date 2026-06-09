@@ -1,16 +1,28 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
+import { ok, fail } from "@/lib/api-response";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+
+const GET_LIMIT = { limit: 60, windowMs: 60_000 }; // 60 req/min por IP
 
 export async function GET(
-  _req: Request,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const rl = await checkRateLimit(`ong-adoption:${getClientIp(req)}`, GET_LIMIT);
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { success: false, error: "Muitas requisições. Tente novamente em alguns instantes." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } }
+    );
+  }
+
   const { id } = await params;
   const supabase = await createSupabaseServerClient();
   const user = await getUserSafe(supabase);
 
-  if (!user) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  if (!user) return fail(new Error("Não autenticado"));
 
   const { data: shelter } = await supabase
     .from("shelters")
@@ -18,7 +30,7 @@ export async function GET(
     .eq("user_id", user.id)
     .maybeSingle();
 
-  if (!shelter) return NextResponse.json({ error: "Sem shelter" }, { status: 403 });
+  if (!shelter) return fail(new Error("Sem shelter"));
 
   const { data: adoption } = await supabase
     .from("adoptions")
@@ -34,7 +46,7 @@ export async function GET(
     .eq("shelter_id", shelter.id)
     .maybeSingle();
 
-  if (!adoption) return NextResponse.json({ error: "Não encontrado" }, { status: 404 });
+  if (!adoption) return fail(new Error("Não encontrado"));
 
-  return NextResponse.json({ adoption });
+  return ok({ adoption });
 }

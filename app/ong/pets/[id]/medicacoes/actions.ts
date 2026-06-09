@@ -28,8 +28,8 @@ export async function addMedication(
 ): Promise<MedState> {
   const supabase = await createSupabaseServerClient();
   const user = await getUserSafe(supabase);
-  if (!user) return { error: "Nao autenticado." };
-  if (!(await assertPetOwner(supabase, petId, user.id))) return { error: "Sem permissao." };
+  if (!user) return { error: "Não autenticado." };
+  if (!(await assertPetOwner(supabase, petId, user.id))) return { error: "Sem permissão." };
 
   const raw: Record<string, FormDataEntryValue | boolean> = Object.fromEntries(
     [...formData.entries()].filter(([, v]) => v !== "")

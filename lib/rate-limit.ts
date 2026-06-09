@@ -94,6 +94,12 @@ export async function checkRateLimit(
   key:    string,
   config: RateLimitConfig
 ): Promise<RateLimitResult> {
+  if (!isUpstashConfigured && process.env.NODE_ENV === 'production') {
+    throw new Error(
+      'Rate limiter Redis não configurado. ' +
+      'Defina UPSTASH_REDIS_REST_URL e UPSTASH_REDIS_REST_TOKEN na Vercel.'
+    )
+  }
   if (isUpstashConfigured) {
     const limiter = getUpstashLimiter(config)
     const result  = await limiter.limit(key)
@@ -106,12 +112,13 @@ export async function checkRateLimit(
   return checkInMemory(key, config)
 }
 
-/** Extrai IP do request — compatível com Vercel e Edge Runtime */
+/** Extrai IP do request — usa headers injetados pela Vercel (não manipuláveis pelo cliente) */
 export function getClientIp(request: Request): string {
   const headers = new Headers(request.headers)
   return (
-    headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
+    headers.get('x-vercel-forwarded-for') ??
     headers.get('x-real-ip') ??
+    headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
     'unknown'
   )
 }

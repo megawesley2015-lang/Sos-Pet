@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { syncPrintfulCatalog } from "@/lib/services/printful";
+import { ok, fail } from "@/lib/api-response";
 
 /**
  * POST /api/sync/printful
@@ -18,54 +19,32 @@ export async function POST(req: NextRequest) {
     // Validar autorização
     const authHeader = req.headers.get("authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json(
-        { error: "Missing or invalid Authorization header" },
-        { status: 401 }
-      );
+      return fail(Object.assign(new Error("Missing or invalid Authorization header"), { status: 401 }));
     }
 
     const token = authHeader.slice(7); // "Bearer " = 7 chars
     const syncToken = process.env.SYNC_TOKEN ?? "";
 
     if (!syncToken || token !== syncToken) {
-      return NextResponse.json(
-        { error: "Invalid token" },
-        { status: 403 }
-      );
+      return fail(Object.assign(new Error("Invalid token"), { status: 403 }));
     }
 
     // Disparar sincronização
     console.log("[API] Iniciando sincronização Printful...");
     const result = await syncPrintfulCatalog();
 
-    return NextResponse.json({
-      ok: true,
-      message: "Catálogo sincronizado com sucesso",
-      ...result,
-    });
+    return ok({ message: "Catálogo sincronizado com sucesso", ...result });
   } catch (error) {
     console.error("[API /sync/printful] Erro:", error);
-    const message = error instanceof Error ? error.message : "Erro desconhecido";
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    return fail(error);
   }
 }
 
 /**
  * GET /api/sync/printful
  *
- * Retorna info sobre o último sync (future enhancement)
+ * Health check do endpoint de sincronização.
  */
 export async function GET() {
-  return NextResponse.json({
-    endpoint: "/api/sync/printful",
-    method: "POST",
-    description: "Sincroniza catálogo do Printful",
-    headers: {
-      Authorization: "Bearer {SYNC_TOKEN}",
-    },
-    example: "curl -X POST https://yourdomain.com/api/sync/printful -H 'Authorization: Bearer your-token'",
-  });
+  return ok({ status: "ok" });
 }

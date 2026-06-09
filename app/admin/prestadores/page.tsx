@@ -19,7 +19,7 @@ export default async function AdminPrestadoresPage() {
 
   const { data: prestadores } = await supabase
     .from("prestadores")
-    .select("*")
+    .select("id, nome, status, categoria, cidade, estado, descricao, slug, created_at")
     .order("created_at", { ascending: false })
     .limit(100);
 

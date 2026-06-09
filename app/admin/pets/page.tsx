@@ -21,7 +21,7 @@ export default async function AdminPetsPage() {
 
   const { data: pets } = await supabase
     .from("pets")
-    .select("*")
+    .select("id, name, status, kind, species, photo_url, neighborhood, city, created_at")
     .order("created_at", { ascending: false })
     .limit(100);
 
@@ -117,11 +117,6 @@ function PetAdminCard({ pet: p }: { pet: PetRow }) {
         <p className="mt-0.5 text-xs text-fg-muted">
           {p.neighborhood}, {p.city} · {formatRelativeDate(p.created_at)}
         </p>
-        {p.contact_phone && (
-          <p className="mt-0.5 text-xs text-fg-subtle">
-            Contato: {p.contact_phone}
-          </p>
-        )}
       </div>
 
       {/* Ações */}

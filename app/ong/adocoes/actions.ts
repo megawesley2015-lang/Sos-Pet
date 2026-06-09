@@ -42,16 +42,20 @@ export async function createAdoption(
 
   if (!pet) return { error: "Pet não encontrado neste abrigo." };
 
-  // Cria a adoção e muda status do pet para 'adopted'
-  const [{ error: adoptError }, { error: petError }] = await Promise.all([
-    supabase.from("adoptions").insert({ ...parsed.data, shelter_id: shelter.id }),
-    supabase
-      .from("shelter_pets")
-      .update({ status: "adopted" })
-      .eq("id", parsed.data.pet_id),
-  ]);
+  // Cria a adoção capturando o ID diretamente no INSERT (evita race condition).
+  const { data: adoptionRow, error: adoptError } = await supabase
+    .from("adoptions")
+    .insert({ ...parsed.data, shelter_id: shelter.id })
+    .select("id")
+    .single();
 
   if (adoptError) return { error: adoptError.message };
+
+  const { error: petError } = await supabase
+    .from("shelter_pets")
+    .update({ status: "adopted" })
+    .eq("id", parsed.data.pet_id);
+
   if (petError) return { error: petError.message };
 
   revalidatePath("/ong/adocoes");
@@ -60,22 +64,13 @@ export async function createAdoption(
 
   // Fire-and-forget — não bloqueia redirect nem falha se n8n estiver indisponível
   const webhookUrl = process.env.N8N_ADOPTION_WEBHOOK_URL;
-  if (webhookUrl && adoptError === undefined) {
-    const adoptionId = (await supabase
-      .from("adoptions")
-      .select("id")
-      .eq("pet_id", parsed.data.pet_id)
-      .eq("shelter_id", shelter.id)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle()).data?.id;
-
+  if (webhookUrl) {
     fetch(webhookUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         event: "adoption_created",
-        adoption_id: adoptionId ?? null,
+        adoption_id: adoptionRow.id,
         pet_id: parsed.data.pet_id,
         shelter_id: shelter.id,
         adopter_contact: parsed.data.adopter_phone,

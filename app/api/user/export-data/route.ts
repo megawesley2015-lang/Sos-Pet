@@ -1,12 +1,23 @@
 // app/api/user/export-data/route.ts
 // GET /api/user/export-data — LGPD art. 18: portabilidade de dados pessoais
 
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServerClient as createClient } from '@/lib/supabase/server'
 import { ok, fail } from '@/lib/api-response'
 import { Errors } from '@/lib/errors'
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 
-export async function GET(_req: NextRequest) {
+const GET_LIMIT = { limit: 5, windowMs: 60 * 60_000 }; // 5 req/hora por IP — dados pessoais
+
+export async function GET(req: NextRequest) {
+  const rl = await checkRateLimit(`export-data:${getClientIp(req)}`, GET_LIMIT)
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { success: false, error: 'Muitas requisições. Tente novamente em alguns instantes.' },
+      { status: 429, headers: { 'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } }
+    )
+  }
+
   try {
     const supabase = await createClient()
 

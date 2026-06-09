@@ -1,10 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import { ArrowLeft, MapPin, Phone, MessageCircle, PawPrint, Pencil, Siren } from "lucide-react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
 import { getPetById } from "@/lib/services/pets";
+import { checkRateLimit } from "@/lib/rate-limit";
 import type { PetSaudeRow, PetKind } from "@/lib/types/database";
 import { TopBar } from "@/components/layout/TopBar";
 import { SOSBadge } from "@/components/ui/SOSBadge";
@@ -64,6 +66,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function PetDetailPage({ params }: PageProps) {
   const { id } = await params;
+
+  // Rate limit para a página de detalhe — 10 visitas por hora por IP.
+  // Protege a RPC get_pet_contact chamada internamente por getPetById.
+  const hdrs = await headers();
+  const ip =
+    hdrs.get("x-vercel-forwarded-for") ??
+    hdrs.get("x-real-ip") ??
+    "unknown";
+  const rl = await checkRateLimit(`pet_detail:${ip}`, { limit: 10, windowMs: 3_600_000 });
+  if (!rl.allowed) notFound();
+
   const supabase = await createSupabaseServerClient();
 
   const [pet, user] = await Promise.all([

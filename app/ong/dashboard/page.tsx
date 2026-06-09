@@ -3,6 +3,7 @@ import Link from "next/link";
 import { PawPrint, Heart, Syringe, Pill, AlertTriangle, FileText } from "lucide-react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
+import { isFollowUp30Overdue, isFollowUp90Overdue } from "@/lib/validation/ong";
 
 export const revalidate = 60;
 export const metadata = { title: "Dashboard — Painel ONG" };
@@ -341,8 +342,8 @@ export default async function OngDashboardPage() {
                 
                 const petSpecies = adoption.shelter_pets?.species;
                 const emoji = petSpecies === "dog" ? "🐶" : petSpecies === "cat" ? "🐱" : "🐾";
-                const f30overdue = adoption.follow_up_30_date && adoption.follow_up_30_date <= today;
-                const f90overdue = adoption.follow_up_90_date && adoption.follow_up_90_date <= today;
+                const f30overdue = isFollowUp30Overdue(adoption.adoption_date, adoption.follow_up_30_date ?? null, today);
+                const f90overdue = isFollowUp90Overdue(adoption.adoption_date, adoption.follow_up_90_date ?? null, today);
                 return (
                   <Link
                     key={adoption.id}
@@ -355,16 +356,16 @@ export default async function OngDashboardPage() {
                         {petName} → {adoption.adopter_name}
                       </p>
                       <div className="mt-0.5 flex flex-wrap gap-2 text-[11px]">
-                        {adoption.follow_up_30_date && (
-                          <span className={f30overdue ? "font-bold text-danger" : "text-fg-subtle"}>
-                            {f30overdue ? "⚠️ " : ""}30d: {new Date(adoption.follow_up_30_date).toLocaleDateString("pt-BR")}
-                          </span>
-                        )}
-                        {adoption.follow_up_90_date && (
-                          <span className={f90overdue ? "font-bold text-brand-300" : "text-fg-subtle"}>
-                            {f90overdue ? "⚠️ " : ""}90d: {new Date(adoption.follow_up_90_date).toLocaleDateString("pt-BR")}
-                          </span>
-                        )}
+                        {f30overdue ? (
+                          <span className="font-bold text-danger">⚠️ 30d: pendente</span>
+                        ) : adoption.follow_up_30_date ? (
+                          <span className="text-fg-subtle">30d: {new Date(adoption.follow_up_30_date).toLocaleDateString("pt-BR")}</span>
+                        ) : null}
+                        {f90overdue ? (
+                          <span className="font-bold text-brand-300">⚠️ 90d: pendente</span>
+                        ) : adoption.follow_up_90_date ? (
+                          <span className="text-fg-subtle">90d: {new Date(adoption.follow_up_90_date).toLocaleDateString("pt-BR")}</span>
+                        ) : null}
                       </div>
                     </div>
                   </Link>
