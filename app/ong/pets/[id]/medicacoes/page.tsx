@@ -61,7 +61,14 @@ export default async function MedicacoesPage({ params }: { params: Promise<{ id:
                 <div className="flex items-start gap-3">
                   <Pill className="mt-0.5 h-5 w-5 shrink-0 text-brand-400" />
                   <div className="flex-1">
-                    <p className="font-semibold text-fg">{med.medication_name}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-semibold text-fg">{med.medication_name}</p>
+                      {!med.end_date && (
+                        <span className="rounded-full border border-brand-500/40 bg-brand-500/10 px-2 py-0.5 text-[10px] font-bold text-brand-300">
+                          Contínua
+                        </span>
+                      )}
+                    </div>
                     <div className="mt-1 flex flex-wrap gap-4 text-xs text-fg-muted">
                       <span>Dose: {med.dosage}</span>
                       <span>Frequência: {med.frequency}</span>

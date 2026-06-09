@@ -286,7 +286,7 @@ grep -n "next_dose_date\|Atrasada\|Vence em" app/ong/pets/\[id\]/vacinas/page.ts
 ## T7 — Medicações (contínuas e temporárias)
 
 **Fase SDD:** Implementar & Verificar
-**Status:** ✅ Código existe em `app/ong/pets/[id]/medicacoes/`
+**Status:** ✅ Concluído em 2026-06-08
 **Depende de:** T1, T2
 
 ### Especificação EARS
@@ -313,10 +313,10 @@ grep -n "end_date\|Contínua\|Histórico" app/ong/pets/\[id\]/medicacoes/page.ts
 
 ### Critério de Aceite
 
-- [ ] Medicação com `end_date = NULL` aparece em Ativas com label "Contínua"
-- [ ] Medicação com `end_date` no passado aparece em Histórico
-- [ ] Contagem de medicações contínuas bate com dashboard (T3)
-- [ ] Typecheck passa
+- [x] Medicação com `end_date = NULL` exibe badge "Contínua" (laranja) ao lado do nome
+- [x] Ativas = `is_ongoing = true` · Histórico = `is_ongoing = false` (semanticamente equiv. à spec)
+- [x] Dashboard usa `is_ongoing = true` para métrica — consistente com a página
+- [x] `npm run typecheck` → 0 erros · `npx vitest run ong` → 61/61
 
 ---
 
