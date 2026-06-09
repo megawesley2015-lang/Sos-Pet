@@ -12,7 +12,7 @@ export function MarketingFooter() {
               <PawPrint className="h-4 w-4 text-brand-600" strokeWidth={2.5} />
             </div>
             <div className="flex flex-col leading-none">
-              <span className="font-display text-lg font-bold text-ink-900">
+              <span className="font-display text-lg font-bold text-fg">
                 SOS <span className="text-brand-500">Pet</span>
               </span>
               <span className="text-[10px] uppercase tracking-widest text-brand-700/70">
@@ -20,7 +20,7 @@ export function MarketingFooter() {
               </span>
             </div>
           </Link>
-          <p className="mt-3 max-w-xs text-sm text-ink-700">
+          <p className="mt-3 max-w-xs text-sm text-fg-muted">
             Uma rede colaborativa para reencontrar pets perdidos com seus
             tutores — rápido, simples e gratuito.
           </p>
@@ -30,7 +30,7 @@ export function MarketingFooter() {
           <h3 className="text-xs font-bold uppercase tracking-widest text-brand-700/70">
             Plataforma
           </h3>
-          <ul className="mt-3 space-y-2 text-sm text-ink-800">
+          <ul className="mt-3 space-y-2 text-sm text-fg-muted">
             <li>
               <Link href="/pets" className="hover:text-brand-600">
                 Pets ativos
@@ -73,7 +73,7 @@ export function MarketingFooter() {
           <h3 className="text-xs font-bold uppercase tracking-widest text-brand-700/70">
             Legal
           </h3>
-          <ul className="mt-3 space-y-2 text-sm text-ink-800">
+          <ul className="mt-3 space-y-2 text-sm text-fg-muted">
             <li>
               <Link href="/termos" className="hover:text-brand-600">
                 Termos de uso
@@ -88,7 +88,7 @@ export function MarketingFooter() {
         </div>
       </div>
 
-      <div className="mx-auto mt-8 flex max-w-6xl flex-col items-center justify-between gap-2 border-t border-warm-200/80 px-4 pt-6 text-xs text-ink-700 sm:flex-row">
+      <div className="mx-auto mt-8 flex max-w-6xl flex-col items-center justify-between gap-2 border-t border-warm-200/80 px-4 pt-6 text-xs text-fg-muted sm:flex-row">
         <p>© {year} SOS Pet — Feito no Brasil.</p>
         <p className="flex items-center gap-1">
           Construído com <Heart className="h-3 w-3 text-brand-500" /> para

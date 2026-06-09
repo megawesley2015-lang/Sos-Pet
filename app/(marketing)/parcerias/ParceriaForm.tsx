@@ -16,10 +16,10 @@ export function ParceriaForm() {
         <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-brand-500/15 text-brand-600">
           <CheckCircle2 className="h-6 w-6" />
         </div>
-        <h2 className="font-display text-xl font-bold text-ink-900">
+        <h2 className="font-display text-xl font-bold text-fg">
           Mensagem enviada, {state.successName.split(" ")[0]}!
         </h2>
-        <p className="mt-2 text-sm text-ink-700">
+        <p className="mt-2 text-sm text-fg-muted">
           Obrigado pelo interesse. Nossa equipe vai analisar e responder no
           e-mail informado em até 5 dias úteis.
         </p>
@@ -73,7 +73,7 @@ export function ParceriaForm() {
           maxLength={1000}
           placeholder="Conte sobre sua organização e o que tem em mente"
           aria-invalid={!!state.errors?.mensagem}
-          className={`w-full rounded-lg border bg-white px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-300 focus:outline-none focus:ring-2 focus:ring-brand-500/40 ${
+          className={`w-full rounded-lg border bg-white px-3 py-2.5 text-sm text-fg placeholder:text-ink-300 focus:outline-none focus:ring-2 focus:ring-brand-500/40 ${
             state.errors?.mensagem
               ? "border-red-400 focus:border-red-500"
               : "border-warm-300 focus:border-brand-500/60"
@@ -91,7 +91,7 @@ export function ParceriaForm() {
         Enviar mensagem
       </button>
 
-      <p className="text-center text-[11px] text-ink-700">
+      <p className="text-center text-[11px] text-fg-muted">
         Ao enviar, você concorda com nossa{" "}
         <Link href="/privacidade" className="underline hover:text-brand-600">
           Política de Privacidade
@@ -132,7 +132,7 @@ function Field({
         required={required}
         autoComplete={autoComplete}
         aria-invalid={!!error}
-        className={`w-full rounded-lg border bg-white px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-300 focus:outline-none focus:ring-2 focus:ring-brand-500/40 ${
+        className={`w-full rounded-lg border bg-white px-3 py-2.5 text-sm text-fg placeholder:text-ink-300 focus:outline-none focus:ring-2 focus:ring-brand-500/40 ${
           error
             ? "border-red-400 focus:border-red-500"
             : "border-warm-300 focus:border-brand-500/60"

@@ -45,7 +45,7 @@ export async function MarketingHeader() {
             <PawPrint className="h-4 w-4 text-brand-600" strokeWidth={2.5} />
           </div>
           <div className="flex flex-col leading-none">
-            <span className="font-display text-lg font-bold text-ink-900">
+            <span className="font-display text-lg font-bold text-fg">
               SOS <span className="text-brand-500">Pet</span>
             </span>
             <span className="text-[10px] uppercase tracking-widest text-brand-700/70">
@@ -58,31 +58,31 @@ export async function MarketingHeader() {
         <nav className="hidden items-center gap-6 sm:flex">
           <Link
             href="/pets"
-            className="text-sm font-medium text-ink-800 transition-colors hover:text-brand-600"
+            className="text-sm font-medium text-fg-muted transition-colors hover:text-brand-600"
           >
             Achados
           </Link>
           <Link
             href="/mapa"
-            className="text-sm font-medium text-ink-800 transition-colors hover:text-brand-600"
+            className="text-sm font-medium text-fg-muted transition-colors hover:text-brand-600"
           >
             Mapa
           </Link>
           <Link
             href="/avistamentos"
-            className="text-sm font-medium text-ink-800 transition-colors hover:text-brand-600"
+            className="text-sm font-medium text-fg-muted transition-colors hover:text-brand-600"
           >
             Avistamentos
           </Link>
           <Link
             href="/prestadores"
-            className="text-sm font-medium text-ink-800 transition-colors hover:text-brand-600"
+            className="text-sm font-medium text-fg-muted transition-colors hover:text-brand-600"
           >
             Prestadores
           </Link>
           <Link
             href="/dicas"
-            className="text-sm font-medium text-ink-800 transition-colors hover:text-brand-600"
+            className="text-sm font-medium text-fg-muted transition-colors hover:text-brand-600"
           >
             Dicas
           </Link>
@@ -105,7 +105,7 @@ export async function MarketingHeader() {
           {/* Busca rápida — só mobile (em vez de sumir tudo) */}
           <Link
             href="/pets"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-warm-200 bg-warm-100/60 text-ink-700 transition-colors hover:bg-warm-200/60 sm:hidden"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-warm-200 bg-warm-100/60 text-fg-muted transition-colors hover:bg-warm-200/60 sm:hidden"
             aria-label="Buscar pets"
           >
             <Search className="h-4 w-4" />
@@ -124,7 +124,7 @@ export async function MarketingHeader() {
               <>
                 <Link
                   href="/login"
-                  className="text-sm font-bold text-ink-800 hover:text-brand-600"
+                  className="text-sm font-bold text-fg-muted hover:text-brand-600"
                 >
                   Entrar
                 </Link>

@@ -52,7 +52,7 @@ export function MobileNav({ isLoggedIn }: MobileNavProps) {
         aria-label={open ? "Fechar menu" : "Abrir menu"}
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className="flex h-9 w-9 items-center justify-center rounded-full border border-warm-200 bg-warm-100/60 text-ink-700 transition-colors hover:bg-warm-200/60 sm:hidden"
+        className="flex h-9 w-9 items-center justify-center rounded-full border border-warm-200 bg-warm-100/60 text-fg-muted transition-colors hover:bg-warm-200/60 sm:hidden"
       >
         {open ? (
           <X className="h-4 w-4" />
@@ -79,7 +79,7 @@ export function MobileNav({ isLoggedIn }: MobileNavProps) {
                 <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-brand-500 bg-brand-100">
                   <PawPrint className="h-3.5 w-3.5 text-brand-600" strokeWidth={2.5} />
                 </div>
-                <span className="font-display text-base font-bold text-ink-900">
+                <span className="font-display text-base font-bold text-fg">
                   SOS <span className="text-brand-500">Pet</span>
                 </span>
               </div>
@@ -87,7 +87,7 @@ export function MobileNav({ isLoggedIn }: MobileNavProps) {
                 type="button"
                 aria-label="Fechar menu"
                 onClick={() => setOpen(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-warm-200 text-ink-700 hover:bg-warm-200/60"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-warm-200 text-fg-muted hover:bg-warm-200/60"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -100,7 +100,7 @@ export function MobileNav({ isLoggedIn }: MobileNavProps) {
                   key={link.href}
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className="flex items-center rounded-xl px-4 py-3 text-sm font-medium text-ink-800 transition-colors hover:bg-warm-200/60 hover:text-brand-600"
+                  className="flex items-center rounded-xl px-4 py-3 text-sm font-medium text-fg-muted transition-colors hover:bg-warm-200/60 hover:text-brand-600"
                 >
                   {link.label}
                 </Link>
@@ -134,7 +134,7 @@ export function MobileNav({ isLoggedIn }: MobileNavProps) {
                   <Link
                     href="/login"
                     onClick={() => setOpen(false)}
-                    className="flex items-center justify-center rounded-xl border border-warm-200 bg-warm-100/60 px-4 py-3 text-sm font-bold text-ink-800 transition-colors hover:bg-warm-200/60"
+                    className="flex items-center justify-center rounded-xl border border-warm-200 bg-warm-100/60 px-4 py-3 text-sm font-bold text-fg-muted transition-colors hover:bg-warm-200/60"
                   >
                     Entrar
                   </Link>

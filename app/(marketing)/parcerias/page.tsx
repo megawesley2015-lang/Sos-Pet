@@ -46,12 +46,12 @@ export default function ParceriasPage() {
               Por que se juntar
             </span>
 
-            <h2 className="mt-4 font-display text-2xl font-black leading-tight text-ink-900 sm:text-3xl">
+            <h2 className="mt-4 font-display text-2xl font-black leading-tight text-fg sm:text-3xl">
               Trabalhamos com{" "}
               <span className="text-brand-500">ONGs, prefeituras e marcas</span>{" "}
               que cuidam de pets.
             </h2>
-            <p className="mt-3 text-sm leading-relaxed text-ink-700">
+            <p className="mt-3 text-sm leading-relaxed text-fg-muted">
               Se você é abrigo, clínica em rede, distribuidora pet, app de
               transporte ou tem uma comunidade engajada, dá pra fazer mais junto
               do que separado. Conta pra gente o que tem em mente.
@@ -64,10 +64,10 @@ export default function ParceriasPage() {
                     <b.icon className="h-5 w-5" strokeWidth={2.2} />
                   </div>
                   <div>
-                    <h3 className="font-display text-base font-bold text-ink-900">
+                    <h3 className="font-display text-base font-bold text-fg">
                       {b.title}
                     </h3>
-                    <p className="text-sm leading-relaxed text-ink-700">
+                    <p className="text-sm leading-relaxed text-fg-muted">
                       {b.desc}
                     </p>
                   </div>

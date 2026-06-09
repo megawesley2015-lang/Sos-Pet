@@ -71,10 +71,10 @@ export default function DicasPage() {
                   <tip.icon className="h-6 w-6" strokeWidth={2.2} />
                 </div>
                 <div>
-                  <h2 className="font-display text-lg font-bold text-ink-900">
+                  <h2 className="font-display text-lg font-bold text-fg">
                     {tip.title}
                   </h2>
-                  <p className="mt-1 text-sm leading-relaxed text-ink-700">
+                  <p className="mt-1 text-sm leading-relaxed text-fg-muted">
                     {tip.body}
                   </p>
                 </div>
@@ -83,10 +83,10 @@ export default function DicasPage() {
           </ul>
 
           <div className="mt-12 rounded-2xl border border-brand-200 bg-brand-50 p-6 text-center">
-            <h3 className="font-display text-lg font-bold text-ink-900">
+            <h3 className="font-display text-lg font-bold text-fg">
               Pronto para começar?
             </h3>
-            <p className="mt-1 text-sm text-ink-700">
+            <p className="mt-1 text-sm text-fg-muted">
               Cadastre seu pet em menos de 1 minuto.
             </p>
             <Link

@@ -132,7 +132,7 @@ export function AddMedicalRecordForm({ petId }: { petId: string }) {
         <button
           type="submit"
           disabled={isPending}
-          className="flex items-center gap-2 rounded-lg bg-cyan-500 px-4 py-2.5 text-sm font-bold text-ink-900 transition hover:bg-cyan-400 disabled:opacity-50"
+          className="flex items-center gap-2 rounded-lg bg-cyan-500 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-cyan-400 disabled:opacity-50"
         >
           {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
           Salvar registro

@@ -113,7 +113,7 @@ function CardRreencontro({
 
       {/* Corpo */}
       <div className="flex flex-col gap-2 p-4">
-        <h3 className="text-base font-bold text-ink-900 leading-tight">
+        <h3 className="text-base font-bold text-fg leading-tight">
           {nomePet}
           {pet.breed && (
             <span className="ml-2 text-xs font-normal text-ink-500">{pet.breed}</span>
@@ -170,7 +170,7 @@ export default function HallRreencontros({
 
             <h2
               id="hall-heading"
-              className="text-3xl font-black text-ink-900 leading-tight md:text-4xl"
+              className="text-3xl font-black text-fg leading-tight md:text-4xl"
             >
               Eles voltaram{' '}
               <span className="text-brand-500">para casa.</span>
@@ -209,7 +209,7 @@ export default function HallRreencontros({
           <div className="mt-10 flex justify-center">
             <Link
               href="/achados-e-perdidos?status=resolved"
-              className="group inline-flex items-center gap-2 rounded-full border border-warm-300 bg-white px-6 py-3 text-sm font-semibold text-ink-500 transition-all duration-200 hover:border-brand-400/40 hover:text-ink-900"
+              className="group inline-flex items-center gap-2 rounded-full border border-warm-300 bg-white px-6 py-3 text-sm font-semibold text-fg-muted transition-all duration-200 hover:border-brand-400/40 hover:text-fg"
             >
               Ver todos os reencontros
               <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />

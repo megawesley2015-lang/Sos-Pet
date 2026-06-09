@@ -104,10 +104,10 @@ function Section({
 }) {
   return (
     <section className="mb-8">
-      <h2 className="mb-2 font-display text-xl font-bold text-ink-900">
+      <h2 className="mb-2 font-display text-xl font-bold text-fg">
         {title}
       </h2>
-      <p className="text-sm leading-relaxed text-ink-700">{children}</p>
+      <p className="text-sm leading-relaxed text-fg-muted">{children}</p>
     </section>
   );
 }

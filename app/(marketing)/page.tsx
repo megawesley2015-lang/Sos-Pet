@@ -303,7 +303,7 @@ function BandStat({ label, value }: { label: string; value: number }) {
       <p className="font-display text-3xl font-black text-brand-500">
         {value.toLocaleString("pt-BR")}
       </p>
-      <p className="text-[11px] font-bold uppercase tracking-widest text-ink-700">
+      <p className="text-[11px] font-bold uppercase tracking-widest text-fg-muted">
         {label}
       </p>
     </div>
@@ -339,7 +339,7 @@ function HowItWorks() {
           <span className="inline-flex items-center gap-2 rounded-full bg-brand-100 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-brand-700">
             Como funciona
           </span>
-          <h2 className="mt-4 font-display text-3xl font-black text-ink-900 sm:text-4xl">
+          <h2 className="mt-4 font-display text-3xl font-black text-fg sm:text-4xl">
             Três passos para trazer
             <br />
             seu pet de volta.
@@ -355,10 +355,10 @@ function HowItWorks() {
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-500/10 text-brand-600">
                 <s.icon className="h-6 w-6" strokeWidth={2.2} />
               </div>
-              <h3 className="mt-4 font-display text-lg font-bold text-ink-900">
+              <h3 className="mt-4 font-display text-lg font-bold text-fg">
                 {s.title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-ink-700">
+              <p className="mt-2 text-sm leading-relaxed text-fg-muted">
                 {s.desc}
               </p>
             </div>
@@ -593,10 +593,10 @@ function Trust() {
     <section className="py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="font-display text-3xl font-black text-ink-900 sm:text-4xl">
+          <h2 className="font-display text-3xl font-black text-fg sm:text-4xl">
             Por que confiar no SOS Pet?
           </h2>
-          <p className="mt-3 text-ink-700">
+          <p className="mt-3 text-fg-muted">
             Construído por quem vive a dor de perder um pet — e a alegria de
             reencontrar.
           </p>
@@ -611,10 +611,10 @@ function Trust() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-100 text-cyan-700">
                 <p.icon className="h-5 w-5" strokeWidth={2.2} />
               </div>
-              <h3 className="mt-3 font-display text-base font-bold text-ink-900">
+              <h3 className="mt-3 font-display text-base font-bold text-fg">
                 {p.title}
               </h3>
-              <p className="mt-1.5 text-sm text-ink-700">{p.desc}</p>
+              <p className="mt-1.5 text-sm text-fg-muted">{p.desc}</p>
             </div>
           ))}
         </div>
