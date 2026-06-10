@@ -82,7 +82,7 @@ export default async function MapaPage() {
   const foundCount = pets.filter((p) => p.kind === "found").length;
 
   return (
-    <div className="flex min-h-screen flex-col bg-ink-900">
+    <div className="flex min-h-screen flex-col bg-bg">
       <TopBar />
 
       <main className="flex flex-1 flex-col px-4 pb-4 pt-4">
@@ -115,7 +115,7 @@ export default async function MapaPage() {
         </div>
 
         {pets.length === 0 ? (
-          <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-white/10 bg-ink-800 text-center p-12">
+          <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-white/10 bg-ink-800 text-center p-12 shadow-warm-card">
             <div className="text-5xl mb-4">🗺️</div>
             <h2 className="font-display text-xl font-bold text-fg mb-2">
               Mapa vazio por enquanto

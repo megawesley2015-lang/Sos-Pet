@@ -33,7 +33,7 @@ async function PetList({
 
   if (error) {
     return (
-      <p className="py-10 text-center text-sm text-[rgb(var(--color-fg-muted))]">
+      <p className="py-10 text-center text-sm text-fg-muted">
         Erro ao carregar pets. Tente novamente.
       </p>
     )
@@ -45,7 +45,7 @@ async function PetList({
 
   return (
     <div className="flex flex-col gap-6">
-      <p className="text-xs text-[rgb(var(--color-fg-subtle))]">
+      <p className="text-xs text-fg-subtle">
         {total === 0
           ? 'Nenhum resultado'
           : `${total} alerta${total !== 1 ? 's' : ''} encontrado${total !== 1 ? 's' : ''}`}
@@ -58,7 +58,7 @@ async function PetList({
           {page > 1 && (
             <PaginationLink page={page - 1} kind={kind} species={species} city={city}>← Anterior</PaginationLink>
           )}
-          <span className="text-xs text-[rgb(var(--color-fg-subtle))]">Página {page} de {totalPages}</span>
+          <span className="text-xs text-fg-subtle">Página {page} de {totalPages}</span>
           {page < totalPages && (
             <PaginationLink page={page + 1} kind={kind} species={species} city={city}>Próxima →</PaginationLink>
           )}
@@ -79,7 +79,7 @@ function PaginationLink({
   if (species) params.set('species', species)
   if (city)    params.set('city', city)
   return (
-    <Link href={`/achados-e-perdidos?${params.toString()}`} className="text-xs text-[rgb(var(--color-primary))] hover:underline">
+    <Link href={`/achados-e-perdidos?${params.toString()}`} className="text-xs text-brand-500 hover:underline">
       {children}
     </Link>
   )
@@ -104,44 +104,47 @@ export default async function AchadosEPerdidosPage({ searchParams }: PageProps) 
   const page    = Math.max(1, Number(sp.page ?? '1'))
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-8">
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-black text-[rgb(var(--color-fg))]">
-            Achados <span className="text-[rgb(var(--color-primary))]">&</span> Perdidos
-          </h1>
-          <p className="mt-1 text-sm text-[rgb(var(--color-fg-muted))]">Pets perdidos e encontrados na sua região</p>
+    <div data-theme="light" className="min-h-screen bg-bg">
+      <main className="mx-auto max-w-7xl px-4 py-8">
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-black text-fg">
+              Achados <span className="text-brand-500">&</span> Perdidos
+            </h1>
+            <p className="mt-1 text-sm text-fg-muted">Pets perdidos e encontrados na sua região</p>
+          </div>
+
+          <Link
+            href="/achados-e-perdidos/cadastrar"
+            className="
+              inline-flex items-center gap-2 rounded-full
+              bg-[rgb(var(--color-primary))] text-white
+              px-6 py-3 text-sm font-semibold
+              shadow-[0_0_20px_rgba(255,133,27,0.3)]
+              hover:bg-[rgb(var(--color-primary))]/90
+              transition-all duration-200
+              focus-visible:outline-2 focus-visible:outline-offset-2
+              focus-visible:outline-[rgb(var(--color-primary))]
+            "
+          >
+            🐾 Cadastrar alerta
+          </Link>
         </div>
 
-        <Link
-          href="/achados-e-perdidos/cadastrar"
-          className="
-            inline-flex items-center gap-2 rounded-full
-            bg-[rgb(var(--color-primary))] text-white
-            px-6 py-3 text-sm font-semibold
-            hover:bg-[rgb(var(--color-primary))]/90
-            transition-all duration-200
-            focus-visible:outline-2 focus-visible:outline-offset-2
-            focus-visible:outline-[rgb(var(--color-primary))]
-          "
+        {/* Filtros — client component */}
+        <Suspense fallback={<FilterBarSkeleton />}>
+          <FilterBar />
+        </Suspense>
+
+        {/* Lista — muda key para forçar Suspense no filtro */}
+        <Suspense
+          key={`${kind}-${species}-${city}-${page}`}
+          fallback={<PetGridSkeleton count={8} />}
         >
-          🐾 Cadastrar alerta
-        </Link>
-      </div>
-
-      {/* Filtros — client component */}
-      <Suspense fallback={<FilterBarSkeleton />}>
-        <FilterBar />
-      </Suspense>
-
-      {/* Lista — muda key para forçar Suspense no filtro */}
-      <Suspense
-        key={`${kind}-${species}-${city}-${page}`}
-        fallback={<PetGridSkeleton count={8} />}
-      >
-        <PetList kind={kind} species={species} city={city} page={page} />
-      </Suspense>
-    </main>
+          <PetList kind={kind} species={species} city={city} page={page} />
+        </Suspense>
+      </main>
+    </div>
   )
 }
 
@@ -149,7 +152,7 @@ function FilterBarSkeleton() {
   return (
     <div className="flex gap-3 py-4" aria-hidden="true">
       {[0, 1, 2].map((i) => (
-        <div key={i} className="h-9 w-28 animate-pulse rounded-lg bg-[rgb(var(--color-bg-overlay))]" />
+        <div key={i} className="h-9 w-28 animate-pulse rounded-lg bg-bg-overlay" />
       ))}
     </div>
   )

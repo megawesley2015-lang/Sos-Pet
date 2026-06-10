@@ -130,7 +130,7 @@ export default async function PetDetailPage({ params }: PageProps) {
   // ── Pet resolvido: owner vê tela de celebração ──────────────
   if (pet.status === "resolved") {
     return (
-      <div className="min-h-screen bg-ink-800 bg-radial-brand">
+      <div className="min-h-screen bg-bg" data-theme="light">
         <TopBar />
         <main className="mx-auto max-w-2xl px-4 pb-16 pt-12 text-center">
           <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border-2 border-green-500/60 bg-green-500/10 text-5xl shadow-[0_0_24px_rgba(34,197,94,0.3)]">
@@ -145,7 +145,7 @@ export default async function PetDetailPage({ params }: PageProps) {
               : `${pet.name ? `${pet.name} foi devolvido` : "O pet foi devolvido"} ao tutor. Ótimo trabalho!`}
           </p>
 
-          <div className="mt-6 rounded-2xl border border-white/10 bg-ink-700/60 p-5 text-left">
+          <div className="mt-6 rounded-2xl border border-white/10 bg-ink-700/60 p-5 text-left shadow-warm-card transition-shadow">
             <p className="text-xs font-bold uppercase tracking-wide text-fg-subtle">Registro</p>
             <p className="mt-1 text-sm font-medium text-fg">
               {pet.name ?? "Sem nome"} · {SPECIES_LABEL[pet.species]}
@@ -175,7 +175,7 @@ export default async function PetDetailPage({ params }: PageProps) {
   const jsonLd = petArticleJsonLd(pet, getBaseUrl());
 
   return (
-    <div className="min-h-screen bg-ink-800 bg-radial-brand">
+    <div className="min-h-screen bg-bg" data-theme="light">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-12 pt-6">
@@ -207,7 +207,7 @@ export default async function PetDetailPage({ params }: PageProps) {
           )}
         </div>
 
-        <article className="overflow-hidden rounded-2xl border border-white/10 bg-ink-700/80 backdrop-blur-sm">
+        <article className="overflow-hidden rounded-2xl border border-white/10 bg-ink-700/80 backdrop-blur-sm shadow-warm-card transition-shadow hover:shadow-warm-hover">
           <div className="relative h-72 bg-gradient-to-br from-ink-600 to-ink-900 sm:h-96">
             {pet.photo_url ? (
               <Image
@@ -223,7 +223,7 @@ export default async function PetDetailPage({ params }: PageProps) {
                 <PawPrint className="h-20 w-20 text-brand-500/30" />
               </div>
             )}
-            <div className="absolute left-3 top-3 z-10">
+            <div className="absolute left-3 top-3 z-10 [&>*]:px-3 [&>*]:py-1.5 [&>*]:font-bold">
               <SOSBadge kind={pet.kind as PetKind} />
             </div>
           </div>
@@ -266,8 +266,8 @@ export default async function PetDetailPage({ params }: PageProps) {
               </section>
             )}
 
-            <section className="mt-8 rounded-xl border border-cyan-500/30 bg-cyan-500/5 p-4">
-              <h2 className="text-sm font-bold uppercase tracking-wide text-cyan-300">Entre em contato</h2>
+            <section className="mt-8 rounded-xl border border-brand-200 bg-brand-500/5 p-4 shadow-warm-card transition-shadow">
+              <h2 className="text-sm font-bold uppercase tracking-wide text-brand-500">Entre em contato</h2>
               <div className="mt-1 flex items-center justify-between gap-3">
                 <p className="text-sm text-fg">
                   {pet.contact_name} - {formatPhone(pet.contact_phone)}
@@ -364,7 +364,7 @@ export default async function PetDetailPage({ params }: PageProps) {
 
 function Attr({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-white/5 bg-ink-800/50 p-3">
+    <div className="rounded-lg border border-white/5 bg-ink-800/50 p-3 shadow-warm-card transition-shadow hover:shadow-warm-hover">
       <p className="text-xs font-bold uppercase tracking-wide text-fg-subtle">{label}</p>
       <p className="mt-0.5 text-sm font-medium text-fg">{value}</p>
     </div>

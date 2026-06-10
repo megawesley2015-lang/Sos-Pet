@@ -60,7 +60,7 @@ export default async function PrestadoresPage({ searchParams }: PageProps) {
   });
 
   return (
-    <div className="min-h-screen bg-ink-800 bg-radial-brand">
+    <div className="min-h-screen bg-bg bg-radial-brand">
       <div className="bg-grid-subtle min-h-screen">
         <TopBar />
 
@@ -125,7 +125,7 @@ export default async function PrestadoresPage({ searchParams }: PageProps) {
 
 function Empty() {
   return (
-    <div className="rounded-2xl border border-dashed border-white/15 bg-ink-700/40 p-10 text-center">
+    <div className="rounded-2xl border border-dashed border-white/15 bg-ink-700/40 p-10 text-center shadow-warm-card">
       <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-cyan-500/40 bg-cyan-500/10">
         <Building2 className="h-7 w-7 text-cyan-400" strokeWidth={2} />
       </div>

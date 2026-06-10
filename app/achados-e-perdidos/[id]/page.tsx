@@ -41,9 +41,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 function Tag({ label, value }: { label: string; value: string }) {
   return (
-    <span className="inline-flex flex-col rounded-lg border border-[rgb(var(--color-border))] bg-[rgb(var(--color-bg-raised))] px-3 py-2 text-center">
-      <span className="text-[10px] text-[rgb(var(--color-fg-subtle))] uppercase tracking-wider">{label}</span>
-      <span className="mt-0.5 text-sm font-medium text-[rgb(var(--color-fg))]">{value}</span>
+    <span className="inline-flex flex-col rounded-lg border border-border bg-bg-raised px-3 py-2 text-center shadow-warm-card">
+      <span className="text-[10px] text-fg-subtle uppercase tracking-wider">{label}</span>
+      <span className="mt-0.5 text-sm font-medium text-fg">{value}</span>
     </span>
   )
 }
@@ -73,27 +73,28 @@ export default async function PetDetailPage({ params, searchParams }: PageParams
     : null
 
   return (
-    <main className="mx-auto max-w-2xl px-4 py-8">
+    <main data-theme="light" className="min-h-screen bg-bg">
+    <div className="mx-auto max-w-2xl px-4 py-8">
       {/* Breadcrumb */}
-      <nav className="mb-6 flex items-center gap-2 text-xs text-[rgb(var(--color-fg-subtle))]">
-        <Link href="/achados-e-perdidos" className="hover:text-[rgb(var(--color-primary))] transition-colors">
+      <nav className="mb-6 flex items-center gap-2 text-xs text-fg-subtle">
+        <Link href="/achados-e-perdidos" className="hover:text-brand-500 transition-colors">
           Achados & Perdidos
         </Link>
         <span aria-hidden="true">/</span>
-        <span className="text-[rgb(var(--color-fg-muted))]">{displayName}</span>
+        <span className="text-fg-muted">{displayName}</span>
       </nav>
 
       {/* Banner de sucesso */}
       {novo === 'true' && (
-        <div className="mb-6 rounded-xl border border-[rgb(var(--color-accent))]/30 bg-[rgb(var(--color-accent))]/10 p-4">
-          <p className="text-sm font-medium text-[rgb(var(--color-accent))]">
+        <div className="mb-6 rounded-xl border border-accent/30 bg-accent/10 p-4">
+          <p className="text-sm font-medium text-accent">
             ✓ Alerta cadastrado com sucesso! Compartilhe para aumentar as chances de reencontro.
           </p>
         </div>
       )}
 
       {/* Foto */}
-      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-[rgb(var(--color-bg-overlay))]">
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-bg-overlay shadow-warm-card">
         {pet.photo_url ? (
           <Image
             src={pet.photo_url}
@@ -115,22 +116,22 @@ export default async function PetDetailPage({ params, searchParams }: PageParams
         <div className="flex items-center gap-3">
           <span className={`
             inline-flex items-center gap-1.5 rounded-full px-3 py-1 border
-            text-xs font-bold uppercase tracking-wider
+            font-bold uppercase tracking-wide
             ${isLost
-              ? 'bg-[rgb(var(--color-primary))]/15 border-[rgb(var(--color-primary))]/30 text-[rgb(var(--color-primary))]'
-              : 'bg-[rgb(var(--color-accent))]/15 border-[rgb(var(--color-accent))]/30 text-[rgb(var(--color-accent))]'}
+              ? 'bg-[#FFF4E8] text-[#9A4E00] border-[#FF9933]/40'
+              : 'bg-[#E1F5EE] text-[#0F6E56] border-[#20B2AA]/40'}
           `}>
-            <span className={`h-1.5 w-1.5 rounded-full animate-pulse ${isLost ? 'bg-[rgb(var(--color-primary))]' : 'bg-[rgb(var(--color-accent))]'}`} />
+            <span className={`h-1.5 w-1.5 rounded-full animate-pulse ${isLost ? 'bg-[#FF9933]' : 'bg-[#20B2AA]'}`} />
             {isLost ? 'Perdido' : 'Encontrado'}
           </span>
-          <span className="text-xs text-[rgb(var(--color-fg-subtle))]">
+          <span className="text-xs text-fg-subtle">
             {new Date(pet.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
           </span>
         </div>
 
-        <h1 className="text-2xl font-black text-[rgb(var(--color-fg))]">
+        <h1 className="text-2xl font-black text-fg">
           {displayName}
-          {pet.breed && <span className="ml-2 text-lg font-normal text-[rgb(var(--color-fg-muted))]">· {pet.breed}</span>}
+          {pet.breed && <span className="ml-2 text-lg font-normal text-fg-muted">· {pet.breed}</span>}
         </h1>
 
         {/* Tags de características */}
@@ -144,28 +145,28 @@ export default async function PetDetailPage({ params, searchParams }: PageParams
 
         {pet.description && (
           <div>
-            <p className="mb-2 text-xs font-medium uppercase tracking-wider text-[rgb(var(--color-fg-subtle))]">Descrição</p>
-            <p className="text-sm leading-relaxed text-[rgb(var(--color-fg-muted))]">{pet.description}</p>
+            <p className="mb-2 text-xs font-medium uppercase tracking-wider text-fg-subtle">Descrição</p>
+            <p className="text-sm leading-relaxed text-fg-muted">{pet.description}</p>
           </div>
         )}
 
         {pet.behavior && (
           <div>
-            <p className="mb-2 text-xs font-medium uppercase tracking-wider text-[rgb(var(--color-fg-subtle))]">Comportamento</p>
-            <p className="text-sm text-[rgb(var(--color-fg-muted))]">{pet.behavior}</p>
+            <p className="mb-2 text-xs font-medium uppercase tracking-wider text-fg-subtle">Comportamento</p>
+            <p className="text-sm text-fg-muted">{pet.behavior}</p>
           </div>
         )}
 
         {/* Localização */}
         <div>
-          <p className="mb-1 text-xs font-medium uppercase tracking-wider text-[rgb(var(--color-fg-subtle))]">
+          <p className="mb-1 text-xs font-medium uppercase tracking-wider text-fg-subtle">
             {isLost ? 'Última localização' : 'Onde foi encontrado'}
           </p>
-          <p className="text-sm text-[rgb(var(--color-fg))]">
+          <p className="text-sm text-fg">
             {[pet.neighborhood, pet.city, pet.state].filter(Boolean).join(', ')}
           </p>
           {pet.event_date && (
-            <p className="mt-0.5 text-xs text-[rgb(var(--color-fg-subtle))]">
+            <p className="mt-0.5 text-xs text-fg-subtle">
               {isLost ? 'Desapareceu em' : 'Encontrado em'}{' '}
               {new Date(pet.event_date + 'T12:00:00').toLocaleDateString('pt-BR')}
             </p>
@@ -173,14 +174,14 @@ export default async function PetDetailPage({ params, searchParams }: PageParams
         </div>
 
         {/* Contato — único lugar da aplicação com esses dados */}
-        <div className="rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-bg-raised))] p-5 flex flex-col gap-4">
-          <p className="text-xs font-medium uppercase tracking-wider text-[rgb(var(--color-fg-subtle))]">
+        <div className="rounded-xl border border-border bg-bg-raised p-5 flex flex-col gap-4 shadow-warm-card">
+          <p className="text-xs font-medium uppercase tracking-wider text-fg-subtle">
             Entrar em contato
           </p>
 
           {pet.contact_name && (
-            <p className="text-sm text-[rgb(var(--color-fg))]">
-              <span className="text-[rgb(var(--color-fg-muted))]">Nome: </span>
+            <p className="text-sm text-fg">
+              <span className="text-fg-muted">Nome: </span>
               {pet.contact_name}
             </p>
           )}
@@ -190,9 +191,9 @@ export default async function PetDetailPage({ params, searchParams }: PageParams
               href={`tel:${pet.contact_phone}`}
               className="
                 flex items-center justify-center gap-2 rounded-full
-                border border-[rgb(var(--color-border))] bg-[rgb(var(--color-bg-overlay))]
-                px-6 py-3 text-sm font-medium text-[rgb(var(--color-fg))]
-                hover:border-[rgb(var(--color-border-strong))] transition-colors
+                border border-border bg-bg-overlay
+                px-6 py-3 text-sm font-medium text-fg
+                hover:border-border transition-colors
               "
             >
               📞 Ligar: {pet.contact_phone}
@@ -215,11 +216,12 @@ export default async function PetDetailPage({ params, searchParams }: PageParams
 
         <Link
           href="/achados-e-perdidos"
-          className="text-center text-xs text-[rgb(var(--color-fg-subtle))] hover:text-[rgb(var(--color-primary))] transition-colors"
+          className="text-center text-xs text-fg-subtle hover:text-brand-500 transition-colors"
         >
           ← Ver todos os alertas
         </Link>
       </div>
+    </div>
     </main>
   )
 }

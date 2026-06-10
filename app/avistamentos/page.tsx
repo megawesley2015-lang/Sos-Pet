@@ -19,7 +19,7 @@ export default async function AvistamentosPage() {
   const avistamentos = await listarAvistamentosRecentes();
 
   return (
-    <div className="min-h-screen bg-ink-800">
+    <div className="min-h-screen bg-bg">
       <TopBar />
 
       <main className="mx-auto max-w-4xl px-4 pb-20 pt-6">
