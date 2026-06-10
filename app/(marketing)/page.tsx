@@ -5,18 +5,14 @@ import {
   HeartHandshake,
   MapPin,
   PawPrint,
-  Search,
   Share2,
   ShieldCheck,
   Siren,
-  Sparkles,
   Eye,
   Users,
 } from "lucide-react";
 import { createServiceClient } from "@/lib/supabase/server";
 import CountUp from "@/components/ui/CountUp";
-import { PetAlertFeed } from "@/components/pets/PetAlertFeed";
-import type { AlertPet } from "@/components/pets/PetAlertFeed";
 import HallRreencontrosServer from "@/components/HallRreencontros.server";
 import HeroSectionServer from "@/components/HeroSection.server";
 import FaixaParceirosServer from "@/components/FaixaParceiros.server";
@@ -53,7 +49,6 @@ export default async function LandingPage() {
     sightingsCount,
     prestadoresCount,
     totalPetsCount,
-    alertPetsResult,
   ] = await Promise.all([
     supabase
       .from("pets")
@@ -83,13 +78,6 @@ export default async function LandingPage() {
     supabase
       .from("pets")
       .select("*", { count: "exact", head: true }),
-    // Feed de alertas — pets ativos mais recentes (com ou sem coordenadas)
-    supabase
-      .from("pets")
-      .select("id, kind, name, species, color, photo_url, city, neighborhood, created_at")
-      .eq("status", "active")
-      .order("created_at", { ascending: false })
-      .limit(30),
   ]);
 
   const stats = {
@@ -104,20 +92,6 @@ export default async function LandingPage() {
     sightings: sightingsCount.count ?? 0,
     prestadores: prestadoresCount.count ?? 0,
   };
-
-  // Feed de alertas — normaliza tipagem
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const alertPets: AlertPet[] = ((alertPetsResult.data ?? []) as any[]).map((p) => ({
-    id: p.id,
-    kind: p.kind as "lost" | "found",
-    name: p.name ?? null,
-    species: p.species ?? "other",
-    color: p.color ?? "",
-    photo_url: p.photo_url ?? null,
-    city: p.city ?? "",
-    neighborhood: p.neighborhood ?? "",
-    created_at: p.created_at ?? "",
-  }));
 
   return (
     <main>
@@ -152,133 +126,6 @@ export default async function LandingPage() {
 }
 
 // ============================================================
-// HERO — bloco híbrido: texto + CTA | feed de alertas ao vivo
-// ============================================================
-function Hero({
-  stats,
-  alertPets,
-}: {
-  stats: { active: number; lost: number; found: number };
-  alertPets: AlertPet[];
-}) {
-  return (
-    <section className="relative overflow-hidden">
-      <div
-        data-theme="dark"
-        className="relative bg-ink-900 text-fg"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 15% 30%, rgba(255,107,53,0.15), transparent 50%), radial-gradient(circle at 85% 70%, rgba(0,229,255,0.10), transparent 50%)",
-        }}
-      >
-        <div className="bg-grid-subtle">
-          <div className="mx-auto max-w-7xl px-4 pt-16 pb-0 sm:pt-24">
-          <div className="grid items-start gap-8 lg:grid-cols-[1fr_1.5fr]">
-            {/* ── Coluna 1: Texto + CTAs ── */}
-            <div className="flex flex-col justify-center lg:pt-4">
-              <span className="inline-flex items-center gap-2 rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-cyan-300 w-fit">
-                <Sparkles className="h-3 w-3" />
-                Rede colaborativa de resgate
-              </span>
-
-              <h1 className="mt-5 font-display text-4xl font-black leading-[1.05] sm:text-5xl lg:text-6xl">
-                Reencontre quem
-                <br />
-                <span className="text-brand-500 glow-text-brand">
-                  se perdeu.
-                </span>
-              </h1>
-
-              <p className="mt-5 max-w-sm text-base text-fg-muted">
-                Cadastre seu pet desaparecido, dispare um alerta de resgate e
-                conte com a rede pra trazer ele de volta. Em segundos.
-              </p>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link
-                  href="/pets/novo"
-                  className="group inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-white shadow-glow-brand-lg transition-all hover:bg-brand-400 active:scale-95"
-                >
-                  <Siren className="h-4 w-4" strokeWidth={2.5} />
-                  Cadastrar pet perdido
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                </Link>
-
-                <Link
-                  href="/pets"
-                  className="inline-flex items-center gap-2 rounded-xl border-2 border-cyan-500/60 bg-cyan-500/10 px-5 py-3 text-sm font-bold text-cyan-200 transition-all hover:bg-cyan-500/20 hover:shadow-glow-cyan active:scale-95"
-                >
-                  <Search className="h-4 w-4" strokeWidth={2.5} />
-                  Ver pets na rede
-                </Link>
-              </div>
-
-              <p className="mt-5 text-xs text-fg-subtle">
-                100% gratuito · sem login · verificação anti-spam automática · você no controle
-              </p>
-
-              {/* Stats compactos embaixo do CTA (visíveis no desktop) */}
-              <div className="mt-8 hidden lg:flex items-center gap-5 border-t border-white/8 pt-6">
-                <MiniStat label="Perdidos" value={stats.lost} color="brand" />
-                <div className="h-6 w-px bg-white/10" />
-                <MiniStat label="Encontrados" value={stats.found} color="cyan" />
-                <div className="h-6 w-px bg-white/10" />
-                <MiniStat label="Ativos" value={stats.active} color="white" />
-              </div>
-            </div>
-
-            {/* ── Coluna 2: Feed de alertas ao vivo ── */}
-            <div className="hidden lg:flex flex-col" style={{ height: "480px" }}>
-              <div className="relative flex-1">
-                {/* Glow de fundo */}
-                <div className="pointer-events-none absolute -inset-3 rounded-2xl bg-gradient-to-br from-brand-500/15 via-transparent to-cyan-500/15 blur-2xl" />
-                <div className="relative h-full">
-                  <PetAlertFeed pets={alertPets} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        </div>
-      </div>
-
-      {/* Transição visual dark → warm */}
-      <div
-        aria-hidden
-        className="h-12 bg-gradient-to-b from-ink-900 to-warm-50"
-      />
-    </section>
-  );
-}
-
-function MiniStat({
-  label,
-  value,
-  color,
-}: {
-  label: string;
-  value: number;
-  color: "brand" | "cyan" | "white";
-}) {
-  const textColor =
-    color === "brand"
-      ? "text-brand-400"
-      : color === "cyan"
-      ? "text-cyan-300"
-      : "text-fg";
-  return (
-    <div className="flex flex-col">
-      <p className={`font-display text-2xl font-black tabular-nums ${textColor}`}>
-        {value.toLocaleString("pt-BR")}
-      </p>
-      <p className="text-[10px] font-bold uppercase tracking-widest text-fg-subtle">
-        {label}
-      </p>
-    </div>
-  );
-}
-
-// ============================================================
 // STATS BAND (visível mobile, redundante desktop)
 // ============================================================
 function StatsBand({
@@ -300,7 +147,7 @@ function StatsBand({
 function BandStat({ label, value }: { label: string; value: number }) {
   return (
     <div>
-      <p className="font-display text-3xl font-black text-brand-500">
+      <p className="font-display text-3xl font-black text-brand-600">
         {value.toLocaleString("pt-BR")}
       </p>
       <p className="text-[11px] font-bold uppercase tracking-widest text-fg-muted">
@@ -350,7 +197,7 @@ function HowItWorks() {
           {steps.map((s) => (
             <div
               key={s.title}
-              className="relative rounded-2xl border border-warm-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+              className="relative rounded-2xl border border-warm-200 bg-white p-6 shadow-warm-card transition-all hover:shadow-warm-hover hover:border-brand-200"
             >
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-500/10 text-brand-600">
                 <s.icon className="h-6 w-6" strokeWidth={2.2} />
@@ -425,7 +272,7 @@ function StatsSection({
         className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 15% 50%, rgba(255,107,53,0.10), transparent 50%), radial-gradient(circle at 85% 50%, rgba(0,229,255,0.08), transparent 50%)",
+            "radial-gradient(circle at 15% 50%, rgba(255,133,27,0.10), transparent 50%), radial-gradient(circle at 85% 50%, rgba(32,178,170,0.08), transparent 50%)",
         }}
       />
 
@@ -507,7 +354,7 @@ function RescueHighlight() {
         className="bg-ink-900 py-20 text-fg sm:py-28"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 30% 50%, rgba(255,107,53,0.12), transparent 60%), radial-gradient(circle at 80% 30%, rgba(0,229,255,0.08), transparent 50%)",
+            "radial-gradient(circle at 30% 50%, rgba(255,133,27,0.12), transparent 60%), radial-gradient(circle at 80% 30%, rgba(32,178,170,0.08), transparent 50%)",
         }}
       >
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 lg:grid-cols-2">
@@ -606,7 +453,7 @@ function Trust() {
           {points.map((p) => (
             <div
               key={p.title}
-              className="rounded-2xl border border-warm-200 bg-warm-50 p-6"
+              className="rounded-2xl border border-warm-200 bg-warm-50 p-6 shadow-warm-card transition-all hover:shadow-warm-hover"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-100 text-cyan-700">
                 <p.icon className="h-5 w-5" strokeWidth={2.2} />
@@ -636,7 +483,7 @@ function FinalCTA() {
             className="absolute inset-0 opacity-30"
             style={{
               backgroundImage:
-                "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.3), transparent 40%), radial-gradient(circle at 80% 80%, rgba(0,229,255,0.3), transparent 40%)",
+                "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.3), transparent 40%), radial-gradient(circle at 80% 80%, rgba(32,178,170,0.3), transparent 40%)",
             }}
           />
           <div className="relative">

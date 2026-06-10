@@ -11,6 +11,7 @@
   --color-brand-500: #FF851B;
   --color-brand-600: #E06A00;
   --color-brand-700: #BD5400;
+  --color-brand-text: #9A4E00;  /* laranja escuro — uso EXCLUSIVO como texto em fundo claro */
 
   /* Primary + Accent */
   --color-primary:       #FF851B;
@@ -23,6 +24,12 @@
   --color-success: #3DAA6B;
   --color-warning: #F5A623;
   --color-danger:  #E54B4B;
+
+  /* Urgência e resolução */
+  --color-urgent:        #DC2626;  /* vermelho urgência — pet desaparecido 7+ dias */
+  --color-urgent-light:  #FEF2F2;  /* fundo urgência light mode */
+  --color-resolved:      #16A34A;  /* verde celebração — pet reencontrado */
+  --color-resolved-light:#F0FDF4;
 
   /* Cyan scale */
   --color-cyan-300: #67E8F9;
@@ -80,9 +87,9 @@
 
 /* ── Dark mode — ÚNICO bloco (sem duplicação) ────────────────────── */
 [data-theme="dark"] {
-  --color-bg:            #121214;
-  --color-bg-raised:     #1A1A1C;
-  --color-bg-overlay:    #252528;
+  --color-bg:            #141210;
+  --color-bg-raised:     #1C1A18;
+  --color-bg-overlay:    #272421;
   --color-fg:            #F2F2F4;
   --color-fg-muted:      #A8A8B0;
   --color-fg-subtle:     #6B6B78;
@@ -90,6 +97,8 @@
   --color-border-strong: #404047;
   --color-accent:        #20B2AA;
   --color-danger-fg:     #FCA5A5;
+  --color-urgent:        #EF4444;
+  --color-resolved:      #22C55E;
 
   /* Ink scale — dark mode */
   --color-ink-50:  #252528;
@@ -279,4 +288,29 @@
     scrollbar-width: none;
   }
   .scrollbar-hide::-webkit-scrollbar { display: none; }
+
+  /* Sombras coloridas — cards sobre fundo cream */
+  .shadow-warm-card {
+    box-shadow:
+      0 1px 3px rgba(26,18,8,0.06),
+      0 4px 12px rgba(26,18,8,0.04),
+      0 0 0 1px rgba(26,18,8,0.03);
+  }
+  .shadow-warm-hover {
+    box-shadow:
+      0 2px 8px rgba(255,133,27,0.12),
+      0 8px 24px rgba(26,18,8,0.08),
+      0 0 0 1px rgba(255,133,27,0.08);
+  }
+  .shadow-brand-glow-sm {
+    box-shadow: 0 0 12px rgba(255,133,27,0.25);
+  }
+
+  /* Glow text — legível sobre fundo escuro */
+  .glow-text-brand {
+    text-shadow: 0 0 24px rgba(255,133,27,0.5);
+  }
+  .glow-text-cyan {
+    text-shadow: 0 0 24px rgba(32,178,170,0.5);
+  }
 }

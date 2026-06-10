@@ -42,9 +42,9 @@ function calcularTempo(inicio: string, fim: string): string {
 
 function estiloTempo(inicio: string, fim: string): string {
   const horas = (new Date(fim).getTime() - new Date(inicio).getTime()) / 1000 / 60 / 60
-  if (horas <= 24) return 'text-emerald-700 border-emerald-600/30 bg-emerald-50'
-  if (horas <= 72) return 'text-teal-700 border-teal-600/30 bg-teal-50'
-  return 'text-amber-700 border-amber-600/30 bg-amber-50'
+  if (horas <= 24) return 'text-[#0F6E56] border-[#20B2AA]/30 bg-[#E1F5EE]'
+  if (horas <= 72) return 'text-[#0F6E56] border-[#20B2AA]/20 bg-[#F0FDFB]'
+  return 'text-[#9A4E00] border-[#FF851B]/30 bg-[#FFF4E8]'
 }
 
 const EMOJI: Record<PetReencontrado['species'], string> = {
@@ -69,7 +69,8 @@ function CardRreencontro({
       className={[
         'group relative flex flex-col overflow-hidden rounded-2xl',
         'bg-white border border-warm-200',
-        'hover:border-brand-400/40 hover:shadow-[0_4px_20px_rgba(255,107,53,0.08)]',
+        'shadow-warm-card hover:shadow-warm-hover hover:border-brand-400/40',
+        'transition-shadow transition-colors',
         'transition-all duration-300',
         destaque ? 'md:col-span-2' : '',
       ].join(' ')}
@@ -134,7 +135,7 @@ function CardRreencontro({
         <div className="mt-1 h-px bg-warm-200" />
 
         <p className="text-xs text-ink-400 uppercase tracking-wider font-medium">
-          <span className="text-emerald-600">✓</span> Reencontrado
+          <span className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wide px-2.5 py-1 rounded-full bg-[#E1F5EE] text-[#0F6E56] border border-[#20B2AA]/40">✓ Reencontrado</span>
         </p>
       </div>
     </article>
@@ -209,7 +210,7 @@ export default function HallRreencontros({
           <div className="mt-10 flex justify-center">
             <Link
               href="/achados-e-perdidos?status=resolved"
-              className="group inline-flex items-center gap-2 rounded-full border border-warm-300 bg-white px-6 py-3 text-sm font-semibold text-fg-muted transition-all duration-200 hover:border-brand-400/40 hover:text-fg"
+              className="group inline-flex items-center gap-2 rounded-full border border-warm-300 bg-white px-6 py-3 text-sm font-semibold text-brand-600 transition-all duration-200 hover:border-brand-400/40 hover:text-brand-500 transition-colors"
             >
               Ver todos os reencontros
               <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />

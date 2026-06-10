@@ -98,19 +98,28 @@ Exemplo ERRADO:
 -- ─────────────────────────────────────────
 -- TABELA: pets (Achados e Perdidos)
 -- ─────────────────────────────────────────
--- id           UUID DEFAULT gen_random_uuid() (PK)
--- user_id      UUID → auth.users (FK, NOT NULL)
--- nome         TEXT NOT NULL
--- especie      TEXT NOT NULL  ['cachorro','gato','passaro','outro']
--- raca         TEXT
--- descricao    TEXT
--- foto_url     TEXT (URL do Storage: bucket pet-images)
--- status       TEXT CHECK IN ('perdido','encontrado','resolvido')
--- localizacao  GEOGRAPHY(POINT, 4326)
--- cidade       TEXT
--- contato      TEXT  → APENAS visível na rota /[id], NUNCA na listagem
--- created_at   TIMESTAMPTZ DEFAULT NOW()
--- RLS: SELECT público / INSERT+UPDATE+DELETE apenas auth.uid() = user_id
+-- ATENÇÃO: schema real em INGLÊS (não PT-BR como era antes)
+-- id            UUID DEFAULT gen_random_uuid() (PK)
+-- owner_id      UUID → auth.users (FK, NOT NULL)  [era user_id]
+-- name          TEXT NOT NULL                      [era nome]
+-- species       TEXT ['dog','cat','bird','other']   [era especie]
+-- kind          TEXT CHECK IN ('lost','found')      [era status perdido/encontrado]
+-- status        TEXT CHECK IN ('active','resolved','removed')
+-- breed         TEXT                               [era raca]
+-- color         TEXT
+-- description   TEXT                               [era descricao]
+-- photo_url     TEXT (Storage: bucket pet-images)
+-- neighborhood  TEXT
+-- city          TEXT                               [era cidade]
+-- state         TEXT
+-- latitude      FLOAT8
+-- longitude     FLOAT8
+-- contact_name  TEXT  → APENAS visível em /pets/[id], NUNCA na listagem
+-- contact_phone TEXT  → APENAS visível em /pets/[id], NUNCA na listagem
+-- contact_whatsapp BOOLEAN
+-- created_at    TIMESTAMPTZ DEFAULT NOW()
+-- View pública: pets_public (exclui contact_* — usar em listagens)
+-- RLS: SELECT público via pets_public / INSERT+UPDATE+DELETE auth.uid() = owner_id
 
 -- ─────────────────────────────────────────
 -- TABELA: prestadores
@@ -170,14 +179,59 @@ PADRÃO PARA TABELAS PRIVADAS (profiles, agent_memory):
 ```
 ROTA                              TIPO          DESCRIÇÃO
 ───────────────────────────────────────────────────────────────────────
+-- PÚBLICAS (route group (marketing) + (public)) --
 /                                 Page          Home pública
 /achados-e-perdidos               Page          Listagem pública de pets
-/achados-e-perdidos/novo          Page          Formulário de cadastro
 /achados-e-perdidos/[id]          Page          Detalhe + CONTATO (só aqui)
-/auth/login                       Page          Login / cadastro
+/achados-e-perdidos/novo          Page          Formulário de cadastro
+/pets/[id]                        Page          Detalhe público do pet
+/prestadores                      Page          Listagem de prestadores
+/prestadores/[slug]               Page          Perfil do prestador
+/mapa                             Page          Mapa de avistamentos
+/avistamentos                     Page          Feed de avistamentos
+/avistamentos/novo                Page          Registrar avistamento
+/sentinela                        Page          Rede de câmeras sentinela
+/[type]-em-[city]                 Page          SEO dinâmico por cidade/espécie
+/loja                             Page          Loja de plaquinhas (Printful)
+/loja/[id]                        Page          Detalhe do produto
+/plaquinha                        Page          Plaquinha tag pet
+/dicas                            Page          Guia rápido
+/parcerias                        Page          Formulário de parcerias
+
+-- AUTH (route group (auth)) --
+/login                            Page          Login/cadastro [NÃO é /auth/login]
+/registro                         Page          Cadastro de conta
+/esqueci-senha                    Page          Recuperação de senha
 /auth/callback                    Route         Callback PKCE do Supabase
-/api/pets                         API Route     GET (listagem) + POST (cadastro)
+
+-- APP AUTENTICADO --
+/meus-pets                        Page          Pets do usuário logado
+/perfil/[id]                      Page          Perfil público de usuário
+/cadastro                         Page          Onboarding pós-registro
+/dashboard-prestador              Page          Dashboard do prestador
+
+-- ONG (requer shelter cadastrado) --
+/ong/dashboard                    Page          Dashboard ONG
+/ong/pets                         Page          Pets do shelter
+/ong/adocoes                      Page          Gestão de adoções
+/ong/adocoes/novo                 Page          Registrar adoção
+/ong/pets/[id]/vacinas            Page          Vacinas do pet
+/ong/pets/[id]/medicacoes         Page          Medicações do pet
+/ong/pets/[id]/prontuario         Page          Prontuário médico
+
+-- ADMIN --
+/admin                            Page          Painel admin geral
+/admin/pets                       Page          Gestão de pets
+/admin/prestadores                Page          Gestão de prestadores
+
+-- API ROUTES --
+/api/pets                         API Route     GET + POST
 /api/pets/[id]                    API Route     GET + PATCH + DELETE
+/api/pets/lost-active             API Route     GET — pets perdidos ativos
+/api/ong/available-pets           API Route     GET — pets disponíveis para adoção
+/api/ong/adoption/[id]            API Route     GET — detalhe de adoção
+/api/user/export-data             API Route     GET — exportação LGPD
+/api/sync/printful                API Route     POST — sync catálogo Printful
 ```
 
 **Regra de contato:** `contato` (telefone/WhatsApp do tutor) NUNCA aparece
@@ -189,33 +243,63 @@ Gerar código que viola isso é um bug de segurança.
 ## COMPONENTES EXISTENTES
 
 ```
-COMPONENTE                    PATH                              STATUS
-───────────────────────────────────────────────────────────────────────
-PetCardFuturistic.jsx         src/components/PetCardFuturistic  ATIVO (277 linhas)
-  Props: { pet: { id, nome, especie, raca, status, localizacao,
-                  cidade, foto_url, descricao, data_cadastro } }
+COMPONENTE                PATH                           STATUS
+──────────────────────────────────────────────────────────────────
+PetCard.tsx               components/pets/PetCard        ATIVO (TypeScript)
+  Props: { pet: PetPublic } — usa tipo de lib/types/database.ts
+  ATENÇÃO: PetCardFuturistic.jsx NÃO EXISTE mais
 
-PetCard.js                    src/components/PetCard            LEGADO (manter)
+PetGrid.tsx               components/pets/PetGrid        ATIVO
+FilterBar.tsx             components/pets/FilterBar      ATIVO
+MarketingHeader.tsx       components/layout/             ATIVO
+MarketingFooter.tsx       components/layout/             ATIVO
+HallRreencontros.tsx      components/                    ATIVO — hall de sucessos
+SOSBadge.tsx              components/ui/                 ATIVO — badges semânticos
+EmergencyFAB.tsx          components/ui/                 ATIVO — botão flutuante SOS
 ```
 
 **ANTES de criar qualquer novo componente:**
-1. Verifique se já existe em `src/components/`
+1. Verifique `components/` (não `src/components/` — não existe src/)
 2. Verifique se o existente pode ser adaptado com props
-3. Nunca duplicar componentes funcionais
+3. Tipos de props em `lib/types/database.ts` ou `types/pets.ts`
 
 ---
 
 ## VARIÁVEIS DE AMBIENTE
 
 ```
-NEXT_PUBLIC_SUPABASE_URL       → https://xxxxx.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY  → eyJ... (anon — segura no frontend)
-NEXT_PUBLIC_SITE_URL           → https://dominio.vercel.app
+-- OBRIGATÓRIAS --
+NEXT_PUBLIC_SUPABASE_URL        → https://xxxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY   → eyJ... (anon — segura no frontend)
+NEXT_PUBLIC_SITE_URL            → https://dominio.vercel.app
+SUPABASE_SERVICE_ROLE_KEY       → server-only, nunca NEXT_PUBLIC_
 
-OPCIONAIS:
-  NEXT_PUBLIC_GA_MEASUREMENT_ID  → G-XXXXXXX
-  RESEND_API_KEY                 → re_... (server only — sem NEXT_PUBLIC_)
-  FROM_EMAIL                     → SOS Pet <noreply@sospet.com.br>
+-- RATE LIMITING (obrigatório em produção) --
+UPSTASH_REDIS_REST_URL          → https://precise-xxx.upstash.io
+UPSTASH_REDIS_REST_TOKEN        → token longo
+
+-- PAGAMENTOS --
+MP_ACCESS_TOKEN                 → Mercado Pago (server-only)
+MP_WEBHOOK_SECRET               → validação HMAC webhook MP
+NEXT_PUBLIC_MP_PUBLIC_KEY       → chave pública MP (frontend)
+
+-- LOJA --
+PRINTFUL_API_KEY                → integração catálogo
+SYNC_TOKEN                      → autenticação endpoint sync/printful
+NEXT_PUBLIC_TAG_PRICE_BRL       → preço da plaquinha
+
+-- COMUNICAÇÃO --
+RESEND_API_KEY                  → email (server-only)
+RESEND_FROM                     → remetente (era FROM_EMAIL)
+N8N_ADOPTION_WEBHOOK_URL        → webhook adoções ONG
+
+-- SEGURANÇA --
+TURNSTILE_SECRET_KEY            → anti-bot formulários (server-only)
+NEXT_PUBLIC_TURNSTILE_SITE_KEY  → chave pública Turnstile
+
+-- OPCIONAIS --
+NEXT_PUBLIC_GA_MEASUREMENT_ID   → Google Analytics
+NEXT_PUBLIC_SENTRY_DSN          → Sentry error tracking
 
 ✗ NUNCA:
   NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY  → BLOQUEIO imediato de deploy
@@ -234,16 +318,22 @@ const supabase = await createClient()  // await obrigatório no Next.js 15+
 import { createClient } from '@/lib/supabase/client'
 const supabase = createClient()
 
-// ✓ CORRETO — Select explícito (nunca *)
+// ✓ CORRETO — Select explícito (nunca *) — colunas REAIS em inglês
 const { data } = await supabase
-  .from('pets')
-  .select('id, nome, especie, status, cidade, foto_url, created_at')
-  .eq('status', 'perdido')
+  .from('pets_public')  // view pública sem contact_*
+  .select('id, name, species, kind, status, city, photo_url, created_at')
+  .eq('kind', 'lost')   // era .eq('status', 'perdido')
+  .eq('status', 'active')
   .order('created_at', { ascending: false })
 
 // ✓ CORRETO — Import alias
-import { PetCard } from '@/components/PetCardFuturistic'
+import { PetCard } from '@/components/pets/PetCard'  // NÃO PetCardFuturistic
 import { createClient } from '@/lib/supabase/server'
+
+// ✓ CORRETO — API response helpers (obrigatório em API Routes)
+import { ok, fail } from '@/lib/api-response'
+return ok({ pets })          // { success: true, data: { pets } }
+return fail(new Error('...')) // { success: false, error: '...', code: '...' }
 
 // ✓ CORRETO — Formato de erro padrão
 return NextResponse.json(

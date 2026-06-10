@@ -31,28 +31,28 @@ function PainelAlertas({
   totalAtivos: number
 }) {
   return (
-    <div className="w-full rounded-2xl overflow-hidden border border-[rgb(var(--color-border))] bg-white shadow-[0_4px_24px_rgba(26,18,8,0.06)]">
+    <div className="w-full rounded-2xl overflow-hidden border border-border bg-white shadow-warm-card">
 
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[rgb(var(--color-border))] bg-[rgb(var(--color-bg-raised))]">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-bg-raised">
         <div className="flex items-center gap-2">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[rgb(var(--color-accent))] opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-[rgb(var(--color-accent))]" />
           </span>
-          <span className="text-xs font-bold uppercase tracking-wider text-[rgb(var(--color-fg-subtle))]">
+          <span className="text-xs font-bold uppercase tracking-wider text-fg-subtle">
             Alertas recentes
           </span>
         </div>
-        <span className="text-xs text-[rgb(var(--color-fg-muted))]">
+        <span className="text-xs text-fg-muted">
           {totalAtivos} ativo{totalAtivos !== 1 ? 's' : ''}
         </span>
       </div>
 
       {/* Lista */}
-      <ul className="divide-y divide-[rgb(var(--color-border))]">
+      <ul className="divide-y divide-border">
         {alertas.length === 0 ? (
-          <li className="px-4 py-8 text-center text-sm text-[rgb(var(--color-fg-muted))]">
+          <li className="px-4 py-8 text-center text-sm text-fg-muted">
             Nenhum alerta recente ainda.<br />
             <span className="font-medium" style={{ color: 'var(--color-brand-500)' }}>
               Seja o primeiro a cadastrar.
@@ -63,10 +63,10 @@ function PainelAlertas({
             <li key={alerta.id}>
               <Link
                 href={`/achados-e-perdidos/${alerta.id}`}
-                className="flex items-center gap-3 px-4 py-3 hover:bg-[rgb(var(--color-bg-overlay))] transition-colors duration-150 group"
+                className="flex items-center gap-3 px-4 py-3 hover:bg-brand-500/5 transition-colors duration-150 group"
               >
                 {/* Avatar emoji */}
-                <div className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center text-base bg-[rgb(var(--color-bg-overlay))] border border-[rgb(var(--color-border))]">
+                <div className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center text-base bg-bg-overlay border border-border">
                   {alerta.especie === 'cachorro' ? '🐶'
                     : alerta.especie === 'gato' ? '🐱'
                     : alerta.especie === 'passaro' ? '🦜'
@@ -77,26 +77,26 @@ function PainelAlertas({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5">
                     <span className={`
-                      inline-block rounded-full px-1.5 py-0.5
-                      text-[10px] font-bold uppercase tracking-wider flex-shrink-0
+                      inline-block rounded-full px-2 py-0.5
+                      text-xs font-bold uppercase tracking-wide flex-shrink-0 border
                       ${alerta.status === 'perdido'
-                        ? 'bg-[rgb(var(--color-primary))]/12 text-[rgb(var(--color-primary))]'
-                        : 'bg-[rgb(var(--color-accent))]/12 text-[rgb(var(--color-accent))]'
+                        ? 'bg-[#FFF4E8] text-[#9A4E00] border-[#FF9933]/40'
+                        : 'bg-[#E1F5EE] text-[#0F6E56] border-[#20B2AA]/40'
                       }
                     `}>
                       {alerta.status}
                     </span>
-                    <p className="text-sm font-semibold text-[rgb(var(--color-fg))] truncate">
+                    <p className="text-sm font-semibold text-fg truncate">
                       {alerta.nome ?? 'Sem nome'} · {alerta.especie}
                     </p>
                   </div>
-                  <p className="text-xs text-[rgb(var(--color-fg-muted))] truncate mt-0.5">
+                  <p className="text-xs text-fg-muted truncate mt-0.5">
                     📍 {alerta.cidade}
                   </p>
                 </div>
 
                 {/* Tempo */}
-                <span className="text-[11px] text-[rgb(var(--color-fg-subtle))] flex-shrink-0 group-hover:text-[rgb(var(--color-primary))] transition-colors duration-150">
+                <span className="text-[11px] text-fg-subtle flex-shrink-0 group-hover:text-[rgb(var(--color-primary))] transition-colors duration-150">
                   {alerta.tempoRelativo}
                 </span>
               </Link>
@@ -106,7 +106,7 @@ function PainelAlertas({
       </ul>
 
       {/* Footer */}
-      <div className="px-4 py-3 border-t border-[rgb(var(--color-border))] bg-[rgb(var(--color-bg-raised))]">
+      <div className="px-4 py-3 border-t border-border bg-bg-raised">
         <Link
           href="/achados-e-perdidos"
           className="text-xs font-semibold transition-colors duration-150 flex items-center gap-1"
@@ -155,54 +155,34 @@ export default function HeroSection({
             </div>
 
             {/* Heading — texto escuro sobre creme, contraste 15:1 */}
-            <h1 className="text-4xl font-black leading-[1.1] text-[rgb(var(--color-fg))] md:text-5xl lg:text-6xl">
+            <h1 className="text-4xl font-black leading-[1.1] text-fg md:text-5xl lg:text-6xl">
               Reencontre{' '}
               <br className="hidden sm:block" />
               quem{' '}
               <span style={{ color: 'var(--color-brand-500)' }}>se perdeu.</span>
             </h1>
 
-            <p className="max-w-md text-base text-[rgb(var(--color-fg-muted))] leading-relaxed md:text-lg">
+            <p className="max-w-md text-base text-fg-muted leading-relaxed md:text-lg">
               Cadastre seu pet desaparecido, dispare um alerta de resgate e
               conte com a rede pra trazer ele de volta.{' '}
-              <strong className="font-semibold text-[rgb(var(--color-fg))]">Em segundos.</strong>
+              <strong className="font-semibold text-fg">Em segundos.</strong>
             </p>
 
             {/* CTAs */}
             <div className="flex flex-wrap gap-3">
-              {/* Primário: laranja sólido via style — fallback se bg-brand-500 não resolver */}
+              {/* Primário: urgência — pet perdido */}
               <Link
                 href="/achados-e-perdidos/cadastrar"
-                className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-white transition-all duration-200 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2"
-                style={{
-                  backgroundColor: 'var(--color-brand-500)',
-                  boxShadow:       '0 2px 12px rgba(255,107,53,0.30)',
-                  outlineColor:    'var(--color-brand-500)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--color-brand-600)'
-                  e.currentTarget.style.boxShadow       = '0 4px 16px rgba(255,107,53,0.40)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--color-brand-500)'
-                  e.currentTarget.style.boxShadow       = '0 2px 12px rgba(255,107,53,0.30)'
-                }}
+                className="group inline-flex items-center gap-2.5 rounded-xl bg-brand-500 px-6 py-3.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(255,133,27,0.4)] transition-all hover:bg-brand-400 hover:shadow-[0_0_30px_rgba(255,133,27,0.5)] active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2"
               >
                 <AlertTriangle size={15} aria-hidden="true" />
                 Cadastrar pet perdido →
               </Link>
 
-              {/* Secundário: outline teal */}
+              {/* Secundário: buscar pets */}
               <Link
                 href="/achados-e-perdidos"
-                className="inline-flex items-center gap-2 rounded-full border px-6 py-3 text-sm font-semibold bg-transparent transition-all duration-200 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2"
-                style={{
-                  borderColor:  'rgb(var(--color-accent))',
-                  color:        'rgb(var(--color-accent))',
-                  outlineColor: 'rgb(var(--color-accent))',
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(var(--color-accent), 0.08)' }}
-                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
+                className="inline-flex items-center gap-2 rounded-xl border-2 border-cyan-500/50 bg-cyan-500/10 px-5 py-3.5 text-sm font-bold text-cyan-200 transition-all hover:bg-cyan-500/20 hover:border-cyan-500/70 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2"
               >
                 <Search size={14} aria-hidden="true" />
                 Ver pets na rede
@@ -210,7 +190,7 @@ export default function HeroSection({
             </div>
 
             {/* Trust line */}
-            <p className="text-xs text-[rgb(var(--color-fg-subtle))] flex flex-wrap gap-x-3 gap-y-1">
+            <p className="text-xs text-fg-subtle flex flex-wrap gap-x-3 gap-y-1">
               <span>✓ 100% gratuito</span>
               <span>✓ sem login obrigatório</span>
               <span>✓ verificação anti-spam automática</span>
