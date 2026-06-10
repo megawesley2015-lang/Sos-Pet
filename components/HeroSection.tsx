@@ -128,7 +128,7 @@ export default function HeroSection({
   return (
     <section
       aria-label="Reencontre seu pet perdido"
-      className="relative overflow-hidden bg-bg bg-warm-grid pt-16 pb-20 md:pt-24 md:pb-28 px-4"
+      className="relative overflow-hidden bg-bg bg-warm-grid pt-16 pb-10 md:pt-24 md:pb-14 px-4"
     >
       {/* Aura decorativa */}
       <div className="pointer-events-none absolute inset-0 bg-radial-warm opacity-60" aria-hidden="true" />

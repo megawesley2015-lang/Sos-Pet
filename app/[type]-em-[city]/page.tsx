@@ -70,7 +70,7 @@ export default async function LocalPetsPage({ params }: PageProps) {
   });
 
   return (
-    <div className="min-h-screen bg-ink-800">
+    <div className="min-h-screen bg-bg" data-theme="light">
       <TopBar />
 
       <main className="mx-auto max-w-6xl px-4 pb-16 pt-6">
@@ -101,7 +101,7 @@ export default async function LocalPetsPage({ params }: PageProps) {
               className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                 isFound
                   ? "bg-brand-500 text-white"
-                  : "border border-white/20 text-fg hover:bg-white/5"
+                  : "border border-warm-200 bg-white text-fg hover:bg-warm-50"
               }`}
             >
               🐾 Achados
@@ -111,7 +111,7 @@ export default async function LocalPetsPage({ params }: PageProps) {
               className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                 !isFound
                   ? "bg-brand-500 text-white"
-                  : "border border-white/20 text-fg hover:bg-white/5"
+                  : "border border-warm-200 bg-white text-fg hover:bg-warm-50"
               }`}
             >
               ❤️ Perdidos
@@ -125,7 +125,7 @@ export default async function LocalPetsPage({ params }: PageProps) {
             Erro ao carregar pets. Tente novamente.
           </div>
         ) : pets.length === 0 ? (
-          <div className="rounded-xl border border-white/10 bg-white/5 p-8 text-center">
+          <div className="rounded-xl border border-warm-200 bg-white p-8 text-center shadow-warm-card">
             <p className="mb-4 text-fg-muted">
               Nenhum pet {isFound ? "encontrado" : "perdido"} em {realCity} no momento.
             </p>
@@ -141,7 +141,7 @@ export default async function LocalPetsPage({ params }: PageProps) {
             <PetGrid pets={pets} />
 
             {/* SEO Footer */}
-            <section className="mt-16 rounded-xl border border-white/10 bg-white/5 p-8">
+            <section className="mt-16 rounded-xl border border-warm-200 bg-white p-8 shadow-warm-card">
               <h2 className="mb-4 font-display text-2xl font-bold">
                 Sobre pets em {realCity}
               </h2>

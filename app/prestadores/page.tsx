@@ -126,8 +126,8 @@ export default async function PrestadoresPage({ searchParams }: PageProps) {
 function Empty() {
   return (
     <div className="rounded-2xl border border-dashed border-white/15 bg-ink-700/40 p-10 text-center shadow-warm-card">
-      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-cyan-500/40 bg-cyan-500/10">
-        <Building2 className="h-7 w-7 text-cyan-400" strokeWidth={2} />
+      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-brand-500/40 bg-brand-500/10">
+        <Building2 className="h-7 w-7 text-brand-500" strokeWidth={2} />
       </div>
       <h2 className="font-display text-xl font-bold text-fg">
         Nenhum prestador no filtro atual
@@ -139,7 +139,7 @@ function Empty() {
       <div className="mt-5">
         <Link
           href="/prestadores"
-          className="text-xs text-cyan-400 hover:text-cyan-300"
+          className="text-xs text-brand-500 hover:text-brand-600"
         >
           ← Limpar filtros
         </Link>

@@ -39,14 +39,14 @@ export default async function SentinelaPage() {
   const verified = partners.filter((p) => p.verified);
 
   return (
-    <div className="min-h-screen bg-ink-800 bg-radial-brand">
+    <div className="min-h-screen bg-bg" data-theme="light">
       <TopBar />
       <main className="mx-auto max-w-4xl px-4 pb-16 pt-8">
         {/* Header */}
         <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
           <div>
             <h1 className="font-display text-3xl font-bold text-fg">
-              Rede <span className="text-cyan-400">Sentinela</span>
+              Rede <span className="text-brand-500">Sentinela</span>
             </h1>
             <p className="mt-1 text-sm text-fg-muted">
               {partners.length} estabelecimento{partners.length !== 1 ? "s" : ""} na rede ·{" "}
@@ -63,7 +63,7 @@ export default async function SentinelaPage() {
         </div>
 
         {partners.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-ink-700/60 p-16 text-center">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-warm-200 bg-white p-16 text-center shadow-warm-card">
             <Camera className="mb-4 h-12 w-12 text-fg-subtle" />
             <h2 className="font-display text-xl font-bold text-fg mb-2">
               Nenhum parceiro ainda
@@ -83,16 +83,16 @@ export default async function SentinelaPage() {
             {partners.map((p) => (
               <div
                 key={p.id}
-                className="flex flex-wrap items-start justify-between gap-3 rounded-xl border border-white/8 bg-ink-700/60 px-5 py-4"
+                className="flex flex-wrap items-start justify-between gap-3 rounded-xl border border-warm-200 bg-white px-5 py-4 shadow-warm-card"
               >
                 <div className="flex items-start gap-3">
                   {/* Ícone câmera */}
                   <div className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border ${
                     p.has_cameras
-                      ? "border-cyan-500/40 bg-cyan-500/10"
-                      : "border-white/10 bg-ink-800"
+                      ? "border-brand-500/40 bg-brand-500/10"
+                      : "border-warm-200 bg-warm-50"
                   }`}>
-                    <Camera className={`h-4 w-4 ${p.has_cameras ? "text-cyan-400" : "text-fg-subtle"}`} />
+                    <Camera className={`h-4 w-4 ${p.has_cameras ? "text-brand-500" : "text-fg-subtle"}`} />
                   </div>
 
                   <div>
@@ -104,7 +104,7 @@ export default async function SentinelaPage() {
                         </span>
                       )}
                       {p.has_cameras && (
-                        <span className="inline-flex items-center gap-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-2 py-0.5 text-[10px] font-bold text-cyan-300">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-brand-500/30 bg-brand-500/10 px-2 py-0.5 text-[10px] font-bold text-brand-600">
                           📷 Câmeras
                         </span>
                       )}
@@ -129,7 +129,7 @@ export default async function SentinelaPage() {
                 {p.contact_phone && (
                   <a
                     href={`tel:${p.contact_phone}`}
-                    className="flex shrink-0 items-center gap-1.5 rounded-lg border border-white/10 bg-ink-800 px-3 py-2 text-xs font-medium text-fg-muted hover:text-fg"
+                    className="flex shrink-0 items-center gap-1.5 rounded-lg border border-warm-200 bg-warm-50 px-3 py-2 text-xs font-medium text-fg-muted hover:text-fg"
                   >
                     <Phone className="h-3.5 w-3.5" />
                     {p.contact_phone}
@@ -142,7 +142,7 @@ export default async function SentinelaPage() {
 
         {/* CTA rodapé */}
         {partners.length > 0 && (
-          <div className="mt-8 rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-5 text-center">
+          <div className="mt-8 rounded-xl border border-brand-500/20 bg-brand-500/5 p-5 text-center">
             <p className="text-sm text-fg-muted mb-3">
               Seu estabelecimento ainda não está na rede?
             </p>

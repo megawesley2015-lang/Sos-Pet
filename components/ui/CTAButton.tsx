@@ -37,7 +37,7 @@ export function CTAButton({
     variant === "primary" &&
       "bg-brand-500 text-white shadow-glow-brand hover:bg-brand-400 hover:shadow-glow-brand-lg active:scale-[0.98]",
     variant === "secondary" &&
-      "border border-cyan-500/60 bg-cyan-500/10 text-cyan-200 hover:bg-cyan-500/20 hover:shadow-glow-cyan active:scale-[0.98]",
+      "border border-brand-500/50 bg-brand-500/10 text-brand-700 hover:bg-brand-500/20 hover:shadow-glow-brand active:scale-[0.98]",
     variant === "ghost" &&
       "text-fg-muted hover:bg-white/5 hover:text-fg",
     className

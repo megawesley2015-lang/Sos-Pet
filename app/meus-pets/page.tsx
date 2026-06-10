@@ -37,7 +37,7 @@ export default async function MeusPetsPage({
   const { pets, error } = await listPets({ ownerId: user.id, limit: 100 });
 
   return (
-    <div className="min-h-screen bg-ink-800 bg-radial-brand">
+    <div className="min-h-screen bg-bg" data-theme="light">
       <div className="bg-grid-subtle min-h-screen">
         <TopBar />
 
@@ -108,7 +108,7 @@ export default async function MeusPetsPage({
 
 function EmptyState() {
   return (
-    <div className="rounded-2xl border border-dashed border-white/15 bg-ink-700/40 p-10 text-center">
+    <div className="rounded-2xl border border-dashed border-warm-200 bg-white p-10 text-center shadow-warm-card">
       <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-brand-500/40 bg-brand-500/10">
         <PawPrint className="h-7 w-7 text-brand-400" strokeWidth={2} />
       </div>

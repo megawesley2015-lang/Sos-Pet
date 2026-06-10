@@ -102,12 +102,12 @@ export default async function MapaPage() {
               <span className="h-2 w-2 rounded-full bg-brand-500 animate-pulse" />
               {lostCount} perdido{lostCount !== 1 ? "s" : ""}
             </span>
-            <span className="flex items-center gap-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1.5 font-bold text-cyan-300">
-              <span className="h-2 w-2 rounded-full bg-cyan-500" />
+            <span className="flex items-center gap-1.5 rounded-full border border-[#20B2AA]/30 bg-[#E1F5EE] px-3 py-1.5 font-bold text-[#0F6E56]">
+              <span className="h-2 w-2 rounded-full bg-[#20B2AA]" />
               {foundCount} encontrado{foundCount !== 1 ? "s" : ""}
             </span>
             {sentinels.length > 0 && (
-              <span className="flex items-center gap-1.5 rounded-full border border-white/10 bg-ink-700 px-3 py-1.5 font-bold text-fg-muted">
+              <span className="flex items-center gap-1.5 rounded-full border border-warm-200 bg-warm-100 px-3 py-1.5 font-bold text-fg-muted">
                 📷 {sentinels.length} câmera{sentinels.length !== 1 ? "s" : ""}
               </span>
             )}
@@ -115,7 +115,7 @@ export default async function MapaPage() {
         </div>
 
         {pets.length === 0 ? (
-          <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-white/10 bg-ink-800 text-center p-12 shadow-warm-card">
+          <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-warm-200 bg-warm-50 text-center p-12 shadow-warm-card">
             <div className="text-5xl mb-4">🗺️</div>
             <h2 className="font-display text-xl font-bold text-fg mb-2">
               Mapa vazio por enquanto
@@ -139,10 +139,10 @@ export default async function MapaPage() {
         <div className="mt-3 flex flex-wrap items-center gap-4 text-[11px] text-fg-subtle">
           <span>💡 Alfinetes laranjas pulsantes = alertas nas últimas 24h</span>
           <span>📷 Câmeras parceiras = estabelecimentos da Rede Sentinela</span>
-          <Link href="/pets/novo" className="text-brand-400 hover:text-brand-300">
+          <Link href="/pets/novo" className="text-brand-600 hover:text-brand-500">
             + Registrar pet →
           </Link>
-          <Link href="/avistamentos/novo" className="text-cyan-400 hover:text-cyan-300">
+          <Link href="/avistamentos/novo" className="text-brand-500 hover:text-brand-400">
             + Reportar avistamento →
           </Link>
         </div>
