@@ -79,7 +79,7 @@ export default async function PlaquinhaPendentePage({
         </div>
 
         {/* Timeline */}
-        <div className="mt-6 w-full max-w-sm rounded-2xl border border-white/10 bg-ink-700/40 p-6 text-left">
+        <div className="mt-6 w-full max-w-sm rounded-2xl border border-white/10 bg-ink-700/40 p-6 text-left shadow-warm-card">
           <p className="mb-4 text-xs font-bold uppercase tracking-widest text-fg-subtle">
             Progresso do pedido
           </p>

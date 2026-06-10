@@ -83,7 +83,7 @@ export default async function PerfilPage({ params }: PageProps) {
   const foundCount = pets.filter((p) => p.kind === "found").length;
 
   return (
-    <div className="min-h-screen bg-ink-800 bg-radial-brand">
+    <div className="min-h-screen bg-bg bg-radial-brand" data-theme="light">
       <TopBar />
       <main className="mx-auto max-w-4xl px-4 pb-16 pt-8">
 
@@ -120,7 +120,7 @@ export default async function PerfilPage({ params }: PageProps) {
             {/* Stats */}
             <div className="mt-4 flex flex-wrap justify-center gap-4 sm:justify-start">
               <Stat value={lostCount} label="perdidos" color="text-brand-400" />
-              <Stat value={foundCount} label="encontrados" color="text-cyan-400" />
+              <Stat value={foundCount} label="encontrados" color="text-brand-500" />
               {resolvedCount > 0 && (
                 <Stat
                   value={resolvedCount}
@@ -135,7 +135,7 @@ export default async function PerfilPage({ params }: PageProps) {
 
         {/* Pets ativos */}
         {pets.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-white/15 bg-ink-700/40 p-12 text-center">
+          <div className="rounded-2xl border border-dashed border-warm-200 bg-warm-50 p-12 text-center shadow-warm-card">
             <PawPrint className="mx-auto mb-3 h-10 w-10 text-brand-500/30" />
             <p className="text-sm text-fg-muted">
               Este tutor não tem registros ativos no momento.
@@ -180,7 +180,7 @@ function Stat({
   icon?: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center gap-1.5 rounded-full border border-white/10 bg-ink-700/60 px-3 py-1.5">
+    <div className="flex items-center gap-1.5 rounded-full border border-warm-200 bg-warm-100 px-3 py-1.5">
       {icon}
       <span className={`text-sm font-bold ${color}`}>{value}</span>
       <span className="text-xs text-fg-muted">{label}</span>
@@ -192,7 +192,7 @@ function ProfilePetCard({ pet }: { pet: PetRow }) {
   return (
     <Link
       href={`/pets/${pet.id}`}
-      className="group overflow-hidden rounded-xl border border-white/5 bg-ink-700/70 transition-all hover:border-brand-500/40 hover:shadow-glow-brand"
+      className="group overflow-hidden rounded-xl border border-warm-200 bg-white transition-all hover:border-brand-500/40 shadow-warm-card hover:shadow-warm-hover"
     >
       {/* Imagem */}
       <div className="relative h-36 bg-gradient-to-br from-ink-600 to-ink-900">

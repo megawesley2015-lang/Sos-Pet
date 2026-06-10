@@ -48,7 +48,7 @@ export default async function DashboardPrestadorPage() {
   const totalReviews = providers.reduce((acc, p) => acc + p.total_avaliacoes, 0);
 
   return (
-    <div className="min-h-screen bg-ink-800 bg-radial-brand">
+    <div className="min-h-screen bg-bg bg-radial-brand" data-theme="light">
       <div className="bg-grid-subtle min-h-screen">
         <TopBar />
 
@@ -57,7 +57,7 @@ export default async function DashboardPrestadorPage() {
             <div>
               <h1 className="font-display text-3xl font-bold leading-tight">
                 Painel do{" "}
-                <span className="text-cyan-400 glow-text-brand">prestador</span>
+                <span className="text-brand-500 glow-text-brand">prestador</span>
               </h1>
               <p className="mt-1 text-sm text-fg-muted">
                 Suas métricas e gestão dos seus estabelecimentos.
@@ -92,7 +92,7 @@ export default async function DashboardPrestadorPage() {
 
               {totalReviews > 0 && (
                 <p className="mb-4 inline-flex items-center gap-1.5 text-xs text-fg-muted">
-                  <TrendingUp className="h-3 w-3 text-cyan-400" />
+                  <TrendingUp className="h-3 w-3 text-brand-500" />
                   {totalReviews}{" "}
                   {totalReviews === 1 ? "avaliação recebida" : "avaliações recebidas"} no total
                 </p>
@@ -119,7 +119,7 @@ export default async function DashboardPrestadorPage() {
 
 function SummaryStat({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-ink-700/50 p-4">
+    <div className="rounded-2xl border border-warm-200 bg-white shadow-warm-card p-4">
       <p className="font-display text-3xl font-bold text-fg">
         {value.toLocaleString("pt-BR")}
       </p>
@@ -132,9 +132,9 @@ function SummaryStat({ label, value }: { label: string; value: number }) {
 
 function Empty() {
   return (
-    <div className="rounded-2xl border border-dashed border-white/15 bg-ink-700/40 p-10 text-center">
-      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-cyan-500/40 bg-cyan-500/10">
-        <Building2 className="h-7 w-7 text-cyan-400" strokeWidth={2} />
+    <div className="rounded-2xl border border-dashed border-warm-200 bg-warm-50 shadow-warm-card p-10 text-center">
+      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-brand-500/40 bg-brand-500/10">
+        <Building2 className="h-7 w-7 text-brand-500" strokeWidth={2} />
       </div>
       <h2 className="font-display text-xl font-bold text-fg">
         Você ainda não tem prestadores cadastrados

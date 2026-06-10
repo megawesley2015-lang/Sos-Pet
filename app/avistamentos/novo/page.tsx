@@ -105,15 +105,15 @@ export default function NovoAvistamentoPage({
   }
 
   return (
-    <div className="min-h-screen bg-ink-800">
+    <div className="min-h-screen bg-bg" data-theme="light">
       {/* Header fixo */}
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-ink-900/80 backdrop-blur-sm">
+      <header className="sticky top-0 z-40 border-b border-warm-200 bg-bg/90 backdrop-blur-sm">
         <div className="mx-auto flex max-w-2xl items-center gap-3 px-4 py-3">
-          <Link href="/avistamentos" className="rounded-lg p-2 text-fg-muted hover:bg-ink-700 hover:text-fg">
+          <Link href="/avistamentos" className="rounded-lg p-2 text-fg-muted hover:bg-warm-100 hover:text-fg">
             <ArrowLeft className="h-4 w-4" />
           </Link>
           <span className="font-display text-sm font-bold text-fg">Reportar avistamento</span>
-          <span className="ml-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-cyan-300">
+          <span className="ml-2 rounded-full border border-brand-500/30 bg-brand-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-brand-700">
             Sem login
           </span>
         </div>
@@ -123,7 +123,7 @@ export default function NovoAvistamentoPage({
         {state.success ? (
           /* ── Sucesso ── */
           <div className="flex flex-col items-center gap-6 py-12 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-cyan-500/20 text-3xl">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-500/15 text-3xl">
               👀
             </div>
             <div>
@@ -135,7 +135,7 @@ export default function NovoAvistamentoPage({
             <div className="flex flex-wrap justify-center gap-3">
               <Link
                 href="/avistamentos/novo"
-                className="rounded-xl border border-white/10 px-5 py-2.5 text-sm font-medium text-fg-muted hover:bg-white/5"
+                className="rounded-xl border border-warm-200 bg-warm-50 px-5 py-2.5 text-sm font-medium text-fg-muted hover:bg-warm-100"
               >
                 Reportar outro
               </Link>
@@ -169,7 +169,7 @@ export default function NovoAvistamentoPage({
               <input type="hidden" name="lng" value={lng} />
 
               {/* Pet */}
-              <section className="rounded-xl border border-white/10 bg-ink-700/50 p-5">
+              <section className="rounded-xl border border-warm-200 bg-warm-50 p-5">
                 <h2 className="mb-4 text-sm font-semibold text-fg">Qual pet você viu?</h2>
                 <div>
                   <label className="mb-1.5 block text-xs font-medium text-fg-muted">
@@ -180,7 +180,7 @@ export default function NovoAvistamentoPage({
                     required
                     value={petId}
                     onChange={(e) => setPetId(e.target.value)}
-                    className="w-full rounded-lg border border-white/10 bg-ink-600 px-3 py-2.5 text-sm text-fg focus:border-cyan-500/60 focus:outline-none"
+                    className="w-full rounded-lg border border-warm-200 bg-white px-3 py-2.5 text-sm text-fg focus:border-brand-500/60 focus:outline-none"
                   >
                     <option value="">-- Selecione o pet perdido --</option>
                     {pets.map((p) => (
@@ -192,7 +192,7 @@ export default function NovoAvistamentoPage({
                   <FieldError errors={state.fieldErrors?.pet_id} />
                   <p className="mt-1.5 text-xs text-fg-subtle">
                     Não sabe qual é?{" "}
-                    <Link href="/pets?kind=lost" className="text-cyan-400 hover:underline">
+                    <Link href="/pets?kind=lost" className="text-brand-500 hover:underline">
                       Veja os pets perdidos na rede
                     </Link>
                   </p>
@@ -200,7 +200,7 @@ export default function NovoAvistamentoPage({
               </section>
 
               {/* Localização */}
-              <section className="rounded-xl border border-white/10 bg-ink-700/50 p-5">
+              <section className="rounded-xl border border-warm-200 bg-warm-50 p-5">
                 <h2 className="mb-1 text-sm font-semibold text-fg">Onde você viu?</h2>
                 <p className="mb-4 text-xs text-fg-muted">
                   Use o GPS ou descreva o endereço. As coordenadas ajudam a plotar no mapa.
@@ -211,7 +211,7 @@ export default function NovoAvistamentoPage({
                   type="button"
                   onClick={handleGeolocate}
                   disabled={geoLoading}
-                  className="mb-4 flex items-center gap-2 rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-4 py-2.5 text-sm font-medium text-cyan-300 transition hover:bg-cyan-500/20 disabled:opacity-50"
+                  className="mb-4 flex items-center gap-2 rounded-lg border border-brand-500/30 bg-brand-500/10 px-4 py-2.5 text-sm font-medium text-brand-700 transition hover:bg-brand-500/20 disabled:opacity-50"
                 >
                   {geoLoading ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -227,7 +227,7 @@ export default function NovoAvistamentoPage({
 
                 {/* Coordenadas preenchidas */}
                 {lat && lng && (
-                  <div className="mb-3 flex items-center gap-2 rounded-lg bg-cyan-500/10 px-3 py-2 text-xs text-cyan-300">
+                  <div className="mb-3 flex items-center gap-2 rounded-lg bg-brand-500/10 px-3 py-2 text-xs text-brand-700">
                     <MapPin className="h-3.5 w-3.5 shrink-0" />
                     Coordenadas capturadas: {parseFloat(lat).toFixed(4)}°, {parseFloat(lng).toFixed(4)}°
                   </div>
@@ -245,14 +245,14 @@ export default function NovoAvistamentoPage({
                     required={!lat}
                     placeholder="Ex.: Rua das Flores próximo ao mercado, Vila Santa Rosa"
                     maxLength={300}
-                    className="w-full rounded-lg border border-white/10 bg-ink-600 px-3 py-2.5 text-sm text-fg placeholder-fg-subtle focus:border-cyan-500/60 focus:outline-none"
+                    className="w-full rounded-lg border border-warm-200 bg-white px-3 py-2.5 text-sm text-fg placeholder-fg-subtle focus:border-brand-500/60 focus:outline-none"
                   />
                   <FieldError errors={state.fieldErrors?.lat} />
                 </div>
               </section>
 
               {/* Descrição */}
-              <section className="rounded-xl border border-white/10 bg-ink-700/50 p-5">
+              <section className="rounded-xl border border-warm-200 bg-warm-50 p-5">
                 <h2 className="mb-4 text-sm font-semibold text-fg">Detalhes do avistamento</h2>
                 <div className="space-y-4">
                   <div>
@@ -276,7 +276,7 @@ export default function NovoAvistamentoPage({
                       name="reporter_name"
                       maxLength={100}
                       placeholder="Ex.: Maria Silva"
-                      className="w-full rounded-lg border border-white/10 bg-ink-600 px-3 py-2.5 text-sm text-fg placeholder-fg-subtle focus:border-cyan-500/60 focus:outline-none"
+                      className="w-full rounded-lg border border-warm-200 bg-white px-3 py-2.5 text-sm text-fg placeholder-fg-subtle focus:border-brand-500/60 focus:outline-none"
                     />
                     <p className="mt-1 text-xs text-fg-subtle">
                       Opcional. Aparece no registro para o tutor.
@@ -288,7 +288,7 @@ export default function NovoAvistamentoPage({
               <button
                 type="submit"
                 disabled={isPending || !petId || (!lat && !address)}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-cyan-600 px-5 py-3 text-sm font-bold text-white shadow-glow-cyan transition hover:bg-cyan-500 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-white shadow-glow-brand transition hover:bg-brand-400 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isPending ? (
                   <>

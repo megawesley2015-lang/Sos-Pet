@@ -44,7 +44,7 @@ export default async function PlaquinhaSucessoPage({
         </p>
 
         {/* Timeline */}
-        <div className="mt-10 w-full max-w-sm rounded-2xl border border-white/10 bg-ink-700/40 p-6 text-left">
+        <div className="mt-10 w-full max-w-sm rounded-2xl border border-white/10 bg-ink-700/40 p-6 text-left shadow-warm-card">
           <p className="mb-4 text-xs font-bold uppercase tracking-widest text-fg-subtle">
             O que acontece agora
           </p>
@@ -68,8 +68,8 @@ export default async function PlaquinhaSucessoPage({
               },
               {
                 icon: Package,
-                color: "text-cyan-400",
-                bg: "bg-cyan-500/20",
+                color: "text-brand-400",
+                bg: "bg-brand-500/20",
                 title: "Envio",
                 desc: "Você receberá o código de rastreio por email.",
                 done: false,

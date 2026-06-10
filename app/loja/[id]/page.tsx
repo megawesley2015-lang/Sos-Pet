@@ -61,7 +61,7 @@ export default async function ProdutoDetalhe({
       : null;
 
   return (
-    <div className="min-h-screen bg-ink-900 text-fg">
+    <div className="min-h-screen bg-bg text-fg" data-theme="light">
       <div className="mx-auto max-w-4xl px-4 py-8">
         {/* Breadcrumb */}
         <Link href="/loja" className="mb-6 flex items-center gap-1.5 text-sm text-fg-subtle hover:text-fg">
@@ -71,7 +71,7 @@ export default async function ProdutoDetalhe({
 
         <div className="grid gap-8 md:grid-cols-2">
           {/* Imagem */}
-          <div className="aspect-square overflow-hidden rounded-2xl bg-ink-700">
+          <div className="aspect-square overflow-hidden rounded-2xl bg-warm-100">
             {typedProduct.photo_url ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -135,7 +135,7 @@ export default async function ProdutoDetalhe({
                   Comprar agora
                 </Link>
               ) : (
-                <div className="rounded-xl border border-white/10 py-3.5 text-center text-sm text-fg-subtle">
+                <div className="rounded-xl border border-warm-200 bg-white py-3.5 text-center text-sm text-fg-subtle shadow-warm-card">
                   Entre em contato para adquirir este produto
                 </div>
               )}
@@ -148,7 +148,7 @@ export default async function ProdutoDetalhe({
                 <span>Produto selecionado pela equipe SOS Pet</span>
               </div>
               <div className="flex items-center gap-2 text-xs text-fg-subtle">
-                <Tag className="h-3.5 w-3.5 text-cyan-400" />
+                <Tag className="h-3.5 w-3.5 text-brand-500" />
                 <span>Preço verificado em {new Date().toLocaleDateString("pt-BR")}</span>
               </div>
             </div>

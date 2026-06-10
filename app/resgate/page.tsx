@@ -55,7 +55,7 @@ export default async function CentralDeResgatePage({ searchParams }: PageProps) 
     const alertHistory = await listAlertsByPet(pet.id);
 
     return (
-      <div className="min-h-screen bg-ink-800 bg-radial-brand">
+      <div className="min-h-screen bg-bg" data-theme="light">
         <div className="bg-grid-subtle min-h-screen">
           <TopBar />
 
@@ -79,8 +79,8 @@ export default async function CentralDeResgatePage({ searchParams }: PageProps) 
             </header>
 
             {/* Resumo do pet escolhido */}
-            <div className="mb-8 flex items-center gap-3 rounded-xl border border-white/10 bg-ink-700/70 p-3">
-              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-ink-800">
+            <div className="mb-8 flex items-center gap-3 rounded-xl border border-warm-200 bg-white shadow-warm-card p-3">
+              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-warm-100">
                 {pet.photo_url ? (
                   <Image
                     src={pet.photo_url}
@@ -103,13 +103,13 @@ export default async function CentralDeResgatePage({ searchParams }: PageProps) 
               </div>
               <Link
                 href={`/pets/${pet.id}`}
-                className="shrink-0 text-xs text-cyan-400 hover:text-cyan-300"
+                className="shrink-0 text-xs text-brand-500 hover:text-brand-400"
               >
                 Ver detalhes →
               </Link>
             </div>
 
-            <div className="rounded-2xl border border-brand-500/30 bg-ink-700/40 p-6 backdrop-blur-sm sm:p-10">
+            <div className="rounded-2xl border border-brand-500/30 bg-brand-500/5 shadow-warm-card p-6 backdrop-blur-sm sm:p-10">
               <RescueLauncher pet={pet} appUrl={`${getBaseUrl()}/pets/${pet.id}`} />
             </div>
 
@@ -123,7 +123,7 @@ export default async function CentralDeResgatePage({ searchParams }: PageProps) 
                   {alertHistory.map((a) => (
                     <li
                       key={a.id}
-                      className="flex items-center gap-3 rounded-lg border border-white/5 bg-ink-700/40 p-3 text-xs"
+                      className="flex items-center gap-3 rounded-lg border border-warm-200 bg-white p-3 text-xs"
                     >
                       <Siren className="h-4 w-4 text-brand-400" />
                       <span className="flex-1 text-fg-muted">
@@ -152,7 +152,7 @@ export default async function CentralDeResgatePage({ searchParams }: PageProps) 
 
   // Caso B: lista pets perdidos pra escolher
   return (
-    <div className="min-h-screen bg-ink-800 bg-radial-brand">
+    <div className="min-h-screen bg-bg" data-theme="light">
       <div className="bg-grid-subtle min-h-screen">
         <TopBar />
 
@@ -175,9 +175,9 @@ export default async function CentralDeResgatePage({ searchParams }: PageProps) 
                 <li key={pet.id}>
                   <Link
                     href={`/resgate?pet=${pet.id}`}
-                    className="flex items-center gap-3 rounded-xl border border-white/10 bg-ink-700/70 p-3 transition-all hover:border-brand-500/50 hover:shadow-glow-brand"
+                    className="flex items-center gap-3 rounded-xl border border-warm-200 bg-white shadow-warm-card p-3 transition-all hover:border-brand-500/50 hover:shadow-glow-brand"
                   >
-                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-ink-800">
+                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-warm-100">
                       {pet.photo_url ? (
                         <Image
                           src={pet.photo_url}
@@ -217,7 +217,7 @@ export default async function CentralDeResgatePage({ searchParams }: PageProps) 
 
 function EmptyLost() {
   return (
-    <div className="rounded-2xl border border-dashed border-white/15 bg-ink-700/40 p-10 text-center">
+    <div className="rounded-2xl border border-dashed border-warm-200 bg-warm-50 shadow-warm-card p-10 text-center">
       <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-brand-500/40 bg-brand-500/10">
         <Siren className="h-7 w-7 text-brand-400" strokeWidth={2} />
       </div>

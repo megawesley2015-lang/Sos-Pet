@@ -16,7 +16,7 @@ const CATEGORIA_CONFIG: Record<
   { label: string; icon: string; color: string }
 > = {
   seguranca: { label: "Segurança", icon: "🔐", color: "text-brand-400 bg-brand-500/10 border-brand-500/30" },
-  saude:     { label: "Saúde",     icon: "💊", color: "text-cyan-400 bg-cyan-500/10 border-cyan-500/30" },
+  saude:     { label: "Saúde",     icon: "💊", color: "text-[#0F6E56] bg-[#E1F5EE] border-[#20B2AA]/40" },
   higiene:   { label: "Higiene",   icon: "🛁", color: "text-green-400 bg-green-500/10 border-green-500/30" },
   alimentacao: { label: "Alimentação", icon: "🍗", color: "text-yellow-400 bg-yellow-500/10 border-yellow-500/30" },
   acessorio: { label: "Acessórios", icon: "🎽", color: "text-purple-400 bg-purple-500/10 border-purple-500/30" },
@@ -64,7 +64,7 @@ export default async function LojaPage({
   const regular = products?.filter((p) => !p.featured) ?? [];
 
   return (
-    <div className="min-h-screen text-fg">
+    <div className="min-h-screen text-fg" data-theme="light">
       {/* Hero */}
       <div className="relative overflow-hidden border-b border-white/10 bg-gradient-to-b from-ink-700 to-ink-800 px-4 py-14 text-center">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,107,53,0.08),transparent_60%)]" />
@@ -86,7 +86,7 @@ export default async function LojaPage({
               Produtos verificados
             </span>
             <span className="flex items-center gap-1.5">
-              <Package className="h-3.5 w-3.5 text-cyan-400" />
+              <Package className="h-3.5 w-3.5 text-brand-500" />
               Entrega em 1–7 dias úteis
             </span>
             <span className="flex items-center gap-1.5">
@@ -225,10 +225,10 @@ function ProductCard({
   return (
     <Link
       href={`/loja/${product.id}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-ink-700/40 transition hover:border-brand-500/40 hover:bg-ink-700/60 hover:shadow-glow-brand/20"
+      className="group flex flex-col overflow-hidden rounded-2xl border border-warm-200 bg-white shadow-warm-card transition hover:border-brand-500/40 hover:shadow-warm-hover"
     >
       {/* Imagem */}
-      <div className="relative aspect-square overflow-hidden bg-ink-600">
+      <div className="relative aspect-square overflow-hidden bg-warm-100">
         {product.photo_url ? (
           <ProductImage src={product.photo_url} alt={product.name} fallbackIcon={cfg.icon} />
         ) : (

@@ -90,7 +90,7 @@ export function CheckoutForm() {
                   ? "bg-brand-500 text-white shadow-glow-brand"
                   : step > s.n
                   ? "bg-brand-500/20 text-brand-400 cursor-pointer hover:bg-brand-500/30"
-                  : "bg-ink-700 text-fg-subtle"
+                  : "bg-warm-100 text-fg-muted"
               }`}
             >
               {s.n}
@@ -121,7 +121,7 @@ export function CheckoutForm() {
             <label className="mb-1.5 block text-xs font-bold uppercase tracking-widest text-fg-muted">
               Foto do pet (aparece no perfil digital)
             </label>
-            <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-white/20 bg-ink-700/40 p-6 transition-colors hover:border-brand-500/50 hover:bg-ink-700/60">
+            <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-warm-300 bg-warm-50 p-6 transition-colors hover:border-brand-500/50 hover:bg-warm-100">
               {preview ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -158,7 +158,7 @@ export function CheckoutForm() {
                 type="text"
                 name="pet_name"
                 placeholder="Ex: Bolinha"
-                className="w-full rounded-xl border border-white/10 bg-ink-700/60 py-3 pl-10 pr-4 text-sm text-fg placeholder:text-fg-subtle focus:border-brand-500/60 focus:outline-none"
+                className="w-full rounded-xl border border-warm-200 bg-white py-3 pl-10 pr-4 text-sm text-fg placeholder:text-fg-subtle focus:border-brand-500/60 focus:outline-none"
               />
             </div>
           </div>
@@ -182,7 +182,7 @@ export function CheckoutForm() {
                     defaultChecked={opt.value === "dog"}
                     className="peer sr-only"
                   />
-                  <div className="flex items-center justify-center rounded-xl border border-white/10 bg-ink-700/40 py-3 text-sm font-medium text-fg-muted transition-all peer-checked:border-brand-500/60 peer-checked:bg-brand-500/10 peer-checked:text-brand-300">
+                  <div className="flex items-center justify-center rounded-xl border border-warm-200 bg-white py-3 text-sm font-medium text-fg-muted transition-all peer-checked:border-brand-500/60 peer-checked:bg-brand-500/10 peer-checked:text-brand-600">
                     {opt.label}
                   </div>
                 </label>
@@ -202,7 +202,7 @@ export function CheckoutForm() {
                 name="tag_phone"
                 required
                 placeholder="(13) 99999-9999"
-                className="w-full rounded-xl border border-white/10 bg-ink-700/60 py-3 pl-10 pr-4 text-sm text-fg placeholder:text-fg-subtle focus:border-brand-500/60 focus:outline-none"
+                className="w-full rounded-xl border border-warm-200 bg-white py-3 pl-10 pr-4 text-sm text-fg placeholder:text-fg-subtle focus:border-brand-500/60 focus:outline-none"
               />
             </div>
             <p className="mt-1 text-[11px] text-fg-subtle">
@@ -241,7 +241,7 @@ export function CheckoutForm() {
                 name="owner_name"
                 required
                 placeholder="Seu nome completo"
-                className="w-full rounded-xl border border-white/10 bg-ink-700/60 py-3 pl-10 pr-4 text-sm text-fg placeholder:text-fg-subtle focus:border-brand-500/60 focus:outline-none"
+                className="w-full rounded-xl border border-warm-200 bg-white py-3 pl-10 pr-4 text-sm text-fg placeholder:text-fg-subtle focus:border-brand-500/60 focus:outline-none"
               />
             </div>
           </div>
@@ -255,7 +255,7 @@ export function CheckoutForm() {
               name="owner_email"
               required
               placeholder="seu@email.com"
-              className="w-full rounded-xl border border-white/10 bg-ink-700/60 py-3 px-4 text-sm text-fg placeholder:text-fg-subtle focus:border-brand-500/60 focus:outline-none"
+              className="w-full rounded-xl border border-warm-200 bg-white py-3 px-4 text-sm text-fg placeholder:text-fg-subtle focus:border-brand-500/60 focus:outline-none"
             />
             <p className="mt-1 text-[11px] text-fg-subtle">
               Você receberá a confirmação e o rastreio por aqui.
@@ -301,7 +301,7 @@ export function CheckoutForm() {
                 required
                 maxLength={9}
                 placeholder="00000-000"
-                className="w-full rounded-xl border border-white/10 bg-ink-700/60 py-3 pl-10 pr-4 text-sm text-fg placeholder:text-fg-subtle focus:border-brand-500/60 focus:outline-none"
+                className="w-full rounded-xl border border-warm-200 bg-white py-3 pl-10 pr-4 text-sm text-fg placeholder:text-fg-subtle focus:border-brand-500/60 focus:outline-none"
                 onChange={(e) => handleCep(e.target.value)}
               />
               {cepLoading && (
@@ -320,7 +320,7 @@ export function CheckoutForm() {
                 name="logradouro"
                 required
                 placeholder="Rua, Av, etc."
-                className="w-full rounded-xl border border-white/10 bg-ink-700/60 py-3 px-4 text-sm text-fg placeholder:text-fg-subtle focus:border-brand-500/60 focus:outline-none"
+                className="w-full rounded-xl border border-warm-200 bg-white py-3 px-4 text-sm text-fg placeholder:text-fg-subtle focus:border-brand-500/60 focus:outline-none"
               />
             </div>
             <div className="w-24">
@@ -332,7 +332,7 @@ export function CheckoutForm() {
                 name="numero"
                 required
                 placeholder="123"
-                className="w-full rounded-xl border border-white/10 bg-ink-700/60 py-3 px-4 text-sm text-fg placeholder:text-fg-subtle focus:border-brand-500/60 focus:outline-none"
+                className="w-full rounded-xl border border-warm-200 bg-white py-3 px-4 text-sm text-fg placeholder:text-fg-subtle focus:border-brand-500/60 focus:outline-none"
               />
             </div>
           </div>
@@ -345,7 +345,7 @@ export function CheckoutForm() {
               type="text"
               name="complemento"
               placeholder="Apto, bloco, casa..."
-              className="w-full rounded-xl border border-white/10 bg-ink-700/60 py-3 px-4 text-sm text-fg placeholder:text-fg-subtle focus:border-brand-500/60 focus:outline-none"
+              className="w-full rounded-xl border border-warm-200 bg-white py-3 px-4 text-sm text-fg placeholder:text-fg-subtle focus:border-brand-500/60 focus:outline-none"
             />
           </div>
 
@@ -358,7 +358,7 @@ export function CheckoutForm() {
                 type="text"
                 name="bairro"
                 required
-                className="w-full rounded-xl border border-white/10 bg-ink-700/60 py-3 px-4 text-sm text-fg focus:border-brand-500/60 focus:outline-none"
+                className="w-full rounded-xl border border-warm-200 bg-white py-3 px-4 text-sm text-fg focus:border-brand-500/60 focus:outline-none"
               />
             </div>
             <div>
@@ -369,7 +369,7 @@ export function CheckoutForm() {
                 type="text"
                 name="cidade"
                 required
-                className="w-full rounded-xl border border-white/10 bg-ink-700/60 py-3 px-4 text-sm text-fg focus:border-brand-500/60 focus:outline-none"
+                className="w-full rounded-xl border border-warm-200 bg-white py-3 px-4 text-sm text-fg focus:border-brand-500/60 focus:outline-none"
               />
             </div>
           </div>
@@ -384,7 +384,7 @@ export function CheckoutForm() {
               required
               maxLength={2}
               placeholder="SP"
-              className="w-full rounded-xl border border-white/10 bg-ink-700/60 py-3 px-4 text-sm text-fg uppercase focus:border-brand-500/60 focus:outline-none"
+              className="w-full rounded-xl border border-warm-200 bg-white py-3 px-4 text-sm text-fg uppercase focus:border-brand-500/60 focus:outline-none"
             />
           </div>
 
