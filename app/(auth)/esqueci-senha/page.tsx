@@ -24,12 +24,12 @@ export default function EsqueciSenhaPage() {
         subtitle="Se a conta existir, mandamos um link de recuperação."
       >
         <div className="text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border-2 border-cyan-500/60 bg-cyan-500/10 shadow-glow-cyan">
-            <Mail className="h-6 w-6 text-cyan-300" />
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border-2 border-brand-500/60 bg-brand-500/10 shadow-glow-brand">
+            <Mail className="h-6 w-6 text-brand-600" />
           </div>
           <p className="text-sm text-fg">
             Enviamos para{" "}
-            <span className="font-bold text-cyan-300">
+            <span className="font-bold text-brand-600">
               {state.successEmail}
             </span>
             .

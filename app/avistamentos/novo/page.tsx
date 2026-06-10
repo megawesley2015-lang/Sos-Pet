@@ -264,7 +264,7 @@ export default function NovoAvistamentoPage({
                       rows={3}
                       maxLength={500}
                       placeholder="Ex.: Vi um cão da mesma raça próximo à praça, parecia assustado e estava sozinho. Horário: ~15h."
-                      className="w-full resize-none rounded-lg border border-white/10 bg-ink-600 px-3 py-2.5 text-sm text-fg placeholder-fg-subtle focus:border-cyan-500/60 focus:outline-none"
+                      className="w-full resize-none rounded-lg border border-warm-200 bg-white px-3 py-2.5 text-sm text-fg placeholder:text-fg-subtle focus:border-brand-500/60 focus:outline-none"
                     />
                   </div>
 

@@ -33,7 +33,7 @@ export default function LoginPage() {
       }
     >
       <Suspense
-        fallback={<div className="h-72 animate-pulse rounded-lg bg-ink-800/40" />}
+        fallback={<div className="h-72 animate-pulse rounded-lg bg-warm-100" />}
       >
         <LoginForm />
       </Suspense>
