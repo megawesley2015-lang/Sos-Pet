@@ -96,7 +96,7 @@ function PainelAlertas({
                 </div>
 
                 {/* Tempo */}
-                <span className="text-[11px] text-fg-subtle flex-shrink-0 group-hover:text-[rgb(var(--color-primary))] transition-colors duration-150">
+                <span className="text-[11px] text-fg-subtle flex-shrink-0 group-hover:text-brand-500 transition-colors duration-150">
                   {alerta.tempoRelativo}
                 </span>
               </Link>
@@ -128,7 +128,7 @@ export default function HeroSection({
   return (
     <section
       aria-label="Reencontre seu pet perdido"
-      className="relative overflow-hidden bg-[rgb(var(--color-bg))] bg-warm-grid pt-16 pb-20 md:pt-24 md:pb-28 px-4"
+      className="relative overflow-hidden bg-bg bg-warm-grid pt-16 pb-20 md:pt-24 md:pb-28 px-4"
     >
       {/* Aura decorativa */}
       <div className="pointer-events-none absolute inset-0 bg-radial-warm opacity-60" aria-hidden="true" />
@@ -182,7 +182,7 @@ export default function HeroSection({
               {/* Secundário: buscar pets */}
               <Link
                 href="/achados-e-perdidos"
-                className="inline-flex items-center gap-2 rounded-xl border-2 border-cyan-500/50 bg-cyan-500/10 px-5 py-3.5 text-sm font-bold text-cyan-200 transition-all hover:bg-cyan-500/20 hover:border-cyan-500/70 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2"
+                className="inline-flex items-center gap-2 rounded-xl border-2 border-brand-500/30 bg-brand-500/5 px-5 py-3.5 text-sm font-bold text-brand-700 transition-all hover:bg-brand-500/10 hover:border-brand-500/50 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2"
               >
                 <Search size={14} aria-hidden="true" />
                 Ver pets na rede
@@ -190,7 +190,7 @@ export default function HeroSection({
             </div>
 
             {/* Trust line */}
-            <p className="text-xs text-fg-subtle flex flex-wrap gap-x-3 gap-y-1">
+            <p className="text-xs text-fg-muted flex flex-wrap gap-x-3 gap-y-1">
               <span>✓ 100% gratuito</span>
               <span>✓ sem login obrigatório</span>
               <span>✓ verificação anti-spam automática</span>

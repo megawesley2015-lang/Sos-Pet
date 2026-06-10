@@ -47,7 +47,7 @@ export function PrestadorFilters() {
             placeholder="Buscar por nome ou descrição…"
             defaultValue={activeBusca}
             onChange={(e) => set("busca", e.target.value)}
-            className="w-full rounded-lg border border-white/10 bg-ink-800/70 py-2.5 pl-10 pr-3 text-sm text-fg placeholder:text-fg-subtle focus:border-cyan-500/60 focus:outline-none focus:ring-2 focus:ring-cyan-500/40"
+            className="w-full rounded-lg border border-white/10 bg-ink-800/70 py-2.5 pl-10 pr-3 text-sm text-fg placeholder:text-fg-subtle focus:border-brand-500/60 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
           />
         </div>
         <input
@@ -55,7 +55,7 @@ export function PrestadorFilters() {
           placeholder="Cidade…"
           defaultValue={activeCidade}
           onChange={(e) => set("cidade", e.target.value)}
-          className="w-full rounded-lg border border-white/10 bg-ink-800/70 px-3 py-2.5 text-sm text-fg placeholder:text-fg-subtle focus:border-cyan-500/60 focus:outline-none focus:ring-2 focus:ring-cyan-500/40"
+          className="w-full rounded-lg border border-white/10 bg-ink-800/70 px-3 py-2.5 text-sm text-fg placeholder:text-fg-subtle focus:border-brand-500/60 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
         />
       </div>
 
@@ -107,7 +107,7 @@ export function PrestadorFilters() {
         )}
 
         {pending && (
-          <span className="text-xs text-cyan-400">atualizando…</span>
+          <span className="text-xs text-brand-400">atualizando…</span>
         )}
       </div>
     </div>
@@ -129,7 +129,7 @@ function Chip({
       onClick={onClick}
       className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-bold uppercase tracking-wide transition-all ${
         active
-          ? "border-cyan-500 bg-cyan-500/15 text-cyan-200 shadow-glow-cyan"
+          ? "border-brand-500 bg-brand-500/15 text-brand-100 shadow-glow-brand"
           : "border-white/10 bg-ink-700/50 text-fg-muted hover:border-white/20 hover:text-fg"
       }`}
     >

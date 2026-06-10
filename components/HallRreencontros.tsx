@@ -117,11 +117,11 @@ function CardRreencontro({
         <h3 className="text-base font-bold text-fg leading-tight">
           {nomePet}
           {pet.breed && (
-            <span className="ml-2 text-xs font-normal text-ink-500">{pet.breed}</span>
+            <span className="ml-2 text-xs font-normal text-fg-muted">{pet.breed}</span>
           )}
         </h3>
 
-        <p className="flex items-center gap-1.5 text-xs text-ink-500">
+        <p className="flex items-center gap-1.5 text-xs text-fg-muted">
           <MapPin size={11} className="text-brand-400 flex-shrink-0" aria-hidden="true" />
           {pet.city}
         </p>
@@ -134,7 +134,7 @@ function CardRreencontro({
 
         <div className="mt-1 h-px bg-warm-200" />
 
-        <p className="text-xs text-ink-400 uppercase tracking-wider font-medium">
+        <p className="text-xs text-fg-subtle uppercase tracking-wider font-medium">
           <span className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wide px-2.5 py-1 rounded-full bg-[#E1F5EE] text-[#0F6E56] border border-[#20B2AA]/40">✓ Reencontrado</span>
         </p>
       </div>
@@ -157,7 +157,7 @@ export default function HallRreencontros({
   return (
     <section
       aria-labelledby="hall-heading"
-      className="bg-warm-50 py-20 px-4"
+      className="bg-warm-50 pt-10 pb-16 px-4"
     >
       <div className="mx-auto max-w-6xl">
 
@@ -177,7 +177,7 @@ export default function HallRreencontros({
               <span className="text-brand-500">para casa.</span>
             </h2>
 
-            <p className="mt-3 text-sm text-ink-600 leading-relaxed max-w-sm">
+            <p className="mt-3 text-sm text-fg-muted leading-relaxed max-w-sm">
               Cada reencontro aqui é real. Cada hora contada é a diferença
               que o SOS Pet fez na vida de um tutor.
             </p>
@@ -191,7 +191,7 @@ export default function HallRreencontros({
             >
               {contador}
             </span>
-            <span className="text-xs text-ink-500 leading-tight">
+            <span className="text-xs text-fg-muted leading-tight">
               pets<br />reencontrados
             </span>
           </div>

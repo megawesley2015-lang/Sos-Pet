@@ -43,17 +43,17 @@ export default async function AvistamentosPage() {
         </div>
 
         {/* Banner informativo */}
-        <div className="mb-6 rounded-xl border border-cyan-500/20 bg-cyan-500/5 px-4 py-3 text-sm text-cyan-300">
+        <div className="mb-6 rounded-xl border border-brand-200/60 bg-brand-500/5 px-4 py-3 text-sm text-brand-700">
           <Eye className="mb-1 h-4 w-4 inline mr-1.5" />
           Viu um pet perdido na rua?{" "}
-          <Link href="/avistamentos/novo" className="font-bold underline underline-offset-2 hover:text-cyan-200">
+          <Link href="/avistamentos/novo" className="font-bold underline underline-offset-2 hover:text-brand-600">
             Registre o avistamento
           </Link>{" "}
           e ajude o tutor a encontrá-lo. Não precisa de login.
         </div>
 
         {avistamentos.length === 0 ? (
-          <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-white/10 bg-ink-700/20 py-20 text-center">
+          <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-warm-300 bg-warm-50 py-20 text-center">
             <Eye className="h-12 w-12 text-fg-subtle/40" strokeWidth={1} />
             <div>
               <p className="font-semibold text-fg">Nenhum avistamento nos últimos 30 dias</p>

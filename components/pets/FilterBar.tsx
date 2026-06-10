@@ -17,13 +17,13 @@ const SPECIES_OPTIONS = [
 ]
 
 const selectCls = `
-  rounded-lg border border-[rgb(var(--color-border))]
-  bg-[rgb(var(--color-bg-raised))]
-  text-[rgb(var(--color-fg-muted))]
+  rounded-lg border border-border
+  bg-bg-raised
+  text-fg-muted
   px-3 py-2 text-sm cursor-pointer
-  hover:border-[rgb(var(--color-border-strong))]
-  focus:border-[rgb(var(--color-primary))]/60
-  focus:outline-none focus:ring-2 focus:ring-[rgb(var(--color-primary))]/20
+  hover:border-border-strong
+  focus:border-brand-500/60
+  focus:outline-none focus:ring-2 focus:ring-brand-500/20
   transition-all duration-200
 `.trim()
 
@@ -78,14 +78,14 @@ export function FilterBar() {
       />
 
       {pending && (
-        <span className="text-xs text-[rgb(var(--color-fg-subtle))] animate-pulse">Filtrando...</span>
+        <span className="text-xs text-fg-subtle animate-pulse">Filtrando...</span>
       )}
 
       {(currentKind || currentSpecies || currentCity) && (
         <button
           type="button"
           onClick={() => router.push(pathname)}
-          className="text-xs text-[rgb(var(--color-fg-subtle))] hover:text-[rgb(var(--color-primary))] transition-colors"
+          className="text-xs text-fg-subtle hover:text-brand-500 transition-colors"
         >
           Limpar filtros
         </button>
