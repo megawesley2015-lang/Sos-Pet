@@ -11,6 +11,8 @@ import { petSchema } from '@/lib/schemas/pet'
 import { type PetPublic, type InsertPet } from '@/types/pets'
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 import { haversineKm } from '@/lib/geo'
+import { sendEmail } from '@/lib/email/send'
+import { petConfirmationTemplate } from '@/lib/email/templates'
 
 const POST_LIMIT = { limit: 5, windowMs: 60_000 } // 5 POSTs/min por IP
 const GET_LIMIT  = { limit: 30, windowMs: 60_000 } // 30 GETs/min por IP — impede scraping da listagem
@@ -250,6 +252,21 @@ export async function POST(req: NextRequest) {
     if (error) {
       console.error('[POST /api/pets]', error)
       return fail(error)
+    }
+
+    if (user?.email && pet.kind === 'lost') {
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sospetamigo.com.br'
+      void sendEmail({
+        to: user.email,
+        subject: `${pet.name ?? 'Seu pet'} foi cadastrado — SOS Pet Amigo`,
+        html: petConfirmationTemplate({
+          petName: pet.name ?? 'Seu pet',
+          petId: pet.id,
+          species: 'pet',
+          siteUrl,
+        }),
+        templateName: 'pet_confirmation',
+      })
     }
 
     return ok({ id: pet.id, kind: pet.kind, name: pet.name, city: pet.city }, 201)

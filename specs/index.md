@@ -19,7 +19,7 @@
 | Plaquinha QR Code | plaquinha-qr | [spec.md](plaquinha-qr/spec.md) | [tasks.md](plaquinha-qr/tasks.md) | ⬜ T1–T5 pendentes |
 | Painel de Moderação Admin | admin-panel | [spec.md](admin-panel/spec.md) | [tasks.md](admin-panel/tasks.md) | ✅ T1–T6 concluídos |
 | SEO Dinâmico com ISR | seo-dinamico | [spec.md](seo-dinamico/spec.md) | [tasks.md](seo-dinamico/tasks.md) | ⬜ T1–T5 pendentes |
-| Email Transacional (Resend) | email-sistema | [spec.md](email-sistema/spec.md) | [tasks.md](email-sistema/tasks.md) | ⬜ T1–T6 pendentes |
+| Email Transacional (Resend) | email-sistema | [spec.md](email-sistema/spec.md) | [tasks.md](email-sistema/tasks.md) | ✅ T1–T6 concluídos |
 | Analytics (GA4 + Sentry) | analytics | [spec.md](analytics/spec.md) | [tasks.md](analytics/tasks.md) | ⬜ T1–T6 pendentes |
 | Parcerias B2B | parceiros | [spec.md](parceiros/spec.md) | [tasks.md](parceiros/tasks.md) | ⬜ T1–T6 pendentes |
 
