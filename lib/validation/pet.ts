@@ -79,10 +79,13 @@ export const createPetSchema = z.object({
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, "Data inválida (use o seletor)")
     .refine((d) => {
-      const date = new Date(d);
       const today = new Date();
-      today.setHours(23, 59, 59, 999);
-      return date <= today;
+      const todayStr = [
+        today.getFullYear(),
+        String(today.getMonth() + 1).padStart(2, "0"),
+        String(today.getDate()).padStart(2, "0"),
+      ].join("-");
+      return d <= todayStr;
     }, "Data não pode estar no futuro"),
 
   contact_name: z.string().min(2, "Informe seu nome").max(80),
