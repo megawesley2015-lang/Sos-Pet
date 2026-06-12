@@ -21,7 +21,7 @@
 | SEO Dinâmico com ISR | seo-dinamico | [spec.md](seo-dinamico/spec.md) | [tasks.md](seo-dinamico/tasks.md) | ⬜ T1–T5 pendentes |
 | Email Transacional (Resend) | email-sistema | [spec.md](email-sistema/spec.md) | [tasks.md](email-sistema/tasks.md) | ✅ T1–T6 concluídos |
 | Analytics (GA4 + Sentry) | analytics | [spec.md](analytics/spec.md) | [tasks.md](analytics/tasks.md) | ⬜ T1–T6 pendentes |
-| Parcerias B2B | parceiros | [spec.md](parceiros/spec.md) | [tasks.md](parceiros/tasks.md) | ⬜ T1–T6 pendentes |
+| Parcerias B2B | parceiros | [spec.md](parceiros/spec.md) | [tasks.md](parceiros/tasks.md) | ✅ T1–T6 concluídos |
 
 ## Como Invocar o Highermind
 
