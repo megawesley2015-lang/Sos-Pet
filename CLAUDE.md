@@ -674,6 +674,7 @@ HARNESS GLOBAL:
 ## SKILLS DISPONÍVEIS (Claude Code pode acionar)
 
 ```
+-- PROJETO SOS PET --
 sos-pet-orchestrator-v2   → Highermind — executa tasks.md com harness gate
 manifesto-de-contexto     → Este arquivo + contexto completo do projeto
 supabase-architect        → Gerar SQL completo + RLS + tipos TypeScript
@@ -683,6 +684,32 @@ backend-review            → Auditoria e correção de código backend
 debug-integration-tripler → Debug de erros Vercel → n8n → Supabase
 deploy-checklist          → Verificação pré-deploy em 5 camadas
 frontend-design-review    → Revisão de UI/UX existente
+
+-- HARNESS (revfactory/harness v1.2.0) --
+harness                   → Meta-fábrica de equipes de agentes
+                            Uso: "Build a harness for [domínio]"
+                            Gera .claude/agents/ + .claude/skills/ automaticamente
+                            Padrões: Pipeline, Fan-out/Fan-in, Expert Pool,
+                                     Producer-Reviewer, Supervisor, Hierarchical
+                            Requer: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
+                            Agents dir: .claude/agents/ (criado e pronto)
+                            Refs: .claude/skills/harness/references/
+
+-- SUPERPOWERS (obra/superpowers) --
+brainstorming                   → Design antes de código — gate obrigatório pré-implementação
+test-driven-development         → TDD rígido — RED→GREEN→REFACTOR, sem exceções
+writing-plans                   → Plano de implementação com tarefas de 2-5 min
+executing-plans                 → Executa plano task a task com commits atômicos
+subagent-driven-development     → Fresh subagent por task + revisão em 2 estágios
+dispatching-parallel-agents     → Despacha 3+ agentes paralelos para problemas independentes
+systematic-debugging            → Debug com investigação de causa raiz obrigatória
+verification-before-completion  → Evidência antes de declarar qualquer coisa "pronto"
+requesting-code-review          → Revisão de código via subagente com severidade
+receiving-code-review           → Recebe feedback: READ→VERIFY→RESPOND→IMPLEMENT, sem performatividade
+using-git-worktrees             → Workspace isolado por feature branch
+finishing-a-development-branch  → Finaliza branch: merge/PR/discard com validação
+using-superpowers               → Meta-skill: mapa e prioridade de invocação
+writing-skills                  → TDD aplicado a documentação — cria skills testados antes de deploy
 ```
 
 ---

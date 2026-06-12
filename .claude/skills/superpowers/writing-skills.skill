@@ -1,0 +1,95 @@
+# Writing Skills
+# Source: github.com/obra/superpowers | License: MIT
+
+## When to Use
+Use when creating a new skill file for this project (.skill), updating an
+existing skill, or codifying a repeated workflow into a reusable pattern.
+Triggers on: "create a skill for X", "document this pattern", "save this
+workflow", "turn this into a skill".
+
+---
+
+## Core Principle
+
+Writing skills IS Test-Driven Development applied to process documentation.
+**NO SKILL WITHOUT A FAILING TEST FIRST** — this applies to new skills and
+to edits of existing skills.
+
+Skills are reusable techniques and reference guides — not narratives about
+one-time solutions.
+
+---
+
+## SKILL.md Structure (for new skills)
+
+```markdown
+# [Skill Name]
+# Source: [origin] | License: [license]
+
+## When to Use
+Use when [specific triggering condition — symptoms, not workflow summary].
+Triggers on: [explicit phrases or situations].
+
+---
+
+## [Core section title]
+[Content]
+
+---
+
+## [Additional sections as needed]
+```
+
+**Critical**: The "When to Use" description must start with "Use when..."
+and identify specific problems or symptoms — never a summary of the workflow
+steps. Claude uses this description to decide whether to load the skill.
+
+---
+
+## Testing Before Deploying
+
+For a new skill, simulate pressure scenarios:
+
+1. **Discipline-enforcing skills**: Test under maximum pressure — what's
+   the most likely moment someone would skip this skill?
+2. **Technique skills**: Apply to 3 different scenarios
+3. **Reference skills**: Test information retrieval accuracy
+
+Minimum: one subagent runs the skill on a realistic scenario before it's
+saved to `.claude/skills/`.
+
+---
+
+## SOS Pet Skill Conventions
+
+Skills live in `.claude/skills/superpowers/` (superpowers framework) or
+`.claude/skills/` (project-specific, standalone).
+
+Project-specific skills should include SOS Pet context where relevant:
+- Reference CLAUDE.md constraints explicitly
+- Use Brazilian Portuguese for SOS Pet domain terms
+- Reference real table names, routes, and component paths from CLAUDE.md
+- Never create a skill that conflicts with CLAUDE.md rules
+
+---
+
+## Common Mistakes
+
+- Writing a narrative ("what I did in this session") instead of a reusable pattern
+- Deploying without testing against at least one realistic scenario
+- Generic "When to Use" descriptions that don't identify specific triggers
+- Multi-language code examples (pick one — TypeScript for this project)
+- Flowcharts for linear instructions (use numbered lists instead)
+- Untested skills — test under realistic pressure before saving
+
+---
+
+## After Creating a Skill
+
+```
+[ ] "When to Use" starts with "Use when..." and identifies symptoms
+[ ] Tested against at least one realistic scenario
+[ ] Saved to correct directory (.claude/skills/superpowers/ or .claude/skills/)
+[ ] CLAUDE.md updated if this is a new skill worth documenting in SKILLS section
+[ ] No project secrets or session-specific details in the skill content
+```

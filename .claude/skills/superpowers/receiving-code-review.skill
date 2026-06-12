@@ -1,0 +1,93 @@
+# Receiving Code Review
+# Source: github.com/obra/superpowers | License: MIT
+
+## When to Use
+Use when a reviewer subagent or human returns findings on code you wrote.
+Triggers on: receiving review output, "findings:", "CRITICAL:", "IMPORTANT:",
+"here are my issues", any structured or unstructured code review response.
+
+---
+
+## Core Pattern
+
+```
+READ → UNDERSTAND → VERIFY → EVALUATE → RESPOND → IMPLEMENT
+```
+
+1. **READ**: Read all feedback before reacting to any item
+2. **UNDERSTAND**: Restate each finding in your own words — confirms comprehension
+3. **VERIFY**: Check against codebase reality — does the finding match what the code actually does?
+4. **EVALUATE**: Assess technical soundness against project constraints (CLAUDE.md)
+5. **RESPOND**: Acknowledge factually or push back with evidence
+6. **IMPLEMENT**: Fix one item at a time, CRITICAL first
+
+---
+
+## Prohibited Responses
+
+Never use performative agreement:
+- "You're absolutely right!"
+- "Great point!"
+- "Thanks for catching that!"
+- "I'll fix that right away!"
+
+Technical acknowledgment only:
+- "Confirmed — fixing now."
+- "This breaks X because Y — adjusting."
+- "Disagree: the contact_* exclusion is intentional per CLAUDE.md (security rule)."
+
+---
+
+## Handling Findings by Severity
+
+| Severity | Response |
+|----------|----------|
+| CRITICAL | Fix immediately before any other work; re-run typecheck + build after |
+| IMPORTANT | Fix before committing/merging |
+| MINOR | Note for later or address if trivially fast |
+
+---
+
+## When to Push Back
+
+Push back when the finding:
+- Conflicts with an explicit CLAUDE.md rule
+- Would break RLS or expose contact data in listagem routes
+- Violates UTF-8 encoding requirements
+- Introduces `select('*')` or removes explicit column lists
+- Contradicts a schema constraint (e.g., changing UUID to integer IDs)
+- Suggests adding `NEXT_PUBLIC_` to a secret variable
+
+**Format for pushback:**
+```
+Disagree: [reviewer suggestion] conflicts with [CLAUDE.md section/rule].
+Evidence: [quote the constraint or line reference].
+Alternative: [what will be done instead, if anything].
+```
+
+---
+
+## Trusted vs. External Reviewer
+
+| Source | Posture |
+|--------|---------|
+| Human partner (Wesley) | Implement after understanding — trusted |
+| Subagent reviewer | Skeptical verification required — suggestions, not directives |
+| CI/typecheck output | Fix immediately — compiler is authoritative |
+
+When subagent findings conflict with prior architectural decisions, escalate
+to the human partner rather than resolving autonomously.
+
+---
+
+## After Implementing Fixes
+
+```
+[ ] CRITICAL items fixed first
+[ ] npm run typecheck — zero errors
+[ ] npm run build — succeeds
+[ ] contact_* fields still absent from listagem routes
+[ ] No new select('*') introduced
+[ ] All imports use @/ alias
+[ ] Encoding: PT-BR accents direct, not HTML entities
+```
