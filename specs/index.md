@@ -10,7 +10,7 @@
 | Rate Limiting | rate-limiting | [spec.md](rate-limiting/spec.md) | [tasks.md](rate-limiting/tasks.md) | ✅ T1–T6 concluídos |
 | Paginação Cursor-Based | paginacao | [spec.md](paginacao/spec.md) | [tasks.md](paginacao/tasks.md) | ⬜ T1–T6 pendentes |
 | Histórico de Saúde do Pet | pet-saude | [spec.md](pet-saude/spec.md) | [tasks.md](pet-saude/tasks.md) | ⬜ T1–T6 pendentes |
-| Notificações via n8n | notificacoes | [spec.md](notificacoes/spec.md) | [tasks.md](notificacoes/tasks.md) | ⬜ T1–T6 pendentes |
+| Notificações via n8n | notificacoes | [spec.md](notificacoes/spec.md) | [tasks.md](notificacoes/tasks.md) | ✅ T1–T6 concluídos |
 | Matching Automatizado por IA | matching-ia | [spec.md](matching-ia/spec.md) | [tasks.md](matching-ia/tasks.md) | ⬜ T1–T5 pendentes |
 | Avistamentos (Sightings) | avistamentos | [spec.md](avistamentos/spec.md) | [tasks.md](avistamentos/tasks.md) | ✅ T1–T6 concluídos |
 | Loja Printful + Mercado Pago | loja-printful | [spec.md](loja-printful/spec.md) | [tasks.md](loja-printful/tasks.md) | ⬜ T1–T6 pendentes |

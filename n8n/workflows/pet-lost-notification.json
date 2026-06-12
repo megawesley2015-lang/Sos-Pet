@@ -1,0 +1,122 @@
+{
+  "name": "Pet Perdido — Notificação",
+  "description": "Recebe webhook de pet perdido, busca assinantes da cidade e envia notificações via WhatsApp e Email.",
+  "nodes": [
+    {
+      "id": "webhook-trigger",
+      "name": "Webhook — Pet Perdido",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pet-lost",
+        "responseMode": "lastNode"
+      },
+      "notes": "Recebe payload do /api/webhooks/pet-lost: { pet_id, name, species, city, neighborhood, photo_url, owner_id }"
+    },
+    {
+      "id": "get-subscribers",
+      "name": "Buscar Assinantes da Cidade",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/notification_subscriptions",
+        "headers": {
+          "apikey": "={{ $env.SUPABASE_ANON_KEY }}",
+          "Authorization": "Bearer {{ $env.SUPABASE_ANON_KEY }}"
+        },
+        "queryParameters": {
+          "city": "=eq.{{ $json.city }}",
+          "active": "=eq.true",
+          "select": "user_id,channel,profiles(telefone,email)"
+        }
+      },
+      "notes": "Busca assinantes ativos para a cidade do pet perdido"
+    },
+    {
+      "id": "generate-message",
+      "name": "Gerar Mensagem (Claude)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "parameters": {
+        "model": "claude-sonnet-4-20250514",
+        "temperature": 0.2,
+        "messages": [
+          {
+            "role": "user",
+            "content": "Crie uma mensagem curta e urgente (máximo 160 chars, sem Markdown, sem *, sem #) avisando sobre um pet perdido:\nNome: {{ $('Webhook — Pet Perdido').item.json.name }}\nEspécie: {{ $('Webhook — Pet Perdido').item.json.species }}\nCidade: {{ $('Webhook — Pet Perdido').item.json.city }}\nBairro: {{ $('Webhook — Pet Perdido').item.json.neighborhood }}"
+          }
+        ]
+      },
+      "notes": "Gera mensagem personalizada para WhatsApp. Temperatura 0.2 conforme CLAUDE.md. Texto plano obrigatório."
+    },
+    {
+      "id": "split-channels",
+      "name": "Separar WhatsApp e Email",
+      "type": "n8n-nodes-base.if",
+      "parameters": {
+        "conditions": {
+          "string": [{ "value1": "={{ $json.channel }}", "operation": "equal", "value2": "whatsapp" }]
+        }
+      }
+    },
+    {
+      "id": "send-whatsapp",
+      "name": "Enviar WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.WHATSAPP_API_URL }}",
+        "body": {
+          "to": "={{ $json.profiles.telefone }}",
+          "message": "={{ $('Gerar Mensagem (Claude)').item.json.text }}"
+        }
+      },
+      "notes": "Adapter para WhatsApp Business API ou Evolution API. Mensagem em texto plano."
+    },
+    {
+      "id": "send-email",
+      "name": "Enviar Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SITE_URL }}/api/email/follow-up",
+        "headers": {
+          "Authorization": "Bearer {{ $env.FOLLOW_UP_SECRET }}"
+        },
+        "body": {
+          "to": "={{ $json.profiles.email }}",
+          "pet_id": "={{ $('Webhook — Pet Perdido').item.json.pet_id }}"
+        }
+      },
+      "notes": "Reutiliza endpoint de follow-up do módulo email-sistema"
+    },
+    {
+      "id": "log-result",
+      "name": "Registrar Log",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/notification_logs",
+        "headers": {
+          "apikey": "={{ $env.SUPABASE_SERVICE_ROLE_KEY }}",
+          "Authorization": "Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}",
+          "Prefer": "return=minimal"
+        },
+        "body": {
+          "pet_id": "={{ $('Webhook — Pet Perdido').item.json.pet_id }}",
+          "status": "sent",
+          "channel": "system"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "webhook-trigger": { "main": [["get-subscribers"]] },
+    "get-subscribers": { "main": [["generate-message"]] },
+    "generate-message": { "main": [["split-channels"]] },
+    "split-channels": {
+      "main": [["send-whatsapp"], ["send-email"]]
+    },
+    "send-whatsapp": { "main": [["log-result"]] },
+    "send-email": { "main": [["log-result"]] }
+  }
+}
