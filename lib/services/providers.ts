@@ -30,7 +30,7 @@ export async function listProviders(
   const supabase = await createSupabaseServerClient();
   let query = supabase
     .from("prestadores")
-    .select("id, created_at, updated_at, user_id, slug, nome, descricao, categoria, telefone, whatsapp, email, instagram, site, cidade, bairro, estado, endereco, logo_url, capa_url, emergencia24h, delivery, agendamento_online, verificado, destaque, media_avaliacoes, total_avaliacoes, dias_atendimento, horarios_disponiveis, status")
+    .select("id, created_at, updated_at, user_id, slug, nome, descricao, categoria, telefone, whatsapp, email, instagram, site, cidade, bairro, estado, endereco, logo_url, capa_url, emergencia24h, delivery, agendamento_online, verificado, destaque, media_avaliacoes, total_avaliacoes, status")
     .order("destaque", { ascending: false })
     .order("media_avaliacoes", { ascending: false })
     .order("created_at", { ascending: false })
@@ -64,7 +64,7 @@ export const getProviderBySlug = cache(async (
   const supabase = await createSupabaseServerClient();
   const { data } = await supabase
     .from("prestadores")
-    .select("id, created_at, updated_at, user_id, slug, nome, descricao, categoria, telefone, whatsapp, email, instagram, site, cidade, bairro, estado, endereco, logo_url, capa_url, emergencia24h, delivery, agendamento_online, verificado, destaque, media_avaliacoes, total_avaliacoes, dias_atendimento, horarios_disponiveis, status")
+    .select("id, created_at, updated_at, user_id, slug, nome, descricao, categoria, telefone, whatsapp, email, instagram, site, cidade, bairro, estado, endereco, logo_url, capa_url, emergencia24h, delivery, agendamento_online, verificado, destaque, media_avaliacoes, total_avaliacoes, status")
     .eq("slug", slug)
     .maybeSingle();
   return (data as PrestadorRow | null) ?? null;
@@ -77,7 +77,7 @@ export async function getProviderForOwner(
   const supabase = await createSupabaseServerClient();
   const { data } = await supabase
     .from("prestadores")
-    .select("id, created_at, updated_at, user_id, slug, nome, descricao, categoria, telefone, whatsapp, email, instagram, site, cidade, bairro, estado, endereco, logo_url, capa_url, emergencia24h, delivery, agendamento_online, verificado, destaque, media_avaliacoes, total_avaliacoes, dias_atendimento, horarios_disponiveis, status")
+    .select("id, created_at, updated_at, user_id, slug, nome, descricao, categoria, telefone, whatsapp, email, instagram, site, cidade, bairro, estado, endereco, logo_url, capa_url, emergencia24h, delivery, agendamento_online, verificado, destaque, media_avaliacoes, total_avaliacoes, status")
     .eq("id", id)
     .eq("user_id", userId)
     .maybeSingle();
@@ -90,7 +90,7 @@ export const getProviderStats = cache(async (
   const supabase = await createSupabaseServerClient();
   const { data } = await supabase
     .from("prestador_stats")
-    .select("id, created_at, updated_at, user_id, slug, nome, descricao, categoria, telefone, whatsapp, email, instagram, site, cidade, bairro, estado, endereco, logo_url, capa_url, emergencia24h, delivery, agendamento_online, verificado, destaque, media_avaliacoes, total_avaliacoes, dias_atendimento, horarios_disponiveis, status")
+    .select("id, created_at, updated_at, user_id, slug, nome, descricao, categoria, telefone, whatsapp, email, instagram, site, cidade, bairro, estado, endereco, logo_url, capa_url, emergencia24h, delivery, agendamento_online, verificado, destaque, media_avaliacoes, total_avaliacoes, status")
     .eq("prestador_id", prestadorId)
     .maybeSingle();
   return (data as PrestadorStatsRow | null) ?? null;
