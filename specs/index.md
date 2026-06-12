@@ -13,7 +13,7 @@
 | Notificações via n8n | notificacoes | [spec.md](notificacoes/spec.md) | [tasks.md](notificacoes/tasks.md) | ✅ T1–T6 concluídos |
 | Matching Automatizado por IA | matching-ia | [spec.md](matching-ia/spec.md) | [tasks.md](matching-ia/tasks.md) | ⬜ T1–T5 pendentes |
 | Avistamentos (Sightings) | avistamentos | [spec.md](avistamentos/spec.md) | [tasks.md](avistamentos/tasks.md) | ✅ T1–T6 concluídos |
-| Loja Printful + Mercado Pago | loja-printful | [spec.md](loja-printful/spec.md) | [tasks.md](loja-printful/tasks.md) | ⬜ T1–T6 pendentes |
+| Loja Printful + Mercado Pago | loja-printful | [spec.md](loja-printful/spec.md) | [tasks.md](loja-printful/tasks.md) | ✅ T1–T6 concluídos |
 | Dashboard do Prestador | dashboard-prestador | [spec.md](dashboard-prestador/spec.md) | [tasks.md](dashboard-prestador/tasks.md) | ⬜ T1–T6 pendentes |
 | Busca Avançada Geoespacial | busca-avancada | [spec.md](busca-avancada/spec.md) | [tasks.md](busca-avancada/tasks.md) | ✅ T1–T6 concluídos |
 | Plaquinha QR Code | plaquinha-qr | [spec.md](plaquinha-qr/spec.md) | [tasks.md](plaquinha-qr/tasks.md) | ⬜ T1–T5 pendentes |
