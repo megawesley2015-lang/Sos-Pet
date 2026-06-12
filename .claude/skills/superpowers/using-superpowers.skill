@@ -1,0 +1,102 @@
+# Using Superpowers — Meta Skill
+# Source: github.com/obra/superpowers | License: MIT
+
+## When to Use
+Always active as background priority system. Explicitly triggered on:
+"what skills are available", "how do I use superpowers", "which skill applies here".
+
+---
+
+## Core Principle
+**Invoke relevant or requested skills BEFORE any response or action.**
+Even a 1% chance a skill applies requires invoking it before proceeding.
+
+---
+
+## Instruction Priority
+
+1. User's explicit instructions (highest)
+2. Superpowers skills (override defaults)
+3. Default behavior (lowest)
+
+When a skill and default behavior conflict — the skill wins.
+
+---
+
+## Invocation Order
+
+1. **Process skills first** (shape how you work):
+   - brainstorming (before implementation)
+   - systematic-debugging (before fixes)
+   - verification-before-completion (before claiming done)
+
+2. **Implementation skills second** (do the work):
+   - test-driven-development
+   - subagent-driven-development
+   - dispatching-parallel-agents
+
+---
+
+## Skill Map — Quick Reference
+
+| Situation | Skill to invoke |
+|-----------|----------------|
+| Starting any new feature | brainstorming |
+| Writing code | test-driven-development |
+| Planning implementation | writing-plans |
+| Executing a plan | subagent-driven-development |
+| Multiple independent problems | dispatching-parallel-agents |
+| Debugging an error | systematic-debugging |
+| About to say "done" | verification-before-completion |
+| Reviewing code | requesting-code-review |
+| Receiving review feedback | receiving-code-review |
+| New feature branch | using-git-worktrees |
+| Work is complete | finishing-a-development-branch |
+| Creating a new skill | writing-skills |
+
+---
+
+## Red Flags (Rationalization Indicators)
+
+If you're thinking any of these, you're skipping a skill check:
+- "This is just a simple question"
+- "I need more context first"
+- "Let me explore before using a skill"
+- "This doesn't need a formal skill"
+- "It's too quick for the full process"
+
+Questions are tasks. Tasks need skill assessment.
+
+---
+
+## Skill Types
+
+**Rigid skills** — follow exactly, no adaptation:
+- test-driven-development
+- systematic-debugging
+- verification-before-completion
+
+**Flexible skills** — apply principles contextually:
+- brainstorming
+- writing-plans
+- requesting-code-review
+
+---
+
+## Installed Superpowers in This Project
+
+```
+.claude/skills/superpowers/
+├── brainstorming.skill
+├── dispatching-parallel-agents.skill
+├── executing-plans.skill
+├── finishing-a-development-branch.skill
+├── requesting-code-review.skill
+├── subagent-driven-development.skill
+├── systematic-debugging.skill
+├── test-driven-development.skill
+├── using-git-worktrees.skill
+├── using-superpowers.skill (this file)
+├── verification-before-completion.skill
+└── writing-plans.skill
+```
