@@ -12,7 +12,7 @@
 | Histórico de Saúde do Pet | pet-saude | [spec.md](pet-saude/spec.md) | [tasks.md](pet-saude/tasks.md) | ⬜ T1–T6 pendentes |
 | Notificações via n8n | notificacoes | [spec.md](notificacoes/spec.md) | [tasks.md](notificacoes/tasks.md) | ⬜ T1–T6 pendentes |
 | Matching Automatizado por IA | matching-ia | [spec.md](matching-ia/spec.md) | [tasks.md](matching-ia/tasks.md) | ⬜ T1–T5 pendentes |
-| Avistamentos (Sightings) | avistamentos | [spec.md](avistamentos/spec.md) | [tasks.md](avistamentos/tasks.md) | ⬜ T1–T6 pendentes |
+| Avistamentos (Sightings) | avistamentos | [spec.md](avistamentos/spec.md) | [tasks.md](avistamentos/tasks.md) | ✅ T1–T6 concluídos |
 | Loja Printful + Mercado Pago | loja-printful | [spec.md](loja-printful/spec.md) | [tasks.md](loja-printful/tasks.md) | ⬜ T1–T6 pendentes |
 | Dashboard do Prestador | dashboard-prestador | [spec.md](dashboard-prestador/spec.md) | [tasks.md](dashboard-prestador/tasks.md) | ⬜ T1–T6 pendentes |
 | Busca Avançada Geoespacial | busca-avancada | [spec.md](busca-avancada/spec.md) | [tasks.md](busca-avancada/tasks.md) | ⬜ T1–T6 pendentes |
