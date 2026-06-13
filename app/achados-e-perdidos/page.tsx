@@ -48,13 +48,13 @@ export default async function AchadosEPerdidosPage({ searchParams }: PageProps) 
             href="/achados-e-perdidos/cadastrar"
             className="
               inline-flex items-center gap-2 rounded-full
-              bg-[rgb(var(--color-primary))] text-white
+              bg-brand-500 text-white
               px-6 py-3 text-sm font-semibold
               shadow-[0_0_20px_rgba(255,133,27,0.3)]
-              hover:bg-[rgb(var(--color-primary))]/90
+              hover:bg-brand-600
               transition-all duration-200
               focus-visible:outline-2 focus-visible:outline-offset-2
-              focus-visible:outline-[rgb(var(--color-primary))]
+              focus-visible:outline-brand-500
             "
           >
             <span aria-hidden="true">🐾</span> Cadastrar alerta

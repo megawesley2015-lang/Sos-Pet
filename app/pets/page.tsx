@@ -58,7 +58,10 @@ export default async function PetsPage({ searchParams }: PageProps) {
   // count: "exact" retorna o total para calcular paginação.
   let query = supabase
     .from("pets_public")
-    .select("*", { count: "exact" })
+    .select(
+      "id, name, species, kind, status, city, photo_url, created_at, breed, color, neighborhood",
+      { count: "exact" }
+    )
     .order("created_at", { ascending: false })
     .range(from, to);
 
@@ -94,19 +97,19 @@ export default async function PetsPage({ searchParams }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-ink-800 bg-radial-brand">
-      <div className="bg-grid-subtle min-h-screen">
+    <div data-theme="light" className="min-h-screen bg-bg">
+      <div className="min-h-screen">
         <TopBar />
 
         <main className="mx-auto max-w-6xl px-4 pb-20 pt-6">
           {/* Hero */}
           <section className="mb-6 animate-fade-in">
-            <h1 className="font-display text-3xl font-bold leading-tight sm:text-4xl">
+            <h1 className="font-display text-3xl font-bold leading-tight text-fg sm:text-4xl">
               Achados &amp;{" "}
-              <span className="text-brand-500 glow-text-brand">Perdidos</span>
+              <span className="text-brand-500">Perdidos</span>
             </h1>
             <p className="mt-1.5 flex items-center gap-2 text-sm text-fg-muted">
-              <Radar className="h-4 w-4 text-cyan-400" strokeWidth={2} />
+              <Radar className="h-4 w-4 text-brand-500" strokeWidth={2} />
               <span>
                 {count ?? 0} pets ativos{" "}
                 {params.city ? `em ${params.city}` : "na rede"} agora
@@ -147,13 +150,13 @@ export default async function PetsPage({ searchParams }: PageProps) {
               {hasPrev ? (
                 <Link
                   href={buildPageUrl(page - 1)}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-ink-700/60 px-4 py-2 text-sm font-medium text-fg-muted transition-colors hover:bg-ink-600 hover:text-fg"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-warm-200 bg-white px-4 py-2 text-sm font-medium text-fg-muted shadow-warm-card transition-colors hover:bg-warm-50 hover:text-fg"
                 >
                   <ChevronLeft className="h-4 w-4" />
                   Anterior
                 </Link>
               ) : (
-                <span className="inline-flex items-center gap-1.5 rounded-lg border border-white/5 px-4 py-2 text-sm text-fg-subtle opacity-40 cursor-not-allowed">
+                <span className="inline-flex cursor-not-allowed items-center gap-1.5 rounded-lg border border-warm-100 px-4 py-2 text-sm text-fg-subtle opacity-40">
                   <ChevronLeft className="h-4 w-4" />
                   Anterior
                 </span>
@@ -169,13 +172,13 @@ export default async function PetsPage({ searchParams }: PageProps) {
               {hasNext ? (
                 <Link
                   href={buildPageUrl(page + 1)}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-ink-700/60 px-4 py-2 text-sm font-medium text-fg-muted transition-colors hover:bg-ink-600 hover:text-fg"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-warm-200 bg-white px-4 py-2 text-sm font-medium text-fg-muted shadow-warm-card transition-colors hover:bg-warm-50 hover:text-fg"
                 >
                   Próxima
                   <ChevronRight className="h-4 w-4" />
                 </Link>
               ) : (
-                <span className="inline-flex items-center gap-1.5 rounded-lg border border-white/5 px-4 py-2 text-sm text-fg-subtle opacity-40 cursor-not-allowed">
+                <span className="inline-flex cursor-not-allowed items-center gap-1.5 rounded-lg border border-warm-100 px-4 py-2 text-sm text-fg-subtle opacity-40">
                   Próxima
                   <ChevronRight className="h-4 w-4" />
                 </span>
