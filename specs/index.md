@@ -1,4 +1,4 @@
-# Specs Registry — SOS Pet Amigo
+﻿# Specs Registry — SOS Pet Amigo
 # Highermind entry point: /sos-pet-orchestrator-v2 spec=specs/<module>/tasks.md
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -8,19 +8,19 @@
 |--------|------|------|-------|--------|
 | ONG / Abrigos | ong-module | [spec.md](ong-module/spec.md) | [tasks.md](ong-module/tasks.md) | ✅ T1–T10 concluídos · 66/66 testes |
 | Rate Limiting | rate-limiting | [spec.md](rate-limiting/spec.md) | [tasks.md](rate-limiting/tasks.md) | ✅ T1–T6 concluídos |
-| Paginação Cursor-Based | paginacao | [spec.md](paginacao/spec.md) | [tasks.md](paginacao/tasks.md) | ⬜ T1–T6 pendentes |
+| Paginação Cursor-Based | paginacao | [spec.md](paginacao/spec.md) | [tasks.md](paginacao/tasks.md) | ✅ T1–T6 concluídos |
 | Histórico de Saúde do Pet | pet-saude | [spec.md](pet-saude/spec.md) | [tasks.md](pet-saude/tasks.md) | ✅ T1–T6 concluídos |
 | Notificações via n8n | notificacoes | [spec.md](notificacoes/spec.md) | [tasks.md](notificacoes/tasks.md) | ✅ T1–T6 concluídos |
-| Matching Automatizado por IA | matching-ia | [spec.md](matching-ia/spec.md) | [tasks.md](matching-ia/tasks.md) | ⬜ T1–T5 pendentes |
+| Matching Automatizado por IA | matching-ia | [spec.md](matching-ia/spec.md) | [tasks.md](matching-ia/tasks.md) | ✅ T1–T5 concluídos |
 | Avistamentos (Sightings) | avistamentos | [spec.md](avistamentos/spec.md) | [tasks.md](avistamentos/tasks.md) | ✅ T1–T6 concluídos |
 | Loja Printful + Mercado Pago | loja-printful | [spec.md](loja-printful/spec.md) | [tasks.md](loja-printful/tasks.md) | ✅ T1–T6 concluídos |
 | Dashboard do Prestador | dashboard-prestador | [spec.md](dashboard-prestador/spec.md) | [tasks.md](dashboard-prestador/tasks.md) | ✅ T1–T6 concluídos |
 | Busca Avançada Geoespacial | busca-avancada | [spec.md](busca-avancada/spec.md) | [tasks.md](busca-avancada/tasks.md) | ✅ T1–T6 concluídos |
 | Plaquinha QR Code | plaquinha-qr | [spec.md](plaquinha-qr/spec.md) | [tasks.md](plaquinha-qr/tasks.md) | ✅ T1–T5 concluídos |
 | Painel de Moderação Admin | admin-panel | [spec.md](admin-panel/spec.md) | [tasks.md](admin-panel/tasks.md) | ✅ T1–T6 concluídos |
-| SEO Dinâmico com ISR | seo-dinamico | [spec.md](seo-dinamico/spec.md) | [tasks.md](seo-dinamico/tasks.md) | ⬜ T1–T5 pendentes |
+| SEO Dinâmico com ISR | seo-dinamico | [spec.md](seo-dinamico/spec.md) | [tasks.md](seo-dinamico/tasks.md) | ✅ T1–T5 concluídos |
 | Email Transacional (Resend) | email-sistema | [spec.md](email-sistema/spec.md) | [tasks.md](email-sistema/tasks.md) | ✅ T1–T6 concluídos |
-| Analytics (GA4 + Sentry) | analytics | [spec.md](analytics/spec.md) | [tasks.md](analytics/tasks.md) | ⬜ T1–T6 pendentes |
+| Analytics (GA4 + Sentry) | analytics | [spec.md](analytics/spec.md) | [tasks.md](analytics/tasks.md) | ✅ T1–T6 concluídos |
 | Parcerias B2B | parceiros | [spec.md](parceiros/spec.md) | [tasks.md](parceiros/tasks.md) | ✅ T1–T6 concluídos |
 
 ## Como Invocar o Highermind
@@ -98,3 +98,4 @@ npx vitest run      # gate de testes (quando existirem para o módulo)
 
 Arquivo: `CLAUDE.md` (raiz do projeto)
 CLAUDE.md é a lei máxima — specs não podem contradizê-la.
+
