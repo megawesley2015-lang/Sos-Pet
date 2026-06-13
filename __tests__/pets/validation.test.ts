@@ -83,7 +83,9 @@ describe("createPetSchema — pet perdido/encontrado", () => {
   });
 
   it("aceita data de hoje", () => {
-    const hoje = new Date().toISOString().split("T")[0];
+    // Usa data local (não UTC) — consistente com o validador em lib/validation/pet.ts
+    const d = new Date();
+    const hoje = [d.getFullYear(), String(d.getMonth() + 1).padStart(2, "0"), String(d.getDate()).padStart(2, "0")].join("-");
     const result = createPetSchema.safeParse(petValido({ event_date: hoje }));
     expect(result.success).toBe(true);
   });

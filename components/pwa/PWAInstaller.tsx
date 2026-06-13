@@ -46,8 +46,8 @@ export default function PWAInstaller() {
 
     // Registra o Service Worker
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js").catch((err) => {
-        console.warn("[PWA] SW não registrado:", err);
+      navigator.serviceWorker.register("/sw.js").catch(() => {
+        // SW não disponível no ambiente atual — silencioso em produção
       });
     }
 

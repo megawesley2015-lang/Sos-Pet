@@ -8,10 +8,10 @@
 - 11 arquivos modificados pendentes de commit (auditados, limpos)
 
 ## BACKLOG (ordem de prioridade)
-- [ ] CICLO-1: Commit dos 11 arquivos modificados pendentes (já auditados — só falta commitar)
-- [ ] CICLO-2: Testes para `app/api/pets/lost-active/route.ts`
-- [ ] CICLO-3: Testes para `app/api/ong/available-pets/route.ts`
-- [ ] CICLO-4: Testes para `app/api/user/export-data/route.ts`
+- [x] CICLO-1: Commit dos 11 arquivos modificados pendentes (já auditados — só falta commitar)
+- [x] CICLO-2: Testes para `app/api/pets/lost-active/route.ts`
+- [x] CICLO-3: Testes para `app/api/ong/available-pets/route.ts`
+- [x] CICLO-4: Testes para `app/api/user/export-data/route.ts`
 - [ ] CICLO-5: Remover console.warn de produção em `components/pwa/PWAInstaller.tsx`
 - [ ] CICLO-6: Corrigir `value as any` em `components/pets/FilterBar.tsx`
 - [ ] CICLO-7: Testes para o módulo de email (`lib/email/`)
@@ -31,4 +31,8 @@ Antes de cada commit: `npx vitest run` deve passar 100%
 Antes de cada ciclo: verificar que o anterior está no log
 
 ## LOG DE CICLOS
-(vazio — aguardando início)
+| Ciclo | Descrição | Testes | Status | Commit |
+|-------|-----------|--------|--------|--------|
+| CICLO-1 | Commit 11 arquivos auditados + SESSION_JOURNAL | 217 ✅ | DONE | 6896738 |
+| CICLO-2 | 8 testes para GET /api/pets/lost-active (rate limit, filtros, contact_* ausente) | 225 ✅ | DONE | 4bc6a59 |
+| CICLO-3 | 7 testes para GET /api/ong/available-pets (auth, shelter ausente, select mínimo) | 232 ✅ | DONE | 77811af |
