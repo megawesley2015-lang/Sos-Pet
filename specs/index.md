@@ -16,7 +16,7 @@
 | Loja Printful + Mercado Pago | loja-printful | [spec.md](loja-printful/spec.md) | [tasks.md](loja-printful/tasks.md) | ✅ T1–T6 concluídos |
 | Dashboard do Prestador | dashboard-prestador | [spec.md](dashboard-prestador/spec.md) | [tasks.md](dashboard-prestador/tasks.md) | ✅ T1–T6 concluídos |
 | Busca Avançada Geoespacial | busca-avancada | [spec.md](busca-avancada/spec.md) | [tasks.md](busca-avancada/tasks.md) | ✅ T1–T6 concluídos |
-| Plaquinha QR Code | plaquinha-qr | [spec.md](plaquinha-qr/spec.md) | [tasks.md](plaquinha-qr/tasks.md) | ⬜ T1–T5 pendentes |
+| Plaquinha QR Code | plaquinha-qr | [spec.md](plaquinha-qr/spec.md) | [tasks.md](plaquinha-qr/tasks.md) | ✅ T1–T5 concluídos |
 | Painel de Moderação Admin | admin-panel | [spec.md](admin-panel/spec.md) | [tasks.md](admin-panel/tasks.md) | ✅ T1–T6 concluídos |
 | SEO Dinâmico com ISR | seo-dinamico | [spec.md](seo-dinamico/spec.md) | [tasks.md](seo-dinamico/tasks.md) | ⬜ T1–T5 pendentes |
 | Email Transacional (Resend) | email-sistema | [spec.md](email-sistema/spec.md) | [tasks.md](email-sistema/tasks.md) | ✅ T1–T6 concluídos |
