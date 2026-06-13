@@ -27,11 +27,11 @@ export interface PetFormProps {
 
 const inputCls = (err?: string) =>
   [
-    "w-full rounded-lg border px-3 py-2.5 text-sm bg-ink-600 text-fg",
-    "placeholder-fg-subtle focus:outline-none focus:ring-2 transition-colors duration-200",
+    "w-full rounded-lg border px-3 py-2.5 text-sm bg-white text-fg",
+    "placeholder:text-fg-muted focus:outline-none focus:ring-2 transition-colors duration-200",
     err
       ? "border-danger/60 focus:border-danger focus:ring-danger/20"
-      : "border-white/10 focus:border-cyan-500/60 focus:ring-cyan-500/20",
+      : "border-warm-200 focus:border-brand-500/60 focus:ring-brand-500/20",
   ].join(" ");
 
 function Field({
@@ -263,7 +263,7 @@ export function PetForm({
           type="button"
           onClick={captureGps}
           disabled={gpsStatus === 'loading'}
-          className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-ink-600 px-3 py-2 text-xs font-medium text-fg-muted hover:border-brand-500/40 hover:text-brand-300 transition-all disabled:opacity-50"
+          className="flex items-center gap-1.5 rounded-lg border border-warm-200 bg-white px-3 py-2 text-xs font-medium text-fg-muted hover:border-brand-500/40 hover:text-brand-600 transition-all disabled:opacity-50"
         >
           {gpsStatus === 'loading' ? '⏳ Obtendo localização…' : '📍 Usar minha localização'}
         </button>
@@ -285,7 +285,7 @@ export function PetForm({
       )}
 
       {/* Contato */}
-      <fieldset className="rounded-xl border border-white/10 bg-ink-700/40 p-4 space-y-4">
+      <fieldset className="rounded-xl border border-warm-200 bg-warm-50 p-4 space-y-4">
         <legend className="px-1 text-xs font-semibold text-fg-muted uppercase tracking-wider">Contato</legend>
         <p className="text-xs text-fg-subtle">Visível apenas na página de detalhes — não aparece na listagem.</p>
 

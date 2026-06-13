@@ -21,7 +21,7 @@ export default async function PerfilPage() {
   if (!profile) {
     // Não deveria acontecer (trigger handle_new_user cria profile)
     return (
-      <div className="min-h-screen bg-ink-800">
+      <div data-theme="light" className="min-h-screen bg-bg">
         <TopBar />
         <main className="mx-auto max-w-2xl px-4 py-10">
           <p className="rounded-xl border border-danger/40 bg-danger/10 p-4 text-sm text-danger-fg">

@@ -31,7 +31,7 @@ export default async function EditarPetPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-ink-800">
+    <div data-theme="light" className="min-h-screen bg-bg">
       <TopBar />
       <main className="mx-auto max-w-2xl px-4 pb-16 pt-6">
         <Link

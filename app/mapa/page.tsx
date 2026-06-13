@@ -115,7 +115,7 @@ export default async function MapaPage() {
         </div>
 
         {pets.length === 0 ? (
-          <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-warm-200 bg-warm-50 text-center p-12 shadow-warm-card">
+          <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-warm-200 bg-white text-center p-12 shadow-warm-card">
             <div className="text-5xl mb-4">🗺️</div>
             <h2 className="font-display text-xl font-bold text-fg mb-2">
               Mapa vazio por enquanto

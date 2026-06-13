@@ -47,7 +47,7 @@ export function PrestadorFilters() {
             placeholder="Buscar por nome ou descrição…"
             defaultValue={activeBusca}
             onChange={(e) => set("busca", e.target.value)}
-            className="w-full rounded-lg border border-white/10 bg-ink-800/70 py-2.5 pl-10 pr-3 text-sm text-fg placeholder:text-fg-subtle focus:border-brand-500/60 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+            className="w-full rounded-lg border border-warm-200 bg-white py-2.5 pl-10 pr-3 text-sm text-fg placeholder:text-fg-muted focus:border-brand-500/60 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
           />
         </div>
         <input
@@ -55,7 +55,7 @@ export function PrestadorFilters() {
           placeholder="Cidade…"
           defaultValue={activeCidade}
           onChange={(e) => set("cidade", e.target.value)}
-          className="w-full rounded-lg border border-white/10 bg-ink-800/70 px-3 py-2.5 text-sm text-fg placeholder:text-fg-subtle focus:border-brand-500/60 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+          className="w-full rounded-lg border border-warm-200 bg-white px-3 py-2.5 text-sm text-fg placeholder:text-fg-muted focus:border-brand-500/60 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
         />
       </div>
 
@@ -129,8 +129,8 @@ function Chip({
       onClick={onClick}
       className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-bold uppercase tracking-wide transition-all ${
         active
-          ? "border-brand-500 bg-brand-500/15 text-brand-100 shadow-glow-brand"
-          : "border-white/10 bg-ink-700/50 text-fg-muted hover:border-white/20 hover:text-fg"
+          ? "border-brand-500 bg-brand-50 text-brand-700"
+          : "border-warm-200 bg-white text-fg-muted hover:border-brand-300 hover:text-fg"
       }`}
     >
       {label}
@@ -155,8 +155,8 @@ function ToggleChip({
       onClick={onClick}
       className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-bold transition-all ${
         active
-          ? "border-brand-500 bg-brand-500/15 text-brand-200 shadow-glow-brand"
-          : "border-white/10 bg-ink-700/50 text-fg-muted hover:border-white/20 hover:text-fg"
+          ? "border-brand-500 bg-brand-50 text-brand-700"
+          : "border-warm-200 bg-white text-fg-muted hover:border-brand-300 hover:text-fg"
       }`}
     >
       {icon}

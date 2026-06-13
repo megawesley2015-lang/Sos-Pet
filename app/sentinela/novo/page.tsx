@@ -29,7 +29,7 @@ const BENEFICIOS = [
 
 export default function SentinelaNovoPage() {
   return (
-    <div className="min-h-screen bg-ink-800 bg-radial-brand">
+    <div data-theme="light" className="min-h-screen bg-bg">
       <TopBar />
       <main className="mx-auto max-w-2xl px-4 pb-16 pt-8">
         {/* Header */}
