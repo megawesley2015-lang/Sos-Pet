@@ -1,94 +1,21 @@
-// app/achados-e-perdidos/page.tsx — listagem pública, Server Component + Suspense granular
+// app/achados-e-perdidos/page.tsx
+// Server Component — SSR de metadados + filtros via URL.
+// PetListClient (filho) gerencia cursor pagination client-side.
 
-import { Suspense }        from 'react'
-import Link                from 'next/link'
-import { createSupabaseServerClient as createClient } from '@/lib/supabase/server'
-import { PetGrid }         from '@/components/pets/PetGrid'
-import { FilterBar }       from '@/components/pets/FilterBar'
-import { PetGridSkeleton } from '@/components/skeletons/PetCardSkeleton'
-import { PET_PUBLIC_COLUMNS, type PetPublic } from '@/types/pets'
-
-// ── Sub-componente servidor que busca os dados ─────────────────────────────
-async function PetList({
-  kind, species, city, page,
-}: {
-  kind?: string; species?: string; city?: string; page: number
-}) {
-  const LIMIT  = 20
-  const offset = (page - 1) * LIMIT
-
-  const supabase = await createClient()
-  let query = supabase
-    .from('pets')
-    .select(PET_PUBLIC_COLUMNS, { count: 'exact' })
-    .eq('status', 'active')
-    .order('created_at', { ascending: false })
-    .range(offset, offset + LIMIT - 1)
-
-  if (kind)    query = query.eq('kind', kind as 'lost' | 'found')
-  if (species) query = query.eq('species', species as 'dog' | 'cat' | 'other')
-  if (city)    query = query.ilike('city', `%${city}%`)
-
-  const { data, error, count } = await query
-
-  if (error) {
-    return (
-      <p className="py-10 text-center text-sm text-fg-muted">
-        Erro ao carregar pets. Tente novamente.
-      </p>
-    )
-  }
-
-  const pets       = (data ?? []) as unknown as PetPublic[]
-  const total      = count ?? 0
-  const totalPages = Math.ceil(total / LIMIT)
-
-  return (
-    <div className="flex flex-col gap-6">
-      <p className="text-xs text-fg-subtle">
-        {total === 0
-          ? 'Nenhum resultado'
-          : `${total} alerta${total !== 1 ? 's' : ''} encontrado${total !== 1 ? 's' : ''}`}
-      </p>
-
-      <PetGrid pets={pets} />
-
-      {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-3 pt-4">
-          {page > 1 && (
-            <PaginationLink page={page - 1} kind={kind} species={species} city={city}>← Anterior</PaginationLink>
-          )}
-          <span className="text-xs text-fg-subtle">Página {page} de {totalPages}</span>
-          {page < totalPages && (
-            <PaginationLink page={page + 1} kind={kind} species={species} city={city}>Próxima →</PaginationLink>
-          )}
-        </div>
-      )}
-    </div>
-  )
-}
-
-function PaginationLink({
-  page, kind, species, city, children,
-}: {
-  page: number; kind?: string; species?: string; city?: string; children: React.ReactNode
-}) {
-  const params = new URLSearchParams()
-  params.set('page', String(page))
-  if (kind)    params.set('kind', kind)
-  if (species) params.set('species', species)
-  if (city)    params.set('city', city)
-  return (
-    <Link href={`/achados-e-perdidos?${params.toString()}`} className="text-xs text-brand-500 hover:underline">
-      {children}
-    </Link>
-  )
-}
+import { Suspense }          from 'react'
+import Link                  from 'next/link'
+import { FilterBar }         from '@/components/pets/FilterBar'
+import { PetGridSkeleton }   from '@/components/skeletons/PetCardSkeleton'
+import { PetListClient }     from '@/components/pets/PetListClient'
 
 // ── Page ──────────────────────────────────────────────────────────────────
 // Next.js 15+: searchParams é Promise
 interface PageProps {
-  searchParams: Promise<{ kind?: string; species?: string; city?: string; page?: string }>
+  searchParams: Promise<{
+    kind?: string; species?: string; city?: string
+    color?: string; size?: string; neighborhood?: string
+    lat?: string; lng?: string; radiusKm?: string
+  }>
 }
 
 export const metadata = {
@@ -97,11 +24,14 @@ export const metadata = {
 }
 
 export default async function AchadosEPerdidosPage({ searchParams }: PageProps) {
-  const sp      = await searchParams
-  const kind    = sp.kind
-  const species = sp.species
-  const city    = sp.city
-  const page    = Math.max(1, Number(sp.page ?? '1'))
+  const sp = await searchParams
+
+  // Chave que muda com qualquer filtro → força re-exibição do skeleton
+  const filterKey = [
+    sp.kind, sp.species, sp.city,
+    sp.color, sp.size, sp.neighborhood,
+    sp.lat, sp.lng, sp.radiusKm,
+  ].join('|')
 
   return (
     <div data-theme="light" className="min-h-screen bg-bg">
@@ -131,17 +61,17 @@ export default async function AchadosEPerdidosPage({ searchParams }: PageProps) 
           </Link>
         </div>
 
-        {/* Filtros — client component */}
+        {/* Filtros — client component, muda URL → server re-render */}
         <Suspense fallback={<FilterBarSkeleton />}>
           <FilterBar />
         </Suspense>
 
-        {/* Lista — muda key para forçar Suspense no filtro */}
+        {/* Lista com cursor pagination — key muda quando filtro muda → remonta o Client Component */}
         <Suspense
-          key={`${kind}-${species}-${city}-${page}`}
+          key={filterKey}
           fallback={<PetGridSkeleton count={8} />}
         >
-          <PetList kind={kind} species={species} city={city} page={page} />
+          <PetListClient />
         </Suspense>
       </main>
     </div>

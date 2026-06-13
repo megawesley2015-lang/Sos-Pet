@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
 import { ok, fail } from "@/lib/api-response";
-import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { checkRateLimit, getClientIp, rateLimitHeaders } from "@/lib/rate-limit";
 
 const GET_LIMIT = { limit: 60, windowMs: 60_000 }; // 60 req/min por IP
 
@@ -13,8 +13,8 @@ export async function GET(
   const rl = await checkRateLimit(`ong-adoption:${getClientIp(req)}`, GET_LIMIT);
   if (!rl.allowed) {
     return NextResponse.json(
-      { success: false, error: "Muitas requisições. Tente novamente em alguns instantes." },
-      { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } }
+      { success: false, error: "Muitas requisições. Tente novamente em alguns instantes.", code: "RATE_LIMITED" },
+      { status: 429, headers: rateLimitHeaders(rl) }
     );
   }
 
@@ -48,5 +48,7 @@ export async function GET(
 
   if (!adoption) return fail(new Error("Não encontrado"));
 
-  return ok({ adoption });
+  const res = ok({ adoption });
+  Object.entries(rateLimitHeaders(rl)).forEach(([k, v]) => res.headers.set(k, v));
+  return res;
 }

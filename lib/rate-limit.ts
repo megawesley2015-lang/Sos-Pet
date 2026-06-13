@@ -71,7 +71,7 @@ function maybeCleanup() {
   }
 }
 
-function checkInMemory(key: string, config: RateLimitConfig): RateLimitResult {
+export function checkInMemory(key: string, config: RateLimitConfig): RateLimitResult {
   maybeCleanup()
   const now   = Date.now()
   const entry = store.get(key)
@@ -110,6 +110,20 @@ export async function checkRateLimit(
     }
   }
   return checkInMemory(key, config)
+}
+
+/**
+ * Monta headers de rate limit para incluir na resposta.
+ * Sempre inclui X-RateLimit-Remaining. Adiciona Retry-After apenas em 429.
+ */
+export function rateLimitHeaders(result: RateLimitResult): Record<string, string> {
+  const headers: Record<string, string> = {
+    'X-RateLimit-Remaining': String(result.remaining),
+  }
+  if (!result.allowed) {
+    headers['Retry-After'] = String(Math.ceil((result.resetAt - Date.now()) / 1000))
+  }
+  return headers
 }
 
 /** Extrai IP do request — usa headers injetados pela Vercel (não manipuláveis pelo cliente) */

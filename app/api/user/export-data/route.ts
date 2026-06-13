@@ -5,16 +5,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServerClient as createClient } from '@/lib/supabase/server'
 import { ok, fail } from '@/lib/api-response'
 import { Errors } from '@/lib/errors'
-import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
+import { checkRateLimit, getClientIp, rateLimitHeaders } from '@/lib/rate-limit'
 
-const GET_LIMIT = { limit: 5, windowMs: 60 * 60_000 }; // 5 req/hora por IP — dados pessoais
+const GET_LIMIT = { limit: 2, windowMs: 60 * 60_000 }; // 2 req/hora por IP — dados pessoais LGPD
 
 export async function GET(req: NextRequest) {
   const rl = await checkRateLimit(`export-data:${getClientIp(req)}`, GET_LIMIT)
   if (!rl.allowed) {
     return NextResponse.json(
-      { success: false, error: 'Muitas requisições. Tente novamente em alguns instantes.' },
-      { status: 429, headers: { 'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } }
+      { success: false, error: 'Muitas requisições. Tente novamente em alguns instantes.', code: 'RATE_LIMITED' },
+      { status: 429, headers: rateLimitHeaders(rl) }
     )
   }
 
@@ -43,12 +43,14 @@ export async function GET(req: NextRequest) {
         .order('created_at', { ascending: false }),
     ])
 
-    return ok({
+    const res = ok({
       exported_at: new Date().toISOString(),
       email:       user.email ?? null,
       profile:     profileResult.data ?? null,
       pets:        petsResult.data ?? [],
     })
+    Object.entries(rateLimitHeaders(rl)).forEach(([k, v]) => res.headers.set(k, v))
+    return res
 
   } catch (err) {
     return fail(err)

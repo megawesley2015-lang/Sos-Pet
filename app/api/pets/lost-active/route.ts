@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { ok, fail } from "@/lib/api-response";
-import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { checkRateLimit, getClientIp, rateLimitHeaders } from "@/lib/rate-limit";
 
 const GET_LIMIT = { limit: 30, windowMs: 60_000 }; // 30 req/min por IP
 
@@ -15,8 +15,8 @@ export async function GET(request: NextRequest) {
   const rl = await checkRateLimit(`lost-active:${getClientIp(request)}`, GET_LIMIT);
   if (!rl.allowed) {
     return NextResponse.json(
-      { success: false, error: "Muitas requisições. Tente novamente em alguns instantes." },
-      { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } }
+      { success: false, error: "Muitas requisições. Tente novamente em alguns instantes.", code: "RATE_LIMITED" },
+      { status: 429, headers: rateLimitHeaders(rl) }
     );
   }
 
@@ -30,9 +30,9 @@ export async function GET(request: NextRequest) {
     .order("created_at", { ascending: false })
     .limit(200);
 
-  if (error) {
-    return fail(error);
-  }
+  if (error) return fail(error);
 
-  return ok({ pets: pets ?? [] });
+  const res = ok({ pets: pets ?? [] });
+  Object.entries(rateLimitHeaders(rl)).forEach(([k, v]) => res.headers.set(k, v));
+  return res;
 }

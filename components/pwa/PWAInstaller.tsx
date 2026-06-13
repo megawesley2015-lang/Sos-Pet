@@ -99,7 +99,7 @@ export default function PWAInstaller() {
       aria-label="Instalar SOS Pet"
       className="fixed bottom-20 left-3 right-3 z-50 animate-in slide-in-from-bottom-4 duration-300 md:bottom-6 md:left-auto md:right-6 md:w-96"
     >
-      <div className="overflow-hidden rounded-2xl border border-white/10 bg-ink-700/95 shadow-2xl backdrop-blur-md">
+      <div data-theme="dark" className="overflow-hidden rounded-2xl border border-white/10 bg-ink-700/95 shadow-2xl backdrop-blur-md">
         {/* Header */}
         <div className="flex items-start gap-3 p-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-500/20 text-2xl">

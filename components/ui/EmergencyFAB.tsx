@@ -113,6 +113,7 @@ export default function EmergencyFAB() {
 
       {/* FAB container — só em mobile/tablet, posicionado acima da safe area */}
       <div
+        data-theme="dark"
         className={`emergency-fab fixed bottom-8 right-4 z-50 flex flex-col items-end gap-3 transition-all duration-300 lg:hidden ${
           visible ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0 pointer-events-none"
         }`}

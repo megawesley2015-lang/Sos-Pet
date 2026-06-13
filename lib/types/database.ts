@@ -1788,11 +1788,17 @@ export const Constants = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ── Pets (achados e perdidos públicos) ────────────────────────────────────────
-export type PetRow    = Database['public']['Tables']['pets']['Row']
-export type PetInsert = Database['public']['Tables']['pets']['Insert']
-export type PetUpdate = Database['public']['Tables']['pets']['Update']
+export type PetSize    = 'small' | 'medium' | 'large'
 export type PetKind    = 'lost' | 'found'
 export type PetSpecies = 'dog' | 'cat' | 'other'
+
+type _PetRowBase    = Database['public']['Tables']['pets']['Row']
+type _PetInsertBase = Database['public']['Tables']['pets']['Insert']
+type _PetUpdateBase = Database['public']['Tables']['pets']['Update']
+
+export type PetRow    = Omit<_PetRowBase,    'size'> & { size: PetSize | null }
+export type PetInsert = Omit<_PetInsertBase, 'size'> & { size?: PetSize | null }
+export type PetUpdate = Omit<_PetUpdateBase, 'size'> & { size?: PetSize | null }
 
 // ── Profiles ──────────────────────────────────────────────────────────────────
 export type ProfileRow    = Database['public']['Tables']['profiles']['Row']
