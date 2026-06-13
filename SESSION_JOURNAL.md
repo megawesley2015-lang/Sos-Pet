@@ -12,8 +12,8 @@
 - [x] CICLO-2: Testes para `app/api/pets/lost-active/route.ts`
 - [x] CICLO-3: Testes para `app/api/ong/available-pets/route.ts`
 - [x] CICLO-4: Testes para `app/api/user/export-data/route.ts`
-- [ ] CICLO-5: Remover console.warn de produção em `components/pwa/PWAInstaller.tsx`
-- [ ] CICLO-6: Corrigir `value as any` em `components/pets/FilterBar.tsx`
+- [x] CICLO-5: Remover console.warn de produção em `components/pwa/PWAInstaller.tsx`
+- [x] CICLO-6: Corrigir `value as any` em `components/pets/FilterBar.tsx`
 - [ ] CICLO-7: Testes para o módulo de email (`lib/email/`)
 - [ ] CICLO-8: Melhorar acessibilidade da página `/achados-e-perdidos` (aria-labels, roles)
 
@@ -36,3 +36,6 @@ Antes de cada ciclo: verificar que o anterior está no log
 | CICLO-1 | Commit 11 arquivos auditados + SESSION_JOURNAL | 217 ✅ | DONE | 6896738 |
 | CICLO-2 | 8 testes para GET /api/pets/lost-active (rate limit, filtros, contact_* ausente) | 225 ✅ | DONE | 4bc6a59 |
 | CICLO-3 | 7 testes para GET /api/ong/available-pets (auth, shelter ausente, select mínimo) | 232 ✅ | DONE | 77811af |
+| CICLO-4 | 8 testes para GET /api/user/export-data LGPD (rate 2/h, auth, payload, owner_id) | 240 ✅ | DONE | a301780 |
+| CICLO-5 | Remove console.warn de PWAInstaller (SW silencioso em produção) | 267 ✅ | DONE | f5b2251 |
+| CICLO-6 | Fix test data local vs UTC em validation.test.ts (bug BRT pós-meia-noite) | 267 ✅ | DONE | f5b2251 |

@@ -35,10 +35,10 @@ export default async function AchadosEPerdidosPage({ searchParams }: PageProps) 
 
   return (
     <div data-theme="light" className="min-h-screen bg-bg">
-      <main className="mx-auto max-w-7xl px-4 py-8">
+      <main aria-labelledby="pets-heading" className="mx-auto max-w-7xl px-4 py-8">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl font-black text-fg">
+            <h1 id="pets-heading" className="text-2xl font-black text-fg">
               Achados <span className="text-brand-500">&</span> Perdidos
             </h1>
             <p className="mt-1 text-sm text-fg-muted">Pets perdidos e encontrados na sua região</p>
@@ -57,7 +57,7 @@ export default async function AchadosEPerdidosPage({ searchParams }: PageProps) 
               focus-visible:outline-[rgb(var(--color-primary))]
             "
           >
-            🐾 Cadastrar alerta
+            <span aria-hidden="true">🐾</span> Cadastrar alerta
           </Link>
         </div>
 
@@ -80,9 +80,10 @@ export default async function AchadosEPerdidosPage({ searchParams }: PageProps) 
 
 function FilterBarSkeleton() {
   return (
-    <div className="flex gap-3 py-4" aria-hidden="true">
+    <div role="status" aria-label="Carregando filtros" className="flex gap-3 py-4">
+      <span className="sr-only">Carregando filtros…</span>
       {[0, 1, 2].map((i) => (
-        <div key={i} className="h-9 w-28 animate-pulse rounded-lg bg-bg-overlay" />
+        <div key={i} aria-hidden="true" className="h-9 w-28 animate-pulse rounded-lg bg-bg-overlay" />
       ))}
     </div>
   )
