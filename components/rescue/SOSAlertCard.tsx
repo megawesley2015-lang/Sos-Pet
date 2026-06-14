@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+﻿import { forwardRef } from "react";
 import {
   formatPhone,
   whatsappLink,
@@ -277,5 +277,5 @@ export const SOSAlertCard = forwardRef<HTMLDivElement, SOSAlertCardProps>(
 export const sosAlertWhatsappLink = (pet: PetRow) =>
   whatsappLink(
     pet.contact_phone,
-    `Olá! Vi o alerta SOS do pet ${pet.name ?? ""} no SOS Pet e quero ajudar.`
+    `Olá! Vi o alerta SOS do pet ${pet.name ?? ""} no Pet Aumigo e quero ajudar.`
   );

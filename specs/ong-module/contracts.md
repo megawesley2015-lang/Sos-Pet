@@ -1,4 +1,4 @@
-# Contracts — Módulo ONG
+﻿# Contracts — Módulo ONG
 # SDD Fase 2: PLANEJAR — Contratos de API e payloads
 # Segue padrão global: { success: true, data: {} } / { success: false, error: "" }
 # ─────────────────────────────────────────────────────────────────────────
@@ -65,7 +65,7 @@ Output — Sucesso:
 **Destino:** `process.env.N8N_ONG_ADOPTION_WEBHOOK_URL`
 **Falha:** silenciosa — loga em webhook_logs, não bloqueia o fluxo
 
-### Payload de saída (SOS Pet → n8n):
+### Payload de saída (Pet Aumigo → n8n):
 ```json
 {
   "event": "adoption.created",

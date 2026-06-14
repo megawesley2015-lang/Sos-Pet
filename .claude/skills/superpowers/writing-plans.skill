@@ -1,0 +1,108 @@
+# Writing Plans — Implementation Plan Before Code
+# Source: github.com/obra/superpowers | License: MIT
+
+## When to Use
+Use after design is approved (post-brainstorming) and before implementation.
+Triggers on: "write a plan for X", "plan the implementation", "break this down",
+"how do we implement X" (after design exists). Also invoked by brainstorming skill.
+
+---
+
+## Output Location
+`docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`
+
+Create the directory if it doesn't exist.
+
+---
+
+## Plan Structure
+
+```markdown
+# Plan: {Feature Name}
+**Date:** YYYY-MM-DD
+**Goal:** {one sentence — what does done look like?}
+**Spec:** {link to design doc if exists}
+
+## Architecture
+{Brief description of the approach chosen}
+
+## Tech Stack Changes
+{List any new dependencies, config changes}
+
+## File Map
+{Every file that will be touched:}
+- `path/to/file.ts` — what changes and why
+- `path/to/new-file.ts` — NEW — what it contains
+
+## Tasks
+
+### Task 1: {Name}
+**Files:** `path/to/file.ts`
+**Test first:**
+```typescript
+// Exact test code to write
+test('description', () => {
+  // ...
+})
+```
+**Implementation:**
+```typescript
+// Exact code to write
+```
+**Verify:** `npm test -- --testNamePattern="description"`
+**Commit:** `feat: description of what was added`
+
+### Task 2: {Name}
+...
+```
+
+---
+
+## Critical Requirements
+
+**Bite-sized tasks:** Each task = 2–5 minutes of work.
+If a task takes longer, split it.
+
+**No placeholders:** Every code block must be complete.
+- No "TBD", "add validation here", "implement this"
+- If you don't know the exact code, figure it out before writing the plan
+
+**Complete test code:** Every task starts with a failing test.
+Write the exact test, not a description of what to test.
+
+**Complete implementation code:** Show the exact implementation.
+No "something like this" — the exact code.
+
+**Exact commands:** Show what to run and what the output looks like.
+
+---
+
+## Self-Review Before Presenting
+
+```
+[ ] Goal is measurable (not "improve X", but "X returns Y when Z")
+[ ] File map is complete (no files touched that aren't listed)
+[ ] All tasks have test-first cycle (RED → GREEN → REFACTOR)
+[ ] No task has "TBD" or incomplete code
+[ ] Tasks are ordered (no task depends on a later task)
+[ ] Commit messages follow semantic commits (feat:, fix:, refactor:)
+[ ] Plan matches the approved spec (no scope creep)
+```
+
+---
+
+## Execution Options
+
+After presenting the plan, offer:
+1. **Subagent-driven** (recommended) — fresh subagent per task via `/subagent-driven-development`
+2. **Inline** — execute tasks sequentially via `/executing-plans`
+
+---
+
+## SOS Pet Plan Conventions
+
+- Imports: always `@/` alias (never relative)
+- Supabase selects: always explicit columns (never `*`)
+- New API routes: include Zod validation + `ok()`/`fail()` response helpers
+- New pages: check if component already exists in `components/` before creating
+- Commits: follow pattern from recent git log (`feat:`, `fix:`, `refactor:`, `docs:`)

@@ -1,4 +1,4 @@
-# Requirements — Módulo ONG
+﻿# Requirements — Módulo ONG
 # Spec-Driven Development | Fase: Execute (código pronto, migration pendente)
 
 **Slug:** ong-module
@@ -11,7 +11,7 @@
 
 ONGs e protetores independentes resgatam pets, gerenciam lares temporários
 e encaminham para adoção. Hoje fazem isso via planilha ou memória.
-O módulo ONG dá a eles um sistema web completo integrado ao SOS Pet.
+O módulo ONG dá a eles um sistema web completo integrado ao Pet Aumigo.
 
 ---
 

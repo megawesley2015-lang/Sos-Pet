@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { WifiOff, PawPrint, RefreshCw } from "lucide-react";
@@ -43,7 +43,7 @@ export default function OfflinePage() {
       </div>
 
       <p className="mt-10 text-xs text-fg-subtle">
-        SOS Pet · Rede colaborativa de resgate de animais
+        Pet Aumigo · Rede colaborativa de resgate de animais
       </p>
     </div>
   );

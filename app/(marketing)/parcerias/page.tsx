@@ -1,4 +1,4 @@
-import { HeartHandshake, Megaphone, ShieldCheck, Sparkles } from "lucide-react";
+﻿import { HeartHandshake, Megaphone, ShieldCheck, Sparkles } from "lucide-react";
 import { PageHeader } from "@/components/marketing/PageHeader";
 import { ParceriaForm } from "./ParceriaForm";
 
@@ -34,7 +34,7 @@ export default function ParceriasPage() {
       <PageHeader
         eyebrow="Parcerias"
         title="Vamos juntos resgatar mais pets"
-        description="Conte sobre sua organização e como você quer somar com a rede SOS Pet."
+        description="Conte sobre sua organização e como você quer somar com a rede Pet Aumigo."
       />
 
       <section className="py-16">

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const name = profile.full_name ?? "Tutor";
   return {
     title: `Perfil de ${name}`,
-    description: `Veja os registros de pets de ${name} na rede SOS Pet.`,
+    description: `Veja os registros de pets de ${name} na rede Pet Aumigo.`,
   };
 }
 

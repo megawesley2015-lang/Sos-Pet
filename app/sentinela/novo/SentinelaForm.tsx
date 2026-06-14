@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState, useState, useRef } from "react";
 import { Camera, MapPin, CheckCircle2, Loader2, Building2, Phone, Mail } from "lucide-react";
@@ -322,8 +322,8 @@ export function SentinelaForm() {
       <div className="rounded-lg border border-cyan-500/20 bg-cyan-500/5 p-3 text-[11px] text-fg-subtle leading-relaxed">
         📋 Ao se cadastrar você concorda em colaborar com tutores que buscam seus pets.
         Sua participação é voluntária e pode ser encerrada a qualquer momento via{" "}
-        <a href="mailto:contato@sospet.com.br" className="text-cyan-400 hover:underline">
-          contato@sospet.com.br
+        <a href="mailto:contato@aumigo.com.br" className="text-cyan-400 hover:underline">
+          contato@aumigo.com.br
         </a>.
         Os dados são usados exclusivamente para exibição no mapa de alertas.
       </div>

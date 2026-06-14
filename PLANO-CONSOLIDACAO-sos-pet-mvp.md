@@ -1,4 +1,4 @@
-# Plano de Consolidação — SOS Pet MVP
+﻿# Plano de Consolidação — Pet Aumigo MVP
 
 **Destino:** `C:\Users\wesley\sos-pet-mvp` (pasta nova, limpa)
 **Stack-alvo:** Next.js 15.1 App Router · TypeScript strict · Tailwind CSS 3.4 · Supabase (SSR + RLS + Storage) · Vercel
@@ -9,7 +9,7 @@
 
 ## 1. Por que consolidar
 
-Hoje há 4 pastas ativas do SOS Pet, cada uma com pedaços diferentes e dívidas diferentes. A consolidação resolve três problemas que o wes levantou:
+Hoje há 4 pastas ativas do Pet Aumigo, cada uma com pedaços diferentes e dívidas diferentes. A consolidação resolve três problemas que o wes levantou:
 
 1. **Perdi features focando em paleta.** O projeto é muito maior que Achados e Perdidos — tem auth, prestadores, dashboard, admin, landing. Precisamos trazer tudo junto.
 2. **Stack divergente.** `sos-pet-v2` mistura JS e TS, usa Tailwind 4 canary, tem backend Express separado com segredos hardcoded. `Meu Saas` já é TS puro, Supabase SSR correto, Tailwind 3 estável, design aprovado.

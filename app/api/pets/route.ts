@@ -1,4 +1,4 @@
-// app/api/pets/route.ts
+﻿// app/api/pets/route.ts
 // GET  /api/pets — listagem pública com filtros
 // POST /api/pets — cadastro (anônimo ou autenticado)
 
@@ -256,10 +256,10 @@ export async function POST(req: NextRequest) {
     }
 
     if (user?.email && pet.kind === 'lost') {
-      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sospetamigo.com.br'
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aumigo.com.br'
       void sendEmail({
         to: user.email,
-        subject: `${pet.name ?? 'Seu pet'} foi cadastrado — SOS Pet Amigo`,
+        subject: `${pet.name ?? 'Seu pet'} foi cadastrado — Pet Aumigo`,
         html: petConfirmationTemplate({
           petName: pet.name ?? 'Seu pet',
           petId: pet.id,

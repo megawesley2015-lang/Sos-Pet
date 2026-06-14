@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { forwardRef } from 'react'
 import Image from 'next/image'
@@ -25,7 +25,7 @@ function truncateName(name: string, max = 20): string {
 
 export const PlaquinhaPreview = forwardRef<HTMLDivElement, Props>(
   ({ petName, photoUrl, petId, bgColor = 'orange' }, ref) => {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sospetamigo.com.br'
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aumigo.com.br'
     const qrValue = `${siteUrl}/pets/${petId}`
     const bg = BG_COLORS[bgColor]
     const displayName = truncateName(petName)
@@ -94,7 +94,7 @@ export const PlaquinhaPreview = forwardRef<HTMLDivElement, Props>(
         </div>
 
         <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 10, margin: 0, textAlign: 'center' }}>
-          SOS Pet Amigo
+          Pet Aumigo
         </p>
       </div>
     )

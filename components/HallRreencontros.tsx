@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 // components/HallRreencontros.tsx — Hall de Reencontros
 // Schema real: name, species ('dog'|'cat'|'other'), breed, city, photo_url, event_date, resolved_at
 
@@ -179,7 +179,7 @@ export default function HallRreencontros({
 
             <p className="mt-3 text-sm text-fg-muted leading-relaxed max-w-sm">
               Cada reencontro aqui é real. Cada hora contada é a diferença
-              que o SOS Pet fez na vida de um tutor.
+              que o Pet Aumigo fez na vida de um tutor.
             </p>
           </div>
 

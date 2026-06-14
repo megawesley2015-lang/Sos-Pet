@@ -1,4 +1,4 @@
-"use server";
+﻿"use server";
 
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient, createServiceClient } from "@/lib/supabase/server";
@@ -137,7 +137,7 @@ export async function iniciarCheckoutPlaquinha(formData: FormData) {
     items: [
       {
         id: "plaquinha-standard",
-        title: `Plaquinha SOS Pet${petName ? ` — ${petName}` : ""}`,
+        title: `Plaquinha Pet Aumigo${petName ? ` — ${petName}` : ""}`,
         quantity: 1,
         unit_price: TAG_PRICE_BRL,
         ...(photoUrl ? { picture_url: photoUrl } : {}),

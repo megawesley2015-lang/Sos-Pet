@@ -1,4 +1,4 @@
-# learnings.md — SOS Pet Amigo
+﻿# learnings.md — Pet Aumigo
 # Log de lições aprendidas (Anti-Erro)
 # Formato: DATA | ERRO | CAUSA RAIZ | FIX | PREVENÇÃO
 # ─────────────────────────────────────────────────────────────

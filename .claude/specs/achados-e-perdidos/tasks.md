@@ -1,9 +1,9 @@
-# Tasks — Achados e Perdidos
+﻿# Tasks — Achados e Perdidos
 
 ## Melhorias pendentes (priorizadas)
 
 - [ ] **SEO-1** — Adicionar `generateMetadata` dinâmico em `/achados-e-perdidos/[id]`
-  - title: `{nome} — Pet {status} em {cidade} | SOS Pet`
+  - title: `{nome} — Pet {status} em {cidade} | Pet Aumigo`
   - og:image: foto_url do pet
   - og:description: primeiros 160 chars da descricao
 

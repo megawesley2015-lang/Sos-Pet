@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef, useState } from "react";
 import { Share2, Download, CheckCircle2, AlertCircle } from "lucide-react";
@@ -73,7 +73,7 @@ export function RescueLauncher({ pet, appUrl }: RescueLauncherProps) {
       await shareAlertImage({
         blob,
         filename: `sos-${pet.name ?? pet.id}.png`,
-        title: `SOS Pet — ${pet.name ?? "pet desaparecido"}`,
+        title: `Pet Aumigo — ${pet.name ?? "pet desaparecido"}`,
         text: `Procura-se: ${pet.name ?? `${pet.species}`} desaparecido em ${pet.neighborhood}, ${pet.city}. Ajude a compartilhar!`,
       });
     } catch (err) {
@@ -89,7 +89,7 @@ export function RescueLauncher({ pet, appUrl }: RescueLauncherProps) {
     await shareAlertImage({
       blob: state.blob,
       filename: `sos-${pet.name ?? pet.id}.png`,
-      title: `SOS Pet — ${pet.name ?? "pet desaparecido"}`,
+      title: `Pet Aumigo — ${pet.name ?? "pet desaparecido"}`,
       text: `Procura-se: ${pet.name ?? `${pet.species}`} desaparecido em ${pet.neighborhood}, ${pet.city}. Ajude a compartilhar!`,
     });
   }

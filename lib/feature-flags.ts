@@ -1,4 +1,4 @@
-// lib/feature-flags.ts — acesso type-safe a feature flags no perfil do usuário
+﻿// lib/feature-flags.ts — acesso type-safe a feature flags no perfil do usuário
 //
 // Flags são armazenadas como JSONB em profiles.feature_flags.
 // Ativadas manualmente pelo admin ou automaticamente ao assinar plano premium.
@@ -8,7 +8,7 @@ export type FeatureFlag =
   | 'verified_badge'       // exibir badge de verificado no perfil
   | 'analytics_dashboard'  // acesso ao painel de métricas
   | 'bulk_notifications'   // notificações em massa para contatos salvos
-  | 'api_access'           // acesso à API pública do SOS Pet
+  | 'api_access'           // acesso à API pública do Pet Aumigo
 
 export type FeatureFlags = Partial<Record<FeatureFlag, boolean>>
 

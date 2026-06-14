@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
@@ -51,7 +51,7 @@ const ACTIONS = [
   //   id: "whatsapp",
   //   label: "Suporte",
   //   Icon: MessageCircle,
-  //   href: "https://wa.me/55XXXXXXXXXXX?text=Olá! Preciso de ajuda no SOS Pet",
+  //   href: "https://wa.me/55XXXXXXXXXXX?text=Olá! Preciso de ajuda no Pet Aumigo",
   //   cls: "bg-green-500 hover:bg-green-600",
   //   external: true,
   // },

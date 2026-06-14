@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { X, Download, Share } from "lucide-react";
@@ -96,7 +96,7 @@ export default function PWAInstaller() {
   return (
     <div
       role="dialog"
-      aria-label="Instalar SOS Pet"
+      aria-label="Instalar Pet Aumigo"
       className="fixed bottom-20 left-3 right-3 z-50 animate-in slide-in-from-bottom-4 duration-300 md:bottom-6 md:left-auto md:right-6 md:w-96"
     >
       <div data-theme="dark" className="overflow-hidden rounded-2xl border border-white/10 bg-ink-700/95 shadow-2xl backdrop-blur-md">
@@ -107,7 +107,7 @@ export default function PWAInstaller() {
           </div>
 
           <div className="min-w-0 flex-1">
-            <p className="font-semibold text-fg">Instalar SOS Pet</p>
+            <p className="font-semibold text-fg">Instalar Pet Aumigo</p>
             <p className="mt-0.5 text-xs text-fg-muted">
               Acesso rápido direto da tela inicial, mesmo offline
             </p>

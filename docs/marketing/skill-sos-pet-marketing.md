@@ -1,6 +1,6 @@
-# Skill: SOS Pet — Marketing & Identidade Visual
+﻿# Skill: Pet Aumigo — Marketing & Identidade Visual
 
-> Esta skill orienta a criação de dois tipos de output para o **SOS Pet**: (1) **Cartão de Visita Digital** e (2) **Conteúdo para Instagram** (posts, Reels, carrosséis, stories). Todo output deve seguir o design system aprovado: dark futurista como base, laranja (`brand-500`) como cor primária de ação/urgência, cyan como acento secundário.
+> Esta skill orienta a criação de dois tipos de output para o **Pet Aumigo**: (1) **Cartão de Visita Digital** e (2) **Conteúdo para Instagram** (posts, Reels, carrosséis, stories). Todo output deve seguir o design system aprovado: dark futurista como base, laranja (`brand-500`) como cor primária de ação/urgência, cyan como acento secundário.
 
 > **Idioma obrigatório:** Todo output em **português do Brasil (PT-BR)**.
 
@@ -8,7 +8,7 @@
 
 ## Contexto do Produto
 
-**SOS Pet** é uma plataforma da Baixada Santista (9 cidades) para achados e perdidos de animais. Qualquer pessoa pode registrar um pet perdido ou encontrado. A plataforma conecta tutores e encontrantes via WhatsApp/telefone.
+**Pet Aumigo** é uma plataforma da Baixada Santista (9 cidades) para achados e perdidos de animais. Qualquer pessoa pode registrar um pet perdido ou encontrado. A plataforma conecta tutores e encontrantes via WhatsApp/telefone.
 
 **Público-alvo:**
 - Tutores que perderam seus pets (urgência, emoção, desespero)
@@ -31,7 +31,7 @@
 
 Pergunte ao usuário:
 
-- ✅ **Uso do cartão:** Para o produto SOS Pet em geral, para um prestador parceiro, ou para o tutor/encontrante?
+- ✅ **Uso do cartão:** Para o produto Pet Aumigo em geral, para um prestador parceiro, ou para o tutor/encontrante?
 - ✅ **Formato de entrega:** HTML interativo (para salvar como imagem/compartilhar), prompt para Canva, ou especificação visual descritiva?
 - ✅ **Informações de contato a exibir:** Site, WhatsApp, Instagram, email?
 - ✅ **Cidade/região de destaque?** (ex: Santos, São Vicente, Guarujá — ou "Baixada Santista")
@@ -42,7 +42,7 @@ Gere o cartão **em HTML puro** (single file) pronto para abrir no browser e sal
 
 ---
 
-### Especificações do Cartão de Visita Digital (SOS Pet)
+### Especificações do Cartão de Visita Digital (Pet Aumigo)
 
 ```
 Dimensões: 1050 × 600px (proporção padrão cartão de visita digital / LinkedIn)
@@ -53,7 +53,7 @@ Tipografia:
   - Contatos: 14–16px, cor cyan ou branco
 Elementos obrigatórios:
   ├── Logo/ícone da pata (🐾 ou SVG) — laranja, canto superior esquerdo
-  ├── Nome: SOS Pet
+  ├── Nome: Pet Aumigo
   ├── Tagline: "Sua busca começa aqui | Baixada Santista"
   ├── Divisor: linha gradiente laranja → cyan
   ├── Contatos: ícones + texto (site, WhatsApp, Instagram)
@@ -71,7 +71,7 @@ Efeitos visuais:
 Entregue no seguinte formato:
 
 ```
-## Cartão de Visita Digital — SOS Pet
+## Cartão de Visita Digital — Pet Aumigo
 
 ### Especificação Visual (para uso no Canva ou Figma)
 
@@ -99,7 +99,7 @@ Entregue no seguinte formato:
 
 ## MÓDULO 2 — Conteúdo para Instagram
 
-> Objetivo: crescer seguidores, aumentar alcance orgânico e posicionar o SOS Pet como referência em bem-estar animal na Baixada Santista.
+> Objetivo: crescer seguidores, aumentar alcance orgânico e posicionar o Pet Aumigo como referência em bem-estar animal na Baixada Santista.
 
 ### Fluxo de Trabalho
 
@@ -134,7 +134,7 @@ Após aprovação, entregue cada post no template fixo abaixo.
 
 ---
 
-### Categorias de Conteúdo Instagram SOS Pet
+### Categorias de Conteúdo Instagram Pet Aumigo
 
 Use pelo menos uma categoria diferente por lote. Nunca repita a mesma categoria em posts consecutivos.
 
@@ -273,7 +273,7 @@ Exemplo base:
 
 **Dado / Estatística:**
 - "Todo ano, mais de [X] pets se perdem no Brasil. A maioria nunca volta para casa."
-- "Na Baixada Santista, [X] pets foram reunidos com suas famílias via SOS Pet."
+- "Na Baixada Santista, [X] pets foram reunidos com suas famílias via Pet Aumigo."
 - "Pets com plaquinha de identificação têm [X]x mais chance de voltar para casa."
 
 **Humor / Pet Content:**
@@ -297,7 +297,7 @@ Exemplo base:
 
 ## Referências do Produto
 
-Para contexto técnico completo do SOS Pet (funcionalidades, stack, design system):
+Para contexto técnico completo do Pet Aumigo (funcionalidades, stack, design system):
 
 📄 `skill-meta-andromeda.md` — base metodológica de copywriting e diversidade criativa  
 🎨 Design system: dark + laranja `#F97316` + cyan `#22D3EE`  

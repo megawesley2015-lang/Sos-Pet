@@ -1,4 +1,4 @@
-# AGENTS.md — SOS Pet Amigo
+﻿# AGENTS.md — Pet Aumigo
 # Mapa de harness para agentes de IA (Claude Code, Codex, etc.)
 # Versão: 2.0.0 | Atualizado: 2026-05-31
 # ─────────────────────────────────────────────────────────────

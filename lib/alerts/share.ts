@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Web Share API com fallback de download.
  *
  * Suporte: iOS Safari ✓, Chrome Android ✓, Chrome desktop parcial.
@@ -38,7 +38,7 @@ export async function shareAlertImage({
     try {
       await navigator.share({
         files: [file],
-        title: title ?? "SOS Pet",
+        title: title ?? "Pet Aumigo",
         text: text ?? "Ajude a encontrar este pet!",
       });
       return { method: "share", ok: true };

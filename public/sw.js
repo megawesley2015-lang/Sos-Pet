@@ -1,5 +1,5 @@
-/**
- * Service Worker — SOS Pet
+﻿/**
+ * Service Worker — Pet Aumigo
  *
  * Estratégia: Network First com fallback para cache.
  * Garante que o app possa abrir mesmo offline (mostra cache),

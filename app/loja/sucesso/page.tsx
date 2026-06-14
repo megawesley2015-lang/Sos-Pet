@@ -1,11 +1,11 @@
-import { CheckCircle } from 'lucide-react'
+﻿import { CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 
 interface PageProps {
   searchParams: Promise<{ payment_id?: string; order_id?: string }>
 }
 
-export const metadata = { title: 'Pedido confirmado — SOS Pet' }
+export const metadata = { title: 'Pedido confirmado — Pet Aumigo' }
 
 export default async function LojaSuccessPage({ searchParams }: PageProps) {
   const sp = await searchParams

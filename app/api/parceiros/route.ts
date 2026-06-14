@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { partnershipRequestSchema } from '@/lib/validation/parceiros'
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
@@ -76,12 +76,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 })
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sospetamigo.com.br'
-  const adminEmail = process.env.ADMIN_EMAIL ?? 'admin@sospetamigo.com.br'
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aumigo.com.br'
+  const adminEmail = process.env.ADMIN_EMAIL ?? 'admin@aumigo.com.br'
 
   void sendEmail({
     to: parsed.data.email,
-    subject: 'Bem-vindo à rede SOS Pet Amigo!',
+    subject: 'Bem-vindo à rede Pet Aumigo!',
     html: partnershipWelcomeTemplate({
       nome: parsed.data.nome,
       tipoNegocio: parsed.data.tipo_negocio,

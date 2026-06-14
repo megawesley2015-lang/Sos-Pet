@@ -95,7 +95,7 @@ npm run typecheck
    - `petFollowUpTemplate({ petName, petId, daysSinceLost, siteUrl }): string`
 2. HTML deve ser tabela-based simples e compatível com clientes de email (Outlook, Gmail)
 3. Usar inline CSS — sem classes externas
-4. Incluir logo/nome "SOS Pet Amigo" no header
+4. Incluir logo/nome "Pet Aumigo" no header
 5. Usar cores da paleta: `#FF851B` (laranja) para botões CTA, `#121214` (dark) para header
 6. CTA buttons: `<a href="..." style="background:#FF851B;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;">Texto</a>`
 7. Footer com link para descadastrar alertas (link futuro — pode ser `{siteUrl}/perfil/configuracoes`)

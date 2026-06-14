@@ -1,0 +1,98 @@
+# Requesting Code Review
+# Source: github.com/obra/superpowers | License: MIT
+
+## When to Use
+Use after completing each task in subagent-driven development, after major
+features, and before merging to main. Triggers on: "review my code",
+"check this implementation", "is this good?", end of each task cycle.
+
+---
+
+## When Reviews Are Required
+
+**Always:**
+- After each task in subagent-driven development
+- Before merging to main branch
+- After completing a major feature
+
+**Also beneficial:**
+- When development hits a blocker (fresh eyes help)
+- Before starting a refactor (document baseline quality)
+- After fixing a complex bug (confirm fix is correct and complete)
+
+---
+
+## Dispatch a Reviewer Subagent
+
+The reviewer gets focused context — NOT your session history.
+
+```
+Agent(
+  description: "Code review: {what was implemented}",
+  prompt: """
+  Review the following changes for correctness and quality.
+
+  Changes (git diff):
+  {paste git diff output}
+
+  Context:
+  - Feature goal: {one sentence}
+  - Files changed: {list}
+  - Tests added: {list test names}
+
+  Project constraints (from CLAUDE.md):
+  - TypeScript strict, no unwarranted any
+  - Supabase: explicit selects, RLS required for all tables
+  - Imports: @/ alias always
+  - API responses: { success, data } or { success: false, error }
+  - contact_* fields NEVER in listagem (only in /[id] routes)
+  - UTF-8 encoding with direct PT-BR characters
+
+  Review for:
+  1. Correctness: does it do what was intended?
+  2. Security: RLS, auth checks, input validation, no exposed secrets
+  3. TypeScript: proper types, no any, correct async/await
+  4. CLAUDE.md compliance: patterns, conventions, schema alignment
+
+  Severity classification:
+  - CRITICAL: must fix before proceeding (security, data loss, broken functionality)
+  - IMPORTANT: must fix before merging (correctness, significant issues)
+  - MINOR: note for later (style, small improvements)
+
+  Return structured findings by severity.
+  """
+)
+```
+
+---
+
+## Responding to Findings
+
+| Severity | Action |
+|----------|--------|
+| CRITICAL | Fix immediately before any other work |
+| IMPORTANT | Fix before merging to main |
+| MINOR | Note in CLAUDE.md or defer to later PR |
+
+**Challenging findings:**
+If you disagree with a finding, respond with technical justification.
+Example: "This RLS policy is intentionally permissive because X (see CLAUDE.md constraint Y)"
+
+---
+
+## Quick Review (for small tasks)
+
+For tasks under 50 lines changed, inline review:
+
+```
+[ ] No contact_* fields in listagem routes
+[ ] No select('*') — explicit columns only
+[ ] await cookies() / await params (Next.js 15+)
+[ ] Response format: { success, data } or { success: false, error }
+[ ] No NEXT_PUBLIC_ for secrets
+[ ] Zod validation on API inputs
+[ ] RLS would block unauthorized access
+[ ] TypeScript: no any, proper types
+[ ] Imports: @/ alias
+[ ] PT-BR strings: direct accented characters (not HTML entities)
+```

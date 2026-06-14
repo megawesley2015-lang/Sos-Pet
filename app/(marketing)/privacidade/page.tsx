@@ -1,9 +1,9 @@
-import { PageHeader } from "@/components/marketing/PageHeader";
+﻿import { PageHeader } from "@/components/marketing/PageHeader";
 
 export const metadata = {
   title: "Política de Privacidade",
   description:
-    "Como coletamos, usamos e protegemos seus dados na plataforma SOS Pet.",
+    "Como coletamos, usamos e protegemos seus dados na plataforma Pet Aumigo.",
   alternates: { canonical: "/privacidade" },
   openGraph: { url: "/privacidade", type: "website" as const },
 };
@@ -107,7 +107,7 @@ export default function PrivacidadePage() {
           </Section>
 
           <Section title="8. Contato do controlador">
-            Responsável pelo tratamento: SOS Pet (placeholder — substituir
+            Responsável pelo tratamento: Pet Aumigo (placeholder — substituir
             por razão social e CNPJ reais quando constituir a entidade).
             E-mail de contato: contato@sospet.app
           </Section>

@@ -1,10 +1,10 @@
-import { ImageResponse } from "next/og";
+﻿import { ImageResponse } from "next/og";
 
 /**
  * OG image padrão (usada quando alguém compartilha a landing).
  * Tamanho recomendado: 1200×630 (16:8.4 — padrão Twitter/Facebook).
  */
-export const alt = "SOS Pet — Achados & Perdidos";
+export const alt = "Pet Aumigo — Achados & Perdidos";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

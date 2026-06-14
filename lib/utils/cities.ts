@@ -1,5 +1,5 @@
-/**
- * Fonte única das cidades alvo do SOS Pet.
+﻿/**
+ * Fonte única das cidades alvo do Pet Aumigo.
  *
  * Hoje o produto cobre a Baixada Santista (9 cidades). O array é exportado
  * como `BAIXADA_SANTISTA` e usado por:

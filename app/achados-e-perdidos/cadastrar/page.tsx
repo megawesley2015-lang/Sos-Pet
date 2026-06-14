@@ -1,10 +1,10 @@
-// app/achados-e-perdidos/cadastrar/page.tsx
+﻿// app/achados-e-perdidos/cadastrar/page.tsx
 
 import Link      from 'next/link'
 import { PetForm } from '@/components/pets/PetFormWithUpload'
 
 export const metadata = {
-  title:       'Cadastrar Pet — SOS Pet',
+  title:       'Cadastrar Pet — Pet Aumigo',
   description: 'Cadastre um alerta de pet perdido ou encontrado. Grátis, sem login.',
 }
 

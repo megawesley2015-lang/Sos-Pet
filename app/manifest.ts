@@ -1,4 +1,4 @@
-import type { MetadataRoute } from "next";
+﻿import type { MetadataRoute } from "next";
 
 /**
  * PWA manifest — gera /manifest.webmanifest dinamicamente.
@@ -8,8 +8,8 @@ import type { MetadataRoute } from "next";
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "SOS Pet — Achados & Perdidos",
-    short_name: "SOS Pet",
+    name: "Pet Aumigo — Achados & Perdidos",
+    short_name: "Pet Aumigo",
     description:
       "Rede colaborativa de resgate. Cadastre seu pet perdido, dispare um SOS e conte com a rede pra trazer ele de volta.",
     start_url: "/",

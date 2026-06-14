@@ -1,0 +1,95 @@
+# Test-Driven Development (TDD)
+# Source: github.com/obra/superpowers | License: MIT
+
+## When to Use
+Use for ALL feature development and bug fixes. Triggers on: "implement X",
+"add X", "fix bug in X", "build X", "create X function", any implementation task.
+RIGID SKILL — follow exactly, no adaptation.
+
+## IRON LAW
+NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST.
+No exceptions without explicit approval.
+
+---
+
+## The Three-Phase Cycle
+
+### Phase RED — Write the Failing Test
+1. Identify the smallest unit of behavior to implement
+2. Write a test that describes that behavior
+3. Run the test — it MUST fail (if it passes, the test is wrong)
+4. Verify the failure is for the right reason (not compilation error)
+
+```typescript
+// Example: RED phase
+test('findPetsByCity returns only active pets', async () => {
+  const result = await findPetsByCity('Santos')
+  expect(result.every(p => p.status === 'active')).toBe(true)
+})
+// Run: npm test → FAIL (function doesn't exist yet)
+```
+
+### Phase GREEN — Write Minimal Code to Pass
+- Implement the simplest code that makes the test pass
+- Do NOT add features not tested yet
+- Do NOT optimize — just make it green
+
+```typescript
+// Example: GREEN phase (minimal)
+async function findPetsByCity(city: string) {
+  return supabase.from('pets_public')
+    .select('id, name, status, city')
+    .eq('city', city)
+    .eq('status', 'active')
+}
+// Run: npm test → PASS
+```
+
+### Phase REFACTOR — Improve Without Breaking
+- Only after tests are green
+- Improve naming, structure, performance
+- Run tests after every change
+- Never add new behavior during refactor
+
+---
+
+## Critical Discipline
+
+**Never skip watching tests fail.**
+A test that passes immediately either:
+- Tests code that already exists (find and use that code)
+- Is written wrong (fix the test)
+
+**If code exists before tests:**
+Delete it entirely and restart. Keeping it "as reference" is rationalization.
+
+**Common rationalizations (all wrong):**
+- "I'll test after" → tests after don't prove the code was needed
+- "It's too simple to test" → then it's too simple to take long to write the test
+- "Manual testing is enough" → manual testing can't run in CI
+- "I've spent hours on this" → sunk cost; start from the test
+
+---
+
+## Verification Before Moving On
+
+Before each commit:
+```
+[ ] Every function I wrote has a test
+[ ] I watched each test fail before implementing
+[ ] Implementation is minimal (no extra features)
+[ ] All tests pass: npm test
+[ ] Tests use real behavior, not mock-only verification
+```
+
+---
+
+## SOS Pet Specifics
+
+Test files go in: `__tests__/` (already exists) or adjacent to the file.
+Test runner: Vitest (`npm test` or `npm run test`)
+
+For Supabase queries in tests:
+- Use test database or mock at the boundary (supabase client)
+- Never mock the business logic — only external I/O
+- Integration tests hit real Supabase when possible

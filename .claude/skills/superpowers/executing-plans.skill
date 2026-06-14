@@ -1,0 +1,97 @@
+# Executing Plans
+# Source: github.com/obra/superpowers | License: MIT
+
+## When to Use
+Use when a written plan exists and is ready for implementation.
+Triggers on: "execute the plan", "implement the plan", "run the plan",
+"start implementation", "proceed with the plan". Requires a plan file to exist.
+Prefer subagent-driven-development when subagents are available.
+
+---
+
+## Step 1 — Load and Review Plan
+
+Read the plan file completely. Before touching any code:
+
+```
+[ ] Goal is clear
+[ ] All file paths exist (or are explicitly NEW)
+[ ] Task order makes sense (no circular dependencies)
+[ ] Test code is complete (no placeholders)
+[ ] Any blocking concerns?
+```
+
+**If concerns exist:** Raise them with the user before starting.
+**If plan is clear:** Create a TaskCreate list for all tasks.
+
+---
+
+## Step 2 — Execute Each Task
+
+For every task in sequence:
+
+1. **Mark in_progress:** `TaskUpdate(task, status: 'in_progress')`
+
+2. **Write the failing test first** (exactly as written in plan)
+
+3. **Verify it fails:**
+   ```bash
+   npm test -- --testNamePattern="test description"
+   # Expected: FAIL
+   ```
+
+4. **Implement** (exactly as written in plan)
+
+5. **Verify it passes:**
+   ```bash
+   npm test -- --testNamePattern="test description"
+   # Expected: PASS
+   ```
+
+6. **Run full suite** (no regressions):
+   ```bash
+   npm test
+   npm run typecheck
+   ```
+
+7. **Commit:**
+   ```bash
+   git add [specific files]
+   git commit -m "feat: description from plan"
+   ```
+
+8. **Mark completed:** `TaskUpdate(task, status: 'completed')`
+
+9. **Proceed to next task**
+
+---
+
+## Stop Conditions
+
+Stop and ask for clarification when:
+- Missing dependency that the plan assumed exists
+- A test fails for a reason different than expected
+- An instruction is ambiguous or contradicts CLAUDE.md
+- TypeScript build breaks after implementation
+- A file in the file map doesn't match what actually exists
+
+**Never guess — ask.**
+
+---
+
+## Critical Rules
+
+- Follow the plan exactly (no improvisation)
+- If the plan has a bug → stop, report, get plan updated
+- Never skip the failing test phase
+- Never batch multiple tasks in one commit
+- Never proceed with failing tests
+
+---
+
+## Completion
+
+After all tasks complete, invoke `/finishing-a-development-branch` to:
+- Verify all tests pass
+- Present merge/PR/discard options
+- Clean up worktree if applicable

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { sendEmail, hasEmailBeenSent } from '@/lib/email/send'
 import { petFollowUpTemplate } from '@/lib/email/templates'
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
   }
 
   const supabase = createServiceClient()
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sospetamigo.com.br'
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aumigo.com.br'
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
 
   const { data: pets } = await supabase

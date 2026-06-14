@@ -1,4 +1,4 @@
-import { createServiceClient } from "@/lib/supabase/server";
+﻿import { createServiceClient } from "@/lib/supabase/server";
 import { safeExternalUrl } from "@/lib/utils/url";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -12,9 +12,9 @@ export async function generateMetadata({
   const { id } = await params;
   const service = createServiceClient();
   const { data } = await service.from("store_products").select("name, description").eq("id", id).single();
-  if (!data) return { title: { absolute: "Produto não encontrado · SOS Pet" } };
+  if (!data) return { title: { absolute: "Produto não encontrado · Pet Aumigo" } };
   return {
-    title: { absolute: `${data.name} · Loja SOS Pet` },
+    title: { absolute: `${data.name} · Loja Pet Aumigo` },
     description: data.description ?? undefined,
   };
 }
@@ -145,7 +145,7 @@ export default async function ProdutoDetalhe({
             <div className="mt-6 space-y-2">
               <div className="flex items-center gap-2 text-xs text-fg-subtle">
                 <Shield className="h-3.5 w-3.5 text-green-400" />
-                <span>Produto selecionado pela equipe SOS Pet</span>
+                <span>Produto selecionado pela equipe Pet Aumigo</span>
               </div>
               <div className="flex items-center gap-2 text-xs text-fg-subtle">
                 <Tag className="h-3.5 w-3.5 text-brand-500" />
@@ -159,7 +159,7 @@ export default async function ProdutoDetalhe({
         <div className="mt-12 rounded-2xl border border-brand-500/30 bg-brand-500/10 p-6 text-center">
           <p className="font-display text-lg font-bold text-fg">🐾 Não esqueça da plaquinha!</p>
           <p className="mt-1 text-sm text-fg-muted">
-            Com o QR Code do SOS Pet, qualquer pessoa que encontrar seu pet pode ver seu contato na hora.
+            Com o QR Code do Pet Aumigo, qualquer pessoa que encontrar seu pet pode ver seu contato na hora.
           </p>
           <Link
             href="/plaquinha"

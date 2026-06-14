@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { AuthCard } from "@/components/auth/AuthCard";
@@ -6,7 +6,7 @@ import { LoginForm } from "./LoginForm";
 
 export const metadata: Metadata = {
   title: "Entrar",
-  description: "Acesse sua conta SOS Pet para gerenciar seus registros de pets perdidos e encontrados.",
+  description: "Acesse sua conta Pet Aumigo para gerenciar seus registros de pets perdidos e encontrados.",
 };
 
 /**

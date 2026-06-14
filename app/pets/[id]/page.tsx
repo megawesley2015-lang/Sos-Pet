@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const verb = pet.kind === "lost" ? "Procura-se" : "Encontrado";
   const nome = pet.name ?? `${pet.species} ${pet.kind}`;
   const title = `${verb}: ${nome} em ${pet.city}`;
-  const description = `${verb} ${nome} em ${pet.neighborhood}, ${pet.city}. Veja detalhes e ajude na rede SOS Pet.`;
+  const description = `${verb} ${nome} em ${pet.neighborhood}, ${pet.city}. Veja detalhes e ajude na rede Pet Aumigo.`;
   const baseUrl = getBaseUrl();
   const url = `${baseUrl}/pets/${id}`;
   const images = pet.photo_url ? [{ url: pet.photo_url, alt: nome }] : undefined;
@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title,
     description,
     alternates: { canonical: url },
-    openGraph: { title, description, url, type: "article", locale: "pt_BR", siteName: "SOS Pet", images },
+    openGraph: { title, description, url, type: "article", locale: "pt_BR", siteName: "Pet Aumigo", images },
     twitter: {
       card: pet.photo_url ? "summary_large_image" : "summary",
       title,
@@ -93,7 +93,7 @@ export default async function PetDetailPage({ params }: PageProps) {
 
   const waMessage = `Oi! Vi o registro do pet ${
     pet.name ? pet.name : `(${KIND_LABEL[pet.kind].toLowerCase()})`
-  } no SOS Pet e gostaria de ajudar.`;
+  } no Pet Aumigo e gostaria de ajudar.`;
 
   // Busca paralela: health records (owner), sightings (pet lost) e perfil público do owner
   const hasLocation = !!pet.latitude && !!pet.longitude;

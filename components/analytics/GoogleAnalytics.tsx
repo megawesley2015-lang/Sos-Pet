@@ -1,4 +1,4 @@
-import Script from "next/script";
+﻿import Script from "next/script";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
@@ -63,7 +63,7 @@ function trackEvent({ action, category, label, value }: GTagEvent) {
   });
 }
 
-// ─── Eventos pré-definidos para o SOS Pet ────────────────────
+// ─── Eventos pré-definidos para o Pet Aumigo ────────────────────
 
 export const analytics = {
   // Pets

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes — lib/email/templates.ts
  *
  * Funções puras: sem mocks necessários.
@@ -18,7 +18,7 @@ import {
   partnershipRejectedTemplate,
 } from "@/lib/email/templates";
 
-const SITE = "https://sospetamigo.com.br";
+const SITE = "https://aumigo.com.br";
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 

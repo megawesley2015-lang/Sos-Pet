@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import {
   buscarPagamento,
@@ -179,7 +179,7 @@ export async function POST(req: NextRequest) {
     if (SUPPLIER_EMAIL) {
       const supplierHtml = `
         <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px;background:#0F0F1A;color:#F1EDE8;border-radius:16px;">
-          <h1 style="color:#FF6B35;font-size:22px;margin:0 0 4px">🐾 Novo Pedido — SOS Pet</h1>
+          <h1 style="color:#FF6B35;font-size:22px;margin:0 0 4px">🐾 Novo Pedido — Pet Aumigo</h1>
           <p style="color:#9A8F8A;font-size:14px;margin:0 0 24px">Pedido <strong style="color:#F1EDE8">#${safeOrderId}</strong></p>
 
           <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
@@ -240,7 +240,7 @@ export async function POST(req: NextRequest) {
           </table>
 
           <p style="font-size:12px;color:#9A8F8A;text-align:center;margin-top:24px;">
-            Pedido gerado automaticamente pelo sistema SOS Pet.<br>
+            Pedido gerado automaticamente pelo sistema Pet Aumigo.<br>
             Dúvidas? Acesse o painel em <a href="${safeAppUrl}/admin/plaquinhas" style="color:#FF6B35">${safeAppUrl}/admin/plaquinhas</a>
           </p>
         </div>
@@ -248,7 +248,7 @@ export async function POST(req: NextRequest) {
 
       await sendEmail({
         to: SUPPLIER_EMAIL,
-        subject: `[SOS Pet] Novo pedido #${safeOrderId} — ${petName}`,
+        subject: `[Pet Aumigo] Novo pedido #${safeOrderId} — ${petName}`,
         html: supplierHtml,
       }).catch(console.error);
 
@@ -286,7 +286,7 @@ export async function POST(req: NextRequest) {
 
           <hr style="border:none;border-top:1px solid rgba(255,255,255,0.08);margin:24px 0;">
           <p style="font-size:11px;color:#9A8F8A;text-align:center;">
-            SOS Pet · Rede colaborativa de resgate<br>
+            Pet Aumigo · Rede colaborativa de resgate<br>
             <a href="${safeAppUrl}" style="color:#FF6B35">${safeAppUrl}</a>
           </p>
         </div>

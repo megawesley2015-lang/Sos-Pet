@@ -1,9 +1,9 @@
-import { createServiceClient, createSupabaseServerClient } from "@/lib/supabase/server";
+﻿import { createServiceClient, createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
 import { redirect } from "next/navigation";
 import LojaAdminClient, { type Product } from "./LojaAdminClient";
 
-export const metadata = { title: "Loja — Admin · SOS Pet" };
+export const metadata = { title: "Loja — Admin · Pet Aumigo" };
 
 export default async function AdminLojaPage() {
   const supabase = await createSupabaseServerClient();

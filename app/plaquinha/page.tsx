@@ -1,4 +1,4 @@
-import { TopBar } from "@/components/layout/TopBar";
+﻿import { TopBar } from "@/components/layout/TopBar";
 import { CheckoutForm } from "./CheckoutForm";
 import { ShieldCheck, Truck, QrCode, Siren } from "lucide-react";
 
@@ -7,7 +7,7 @@ export const metadata = {
   description:
     "Garanta a segurança do seu pet com uma plaquinha personalizada com QR code. Em caso de perda, qualquer pessoa pode escanear e entrar em contato com você.",
   openGraph: {
-    title: "Plaquinha de Identificação QR Code · SOS Pet",
+    title: "Plaquinha de Identificação QR Code · Pet Aumigo",
     description:
       "Plaquinha personalizada com QR code para seu pet. Em caso de perda, qualquer pessoa escaneia e entra em contato com você.",
     type: "website" as const,
@@ -28,7 +28,7 @@ const FEATURES = [
   {
     icon: ShieldCheck,
     title: "Perfil digital vitalício",
-    desc: "O QR leva para o perfil do seu pet no SOS Pet, que você pode atualizar a qualquer hora.",
+    desc: "O QR leva para o perfil do seu pet no Pet Aumigo, que você pode atualizar a qualquer hora.",
   },
   {
     icon: Siren,

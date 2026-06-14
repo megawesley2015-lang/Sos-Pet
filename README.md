@@ -1,4 +1,4 @@
-# SOS Pet — Achados & Perdidos
+﻿# Pet Aumigo — Achados & Perdidos
 
 Plataforma colaborativa de registro de pets perdidos e encontrados, com Central de Resgate (cartaz SOS gerado automaticamente), rede de prestadores e avaliações.
 
@@ -141,7 +141,7 @@ Abre [http://localhost:3000](http://localhost:3000).
 ```bash
 git init
 git add .
-git commit -m "feat: MVP SOS Pet"
+git commit -m "feat: MVP Pet Aumigo"
 git branch -M main
 git remote add origin git@github.com:<seu-usuario>/sos-pet.git
 git push -u origin main

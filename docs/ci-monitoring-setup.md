@@ -1,8 +1,8 @@
-# CI / Monitoramento — Guia de Configuração
+﻿# CI / Monitoramento — Guia de Configuração
 
 ## Visão Geral
 
-O projeto SOS Pet tem **duas camadas de proteção automática**:
+O projeto Pet Aumigo tem **duas camadas de proteção automática**:
 
 | Camada | Ferramenta | Quando ativa | O que detecta |
 |--------|-----------|--------------|---------------|

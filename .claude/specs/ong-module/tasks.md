@@ -1,4 +1,4 @@
-# Tasks — Módulo ONG
+﻿# Tasks — Módulo ONG
 
 **Sprint:** Ativar o módulo ONG em produção
 **Estimativa total:** ~3h
@@ -11,7 +11,7 @@
 **Esforço:** 10 min | **Responsável:** Wes (manual)
 
 ```
-1. Abrir Supabase Dashboard → projeto SOS Pet (odrybnjjpdxqjofgewam)
+1. Abrir Supabase Dashboard → projeto Pet Aumigo (odrybnjjpdxqjofgewam)
 2. SQL Editor → New query
 3. Colar conteúdo de: supabase/migrations/001_ong_module.sql
 4. Run
@@ -28,7 +28,7 @@ Sem esta task, nada do módulo funciona.
 ### TASK-ONG-01: Smoke test end-to-end
 **Depende:** TASK-ONG-00
 
-- [ ] Criar conta de teste: `ong-teste@sospet.com.br`
+- [ ] Criar conta de teste: `ong-teste@aumigo.com.br`
 - [ ] Acessar `/ong/cadastro` → preencher e submeter
 - [ ] Confirmar row em `shelters` no Supabase Dashboard
 - [ ] Acessar `/ong/dashboard` → confirmar métricas em zero (shelter novo)

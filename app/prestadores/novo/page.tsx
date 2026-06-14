@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowLeft, Building2 } from "lucide-react";
 import { TopBar } from "@/components/layout/TopBar";
@@ -10,7 +10,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Cadastrar Prestador",
-  description: "Cadastre sua clínica veterinária, pet shop ou serviço de cuidados na rede SOS Pet.",
+  description: "Cadastre sua clínica veterinária, pet shop ou serviço de cuidados na rede Pet Aumigo.",
 };
 
 export default async function NovoPrestadorPage() {

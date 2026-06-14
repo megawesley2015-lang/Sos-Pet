@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
@@ -63,7 +63,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const title = `${nomeFmt} — ${CATEGORIA_LABEL[prestador.categoria as import("@/lib/types/database").PrestadorCategoria]} em ${cidadeFmt}`;
   const description =
     prestador.descricao?.trim() ||
-    `${nomeFmt} é ${CATEGORIA_LABEL[prestador.categoria as import("@/lib/types/database").PrestadorCategoria]} em ${cidadeFmt}. Encontre contato, avaliações e horários no SOS Pet.`;
+    `${nomeFmt} é ${CATEGORIA_LABEL[prestador.categoria as import("@/lib/types/database").PrestadorCategoria]} em ${cidadeFmt}. Encontre contato, avaliações e horários no Pet Aumigo.`;
 
   const ogImage = prestador.capa_url ?? prestador.logo_url;
   // Fallback para og:image do site quando o prestador não tem foto
@@ -80,7 +80,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       url,
       type: "website",
       locale: "pt_BR",
-      siteName: "SOS Pet",
+      siteName: "Pet Aumigo",
       images,
     },
     twitter: {

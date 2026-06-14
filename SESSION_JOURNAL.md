@@ -1,4 +1,4 @@
-# SESSION_JOURNAL — Loop Autônomo SOS Pet
+﻿# SESSION_JOURNAL — Loop Autônomo Pet Aumigo
 # Iniciado: 2026-06-12
 # Objetivo: 2 horas de melhorias autônomas com ciclos de implementação + teste + commit
 

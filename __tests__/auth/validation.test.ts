@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes — lib/validation/auth.ts
  *
  * Módulo: Autenticação (login, registro, recuperação de senha)
@@ -27,7 +27,7 @@ import {
 describe("loginSchema — Entrar na conta", () => {
   it("aceita e-mail e senha válidos", () => {
     const result = loginSchema.safeParse({
-      email: "wes@sospet.com.br",
+      email: "wes@aumigo.com.br",
       password: "senhaSegura123",
     });
     expect(result.success).toBe(true);
@@ -51,7 +51,7 @@ describe("loginSchema — Entrar na conta", () => {
 
   it("rejeita senha vazia", () => {
     const result = loginSchema.safeParse({
-      email: "wes@sospet.com.br",
+      email: "wes@aumigo.com.br",
       password: "",
     });
     expect(result.success).toBe(false);
@@ -64,7 +64,7 @@ describe("registerSchema — Criar conta", () => {
   it("aceita cadastro válido", () => {
     const result = registerSchema.safeParse({
       full_name: "Wesley Costa",
-      email: "wes@sospet.com.br",
+      email: "wes@aumigo.com.br",
       password: "MinhaSenh@123",
       confirm: "MinhaSenh@123",
     });
@@ -74,7 +74,7 @@ describe("registerSchema — Criar conta", () => {
   it("rejeita senha com menos de 8 caracteres", () => {
     const result = registerSchema.safeParse({
       full_name: "Wesley Costa",
-      email: "wes@sospet.com.br",
+      email: "wes@aumigo.com.br",
       password: "curta",
       confirm: "curta",
     });
@@ -88,7 +88,7 @@ describe("registerSchema — Criar conta", () => {
   it("rejeita quando as senhas não coincidem", () => {
     const result = registerSchema.safeParse({
       full_name: "Wesley Costa",
-      email: "wes@sospet.com.br",
+      email: "wes@aumigo.com.br",
       password: "MinhaSenh@123",
       confirm: "SenhaErrada456",
     });
@@ -102,7 +102,7 @@ describe("registerSchema — Criar conta", () => {
   it("rejeita nome com menos de 2 caracteres", () => {
     const result = registerSchema.safeParse({
       full_name: "W",
-      email: "wes@sospet.com.br",
+      email: "wes@aumigo.com.br",
       password: "MinhaSenh@123",
       confirm: "MinhaSenh@123",
     });
@@ -124,7 +124,7 @@ describe("registerSchema — Criar conta", () => {
 
 describe("forgotPasswordSchema — Recuperar senha", () => {
   it("aceita e-mail válido", () => {
-    const result = forgotPasswordSchema.safeParse({ email: "wes@sospet.com.br" });
+    const result = forgotPasswordSchema.safeParse({ email: "wes@aumigo.com.br" });
     expect(result.success).toBe(true);
   });
 
@@ -139,13 +139,13 @@ describe("forgotPasswordSchema — Recuperar senha", () => {
 describe("parseFormData — helper de Server Action", () => {
   it("extrai dados válidos do FormData", () => {
     const fd = new FormData();
-    fd.append("email", "wes@sospet.com.br");
+    fd.append("email", "wes@aumigo.com.br");
     fd.append("password", "senhaValida");
 
     const result = parseFormData(loginSchema, fd);
     expect(result.ok).toBe(true);
     if (result.ok) {
-      expect(result.data.email).toBe("wes@sospet.com.br");
+      expect(result.data.email).toBe("wes@aumigo.com.br");
     }
   });
 

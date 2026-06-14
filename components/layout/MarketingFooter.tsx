@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { PawPrint, Heart } from "lucide-react";
 
 export function MarketingFooter() {
@@ -89,7 +89,7 @@ export function MarketingFooter() {
       </div>
 
       <div className="mx-auto mt-8 flex max-w-6xl flex-col items-center justify-between gap-2 border-t border-warm-200/80 px-4 pt-6 text-xs text-fg-muted sm:flex-row">
-        <p>© {year} SOS Pet — Feito no Brasil.</p>
+        <p>© {year} Pet Aumigo — Feito no Brasil.</p>
         <p className="flex items-center gap-1">
           Construído com <Heart className="h-3 w-3 text-brand-500" /> para
           quem ama bichos.

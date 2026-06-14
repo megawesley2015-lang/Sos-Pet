@@ -1,4 +1,4 @@
-/**
+﻿/**
  * /achados-em-[city] e /perdidos-em-[city]
  *
  * Página dinâmica otimizada para SEO local.
@@ -41,7 +41,7 @@ export async function generateMetadata({
     title: `${emoji} ${typeLabel} em ${realCity}`,
     description: `Todos os pets ${isFound ? "encontrados" : "perdidos"} em ${realCity}. Ajude a reunir animais com suas famílias ou compartilhe informações sobre achados.`,
     openGraph: {
-      title: `${typeLabel} em ${realCity} — SOS Pet`,
+      title: `${typeLabel} em ${realCity} — Pet Aumigo`,
       description: `${typeLabel} de pets em ${realCity}. Reencontre seu pet ou ajude na busca.`,
       type: "website",
     },
@@ -146,7 +146,7 @@ export default async function LocalPetsPage({ params }: PageProps) {
                 Sobre pets em {realCity}
               </h2>
               <p className="mb-4 text-fg-muted">
-                O SOS Pet é uma rede colaborativa que ajuda a reunir pets perdidos com suas famílias.
+                O Pet Aumigo é uma rede colaborativa que ajuda a reunir pets perdidos com suas famílias.
                 Se você {isFound ? "encontrou" : "perdeu"} um pet em {realCity}, registre aqui para
                 aumentar as chances de reencontro.
               </p>

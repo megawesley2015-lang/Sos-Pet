@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { createServiceClient } from '@/lib/supabase/server'
 import { sendEmail } from '@/lib/email/send'
@@ -101,10 +101,10 @@ export async function POST(request: NextRequest) {
     const { data: userData } = await service.auth.admin.getUserById(order.user_id)
     const email = userData?.user?.email
     if (email) {
-      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sospetamigo.com.br'
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aumigo.com.br'
       void sendEmail({
         to: email,
-        subject: 'Pedido confirmado — SOS Pet Amigo',
+        subject: 'Pedido confirmado — Pet Aumigo',
         html: `<p>Seu pedido foi confirmado! Número: <strong>${order.id.slice(0, 8)}</strong></p>
                <p><a href="${siteUrl}/loja/sucesso?payment_id=${paymentId}">Ver detalhes</a></p>`,
         templateName: 'order_confirmation',

@@ -1,4 +1,4 @@
-# Constituição Técnica — SOS Pet Amigo
+﻿# Constituição Técnica — Pet Aumigo
 # Spec-Driven Development | Nível: Spec-anchored
 # Última revisão: 2026-06-08
 # ─────────────────────────────────────────────────────────────────────────
@@ -8,7 +8,7 @@
 
 ## 1. Identidade do Projeto
 
-- **Nome:** SOS Pet Amigo
+- **Nome:** Pet Aumigo
 - **Domínio:** Plataforma SaaS para pets perdidos + serviços pet — Baixada Santista
 - **Stack:** Next.js 16 (App Router) · React 19 · Tailwind CSS v4 · Supabase (PostgreSQL) · Vercel
 - **Automação:** n8n + Claude (Anthropic) · Agentes: Tools Agent, temperature 0.3

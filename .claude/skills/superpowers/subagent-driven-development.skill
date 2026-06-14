@@ -1,0 +1,131 @@
+# Subagent-Driven Development
+# Source: github.com/obra/superpowers | License: MIT
+
+## When to Use
+Use as the primary execution method after a plan is written.
+Triggers on: "execute with subagents", "implement using subagents", invoked by
+executing-plans when subagent support is available, "dispatch agents for each task".
+
+---
+
+## Core Principle
+Fresh subagent per task + two-stage review (spec compliance → quality) = high quality, fast iteration.
+
+Each subagent receives:
+- One task from the plan
+- Full context needed (file contents, constraints, expected output)
+- Clear success criteria
+
+No subagent inherits your session history.
+
+---
+
+## Workflow Per Task
+
+### Step 1 — Dispatch Implementation Subagent
+```
+Agent(
+  description: "Implement: {task name from plan}",
+  prompt: """
+  Task: {task description}
+
+  Files to touch:
+  - {file path}: {what changes}
+
+  Test to write first (must fail before implementation):
+  {exact test code from plan}
+
+  Implementation:
+  {exact code from plan}
+
+  Verify with: npm test -- --testNamePattern="{test name}"
+  Then: npm run typecheck
+
+  Constraints (from CLAUDE.md):
+  - Import alias: @/ (never relative)
+  - Supabase: explicit column selects (never *)
+  - await cookies() and await params (Next.js 15+)
+  - Encoding: UTF-8 with direct PT-BR characters
+
+  Return: what you changed + test output confirming pass
+  """
+)
+```
+
+### Step 2 — Spec Review (Stage 1)
+Dispatch a reviewer subagent:
+```
+Agent(
+  description: "Spec review: {task name}",
+  prompt: """
+  Review this implementation against the spec.
+
+  Spec requirement: {task description from plan}
+  Implementation: {implementation subagent's output}
+
+  Check ONLY:
+  - Does the implementation do what the spec requires?
+  - Are there missing behaviors?
+  - Does the test actually verify the spec?
+
+  Return: PASS or FAIL with specific issues.
+  Do NOT review code style or quality in this stage.
+  """
+)
+```
+
+If FAIL → send spec issues back to implementation subagent → re-review.
+Max 3 cycles, then escalate to user.
+
+### Step 3 — Quality Review (Stage 2)
+Only after spec compliance passes:
+```
+Agent(
+  description: "Quality review: {task name}",
+  prompt: """
+  Review code quality of this implementation.
+
+  Implementation: {from stage 1 pass}
+  Project standards: CLAUDE.md patterns
+
+  Check:
+  - TypeScript types (no unwarranted any)
+  - CLAUDE.md conventions (imports, error format, RLS)
+  - Security (no secrets exposed, input validated)
+  - No unnecessary complexity
+
+  Return: PASS or list of specific improvements needed.
+  """
+)
+```
+
+If FAIL → fix and re-review (same 3-cycle limit).
+
+### Step 4 — Commit and Proceed
+After both reviews pass:
+```bash
+git add [specific files from task]
+git commit -m "feat: {task description}"
+```
+Mark task completed. Proceed to next task without pausing.
+
+---
+
+## Model Selection
+
+| Task Type | Model |
+|-----------|-------|
+| Architecture, design decisions | claude-opus-4-8 |
+| Standard implementation | claude-sonnet-4-6 |
+| Mechanical, well-specified tasks | claude-haiku-4-5 |
+| Reviews | claude-sonnet-4-6 |
+
+---
+
+## Rules
+
+- NEVER skip either review stage
+- NEVER proceed with unfixed issues
+- NEVER do quality review before spec compliance passes
+- NEVER pause between tasks (continuous execution)
+- Only stop for: genuine blockers, ambiguity, or task completion

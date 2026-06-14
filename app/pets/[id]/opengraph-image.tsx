@@ -1,11 +1,11 @@
-import { ImageResponse } from "next/og";
+﻿import { ImageResponse } from "next/og";
 import { getPetById } from "@/lib/services/pets";
 import {
   SPECIES_LABEL,
   KIND_LABEL,
 } from "@/lib/utils/format";
 
-export const alt = "Pet desaparecido — SOS Pet";
+export const alt = "Pet desaparecido — Pet Aumigo";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -38,7 +38,7 @@ export default async function PetOpengraphImage({ params }: Props) {
             fontSize: 48,
           }}
         >
-          SOS Pet
+          Pet Aumigo
         </div>
       ),
       { ...size }

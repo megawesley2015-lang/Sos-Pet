@@ -1,5 +1,5 @@
-/**
- * Sistema de Notificações Internas - SOS Pet
+﻿/**
+ * Sistema de Notificações Internas - Pet Aumigo
  * 
  * STATUS: 🔜 PÓS-MVP
  * 

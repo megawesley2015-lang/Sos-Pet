@@ -1,0 +1,107 @@
+# Using Git Worktrees
+# Source: github.com/obra/superpowers | License: MIT
+
+## When to Use
+Use when starting feature work that should be isolated from main.
+Triggers on: "start working on X", "new feature branch", "isolate this work",
+invoked by brainstorming after design approval. Skip if already in an isolated workspace.
+
+---
+
+## Step 0 — Detect Existing Isolation
+
+Check if you're already in a worktree:
+```bash
+git rev-parse --git-dir
+# Normal repo: .git
+# Worktree: ../.git/worktrees/branch-name
+```
+
+If already isolated → skip to Step 3 (dependency install).
+
+---
+
+## Step 1 — Create Worktree
+
+**Preferred location:** `.worktrees/` (project-local, already in .gitignore usually)
+
+```bash
+# Check if .worktrees/ is gitignored
+cat .gitignore | grep worktrees
+
+# Create the worktree
+git worktree add .worktrees/feature-name -b feature/feature-name
+
+# Navigate into it
+cd .worktrees/feature-name
+```
+
+**If .worktrees/ not gitignored, add it:**
+```bash
+echo ".worktrees/" >> .gitignore
+git add .gitignore
+git commit -m "chore: gitignore worktrees directory"
+```
+
+---
+
+## Step 2 — Safety Verification
+
+```bash
+# Confirm worktree location is gitignored
+git check-ignore -v .worktrees/feature-name
+# Should output: .gitignore:N:.worktrees/
+
+# Confirm branch was created
+git branch | grep feature-name
+```
+
+---
+
+## Step 3 — Install Dependencies
+
+```bash
+npm install
+```
+
+---
+
+## Step 4 — Baseline Testing
+
+```bash
+npm test
+npm run typecheck
+```
+
+Both must pass before starting work. If they fail → investigate before adding new code.
+
+---
+
+## Worktree Cleanup
+
+**After merge (Option 1 from finishing-a-development-branch):**
+```bash
+cd ../..  # Back to main repo root
+git worktree remove .worktrees/feature-name
+git branch -d feature/feature-name
+```
+
+**If discarding work (Option 4):**
+```bash
+cd ../..
+git worktree remove .worktrees/feature-name --force
+git branch -D feature/feature-name
+```
+
+---
+
+## SOS Pet Conventions
+
+Branch naming:
+- `feat/module-name` — new feature
+- `fix/bug-description` — bug fix
+- `refactor/area` — refactoring
+
+Worktree path: `.worktrees/{branch-slug}/`
+
+Never create worktrees inside another worktree.

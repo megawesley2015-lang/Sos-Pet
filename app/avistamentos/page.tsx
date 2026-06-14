@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import Image from "next/image";
 import { Eye, MapPin, Plus, Clock } from "lucide-react";
 import { TopBar } from "@/components/layout/TopBar";
@@ -8,7 +8,7 @@ import { formatRelativeDate } from "@/lib/utils/format";
 export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Avistamentos",
-  description: "Veja os avistamentos recentes de pets perdidos reportados pela comunidade SOS Pet.",
+  description: "Veja os avistamentos recentes de pets perdidos reportados pela comunidade Pet Aumigo.",
   alternates: { canonical: "/avistamentos" },
   openGraph: { url: "/avistamentos", type: "website" as const },
 };

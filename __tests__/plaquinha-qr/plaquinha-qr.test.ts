@@ -23,15 +23,15 @@ describe('PlaquinhaPreview', () => {
   })
 
   it('URL do QR code contem o petId', () => {
-    const siteUrl = 'https://sospetamigo.com.br'
+    const siteUrl = 'https://aumigo.com.br'
     const petId = 'abc-123'
     const qrValue = `${siteUrl}/pets/${petId}`
-    expect(qrValue).toBe('https://sospetamigo.com.br/pets/abc-123')
+    expect(qrValue).toBe('https://aumigo.com.br/pets/abc-123')
   })
 
   it('URL do QR code usa siteUrl correto', () => {
     const petId = 'test-id'
-    const siteUrl = 'https://sospetamigo.com.br'
+    const siteUrl = 'https://aumigo.com.br'
     expect(`${siteUrl}/pets/${petId}`).toContain('/pets/')
     expect(`${siteUrl}/pets/${petId}`).toContain(petId)
   })

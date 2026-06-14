@@ -1,0 +1,116 @@
+# Systematic Debugging
+# Source: github.com/obra/superpowers | License: MIT
+
+## When to Use
+Use for ALL debugging tasks. Triggers on: "fix this error", "this is broken",
+"why does X fail", "debug X", "getting error X", "unexpected behavior in X",
+bug reports, stack traces, failing tests. RIGID SKILL — follow exactly.
+
+## IRON LAW
+NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST.
+Random fixes waste time and mask underlying issues.
+
+---
+
+## Phase 1 — Root Cause Investigation
+
+**Read the error carefully:**
+- What is the exact error message?
+- What file and line number?
+- Is this a type error, runtime error, or logic error?
+
+**Reproduce consistently:**
+- Can you trigger the error on demand?
+- If not, gather more context before attempting a fix
+
+**Check recent changes:**
+```bash
+git log --oneline -10
+git diff HEAD~1
+```
+Did something change recently that could explain this?
+
+**Gather diagnostic evidence:**
+- Add temporary logging at key points
+- Read the full stack trace (don't just look at the last line)
+- Trace data flow backward from the failure point
+
+**Cross boundary investigation:**
+- Frontend error → check: API response shape, network tab, type definitions
+- API error → check: Supabase query, RLS policies, input validation
+- Build error → check: imports, type definitions, tsconfig
+
+---
+
+## Phase 2 — Pattern Analysis
+
+1. Find a working example in the codebase similar to the broken code
+2. Compare them diff-by-diff — every difference is a candidate cause
+3. Identify dependencies and hidden assumptions
+4. Check if the issue is environmental (dev vs prod, auth state, env vars)
+
+---
+
+## Phase 3 — Hypothesis and Testing
+
+1. Form ONE specific hypothesis: "I believe X is failing because Y"
+2. Test it with a minimal change (one variable at a time)
+3. Observe result:
+   - Hypothesis confirmed → proceed to Phase 4
+   - Hypothesis wrong → form new hypothesis from Phase 2 evidence
+   - Unexpected new error → investigate the new error (may be the real root cause)
+
+**Rule: Never make multiple changes simultaneously.**
+If you change A and B and the bug disappears, you don't know which one fixed it.
+
+---
+
+## Phase 4 — Implementation
+
+1. Write a failing test that reproduces the bug (TDD)
+2. Apply ONE focused fix addressing the root cause
+3. Run the test — it must pass
+4. Run full test suite — no regressions
+5. Remove any temporary debugging code
+
+---
+
+## Red Flags (Stop and Re-investigate)
+
+- You're on fix attempt #3 without a confirmed root cause
+- The fix "seems to work" but you don't know why
+- You're making multiple changes simultaneously
+- You're skipping writing a test because "it's a quick fix"
+- You're adding workarounds instead of fixing root causes
+
+If 3+ fixes fail: stop and question the architecture.
+The problem may be at a higher level than you're looking.
+
+---
+
+## SOS Pet Debug Checklist
+
+**Supabase errors:**
+```
+[ ] Check RLS policy covers the operation (SELECT/INSERT/UPDATE/DELETE)
+[ ] Verify column names are in English (not PT-BR legacy names)
+[ ] Check if using pets or pets_public (never use pets for public reads)
+[ ] Verify auth.uid() matches user_id in the operation
+[ ] Check for await on createClient() (Next.js 15+)
+```
+
+**Next.js/TypeScript errors:**
+```
+[ ] await cookies() (not cookies() — Next.js 15+)
+[ ] await params (not params.id directly — Next.js 15+)
+[ ] Import uses @/ alias (not relative ../../)
+[ ] Check case sensitivity of imports (Vercel is Linux)
+```
+
+**API route errors:**
+```
+[ ] Route uses ok()/fail() response helpers
+[ ] Zod validation on all inputs
+[ ] Rate limiting applied (UPSTASH_REDIS configured?)
+[ ] NEXT_PUBLIC_ env vars not used for secrets
+```

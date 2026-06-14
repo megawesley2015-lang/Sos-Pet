@@ -166,7 +166,7 @@ THE SYSTEM SHALL confirmar pedido e criar na Printful.
 6. Atualizar `status = 'paid'`, `mp_payment_id`
 7. Criar pedido na Printful: `POST https://api.printful.com/orders` com os itens e endereço de entrega
 8. Salvar `printful_order_id`; se falhar, salvar erro em `printful_error` (não reverter pagamento)
-9. Enviar email de confirmação via Resend: subject "Pedido confirmado — SOS Pet"
+9. Enviar email de confirmação via Resend: subject "Pedido confirmado — Pet Aumigo"
 
 ### Harness Commands
 ```bash

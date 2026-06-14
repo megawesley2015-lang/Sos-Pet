@@ -1,4 +1,4 @@
-export const CITIES_SLUG_MAP: Record<string, string> = {
+﻿export const CITIES_SLUG_MAP: Record<string, string> = {
   'santos': 'Santos',
   'guaruja': 'Guarujá',
   'sao-vicente': 'São Vicente',
@@ -40,12 +40,12 @@ export function parseSlug(
 
 export function generateSeoTitle(type: string, cityName: string): string {
   const label = TYPE_LABELS[type.toLowerCase()] ?? 'Pets'
-  return `${label} em ${cityName} — SOS Pet Amigo`
+  return `${label} em ${cityName} — Pet Aumigo`
 }
 
 export function generateSeoDescription(type: string, cityName: string): string {
   const label = TYPE_LABELS[type.toLowerCase()]?.toLowerCase() ?? 'pets'
-  return `Veja todos os ${label} de ${cityName} na plataforma SOS Pet Amigo. Ajude a reunir pets com seus tutores.`
+  return `Veja todos os ${label} de ${cityName} na plataforma Pet Aumigo. Ajude a reunir pets com seus tutores.`
 }
 
 export function generateAllParams(): { type: string; city: string }[] {

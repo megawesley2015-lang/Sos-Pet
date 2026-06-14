@@ -1,0 +1,107 @@
+# Dispatching Parallel Agents
+# Source: github.com/obra/superpowers | License: MIT
+
+## When to Use
+Use when you have 3+ independent problems to investigate or fix simultaneously.
+Triggers on: multiple failing tests with different root causes, broken subsystems
+that don't share state, "fix all these issues", "investigate X and Y and Z",
+"run these in parallel". Skip when failures are interconnected or agents would
+compete for the same resources.
+
+---
+
+## Decision: Parallel vs Sequential
+
+**Use parallel when:**
+- 3+ independent problems
+- Different root causes (auth issue + UI bug + DB query = parallel)
+- Problems understandable in isolation
+- No shared state between investigations
+
+**Use sequential when:**
+- Failures are interconnected (fixing A might fix B)
+- Need comprehensive system understanding first
+- Agents would conflict (both modifying same file)
+
+---
+
+## Implementation Steps
+
+### Step 1 — Group by Domain
+Categorize what's broken:
+```
+- Auth issues → auth-agent
+- UI rendering → ui-agent
+- Database queries → db-agent
+- API responses → api-agent
+```
+
+### Step 2 — Write Focused Prompts
+Each agent gets:
+- One clear problem (not a list)
+- All necessary context (file paths, error messages, relevant code)
+- Expected output format
+
+**Good prompt:**
+```
+Fix the failing test in __tests__/rate-limiting/rate-limit.test.ts.
+The test expects a 429 response after 5 requests but gets 200.
+Current implementation is in lib/rate-limit.ts.
+Return: root cause + exact fix + verification that test passes.
+```
+
+**Bad prompt:**
+```
+Fix the rate limiting issues.
+```
+
+### Step 3 — Launch Concurrently
+Dispatch all agents in the same message (not sequential).
+```
+Agent 1: [auth investigation prompt]
+Agent 2: [UI investigation prompt]
+Agent 3: [DB investigation prompt]
+```
+
+### Step 4 — Integrate Results
+- Review each agent's summary
+- Check for conflicting fixes (Agent A adds field that Agent B removes)
+- Apply non-conflicting fixes
+- Run full test suite to confirm nothing regressed
+- If conflicts: resolve manually, then re-verify
+
+---
+
+## Effective Agent Context Template
+
+```
+Context:
+- File: {exact path}
+- Error: {exact error message or test failure output}
+- Relevant code: {paste the specific code block}
+- What was working before: {if known}
+
+Task: {one specific action}
+
+Expected output:
+- Root cause (one sentence)
+- Fix (exact code changes)
+- Verification command + expected output
+```
+
+---
+
+## SOS Pet Parallel Dispatch Examples
+
+**Multiple failing tests:**
+```
+Agent 1 → fix __tests__/busca-avancada/ failures (FilterBar component)
+Agent 2 → fix __tests__/paginacao/ failures (usePaginatedPets hook)
+Agent 3 → fix __tests__/rate-limiting/ failures (lib/rate-limit.ts)
+```
+
+**API + UI investigation:**
+```
+Agent 1 → investigate why /api/pets/lost-active returns 500 in prod logs
+Agent 2 → investigate why FilterBar doesn't reflect URL params on page load
+```

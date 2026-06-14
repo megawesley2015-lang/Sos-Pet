@@ -1,9 +1,9 @@
-# CONSTITUIÇÃO TÉCNICA — SOS Pet Amigo
+﻿# CONSTITUIÇÃO TÉCNICA — Pet Aumigo
 # Nível SDD: Spec-anchored
 # Harness: TypeScript + ESLint + Build + Vitest
 # Highermind: .claude/skills/sos-pet-orchestrator-v2
 # ─────────────────────────────────────────────────────────────────────────────
-# CLAUDE.md — SOS Pet Amigo
+# CLAUDE.md — Pet Aumigo
 # Contrato de Contexto entre Claude Code e o Projeto
 # Versão: 1.1.0 | Atualizado: 2026-06-08
 # ─────────────────────────────────────────────────────────────────────────────
@@ -15,7 +15,7 @@
 
 ## PRODUTO
 
-**Nome:** SOS Pet Amigo
+**Nome:** Pet Aumigo
 **Missão:** Plataforma SaaS para localização de pets perdidos e conexão com
 prestadores de serviços pet na Baixada Santista.
 **Região:** Santos, Guarujá, São Vicente, Cubatão, Bertioga, Praia Grande,
@@ -674,7 +674,7 @@ HARNESS GLOBAL:
 ## SKILLS DISPONÍVEIS (Claude Code pode acionar)
 
 ```
--- PROJETO SOS PET --
+-- PROJETO Pet Aumigo --
 sos-pet-orchestrator-v2   → Highermind — executa tasks.md com harness gate
 manifesto-de-contexto     → Este arquivo + contexto completo do projeto
 supabase-architect        → Gerar SQL completo + RLS + tipos TypeScript
@@ -714,5 +714,5 @@ writing-skills                  → TDD aplicado a documentação — cria skill
 
 ---
 
-*CLAUDE.md — SOS Pet Amigo | Não commitar informações sensíveis neste arquivo.*
+*CLAUDE.md — Pet Aumigo | Não commitar informações sensíveis neste arquivo.*
 *Atualizar após cada mudança estrutural no projeto.*

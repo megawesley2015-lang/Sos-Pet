@@ -1,4 +1,4 @@
-// app/achados-e-perdidos/page.tsx
+﻿// app/achados-e-perdidos/page.tsx
 // Server Component — SSR de metadados + filtros via URL.
 // PetListClient (filho) gerencia cursor pagination client-side.
 
@@ -19,7 +19,7 @@ interface PageProps {
 }
 
 export const metadata = {
-  title:       'Achados e Perdidos — SOS Pet',
+  title:       'Achados e Perdidos — Pet Aumigo',
   description: 'Pets perdidos e encontrados na sua região. Cadastre um alerta grátis.',
 }
 

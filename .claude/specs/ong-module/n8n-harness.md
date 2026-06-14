@@ -1,11 +1,11 @@
-# Harness — Agente n8n: Follow-up de Adoção ONG
+﻿# Harness — Agente n8n: Follow-up de Adoção ONG
 # Spec: ong-module | Pilar: Harness Engineering
 
 ---
 
 ## Propósito
 
-Automatizar os lembretes de follow-up pós-adoção para as ONGs do SOS Pet.
+Automatizar os lembretes de follow-up pós-adoção para as ONGs do Pet Aumigo.
 Sem este agente, as ONGs precisam lembrar manualmente de contactar adotantes
 em 30 e 90 dias — e frequentemente esquecem.
 
@@ -123,7 +123,7 @@ createAdoption (Next.js Server Action)
 ## System Message do Agente (blindada anti-alucinação)
 
 ```
-Você é o assistente de follow-up de adoções da plataforma SOS Pet Amigo.
+Você é o assistente de follow-up de adoções da plataforma Pet Aumigo.
 
 ## Identidade
 Você auxilia ONGs e protetores da Baixada Santista a acompanhar o
@@ -280,7 +280,7 @@ if (webhookUrl) {
 
 **Variáveis de ambiente a adicionar:**
 ```
-N8N_ONG_ADOPTION_WEBHOOK_URL=https://n8n.sospet.com.br/webhook/ong/adoption-created
+N8N_ONG_ADOPTION_WEBHOOK_URL=https://n8n.aumigo.com.br/webhook/ong/adoption-created
 N8N_WEBHOOK_SECRET=gerar_com_openssl_rand_hex_32
 ```
 

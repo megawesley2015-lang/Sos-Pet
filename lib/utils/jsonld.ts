@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Builders de JSON-LD (schema.org) para SEO estruturado.
  *
  * Por que: Google enriquece o snippet quando há JSON-LD válido (rich result
@@ -34,7 +34,7 @@ interface PetArticleLd {
   isAccessibleForFree: true;
   publisher: {
     "@type": "Organization";
-    name: "SOS Pet";
+    name: "Pet Aumigo";
     url: string;
   };
   mainEntity: {
@@ -64,7 +64,7 @@ interface PetArticleLd {
 /**
  * JSON-LD para a página de detalhe de um pet (perdido ou encontrado).
  * @param pet — registro do banco
- * @param baseUrl — URL canônica do site (ex: https://sospet.com.br)
+ * @param baseUrl — URL canônica do site (ex: https://aumigo.com.br)
  */
 export function petArticleJsonLd(pet: PetRow, baseUrl: string): PetArticleLd {
   const isLost = pet.kind === "lost";
@@ -89,7 +89,7 @@ export function petArticleJsonLd(pet: PetRow, baseUrl: string): PetArticleLd {
     headline,
     description:
       pet.description?.trim() ||
-      `${isLost ? "Procura-se" : "Encontrado"} ${nome} em ${localCurto}. Veja detalhes e ajude na rede SOS Pet.`,
+      `${isLost ? "Procura-se" : "Encontrado"} ${nome} em ${localCurto}. Veja detalhes e ajude na rede Pet Aumigo.`,
     datePublished: pet.created_at,
     dateModified: pet.updated_at ?? pet.created_at,
     image: pet.photo_url ? [pet.photo_url] : undefined,
@@ -98,7 +98,7 @@ export function petArticleJsonLd(pet: PetRow, baseUrl: string): PetArticleLd {
     isAccessibleForFree: true,
     publisher: {
       "@type": "Organization",
-      name: "SOS Pet",
+      name: "Pet Aumigo",
       url: baseUrl,
     },
     mainEntity: {

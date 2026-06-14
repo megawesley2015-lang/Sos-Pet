@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { RegistroForm } from "./RegistroForm";
 
 export const metadata: Metadata = {
   title: "Criar conta",
-  description: "Crie sua conta gratuita no SOS Pet e gerencie seus registros de pets perdidos e encontrados.",
+  description: "Crie sua conta gratuita no Pet Aumigo e gerencie seus registros de pets perdidos e encontrados.",
 };
 
 /**

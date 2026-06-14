@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 // components/pets/ShareButton.tsx — isolado como Client Component
 
 interface ShareButtonProps {
@@ -12,8 +12,8 @@ export function ShareButton({ petName }: ShareButtonProps) {
       onClick={() => {
         if (navigator.share) {
           navigator.share({
-            title: `${petName} — SOS Pet`,
-            text:  `Ajude a encontrar ${petName}! Veja o alerta no SOS Pet.`,
+            title: `${petName} — Pet Aumigo`,
+            text:  `Ajude a encontrar ${petName}! Veja o alerta no Pet Aumigo.`,
             url:   window.location.href,
           })
         } else {

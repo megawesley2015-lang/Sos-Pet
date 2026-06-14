@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from "next";
+﻿import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import PWAInstaller from "@/components/pwa/PWAInstaller";
@@ -22,14 +22,14 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   title: {
-    default: "SOS Pet — Achados & Perdidos",
-    template: "%s · SOS Pet",
+    default: "Pet Aumigo — Achados & Perdidos",
+    template: "%s · Pet Aumigo",
   },
   description:
     "Rede colaborativa de resgate. Cadastre seu pet perdido, dispare um SOS e conte com a rede pra trazer ele de volta.",
   metadataBase: new URL(getBaseUrl()),
-  applicationName: "SOS Pet",
-  authors: [{ name: "SOS Pet" }],
+  applicationName: "Pet Aumigo",
+  authors: [{ name: "Pet Aumigo" }],
   keywords: [
     "pet perdido",
     "pet encontrado",
@@ -40,22 +40,22 @@ export const metadata: Metadata = {
     "veterinário",
   ],
   openGraph: {
-    title: "SOS Pet — Achados & Perdidos",
+    title: "Pet Aumigo — Achados & Perdidos",
     description:
       "Rede colaborativa de resgate. Cadastre, busque e ajude a reencontrar pets.",
     type: "website",
     locale: "pt_BR",
-    siteName: "SOS Pet",
+    siteName: "Pet Aumigo",
   },
   twitter: {
     card: "summary_large_image",
-    title: "SOS Pet — Achados & Perdidos",
+    title: "Pet Aumigo — Achados & Perdidos",
     description:
       "Rede colaborativa de resgate. Cadastre, busque e ajude a reencontrar pets.",
   },
   appleWebApp: {
     capable: true,
-    title: "SOS Pet",
+    title: "Pet Aumigo",
     statusBarStyle: "black-translucent",
   },
   formatDetection: {

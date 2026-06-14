@@ -1,0 +1,109 @@
+# Verification Before Completion
+# Source: github.com/obra/superpowers | License: MIT
+
+## When to Use
+Use BEFORE claiming ANY task is complete. Triggers on: about to say "done",
+"complete", "finished", "implemented", "fixed", "working", before any commit,
+before creating a PR, before moving to the next task. RIGID SKILL — no exceptions.
+
+## IRON LAW
+NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE.
+Evidence before claims, always.
+
+---
+
+## Required Process
+
+Before asserting success, complete all 5 steps:
+
+### Step 1 — Identify the Verification Command
+What command proves the claim?
+
+| Claim | Command |
+|-------|---------|
+| "Tests pass" | `npm test` |
+| "No type errors" | `npm run typecheck` |
+| "Build works" | `npm run build` |
+| "API returns correct data" | curl or test that calls the endpoint |
+| "Component renders" | visual check in browser or snapshot test |
+
+### Step 2 — Execute the Full Command
+Not a subset. Not a partial check. The full command.
+
+```bash
+# Run and capture output
+npm test
+npm run typecheck
+```
+
+### Step 3 — Read Complete Output
+- Read every line (not just the summary)
+- Check exit code (0 = success, non-zero = failure)
+- Look for warnings that indicate hidden issues
+
+### Step 4 — Verify Output Confirms the Claim
+"Tests passed: 47" confirms tests pass.
+"3 type errors" does NOT confirm no type errors.
+
+### Step 5 — Make the Claim WITH Evidence
+
+**Correct:**
+> "All tests pass. Output: `Tests: 47 passed, 47 total`"
+
+**Incorrect:**
+> "This should work now"
+> "I believe the tests pass"
+> "It seems to be working"
+
+---
+
+## Red Flag Language (Never Use These)
+
+If you're about to say any of these, stop and verify first:
+- "should work"
+- "probably passes"
+- "seems to be"
+- "I believe"
+- "looks correct"
+- "appears to"
+- "I think"
+
+These phrases signal you haven't verified.
+
+---
+
+## SOS Pet Verification Checklist
+
+Before any commit:
+```bash
+# 1. TypeScript — REQUIRED
+npm run typecheck
+
+# 2. Tests — REQUIRED if test files exist for changed code
+npm test
+
+# 3. Build — REQUIRED before merge to main
+npm run build
+```
+
+Expected clean outputs:
+```
+typecheck: (no output = success)
+test: Tests: N passed, N total
+build: ✓ Compiled successfully
+```
+
+Any output other than these = not done yet.
+
+---
+
+## Why This Matters
+
+Past failures from skipping verification:
+- Undefined functions shipped to production
+- Incomplete features deployed
+- Type errors caught only in Vercel build logs (deploy failed)
+- Tests "obviously passing" that actually weren't imported
+
+The cost of 30 seconds of verification is zero.
+The cost of shipping broken code is not.

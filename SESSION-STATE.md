@@ -1,4 +1,4 @@
-# SESSION-STATE.md — SOS Pet Amigo
+﻿# SESSION-STATE.md — Pet Aumigo
 # WAL (Write-Ahead Log) de estado da sessão atual
 # ─────────────────────────────────────────────────────────────
 # REGRA /dream: A cada 5 sessões, consolidar este arquivo → MEMORY.md

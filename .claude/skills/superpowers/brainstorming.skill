@@ -1,0 +1,83 @@
+# Brainstorming — Design Before Code
+# Source: github.com/obra/superpowers | License: MIT
+
+## When to Use
+Use BEFORE any implementation. Triggers on: "let's build X", "I want to add X",
+"design X", "how should we approach X", "plan X", "new feature", "new module",
+"architect X", "think through X". Also: any ambiguous request where requirements
+aren't fully specified. If there's even 10% chance this applies, invoke it first.
+
+## HARD GATE
+Do NOT invoke any implementation skill, write any code, scaffold any project,
+or take any implementation action until you have presented a design and the
+user has explicitly approved it.
+
+---
+
+## Workflow
+
+### Step 1 — Explore Context
+Before asking anything, read:
+- CLAUDE.md (project constraints, existing patterns)
+- Relevant existing files (don't assume — check)
+- Recent git history for related changes
+
+### Step 2 — Clarifying Questions
+Ask one question at a time. Prefer multiple-choice over open-ended.
+Stop when you have enough to propose approaches.
+
+Example good question:
+> "Should this work for unauthenticated users, or only logged-in tutores?"
+> a) Only authenticated users
+> b) Public with rate limiting
+> c) Both, with different feature sets
+
+### Step 3 — Propose 2–3 Approaches
+For each approach, state:
+- What it does
+- Main trade-off
+- Your recommendation and why
+
+Apply YAGNI ruthlessly — cut anything the user hasn't asked for.
+
+### Step 4 — Present Design in Sections
+Don't dump the full design at once. Present section by section, get approval:
+- Data model
+- API surface
+- UI/UX flow
+- Edge cases
+
+### Step 5 — Write Spec
+Save to: `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
+
+Include:
+- Goal (one sentence)
+- Constraints (from CLAUDE.md + user input)
+- Chosen approach + rationale
+- Data model changes
+- API changes
+- UI changes
+- Out of scope (explicit)
+- Open questions
+
+### Step 6 — Self-Review Spec
+Check for:
+- [ ] Placeholders ("TBD", "TODO") → resolve them
+- [ ] Contradictions with CLAUDE.md constraints
+- [ ] Ambiguous language → make concrete
+- [ ] Missing edge cases
+
+### Step 7 — Request User Review
+Present the spec file path and ask for approval before proceeding.
+
+### Step 8 — Invoke writing-plans
+Only after explicit approval: dispatch `/writing-plans` with the spec as input.
+
+---
+
+## Principles
+- One question per message
+- Always explore alternatives before committing
+- Scale documentation to actual complexity (small feature = short spec)
+- Visual companion (diagrams) only when text is insufficient
+- Never skip this step because the task "seems simple"

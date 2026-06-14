@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Mercado Pago — integração via REST API (sem SDK)
  *
  * Docs: https://www.mercadopago.com.br/developers/pt/reference
@@ -88,7 +88,7 @@ export async function criarPreferencia(
       excluded_payment_types: [], // sem exclusões
       installments: 6,            // máx 6x no cartão
     },
-    statement_descriptor: "SOS PET",
+    statement_descriptor: "Pet Aumigo",
     binary_mode: false, // false = aceita pagamentos pending (boleto/PIX)
   };
 

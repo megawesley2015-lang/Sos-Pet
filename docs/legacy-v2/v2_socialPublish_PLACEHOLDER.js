@@ -1,5 +1,5 @@
-/**
- * Publicação Automática em Redes Sociais - SOS Pet
+﻿/**
+ * Publicação Automática em Redes Sociais - Pet Aumigo
  * 
  * STATUS: 🔮 FUTURO
  * 
