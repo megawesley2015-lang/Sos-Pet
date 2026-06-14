@@ -1,13 +1,10 @@
-<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pet Aumigo">
-  <!-- Círculo laranja -->
-  <circle cx="40" cy="40" r="38" fill="#FF851B"/>
+<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SOS Pet Aumigo">
 
-  <!-- AU bold centralizado -->
-  <text x="40" y="54"
-    font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif"
-    font-weight="900" font-size="30" fill="white"
-    text-anchor="middle" letter-spacing="-1">AU</text>
+  <!-- Patinha laranja — ícone isolado para favicon/app -->
+  <circle cx="20" cy="31" r="9"  fill="#FF851B"/>
+  <circle cx="34" cy="21" r="9"  fill="#FF851B"/>
+  <circle cx="47" cy="21" r="9"  fill="#FF851B"/>
+  <circle cx="61" cy="31" r="9"  fill="#FF851B"/>
+  <ellipse cx="40" cy="56" rx="19" ry="16" fill="#FF851B"/>
 
-  <!-- Ponto teal embaixo — detalhe de identidade -->
-  <circle cx="40" cy="66" r="3" fill="#20B2AA"/>
 </svg>
