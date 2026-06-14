@@ -1,10 +1,15 @@
 <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SOS Pet Aumigo">
 
-  <!-- Patinha laranja — ícone isolado para favicon/app -->
-  <circle cx="20" cy="31" r="9"  fill="#FF851B"/>
-  <circle cx="34" cy="21" r="9"  fill="#FF851B"/>
-  <circle cx="47" cy="21" r="9"  fill="#FF851B"/>
-  <circle cx="61" cy="31" r="9"  fill="#FF851B"/>
-  <ellipse cx="40" cy="56" rx="19" ry="16" fill="#FF851B"/>
+  <!-- Círculo laranja igual à imagem 3 -->
+  <circle cx="40" cy="40" r="38" fill="#FF851B"/>
+
+  <!-- Patinha branca/clara dentro do círculo — igual à imagem 3 -->
+  <!-- Dedos (toe pads) -->
+  <circle cx="21" cy="31" r="8"  fill="rgba(255,255,255,0.88)"/>
+  <circle cx="34" cy="22" r="8"  fill="rgba(255,255,255,0.88)"/>
+  <circle cx="47" cy="22" r="8"  fill="rgba(255,255,255,0.88)"/>
+  <circle cx="60" cy="31" r="8"  fill="rgba(255,255,255,0.88)"/>
+  <!-- Almofada principal -->
+  <ellipse cx="40" cy="53" rx="17" ry="14" fill="rgba(255,255,255,0.88)"/>
 
 </svg>
