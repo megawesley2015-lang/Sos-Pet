@@ -13,6 +13,7 @@ import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 import { haversineKm } from '@/lib/geo'
 import { sendEmail } from '@/lib/email/send'
 import { petConfirmationTemplate } from '@/lib/email/templates'
+import { runAgentsForPet } from '@/lib/agents'
 
 const POST_LIMIT = { limit: 5, windowMs: 60_000 } // 5 POSTs/min por IP
 const GET_LIMIT  = { limit: 30, windowMs: 60_000 } // 30 GETs/min por IP — impede scraping da listagem
@@ -268,6 +269,20 @@ export async function POST(req: NextRequest) {
         templateName: 'pet_confirmation',
       })
     }
+
+    // Dispara agentes em background (best-effort — não bloqueia resposta)
+    void runAgentsForPet(pet.id, {
+      name:         data.name             || null,
+      species:      data.species,
+      breed:        data.breed            || null,
+      color:        data.color            ?? null,
+      size:         data.size             ?? null,
+      sex:          data.sex              ?? null,
+      description:  data.description      || null,
+      behavior:     data.behavior         || null,
+      neighborhood: data.neighborhood     ?? null,
+      city:         data.city,
+    })
 
     return ok({ id: pet.id, kind: pet.kind, name: pet.name, city: pet.city }, 201)
 

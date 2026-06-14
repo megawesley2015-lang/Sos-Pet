@@ -13,6 +13,24 @@
             "command": "echo '🩺 Iniciando diagnóstico automático do projeto...' && bash scripts/monitor.sh . 2>&1 | head -80"
           }
         ]
+      },
+      {
+        "matcher": "(?i)@(diretor|pesquisa|copy|conteudo|estrategia|seo|parcerias|studio|design)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const fs=require('fs');try{const b=fs.readFileSync('.claude/brain/empresa.md','utf8');const linha=b.split('\\n').find(l=>l.startsWith('**Produto'));console.log('[Brain] '+( linha||'empresa.md carregado'))}catch(e){}\""
+          }
+        ]
+      },
+      {
+        "matcher": "(?i)@(davinci|amora)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const fs=require('fs');try{const i=fs.readFileSync('.claude/brain/inbox/wesley.md','utf8');const n=i.split('\\n').filter(l=>l.startsWith('-')).length;console.log('[Brain] Inbox de Wesley: '+n+' item(ns) pendente(s)')}catch(e){console.log('[Brain] Inbox vazio — primeira sessão')}\""
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -42,6 +60,16 @@
           {
             "type": "command",
             "command": "cd \"C:/Users/wesley/Documents/Claude/Projects/sos-pet\" && npm run build 2>&1 | tail -10"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const fs=require('fs');const inbox='.claude/brain/inbox/wesley.md';const now=new Date();const stamp=now.toLocaleDateString('pt-BR')+' '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});try{let c=fs.readFileSync(inbox,'utf8');const entry='\\n---\\n### Sessão encerrada — '+stamp+'\\n> Diga **@amora faz o compact** na próxima sessão para salvar as decisões.\\n';c+=entry;fs.writeFileSync(inbox,c,'utf8');console.log('[Amora] ✅ Sessão registrada no inbox — '+stamp)}catch(e){console.log('[Amora] Inbox não encontrado: '+e.message)}\""
           }
         ]
       }
