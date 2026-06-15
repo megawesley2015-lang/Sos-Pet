@@ -19,7 +19,7 @@ export async function TopBar() {
         <Link href="/" className="flex shrink-0 items-center">
           {/* Versão completa — desktop */}
           <img
-            src="/logo-dark.svg"
+            src="/logo.svg"
             alt="SOS Pet Aumigo — Achados e Perdidos"
             className="hidden h-14 w-auto sm:block"
           />
