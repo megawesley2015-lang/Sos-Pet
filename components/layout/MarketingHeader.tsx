@@ -45,7 +45,7 @@ export async function MarketingHeader() {
           <img
             src="/logo.svg"
             alt="SOS Pet Aumigo — Achados e Perdidos"
-            className="hidden h-14 w-auto sm:block rounded-sm"
+            className="hidden h-14 w-auto sm:block"
           />
           {/* Só ícone — mobile */}
           <img

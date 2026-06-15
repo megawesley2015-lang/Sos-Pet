@@ -13,7 +13,7 @@ export function MarketingFooter() {
             </div>
             <div className="flex flex-col leading-none">
               <span className="font-display text-lg font-bold text-fg">
-                SOS <span className="text-brand-500">Pet</span>
+                SOS <span className="text-brand-500">pet</span> aumigo
               </span>
               <span className="text-[10px] uppercase tracking-widest text-brand-700/70">
                 Achados &amp; Perdidos
@@ -89,7 +89,7 @@ export function MarketingFooter() {
       </div>
 
       <div className="mx-auto mt-8 flex max-w-6xl flex-col items-center justify-between gap-2 border-t border-warm-200/80 px-4 pt-6 text-xs text-fg-muted sm:flex-row">
-        <p>© {year} Pet Aumigo — Feito no Brasil.</p>
+        <p>© {year} SOS Pet Aumigo — Feito no Brasil.</p>
         <p className="flex items-center gap-1">
           Construído com <Heart className="h-3 w-3 text-brand-500" /> para
           quem ama bichos.

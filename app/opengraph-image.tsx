@@ -4,7 +4,7 @@
  * OG image padrão (usada quando alguém compartilha a landing).
  * Tamanho recomendado: 1200×630 (16:8.4 — padrão Twitter/Facebook).
  */
-export const alt = "Pet Aumigo — Achados & Perdidos";
+export const alt = "SOS Pet Aumigo — Achados & Perdidos";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -57,7 +57,8 @@ export default function OpengraphImage() {
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <span style={{ fontSize: 32, fontWeight: 800 }}>
-              SOS <span style={{ color: "#FF851B" }}>Pet</span>
+              <span style={{ color: "#FF851B" }}>SOS pet</span>{" "}
+              <span style={{ color: "white" }}>aumigo</span>
             </span>
             <span
               style={{
@@ -67,7 +68,7 @@ export default function OpengraphImage() {
                 textTransform: "uppercase",
               }}
             >
-              Achados &amp; Perdidos
+              ACHADOS &amp; PERDIDOS
             </span>
           </div>
         </div>
