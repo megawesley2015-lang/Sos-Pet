@@ -1,8 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="SOS Pet Aumigo">
-  <circle cx="50" cy="50" r="44" fill="none" stroke="#FF851B" stroke-width="3.5"/>
-  <ellipse cx="32" cy="51" rx="5.5" ry="5"   fill="#FF851B"/>
-  <ellipse cx="43" cy="41" rx="6.5" ry="6"   fill="#FF851B"/>
-  <ellipse cx="57" cy="41" rx="6.5" ry="6"   fill="#FF851B"/>
-  <ellipse cx="68" cy="51" rx="5.5" ry="5"   fill="#FF851B"/>
-  <ellipse cx="50" cy="64" rx="12.5" ry="11" fill="#FF851B"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" overflow="visible" role="img" aria-label="SOS Pet Aumigo">
+  <defs>
+    <filter id="paw-neon" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <g filter="url(#paw-neon)">
+    <circle cx="50" cy="50" r="44" fill="none" stroke="#FF851B" stroke-width="3.5"/>
+    <ellipse cx="32" cy="51" rx="5.5" ry="5"   fill="#FF851B"/>
+    <ellipse cx="43" cy="41" rx="6.5" ry="6"   fill="#FF851B"/>
+    <ellipse cx="57" cy="41" rx="6.5" ry="6"   fill="#FF851B"/>
+    <ellipse cx="68" cy="51" rx="5.5" ry="5"   fill="#FF851B"/>
+    <ellipse cx="50" cy="64" rx="12.5" ry="11" fill="#FF851B"/>
+  </g>
 </svg>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PawPrint, UserRound } from "lucide-react";
+import { UserRound } from "lucide-react";
 import { getSessionWithProfile } from "@/lib/auth/session";
 import { UserMenu } from "./UserMenu";
 
@@ -17,14 +17,16 @@ export async function TopBar() {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
         {/* Logo */}
         <Link href="/" className="flex shrink-0 items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-brand-500 bg-brand-500/15 shadow-glow-brand">
-            <PawPrint className="h-4 w-4 text-brand-400" strokeWidth={2.5} />
-          </div>
+          <img
+            src="/logo-icon.svg"
+            alt="SOS Pet Aumigo"
+            className="h-9 w-9"
+          />
           <div className="flex flex-col leading-none">
             <span className="font-display text-lg font-bold text-fg">
-              SOS <span className="text-brand-500 glow-text-brand">Pet</span>
+              SOS <span className="text-brand-500 glow-text-brand">pet</span> aumigo
             </span>
-            <span className="text-[10px] uppercase tracking-widest text-fg-subtle">
+            <span className="text-[11px] uppercase tracking-wide text-fg-subtle">
               Achados &amp; Perdidos
             </span>
           </div>
