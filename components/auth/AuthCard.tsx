@@ -18,7 +18,7 @@ export function AuthCard({ title, subtitle, children, footer }: AuthCardProps) {
         <div className="w-full max-w-md">
           <Link href="/" className="mb-6 flex items-center justify-center">
             <img
-              src="/logo-dark.svg"
+              src="/logo.svg"
               alt="SOS Pet Aumigo — Achados e Perdidos"
               className="h-14 w-auto"
             />
