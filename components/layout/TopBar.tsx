@@ -16,20 +16,19 @@ export async function TopBar() {
     <header className="sticky top-0 z-40 border-b border-brand-500/20 bg-ink-900/70 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
         {/* Logo */}
-        <Link href="/" className="flex shrink-0 items-center gap-2">
+        <Link href="/" className="flex shrink-0 items-center">
+          {/* Versão completa — desktop */}
+          <img
+            src="/logo-dark.svg"
+            alt="SOS Pet Aumigo — Achados e Perdidos"
+            className="hidden h-14 w-auto sm:block"
+          />
+          {/* Só ícone — mobile */}
           <img
             src="/logo-icon.svg"
             alt="SOS Pet Aumigo"
-            className="h-9 w-9"
+            className="h-10 w-10 sm:hidden"
           />
-          <div className="flex flex-col leading-none">
-            <span className="font-display text-lg font-bold text-fg">
-              SOS <span className="text-brand-500 glow-text-brand">pet</span> aumigo
-            </span>
-            <span className="text-[11px] uppercase tracking-wide text-fg-subtle">
-              Achados &amp; Perdidos
-            </span>
-          </div>
         </Link>
 
         {/* Nav desktop */}

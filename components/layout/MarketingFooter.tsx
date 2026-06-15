@@ -1,5 +1,5 @@
 ﻿import Link from "next/link";
-import { PawPrint, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
 
 export function MarketingFooter() {
   const year = new Date().getFullYear();
@@ -7,18 +7,12 @@ export function MarketingFooter() {
     <footer className="border-t border-warm-200/80 bg-warm-100/40 py-10">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 sm:grid-cols-3">
         <div>
-          <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-brand-500 bg-brand-100">
-              <PawPrint className="h-4 w-4 text-brand-600" strokeWidth={2.5} />
-            </div>
-            <div className="flex flex-col leading-none">
-              <span className="font-display text-lg font-bold text-fg">
-                SOS <span className="text-brand-500">pet</span> aumigo
-              </span>
-              <span className="text-[10px] uppercase tracking-widest text-brand-700/70">
-                Achados &amp; Perdidos
-              </span>
-            </div>
+          <Link href="/" className="flex items-center">
+            <img
+              src="/logo.svg"
+              alt="SOS Pet Aumigo — Achados e Perdidos"
+              className="h-11 w-auto"
+            />
           </Link>
           <p className="mt-3 max-w-xs text-sm text-fg-muted">
             Uma rede colaborativa para reencontrar pets perdidos com seus
