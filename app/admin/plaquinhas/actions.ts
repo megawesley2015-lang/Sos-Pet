@@ -57,7 +57,7 @@ export async function renotificarFornecedorAction(formData: FormData) {
 
   await sendEmail({
     to: SUPPLIER_EMAIL,
-    subject: `[REENVIO] Pet Aumigo — Pedido #${orderId.slice(0, 8).toUpperCase()} — ${petName}`,
+    subject: `[REENVIO] SOS Pet Aumigo — Pedido #${orderId.slice(0, 8).toUpperCase()} — ${petName}`,
     html: `
       <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px;background:#0F0F1A;color:#F1EDE8;border-radius:16px;">
         <h1 style="color:#FF6B35">🔄 Reenvio — Pedido #${orderId.slice(0, 8).toUpperCase()}</h1>

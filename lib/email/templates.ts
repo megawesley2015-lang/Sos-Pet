@@ -17,14 +17,14 @@ function baseLayout(content: string, siteUrl: string): string {
 <table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;overflow:hidden;max-width:600px">
   <tr>
     <td style="background:#121214;padding:24px 32px">
-      <span style="color:#FF851B;font-size:20px;font-weight:bold">🐾 Pet Aumigo</span>
+      <span style="color:#FF851B;font-size:20px;font-weight:bold">🐾 SOS Pet Aumigo</span>
     </td>
   </tr>
   <tr><td style="padding:32px">${content}</td></tr>
   <tr>
     <td style="background:#f4f4f5;padding:16px 32px;text-align:center">
       <p style="margin:0;font-size:12px;color:#6b7280">
-        Você recebeu este email porque possui um cadastro no Pet Aumigo.<br>
+        Você recebeu este email porque possui um cadastro no SOS Pet Aumigo.<br>
         <a href="${escapeHtml(siteUrl)}/perfil/configuracoes" style="color:#FF851B">Gerenciar alertas</a>
       </p>
     </td>
@@ -146,7 +146,7 @@ interface PartnershipWelcomeParams {
 
 export function partnershipWelcomeTemplate(p: PartnershipWelcomeParams): string {
   const content = `
-    <h1 style="margin:0 0 16px;font-size:22px;color:#111827">Bem-vindo à rede Pet Aumigo!</h1>
+    <h1 style="margin:0 0 16px;font-size:22px;color:#111827">Bem-vindo à rede SOS Pet Aumigo!</h1>
     <p style="margin:0 0 16px;color:#374151;font-size:15px">
       Olá, <strong>${escapeHtml(p.nome)}</strong>! Recebemos sua solicitação de parceria
       (${escapeHtml(p.tipoNegocio)} em ${escapeHtml(p.cidade)}).

@@ -88,7 +88,7 @@ export async function criarPreferencia(
       excluded_payment_types: [], // sem exclusões
       installments: 6,            // máx 6x no cartão
     },
-    statement_descriptor: "Pet Aumigo",
+    statement_descriptor: "SOS Pet Aumigo",
     binary_mode: false, // false = aceita pagamentos pending (boleto/PIX)
   };
 

@@ -3,7 +3,7 @@
 ## Melhorias pendentes (priorizadas)
 
 - [ ] **SEO-1** — Adicionar `generateMetadata` dinâmico em `/achados-e-perdidos/[id]`
-  - title: `{nome} — Pet {status} em {cidade} | Pet Aumigo`
+  - title: `{nome} — Pet {status} em {cidade} | SOS Pet Aumigo`
   - og:image: foto_url do pet
   - og:description: primeiros 160 chars da descricao
 

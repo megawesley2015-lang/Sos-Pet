@@ -5,7 +5,7 @@ import {
   KIND_LABEL,
 } from "@/lib/utils/format";
 
-export const alt = "Pet desaparecido — Pet Aumigo";
+export const alt = "Pet desaparecido — SOS Pet Aumigo";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -38,7 +38,7 @@ export default async function PetOpengraphImage({ params }: Props) {
             fontSize: 48,
           }}
         >
-          Pet Aumigo
+          SOS Pet Aumigo
         </div>
       ),
       { ...size }

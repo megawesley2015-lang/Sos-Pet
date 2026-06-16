@@ -5,7 +5,7 @@ import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 import { sendEmail } from '@/lib/email/send'
 import { partnershipWelcomeTemplate, partnershipAdminAlertTemplate } from '@/lib/email/templates'
 
-const PARCEIRO_RATE = { limit: 3, windowMs: 3_600_000 }
+const PARCEIRO_RATE = { limit: 5, windowMs: 60_000 } // 5 req/min por IP
 
 async function verifyTurnstile(token: string): Promise<boolean> {
   const secret = process.env.TURNSTILE_SECRET_KEY
@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
 
   void sendEmail({
     to: parsed.data.email,
-    subject: 'Bem-vindo à rede Pet Aumigo!',
+    subject: 'Bem-vindo à rede SOS Pet Aumigo!',
     html: partnershipWelcomeTemplate({
       nome: parsed.data.nome,
       tipoNegocio: parsed.data.tipo_negocio,

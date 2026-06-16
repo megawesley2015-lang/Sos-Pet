@@ -125,7 +125,7 @@ npm run build
 
 ### O que fazer
 1. `partnershipWelcomeTemplate({ nome, tipoNegocio, cidade, siteUrl }): string`:
-   - Subject sugerido: "Bem-vindo à rede Pet Aumigo!"
+   - Subject sugerido: "Bem-vindo à rede SOS Pet Aumigo!"
    - Agradecimento personalizado com nome
    - Prazo de resposta: 48 horas úteis
    - Próximos passos: aguardar aprovação, completar perfil após aprovação

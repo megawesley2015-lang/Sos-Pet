@@ -1,8 +1,8 @@
-﻿# Voz da Marca — Pet Aumigo
+﻿# Voz da Marca — SOS Pet Aumigo
 
 ## Personalidade da marca
 
-**Se o Pet Aumigo fosse uma pessoa:** seria aquele vizinho que acorda de madrugada para ajudar a procurar seu cachorro. Prestativo, rápido, sem frescura. Conhece a cidade, conhece as pessoas, age.
+**Se o SOS Pet Aumigo fosse uma pessoa:** seria aquele vizinho que acorda de madrugada para ajudar a procurar seu cachorro. Prestativo, rápido, sem frescura. Conhece a cidade, conhece as pessoas, age.
 
 ## Tom de voz
 

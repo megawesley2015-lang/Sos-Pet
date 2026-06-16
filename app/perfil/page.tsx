@@ -51,7 +51,7 @@ export default async function PerfilPage() {
           <div>
             <h1 className="font-display text-3xl font-bold">Meu perfil</h1>
             <p className="mt-1 text-sm text-fg-muted">
-              Como você aparece no Pet Aumigo.
+              Como você aparece no SOS Pet Aumigo.
             </p>
           </div>
         </header>

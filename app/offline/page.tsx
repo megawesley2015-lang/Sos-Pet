@@ -43,7 +43,7 @@ export default function OfflinePage() {
       </div>
 
       <p className="mt-10 text-xs text-fg-subtle">
-        Pet Aumigo · Rede colaborativa de resgate de animais
+        SOS Pet Aumigo · Rede colaborativa de resgate de animais
       </p>
     </div>
   );

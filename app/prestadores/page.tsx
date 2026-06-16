@@ -14,10 +14,10 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Prestadores",
   description:
-    "Encontre veterinários, pet shops e cuidadores parceiros da rede Pet Aumigo. Filtre por categoria, cidade e serviços de emergência.",
+    "Encontre veterinários, pet shops e cuidadores parceiros da rede SOS Pet Aumigo. Filtre por categoria, cidade e serviços de emergência.",
   alternates: { canonical: "/prestadores" },
   openGraph: {
-    title: "Prestadores Parceiros · Pet Aumigo",
+    title: "Prestadores Parceiros · SOS Pet Aumigo",
     description: "Rede de veterinários e pet shops verificados. Agende, veja avaliações e entre em contato.",
     url: "/prestadores",
     type: "website",

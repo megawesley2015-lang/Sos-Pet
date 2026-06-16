@@ -11,7 +11,7 @@
 **Esforço:** 10 min | **Responsável:** Wes (manual)
 
 ```
-1. Abrir Supabase Dashboard → projeto Pet Aumigo (odrybnjjpdxqjofgewam)
+1. Abrir Supabase Dashboard → projeto SOS Pet Aumigo (odrybnjjpdxqjofgewam)
 2. SQL Editor → New query
 3. Colar conteúdo de: supabase/migrations/001_ong_module.sql
 4. Run

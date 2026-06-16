@@ -29,7 +29,7 @@
    ```
 3. Criar funções:
    - `parseSlug(type: string, city: string): { species?: string, kind: string, cityName: string } | null`
-   - `generateSeoTitle(type: string, cityName: string): string` → "Cachorros perdidos em Santos — Pet Aumigo"
+   - `generateSeoTitle(type: string, cityName: string): string` → "Cachorros perdidos em Santos — SOS Pet Aumigo"
    - `generateSeoDescription(type: string, cityName: string): string`
    - `generateAllParams(): { type: string, city: string }[]` — 54 combinações
 

@@ -393,7 +393,7 @@ export function CheckoutForm() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm text-fg">
                 <CreditCard className="h-4 w-4 text-brand-400" />
-                Plaquinha Pet Aumigo (1x)
+                Plaquinha SOS Pet Aumigo (1x)
               </div>
               <span className="font-display text-lg font-black text-brand-400">
                 R${" "}

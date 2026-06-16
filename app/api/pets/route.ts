@@ -15,8 +15,8 @@ import { sendEmail } from '@/lib/email/send'
 import { petConfirmationTemplate } from '@/lib/email/templates'
 import { runAgentsForPet } from '@/lib/agents'
 
-const POST_LIMIT = { limit: 5, windowMs: 60_000 } // 5 POSTs/min por IP
-const GET_LIMIT  = { limit: 30, windowMs: 60_000 } // 30 GETs/min por IP — impede scraping da listagem
+const POST_LIMIT = { limit: 10, windowMs: 60_000 } // 10 POSTs/min por IP
+const GET_LIMIT  = { limit: 60, windowMs: 60_000 } // 60 GETs/min por IP — impede scraping da listagem
 
 const SAFE_SELECT = [
   'id', 'kind', 'status', 'name', 'species', 'breed',
@@ -259,7 +259,7 @@ export async function POST(req: NextRequest) {
       const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aumigo.com.br'
       void sendEmail({
         to: user.email,
-        subject: `${pet.name ?? 'Seu pet'} foi cadastrado — Pet Aumigo`,
+        subject: `${pet.name ?? 'Seu pet'} foi cadastrado — SOS Pet Aumigo`,
         html: petConfirmationTemplate({
           petName: pet.name ?? 'Seu pet',
           petId: pet.id,

@@ -1,10 +1,10 @@
 ﻿/**
- * Email Service — Pet Aumigo
+ * Email Service — SOS Pet Aumigo
  * Usa a API REST do Resend diretamente (sem pacote extra).
  *
  * Configuração necessária em .env.local / Vercel:
  *   RESEND_API_KEY=re_xxxxxxxxxxxx
- *   RESEND_FROM=Pet Aumigo <noreply@aumigo.com.br>
+ *   RESEND_FROM=SOS Pet Aumigo <noreply@aumigo.com.br>
  *
  * Se RESEND_API_KEY não estiver configurada, as funções retornam
  * { success: false } silenciosamente — não quebra o fluxo principal.
@@ -14,7 +14,7 @@
  */
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const FROM = process.env.RESEND_FROM ?? "Pet Aumigo <noreply@aumigo.com.br>";
+const FROM = process.env.RESEND_FROM ?? "SOS Pet Aumigo <noreply@aumigo.com.br>";
 // Prioridade: NEXT_PUBLIC_SITE_URL (setada na Vercel) > NEXT_PUBLIC_BASE_URL (legado) > fallback local
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ??
@@ -115,11 +115,11 @@ function wrap(content: string, accentColor = "#f97316"): string {
 <body>
   <div class="wrap">
     <div class="card">
-      <div class="header"><h1>🐾 Pet Aumigo</h1></div>
+      <div class="header"><h1>🐾 SOS Pet Aumigo</h1></div>
       <div class="body">${content}</div>
     </div>
     <div class="footer">
-      <p>© ${new Date().getFullYear()} Pet Aumigo — Baixada Santista</p>
+      <p>© ${new Date().getFullYear()} SOS Pet Aumigo — Baixada Santista</p>
       <p><a href="${BASE_URL}">aumigo.com.br</a> · Você recebeu este email por ter um registro ativo.</p>
     </div>
   </div>
@@ -156,7 +156,7 @@ export async function notificarAvistamento(opts: {
   const html = wrap(
     `<h2>👀 Novo avistamento de ${pet}!</h2>
      <p>Olá, <strong>${nome}</strong>!</p>
-     <p>Alguém acabou de reportar um avistamento do seu pet na plataforma Pet Aumigo.</p>
+     <p>Alguém acabou de reportar um avistamento do seu pet na plataforma SOS Pet Aumigo.</p>
      <div class="info-box">
        <p>📍 <strong>Local:</strong> ${local}</p>
        ${observacao ? `<p style="margin-top:8px">💬 <strong>Observação:</strong> ${observacao}</p>` : ""}
@@ -169,7 +169,7 @@ export async function notificarAvistamento(opts: {
 
   return sendEmail({
     to: opts.tutorEmail,
-    subject: `👀 Avistamento de ${pet} registrado no Pet Aumigo`,
+    subject: `👀 Avistamento de ${pet} registrado no SOS Pet Aumigo`,
     html,
     text: `Novo avistamento de ${pet} em ${local} em ${data}. Acesse: ${BASE_URL}/pets/${opts.petId}`,
   });
@@ -193,7 +193,7 @@ export async function confirmarCadastroPet(opts: {
   const html = wrap(
     `<h2>${isLost ? "🔴 Pet perdido cadastrado" : "🟢 Pet encontrado cadastrado"}</h2>
      <p>Olá, <strong>${nome}</strong>!</p>
-     <p>O registro de <strong>${pet}</strong> foi publicado com sucesso na rede Pet Aumigo.</p>
+     <p>O registro de <strong>${pet}</strong> foi publicado com sucesso na rede SOS Pet Aumigo.</p>
      ${isLost
        ? `<p>Não desanime! Compartilhe o link abaixo nas suas redes sociais e grupos de WhatsApp para aumentar as chances de reencontro.</p>`
        : `<p>Obrigado por ajudar! O tutor poderá entrar em contato pelo telefone que você informou.</p>`
@@ -204,7 +204,7 @@ export async function confirmarCadastroPet(opts: {
 
   return sendEmail({
     to: opts.tutorEmail,
-    subject: `${isLost ? "🔴 Pet perdido" : "🟢 Pet encontrado"} cadastrado — Pet Aumigo`,
+    subject: `${isLost ? "🔴 Pet perdido" : "🟢 Pet encontrado"} cadastrado — SOS Pet Aumigo`,
     html,
     text: `${pet} foi cadastrado com sucesso. Acesse: ${BASE_URL}/pets/${opts.petId}`,
   });
@@ -231,13 +231,13 @@ export async function notificarCadastroPrestadorRecebido(opts: {
        <p style="margin-top:4px">2. Entraremos em contato se necessário</p>
        <p style="margin-top:4px">3. Seu perfil será ativado em até <strong>48 horas úteis</strong></p>
      </div>
-     <p>Obrigado por fazer parte do Pet Aumigo!</p>`,
+     <p>Obrigado por fazer parte do SOS Pet Aumigo!</p>`,
     "#f97316"
   );
 
   return sendEmail({
     to: opts.email,
-    subject: "🎉 Cadastro recebido — Pet Aumigo",
+    subject: "🎉 Cadastro recebido — SOS Pet Aumigo",
     html,
     text: `Recebemos o cadastro de ${opts.nomeNegocio}. Análise em até 48 horas úteis.`,
   });
@@ -259,7 +259,7 @@ export async function notificarPrestadorAprovado(opts: {
   const html = wrap(
     `<h2>✅ Cadastro aprovado!</h2>
      <p>Olá, <strong>${nome}</strong>!</p>
-     <p>Ótima notícia! O cadastro de <strong>${nomeNegocio}</strong> foi <strong>aprovado</strong> e já está visível na plataforma Pet Aumigo.</p>
+     <p>Ótima notícia! O cadastro de <strong>${nomeNegocio}</strong> foi <strong>aprovado</strong> e já está visível na plataforma SOS Pet Aumigo.</p>
      <p>Agora tutores da Baixada Santista podem encontrar e entrar em contato com seu negócio.</p>
      <a href="${BASE_URL}/prestadores/${slug}" class="btn">Ver meu perfil →</a>`,
     "#22c55e"
@@ -267,7 +267,7 @@ export async function notificarPrestadorAprovado(opts: {
 
   return sendEmail({
     to: opts.email,
-    subject: "✅ Cadastro aprovado — Pet Aumigo",
+    subject: "✅ Cadastro aprovado — SOS Pet Aumigo",
     html,
     text: `${opts.nomeNegocio} foi aprovado! Veja seu perfil: ${BASE_URL}/prestadores/${opts.slug}`,
   });
@@ -295,7 +295,7 @@ export async function notificarPrestadorRejeitado(opts: {
 
   return sendEmail({
     to: opts.email,
-    subject: "Atualização do seu cadastro — Pet Aumigo",
+    subject: "Atualização do seu cadastro — SOS Pet Aumigo",
     html,
     text: `O cadastro de ${opts.nomeNegocio} não foi aprovado. Responda este email para mais informações.`,
   });
@@ -318,13 +318,13 @@ export async function notificarParceiroAprovado(opts: {
      <p>Olá, <strong>${nome}</strong>!</p>
      <p>Boa notícia: a solicitação de parceria${empresa ? ` da <strong>${empresa}</strong>` : ""} foi aprovada e vamos seguir conversando.</p>
      <p>Em breve nossa equipe entra em contato pelo email cadastrado para alinhar os próximos passos da parceria.</p>
-     <p>Obrigado pelo interesse no Pet Aumigo!</p>`,
+     <p>Obrigado pelo interesse no SOS Pet Aumigo!</p>`,
     "#22c55e"
   );
 
   return sendEmail({
     to: opts.email,
-    subject: "✅ Solicitação de parceria aprovada — Pet Aumigo",
+    subject: "✅ Solicitação de parceria aprovada — SOS Pet Aumigo",
     html,
     text: `Olá ${opts.nome}, sua solicitação de parceria foi aprovada. Vamos entrar em contato em breve.`,
   });
@@ -345,14 +345,14 @@ export async function notificarParceiroRejeitado(opts: {
     `<h2>Solicitação de parceria não aprovada</h2>
      <p>Olá, <strong>${nome}</strong>.</p>
      <p>Infelizmente a solicitação${empresa ? ` da <strong>${empresa}</strong>` : ""} não foi aprovada neste momento.</p>
-     <p>Isso pode mudar no futuro conforme o Pet Aumigo evolui — se quiser saber mais ou esclarecer algo, basta responder este email.</p>
+     <p>Isso pode mudar no futuro conforme o SOS Pet Aumigo evolui — se quiser saber mais ou esclarecer algo, basta responder este email.</p>
      <p>Obrigado pelo interesse!</p>`,
     "#6b7280"
   );
 
   return sendEmail({
     to: opts.email,
-    subject: "Atualização sobre sua solicitação de parceria — Pet Aumigo",
+    subject: "Atualização sobre sua solicitação de parceria — SOS Pet Aumigo",
     html,
     text: `Olá ${opts.nome}, sua solicitação de parceria não foi aprovada. Responda este email para mais informações.`,
   });

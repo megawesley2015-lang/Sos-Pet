@@ -10,7 +10,7 @@
 ```
 [IMAGEM: foto do pet reunido com o tutor — rosto do tutor visível,
 pet no colo ou ao lado. Sobreposição sutil no canto inferior direito:
-logo Pet Aumigo + logo Molecão Santos, separados por um traço vertical
+logo SOS Pet Aumigo + logo Molecão Santos, separados por um traço vertical
 fino em laranja âmbar. Fundo da sobreposição: preto com 60% opacidade.]
 
 LEGENDA:
@@ -25,7 +25,7 @@ comemora junto.
 
 Essa história também tem o @molecaosantos no meio. Foi lá que
 Rafael chegou desesperado pedindo ajuda. O atendente mostrou o
-Pet Aumigo, ele cadastrou o Bolinha em 3 minutos — e a rede começou
+SOS Pet Aumigo, ele cadastrou o Bolinha em 3 minutos — e a rede começou
 a trabalhar.
 
 Se o seu pet sumir, você sabe onde ir.
@@ -58,14 +58,14 @@ por não deixar o Rafael sair sem ajuda.
 ## 3. Mensagem de WhatsApp enviada ao pet shop quando o reencontro acontece
 
 ```
-Oi [nome do responsável]! Aqui é o Pet Aumigo.
+Oi [nome do responsável]! Aqui é o SOS Pet Aumigo.
 
 O Bolinha foi encontrado — aquele que o Rafael cadastrou na loja
 semana passada.
 
 Vamos fazer um post de reencontro no Instagram hoje e queremos
 marcar o Molecão. Tudo bem pra vocês? O post vai falar sobre como
-o Rafael chegou na loja e vocês mostraram o Pet Aumigo pra ele.
+o Rafael chegou na loja e vocês mostraram o SOS Pet Aumigo pra ele.
 
 Se preferir não aparecer, é só falar. 🧡
 ```

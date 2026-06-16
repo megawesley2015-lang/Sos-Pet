@@ -149,7 +149,7 @@ For each major user flow:
 
 ---
 
-## Pet Aumigo Specific Boundaries to Check
+## SOS Pet Aumigo Specific Boundaries to Check
 
 ```
 pets_public view ↔ PetCard component props

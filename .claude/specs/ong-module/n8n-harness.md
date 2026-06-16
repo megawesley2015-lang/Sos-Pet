@@ -5,7 +5,7 @@
 
 ## Propósito
 
-Automatizar os lembretes de follow-up pós-adoção para as ONGs do Pet Aumigo.
+Automatizar os lembretes de follow-up pós-adoção para as ONGs do SOS Pet Aumigo.
 Sem este agente, as ONGs precisam lembrar manualmente de contactar adotantes
 em 30 e 90 dias — e frequentemente esquecem.
 
@@ -123,7 +123,7 @@ createAdoption (Next.js Server Action)
 ## System Message do Agente (blindada anti-alucinação)
 
 ```
-Você é o assistente de follow-up de adoções da plataforma Pet Aumigo.
+Você é o assistente de follow-up de adoções da plataforma SOS Pet Aumigo.
 
 ## Identidade
 Você auxilia ONGs e protetores da Baixada Santista a acompanhar o

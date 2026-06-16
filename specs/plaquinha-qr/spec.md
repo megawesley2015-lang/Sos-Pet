@@ -10,7 +10,7 @@
 
 ## Contexto de Negócio
 
-A plaquinha de identificação é o produto físico central do Pet Aumigo: uma tag para coleira
+A plaquinha de identificação é o produto físico central do SOS Pet Aumigo: uma tag para coleira
 com QR Code que, quando escaneada, leva a uma página com nome do pet, foto e contato
 do tutor. Se o pet se perder, qualquer pessoa pode escanear e entrar em contato. A rota
 `/plaquinha` já existe e a lib `html-to-image` está instalada. O fluxo deve gerar o design

@@ -17,7 +17,7 @@
 
 > Disparar imediatamente após o lojista confirmar que acontece com frequência.
 
-"A gente criou o Pet Aumigo justamente pra isso. É uma plataforma de pets perdidos focada em Santos e na Baixada Santista — quando o tutor cadastra o pet, a rede inteira de voluntários e parceiros da cidade recebe o alerta. A proposta pra vocês é simples: quando chegar um tutor desesperado aqui, você indica a plataforma. Em troca, o nome da [pet shop] aparece em todo post de reencontro que a gente publica. Zero custo, zero trabalho."
+"A gente criou o SOS Pet Aumigo justamente pra isso. É uma plataforma de pets perdidos focada em Santos e na Baixada Santista — quando o tutor cadastra o pet, a rede inteira de voluntários e parceiros da cidade recebe o alerta. A proposta pra vocês é simples: quando chegar um tutor desesperado aqui, você indica a plataforma. Em troca, o nome da [pet shop] aparece em todo post de reencontro que a gente publica. Zero custo, zero trabalho."
 
 ---
 
@@ -31,7 +31,7 @@
 
 Passei na loja semana passada mas não consegui falar com o responsável. Deixa eu ser direto no que vim propor.
 
-A gente está construindo o Pet Aumigo — plataforma de pets perdidos para Santos e região. Já temos tutores cadastrando pets todo dia na cidade.
+A gente está construindo o SOS Pet Aumigo — plataforma de pets perdidos para Santos e região. Já temos tutores cadastrando pets todo dia na cidade.
 
 Temos um parceiro de loja que sempre que um tutor chega desesperado dizendo "meu cachorro sumiu", a equipe indica a plataforma. O tutor sai com uma ferramenta real nas mãos. A loja fica como parceira em todo conteúdo de reencontro que publicamos.
 
@@ -51,7 +51,7 @@ Nesses posts, o nome dos parceiros que ajudaram aparece junto. Não como anúnci
 
 Para uma loja com [X mil] seguidores como vocês, isso vale mais do que impulsionamento pago — porque a audiência que vê é exatamente quem tem pet na cidade.
 
-A única coisa que pedimos: quando um tutor chegar sem saber o que fazer, indica o Pet Aumigo. Leva menos de um minuto.
+A única coisa que pedimos: quando um tutor chegar sem saber o que fazer, indica o SOS Pet Aumigo. Leva menos de um minuto.
 
 Posso mandar o modelo de post de reencontro pra você ver como fica?
 
@@ -63,7 +63,7 @@ Posso mandar o modelo de post de reencontro pra você ver como fica?
 
 Sei que a semana de loja é corrida e que proposta nova sempre parece mais trabalho. Por isso quero ser claro: a parceria inteira exige cinco minutos da sua equipe.
 
-Cinco minutos para cadastrar o perfil da loja na plataforma. Depois disso, quando aparecer um tutor pedindo ajuda, a atendente só precisa dizer: "Baixa o Pet Aumigo, você cadastra em três minutos."
+Cinco minutos para cadastrar o perfil da loja na plataforma. Depois disso, quando aparecer um tutor pedindo ajuda, a atendente só precisa dizer: "Baixa o SOS Pet Aumigo, você cadastra em três minutos."
 
 Nenhum treinamento. Nenhum relatório. Nenhuma mensalidade.
 
@@ -79,7 +79,7 @@ Posso passar pessoalmente em [dia] pela manhã para mostrar ao vivo em cinco min
 
 **ABERTURA (20 segundos)**
 
-"[Nome], tudo bem? Sou o Wesley, do Pet Aumigo. Mandei algumas mensagens no WhatsApp sobre uma parceria para a [pet shop] e queria conversar dois minutos — pode ser agora?"
+"[Nome], tudo bem? Sou o Wesley, do SOS Pet Aumigo. Mandei algumas mensagens no WhatsApp sobre uma parceria para a [pet shop] e queria conversar dois minutos — pode ser agora?"
 
 > Pausa. Se sim, continua. Se não, perguntar: "Qual o melhor momento dessa semana?"
 
@@ -145,5 +145,5 @@ Posso passar pessoalmente em [dia] pela manhã para mostrar ao vivo em cinco min
 
 ---
 
-*Copy — Pet Aumigo | Campanha: Parceiros Santos Jun/26*
+*Copy — SOS Pet Aumigo | Campanha: Parceiros Santos Jun/26*
 *Ângulos 1 + 3 | Produzido em: 2026-06-13*

@@ -108,7 +108,7 @@ All three communicate directly about shared concerns
 
 **Key insight:** Team mode is essential when reviewers should challenge each other's findings. A security issue might be performance-critical; a performance fix might introduce security risk. Cross-domain discussion catches these interactions.
 
-**Relevant for Pet Aumigo:**
+**Relevant for SOS Pet Aumigo:**
 - Security agent: RLS policies, API auth, LGPD compliance
 - Performance agent: Supabase query indexes, pagination, caching
 - Testing agent: coverage gaps, missing edge cases
@@ -147,12 +147,12 @@ while True:
 
 ---
 
-## Pet Aumigo — Recommended Agent Team
+## SOS Pet Aumigo — Recommended Agent Team
 
 Based on the project's planned agents (CLAUDE.md section "Agentes planejados"):
 
 ```
-[Pet Aumigo Orchestrator]
+[SOS Pet Aumigo Orchestrator]
   ├── [Notification Agent]    — WhatsApp alerts on new pets
   │     Pattern: Pipeline (INSERT → find volunteers → send)
   │
@@ -166,7 +166,7 @@ Based on the project's planned agents (CLAUDE.md section "Agentes planejados"):
         Pattern: Pipeline (resolved → generate → return link)
 ```
 
-**Execution mode for Pet Aumigo:** Hybrid
+**Execution mode for SOS Pet Aumigo:** Hybrid
 - Notification + Matching: Sub-agents (independent, triggered by different events)
 - Moderation: Sub-agent (single decision per post)
 - Content: Sub-agent (simple pipeline)

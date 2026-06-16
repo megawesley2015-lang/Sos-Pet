@@ -49,9 +49,9 @@ describe("whatsappLink", () => {
   });
 
   it("codifica mensagem na URL", () => {
-    const link = whatsappLink("13999999999", "Vi seu pet no Pet Aumigo!");
+    const link = whatsappLink("13999999999", "Vi seu pet no SOS Pet Aumigo!");
     expect(link).toContain("?text=");
-    expect(link).toContain(encodeURIComponent("Vi seu pet no Pet Aumigo!"));
+    expect(link).toContain(encodeURIComponent("Vi seu pet no SOS Pet Aumigo!"));
   });
 
   it("gera link sem texto se mensagem não for passada", () => {

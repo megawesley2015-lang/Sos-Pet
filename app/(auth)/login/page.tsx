@@ -6,7 +6,7 @@ import { LoginForm } from "./LoginForm";
 
 export const metadata: Metadata = {
   title: "Entrar",
-  description: "Acesse sua conta Pet Aumigo para gerenciar seus registros de pets perdidos e encontrados.",
+  description: "Acesse sua conta SOS Pet Aumigo para gerenciar seus registros de pets perdidos e encontrados.",
 };
 
 /**

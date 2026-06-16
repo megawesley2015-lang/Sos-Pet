@@ -22,7 +22,7 @@ export function WhatsappButton({
   prestadorNome,
 }: WhatsappButtonProps) {
   const [, startTransition] = useTransition();
-  const message = `Olá! Encontrei vocês pelo Pet Aumigo (${prestadorNome}) e gostaria de mais informações.`;
+  const message = `Olá! Encontrei vocês pelo SOS Pet Aumigo (${prestadorNome}) e gostaria de mais informações.`;
   const href = whatsappLink(phone, message);
 
   return (

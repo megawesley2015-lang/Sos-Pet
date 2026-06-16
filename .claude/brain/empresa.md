@@ -1,8 +1,8 @@
-﻿# Pet Aumigo — Cérebro da Empresa
+﻿# SOS Pet Aumigo — Cérebro da Empresa
 
 ## Identidade
 
-**Produto:** Pet Aumigo  
+**Produto:** SOS Pet Aumigo  
 **Missão:** Reunir pets perdidos com seus tutores na Baixada Santista, com velocidade e tecnologia.  
 **Região:** Santos, Guarujá, São Vicente, Cubatão, Bertioga, Praia Grande, Mongaguá, Itanhaém, Peruíbe.  
 **Modelo:** Gratuito para tutores + monetização B2B/Premium (prestadores, loja, plaquinhas).

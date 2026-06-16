@@ -77,7 +77,7 @@ export function SchedulingModal({
       const horarioFormatado = formData.horario || "a combinar";
 
       const texto =
-        `Olá ${prestadorNome}! Vim pelo Pet Aumigo e gostaria de agendar um horário. 🐾\n\n` +
+        `Olá ${prestadorNome}! Vim pelo SOS Pet Aumigo e gostaria de agendar um horário. 🐾\n\n` +
         `*Nome:* ${formData.nome}\n` +
         `*Pet:* ${formData.petNome}\n` +
         `*Serviço:* ${servicoFinal}\n` +

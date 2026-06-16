@@ -34,7 +34,7 @@ interface PetArticleLd {
   isAccessibleForFree: true;
   publisher: {
     "@type": "Organization";
-    name: "Pet Aumigo";
+    name: "SOS Pet Aumigo";
     url: string;
   };
   mainEntity: {
@@ -89,7 +89,7 @@ export function petArticleJsonLd(pet: PetRow, baseUrl: string): PetArticleLd {
     headline,
     description:
       pet.description?.trim() ||
-      `${isLost ? "Procura-se" : "Encontrado"} ${nome} em ${localCurto}. Veja detalhes e ajude na rede Pet Aumigo.`,
+      `${isLost ? "Procura-se" : "Encontrado"} ${nome} em ${localCurto}. Veja detalhes e ajude na rede SOS Pet Aumigo.`,
     datePublished: pet.created_at,
     dateModified: pet.updated_at ?? pet.created_at,
     image: pet.photo_url ? [pet.photo_url] : undefined,
@@ -98,7 +98,7 @@ export function petArticleJsonLd(pet: PetRow, baseUrl: string): PetArticleLd {
     isAccessibleForFree: true,
     publisher: {
       "@type": "Organization",
-      name: "Pet Aumigo",
+      name: "SOS Pet Aumigo",
       url: baseUrl,
     },
     mainEntity: {

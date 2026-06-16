@@ -51,7 +51,7 @@ const ACTIONS = [
   //   id: "whatsapp",
   //   label: "Suporte",
   //   Icon: MessageCircle,
-  //   href: "https://wa.me/55XXXXXXXXXXX?text=Olá! Preciso de ajuda no Pet Aumigo",
+  //   href: "https://wa.me/55XXXXXXXXXXX?text=Olá! Preciso de ajuda no SOS Pet Aumigo",
   //   cls: "bg-green-500 hover:bg-green-600",
   //   external: true,
   // },

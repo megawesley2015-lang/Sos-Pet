@@ -32,7 +32,7 @@ export async function sendEmail(params: SendEmailParams): Promise<void> {
     return
   }
 
-  const from = process.env.RESEND_FROM ?? 'Pet Aumigo <noreply@aumigo.com.br>'
+  const from = process.env.RESEND_FROM ?? 'SOS Pet Aumigo <noreply@aumigo.com.br>'
   const toHash = hashEmail(params.to)
   const supabase = createServiceClient()
 

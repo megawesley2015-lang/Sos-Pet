@@ -1,4 +1,4 @@
-﻿# Specs Registry — Pet Aumigo
+﻿# Specs Registry — SOS Pet Aumigo
 # Highermind entry point: /sos-pet-orchestrator-v2 spec=specs/<module>/tasks.md
 # ─────────────────────────────────────────────────────────────────────────────
 

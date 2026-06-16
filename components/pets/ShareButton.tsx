@@ -12,8 +12,8 @@ export function ShareButton({ petName }: ShareButtonProps) {
       onClick={() => {
         if (navigator.share) {
           navigator.share({
-            title: `${petName} — Pet Aumigo`,
-            text:  `Ajude a encontrar ${petName}! Veja o alerta no Pet Aumigo.`,
+            title: `${petName} — SOS Pet Aumigo`,
+            text:  `Ajude a encontrar ${petName}! Veja o alerta no SOS Pet Aumigo.`,
             url:   window.location.href,
           })
         } else {

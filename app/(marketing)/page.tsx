@@ -441,7 +441,7 @@ function Trust() {
       <div className="mx-auto max-w-6xl px-4">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="font-display text-3xl font-black text-fg sm:text-4xl">
-            Por que confiar no Pet Aumigo?
+            Por que confiar no SOS Pet Aumigo?
           </h2>
           <p className="mt-3 text-fg-muted">
             Construído por quem vive a dor de perder um pet — e a alegria de

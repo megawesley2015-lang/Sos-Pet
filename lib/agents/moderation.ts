@@ -1,7 +1,7 @@
 ﻿import { callClaude, extractJson } from './claude'
 import type { PetInputForAgents, ModeracaoResult } from './types'
 
-const SYSTEM = `Você é o Agente de Moderação do Pet Aumigo.
+const SYSTEM = `Você é o Agente de Moderação do SOS Pet Aumigo.
 
 Avalie se o cadastro de pet parece legítimo ou suspeito.
 

@@ -14,7 +14,11 @@ import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 type RouteContext = { params: Promise<{ id: string }> }
 
 // 20 req/min por IP — impede scraping em massa de contatos
-const GET_DETAIL_LIMIT = { limit: 20, windowMs: 60_000 }
+const GET_DETAIL_LIMIT    = { limit: 20, windowMs: 60_000 }
+// 20 req/min por IP — edição de pets
+const PATCH_DETAIL_LIMIT  = { limit: 20, windowMs: 60_000 }
+// 10 req/min por IP — deleção de pets
+const DELETE_DETAIL_LIMIT = { limit: 10, windowMs: 60_000 }
 
 // ── GET /api/pets/[id] ────────────────────────────────────────────────────────
 // Único endpoint que expõe dados de contato
@@ -51,6 +55,14 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
 // ── PATCH /api/pets/[id] ──────────────────────────────────────────────────────
 // Edição — apenas o dono autenticado
 export async function PATCH(req: NextRequest, { params }: RouteContext) {
+  const rl = await checkRateLimit(`pets-patch:${getClientIp(req)}`, PATCH_DETAIL_LIMIT)
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { success: false, error: 'Muitas requisições. Tente novamente em alguns instantes.', code: 'RATE_LIMITED' },
+      { status: 429, headers: { 'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } }
+    )
+  }
+
   try {
     const { id } = await params
     const supabase = await createClient()
@@ -102,7 +114,15 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
 
 // ── DELETE /api/pets/[id] ─────────────────────────────────────────────────────
 // Soft delete via status='resolved' — histórico preservado
-export async function DELETE(_req: NextRequest, { params }: RouteContext) {
+export async function DELETE(req: NextRequest, { params }: RouteContext) {
+  const rl = await checkRateLimit(`pets-delete:${getClientIp(req)}`, DELETE_DETAIL_LIMIT)
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { success: false, error: 'Muitas requisições. Tente novamente em alguns instantes.', code: 'RATE_LIMITED' },
+      { status: 429, headers: { 'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } }
+    )
+  }
+
   try {
     const { id } = await params
     const supabase = await createClient()

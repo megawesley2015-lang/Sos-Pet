@@ -73,7 +73,7 @@ export function RescueLauncher({ pet, appUrl }: RescueLauncherProps) {
       await shareAlertImage({
         blob,
         filename: `sos-${pet.name ?? pet.id}.png`,
-        title: `Pet Aumigo — ${pet.name ?? "pet desaparecido"}`,
+        title: `SOS Pet Aumigo — ${pet.name ?? "pet desaparecido"}`,
         text: `Procura-se: ${pet.name ?? `${pet.species}`} desaparecido em ${pet.neighborhood}, ${pet.city}. Ajude a compartilhar!`,
       });
     } catch (err) {
@@ -89,7 +89,7 @@ export function RescueLauncher({ pet, appUrl }: RescueLauncherProps) {
     await shareAlertImage({
       blob: state.blob,
       filename: `sos-${pet.name ?? pet.id}.png`,
-      title: `Pet Aumigo — ${pet.name ?? "pet desaparecido"}`,
+      title: `SOS Pet Aumigo — ${pet.name ?? "pet desaparecido"}`,
       text: `Procura-se: ${pet.name ?? `${pet.species}`} desaparecido em ${pet.neighborhood}, ${pet.city}. Ajude a compartilhar!`,
     });
   }

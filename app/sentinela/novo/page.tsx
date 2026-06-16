@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Cadastrar na Rede Sentinela",
   description:
-    "Seja um ponto de apoio na Rede Sentinela do Pet Aumigo. Registre seu estabelecimento e ajude a localizar pets perdidos na sua região.",
+    "Seja um ponto de apoio na Rede Sentinela do SOS Pet Aumigo. Registre seu estabelecimento e ajude a localizar pets perdidos na sua região.",
 };
 
 const BENEFICIOS = [

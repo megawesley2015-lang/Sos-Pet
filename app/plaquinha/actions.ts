@@ -137,7 +137,7 @@ export async function iniciarCheckoutPlaquinha(formData: FormData) {
     items: [
       {
         id: "plaquinha-standard",
-        title: `Plaquinha Pet Aumigo${petName ? ` — ${petName}` : ""}`,
+        title: `Plaquinha SOS Pet Aumigo${petName ? ` — ${petName}` : ""}`,
         quantity: 1,
         unit_price: TAG_PRICE_BRL,
         ...(photoUrl ? { picture_url: photoUrl } : {}),

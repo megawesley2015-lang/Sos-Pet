@@ -23,17 +23,17 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     .eq('id', id)
     .single()
 
-  if (!data) return { title: 'Pet não encontrado — Pet Aumigo' }
+  if (!data) return { title: 'Pet não encontrado — SOS Pet Aumigo' }
 
   const kind    = data.kind === 'lost' ? 'Perdido' : 'Encontrado'
   const species = SPECIES_LABEL[data.species] ?? 'Pet'
   const name    = data.name ?? species
 
   return {
-    title:       `${kind}: ${name} em ${data.city} — Pet Aumigo`,
+    title:       `${kind}: ${name} em ${data.city} — SOS Pet Aumigo`,
     description: `${kind}: ${name} (${species}) em ${data.city}. Ajude a encontrar!`,
     openGraph:   {
-      title:  `${kind}: ${name} — Pet Aumigo`,
+      title:  `${kind}: ${name} — SOS Pet Aumigo`,
       images: data.photo_url ? [data.photo_url] : [],
     },
   }
@@ -68,7 +68,7 @@ export default async function PetDetailPage({ params, searchParams }: PageParams
 
   const whatsappLink = pet.contact_whatsapp && pet.contact_phone
     ? `https://wa.me/55${pet.contact_phone.replace(/\D/g, '')}?text=${encodeURIComponent(
-        `Olá! Vi o alerta do Pet Aumigo sobre ${isLost ? 'o pet perdido' : 'o pet encontrado'} "${displayName}" e tenho informações!`
+        `Olá! Vi o alerta do SOS Pet Aumigo sobre ${isLost ? 'o pet perdido' : 'o pet encontrado'} "${displayName}" e tenho informações!`
       )}`
     : null
 

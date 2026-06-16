@@ -91,7 +91,7 @@ export default async function AdminPage() {
       <div>
         <h1 className="font-display text-2xl font-bold text-fg">Visão geral</h1>
         <p className="mt-1 text-sm text-fg-muted">
-          Métricas em tempo real do Pet Aumigo.
+          Métricas em tempo real do SOS Pet Aumigo.
         </p>
       </div>
 

@@ -70,7 +70,7 @@ function CardParceiro({ parceiro }: { parceiro: Parceiro }) {
             bg-white px-1.5 py-0.5
             text-[10px] font-bold uppercase tracking-wider text-teal-700
           "
-          title="Parceiro verificado pelo Pet Aumigo"
+          title="Parceiro verificado pelo SOS Pet Aumigo"
         >
           <CheckCircle size={10} className="text-[rgb(var(--color-accent))]" aria-hidden="true" />
           Verificado
@@ -151,11 +151,11 @@ export default function FaixaParceiros({ parceiros }: FaixaParceirosProps) {
 
           <h2 id="parceiros-heading" className="text-2xl font-black text-[rgb(var(--color-fg))] md:text-3xl">
             Estabelecimentos que{' '}
-            <span className="text-[rgb(var(--color-primary))]">confiam no Pet Aumigo.</span>
+            <span className="text-[rgb(var(--color-primary))]">confiam no SOS Pet Aumigo.</span>
           </h2>
 
           <p className="text-sm text-[rgb(var(--color-fg-muted))] max-w-md leading-relaxed">
-            Clínicas e pet shops que indicam o Pet Aumigo para seus clientes e ajudam
+            Clínicas e pet shops que indicam o SOS Pet Aumigo para seus clientes e ajudam
             a ampliar a rede de resgate na Baixada Santista.
           </p>
 

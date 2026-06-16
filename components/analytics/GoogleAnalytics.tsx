@@ -63,7 +63,7 @@ function trackEvent({ action, category, label, value }: GTagEvent) {
   });
 }
 
-// ─── Eventos pré-definidos para o Pet Aumigo ────────────────────
+// ─── Eventos pré-definidos para o SOS Pet Aumigo ────────────────────
 
 export const analytics = {
   // Pets

@@ -38,7 +38,7 @@ export async function shareAlertImage({
     try {
       await navigator.share({
         files: [file],
-        title: title ?? "Pet Aumigo",
+        title: title ?? "SOS Pet Aumigo",
         text: text ?? "Ajude a encontrar este pet!",
       });
       return { method: "share", ok: true };

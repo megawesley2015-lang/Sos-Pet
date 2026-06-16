@@ -73,7 +73,7 @@ export default async function LojaPage({
             <ShoppingBag className="h-8 w-8 text-brand-400" />
           </div>
           <h1 className="font-display text-4xl font-black text-fg">
-            Loja <span className="text-brand-500">Pet Aumigo</span>
+            Loja <span className="text-brand-500">SOS Pet Aumigo</span>
           </h1>
           <p className="mt-3 text-base text-fg-muted">
             Produtos curados para{" "}
@@ -252,7 +252,7 @@ function ProductCard({
       {/* Info */}
       <div className="flex flex-1 flex-col p-4">
         <p className="mb-1 text-[10px] uppercase tracking-wider text-fg-subtle">
-          {product.supplier_name ?? "Pet Aumigo"}
+          {product.supplier_name ?? "SOS Pet Aumigo"}
         </p>
         <p className="line-clamp-2 text-sm font-medium leading-snug text-fg">
           {product.name}

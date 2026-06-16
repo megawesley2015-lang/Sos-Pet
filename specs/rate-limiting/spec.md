@@ -11,7 +11,7 @@
 
 ## Contexto de Negócio
 
-O Pet Aumigo é uma plataforma pública com endpoints que retornam dados sensíveis
+O SOS Pet Aumigo é uma plataforma pública com endpoints que retornam dados sensíveis
 (contatos de tutores, histórico veterinário) e operações custosas (GDPR export,
 sync com Printful). Sem rate limiting distribuído, qualquer instância serverless
 na Vercel opera com estado isolado — um atacante pode scraping ilimitado de

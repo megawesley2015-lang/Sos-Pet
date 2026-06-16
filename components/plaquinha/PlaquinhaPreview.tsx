@@ -94,7 +94,7 @@ export const PlaquinhaPreview = forwardRef<HTMLDivElement, Props>(
         </div>
 
         <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 10, margin: 0, textAlign: 'center' }}>
-          Pet Aumigo
+          SOS Pet Aumigo
         </p>
       </div>
     )

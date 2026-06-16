@@ -157,7 +157,7 @@ export default function NovoProdutoForm({ onClose }: { onClose: () => void }) {
             <div className="flex gap-3">
               {[
                 { value: "external", label: "Link externo", desc: "Redireciona ao site do fornecedor" },
-                { value: "internal", label: "Checkout interno", desc: "Pagamento via Mercado Pago no Pet Aumigo" },
+                { value: "internal", label: "Checkout interno", desc: "Pagamento via Mercado Pago no SOS Pet Aumigo" },
               ].map((opt) => (
                 <label
                   key={opt.value}

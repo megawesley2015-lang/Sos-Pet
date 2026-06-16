@@ -5,7 +5,7 @@ Data: 2026-06-13
 
 Santos tem um ecossistema pet denso e distribuído geograficamente: são mais de 36 estabelecimentos verificados espalhados por 20 bairros, dominados por dois grupos — o Empório Animal (5 unidades próprias, 18 anos de mercado, ~6,5k seguidores no Instagram) e o Petland (8 franquias na cidade, cada uma com Instagram próprio, entre 4,3k e 7,5k seguidores). Além deles, há independentes com forte presença local — Molecão (desde 1993, 14k seguidores, múltiplas contas Instagram), Dog Love (10k seguidores, diferenciado em estética pet low-stress), República dos Bichos (duas unidades, Gonzaga e Marapé) e Planeta Animal (referência em aquarismo). Nenhum deles tem parceria ativa com plataforma de pets perdidos. O benchmark nacional (Viu Meu Pet + Pague Menos, 4Pets.app) confirma que o modelo de parceria B2B gratuito com diretório funciona quando a proposta de valor é clara: visibilidade no momento de crise do tutor.
 
-O comportamento dos tutores de Santos ao perder um pet é previsível e bem documentado: o movimento começa no WhatsApp de vizinhança, vai para o grupo "Bicho Perdido Bicho Achado Procure Aqui" no Facebook (69k curtidas, comunidade ativa) e no Instagram do mesmo (conta @bichoperdidobichoachado), depois vêm os cartazes físicos no bairro. A emoção predominante é desespero com urgência imediata — as postagens usam CAIXA ALTA, múltiplos pontos de exclamação e a frase-gatilho "faz parte da família". O tutor em desespero está receptivo a qualquer serviço que apareça no caminho da solução — e é exatamente nesse momento que o Pet Aumigo pode posicionar o pet shop parceiro.
+O comportamento dos tutores de Santos ao perder um pet é previsível e bem documentado: o movimento começa no WhatsApp de vizinhança, vai para o grupo "Bicho Perdido Bicho Achado Procure Aqui" no Facebook (69k curtidas, comunidade ativa) e no Instagram do mesmo (conta @bichoperdidobichoachado), depois vêm os cartazes físicos no bairro. A emoção predominante é desespero com urgência imediata — as postagens usam CAIXA ALTA, múltiplos pontos de exclamação e a frase-gatilho "faz parte da família". O tutor em desespero está receptivo a qualquer serviço que apareça no caminho da solução — e é exatamente nesse momento que o SOS Pet Aumigo pode posicionar o pet shop parceiro.
 
 O ângulo mais forte para abordagem não é "cadastre seu negócio" (commodity) mas sim "seus clientes perdem pets toda semana — você já sabe disso porque eles chegam aqui pedindo ajuda. Agora você tem o que dar para eles." Isso transforma o pet shop de receptor passivo em herói da situação. O segundo ângulo mais sólido é causa social com retorno de marca: nos casos estudados (Pague Menos + Viu Meu Pet, Cobasi Adote Petz), o pet shop que se associa a causa animal ganha diferenciação genuína e engajamento orgânico nas redes. O terceiro ângulo é puro ROI: visibilidade gratuita no diretório de uma plataforma com foco regional exclusivo na Baixada Santista, sem concorrente equivalente na região.
 
@@ -92,7 +92,7 @@ Com base na análise do grupo "Bicho Perdido Bicho Achado Procure Aqui" (Faceboo
 
 **1. "Seu cliente já chega pedindo ajuda — agora você tem a resposta"**
 
-Enquadramento: Pet shops em Santos recebem tutores desesperados toda semana perguntando "você viu um cachorro preto passando aqui?". Hoje o pet shop não tem nada para dar além de simpatia. Com o Pet Aumigo, o atendente pode dizer: "Cadastra aqui, a gente vai alertar todo mundo num raio de 5km" — e virar herói.
+Enquadramento: Pet shops em Santos recebem tutores desesperados toda semana perguntando "você viu um cachorro preto passando aqui?". Hoje o pet shop não tem nada para dar além de simpatia. Com o SOS Pet Aumigo, o atendente pode dizer: "Cadastra aqui, a gente vai alertar todo mundo num raio de 5km" — e virar herói.
 
 Por que funciona: Resolve uma dor que o pet shop já conhece sem precisar criar nova. O custo para o pet shop é zero. O ganho de fidelização do tutor (que vai lembrar que foi esse pet shop que ajudou) é alto. Funciona especialmente com independentes (Molecão, Empório Animal, Dog Love) onde o atendente tem autonomia e relação pessoal com os clientes.
 
@@ -102,17 +102,17 @@ Abordagem: Iniciar com a pergunta "Quantas vezes por mês alguém chega aqui per
 
 **2. "Visibilidade gratuita no momento em que tutores mais precisam de serviço"**
 
-Enquadramento: Quando um tutor perde um pet, ele entra em modo de crise. Em crise, ele precisa de serviços que normalmente nem busca: microchip, plaquinha de identificação, foto profissional do pet, consulta veterinária para checar o pet encontrado. O Pet Aumigo coloca o pet shop parceiro exatamente nesse momento — não como anúncio, mas como solução dentro do fluxo.
+Enquadramento: Quando um tutor perde um pet, ele entra em modo de crise. Em crise, ele precisa de serviços que normalmente nem busca: microchip, plaquinha de identificação, foto profissional do pet, consulta veterinária para checar o pet encontrado. O SOS Pet Aumigo coloca o pet shop parceiro exatamente nesse momento — não como anúncio, mas como solução dentro do fluxo.
 
-Por que funciona: A proposta é gratuita e sem compromisso de exclusividade. Benchmarks nacionais confirmam o modelo: Pague Menos virou ponto de ativação da Viu Meu Pet via QR Code sem custo adicional para a farmácia. 4Pets.app recruta pet shops como patrocinadores justamente por visibilidade no banco de dados de tutores. Para o dono do pet shop, "aparecer no Pet Aumigo" é mais tangível do que "fazer social media".
+Por que funciona: A proposta é gratuita e sem compromisso de exclusividade. Benchmarks nacionais confirmam o modelo: Pague Menos virou ponto de ativação da Viu Meu Pet via QR Code sem custo adicional para a farmácia. 4Pets.app recruta pet shops como patrocinadores justamente por visibilidade no banco de dados de tutores. Para o dono do pet shop, "aparecer no SOS Pet Aumigo" é mais tangível do que "fazer social media".
 
-Abordagem: Mostrar mock do perfil do pet shop no diretório Pet Aumigo. Concretizar o benefício visualmente antes da conversa de parceria.
+Abordagem: Mostrar mock do perfil do pet shop no diretório SOS Pet Aumigo. Concretizar o benefício visualmente antes da conversa de parceria.
 
 ---
 
 **3. "Causa animal com retorno real de marca"**
 
-Enquadramento: Pet shops que se associam a causa animal ganham diferenciação genuína e engajamento orgânico nas redes sociais — sem pagar por isso. O modelo é validado: Cobasi Cuida e Adote Petz geraram mais de 132k adoções e posicionaram a rede como referência em bem-estar animal. A Viu Meu Pet virou notícia nacional ao fechar com a Pague Menos. Na escala de Santos, o Pet Aumigo pode ser o equivalente regional — e o pet shop parceiro entra no story de sucesso.
+Enquadramento: Pet shops que se associam a causa animal ganham diferenciação genuína e engajamento orgânico nas redes sociais — sem pagar por isso. O modelo é validado: Cobasi Cuida e Adote Petz geraram mais de 132k adoções e posicionaram a rede como referência em bem-estar animal. A Viu Meu Pet virou notícia nacional ao fechar com a Pague Menos. Na escala de Santos, o SOS Pet Aumigo pode ser o equivalente regional — e o pet shop parceiro entra no story de sucesso.
 
 Por que funciona: Atinge especialmente redes com Instagram ativo e proprietários com identidade de marca em construção (Dog Love, Empório Animal, Petland franqueados independentes). Posts de reencontro de pet têm engajamento 3-5x maior que posts de promoção — e o pet shop parceiro aparece como facilitador. Funciona para convencer franqueados que têm autonomia local mas carência de conteúdo diferenciado.
 
@@ -126,10 +126,10 @@ Abordagem: Propor co-criação de conteúdo: "quando um pet for encontrado graç
 |---|---|---|---|---|
 | Viu Meu Pet | Pague Menos (2ª maior farmácia do Brasil) | QR Code nas lojas → acesso gratuito à plataforma | Distribuição física massiva + PR nacional. 7k reencontros validados | Oferecer QR Code para o pet shop colocar no balcão ou WhatsApp status |
 | 4Pets.app | Clínicas e pet shops (modelo de licença) | Pet shop vira "patrocinador" da medalha de identificação | Visibilidade no banco de dados + associação a inovação | Oferecer primeiro gratuito, cobrar no premium depois |
-| Petland + ONGs locais de Santos | ONGs de adoção | Eventos de adoção realizados nas lojas | Geração de tráfego + conteúdo de causa animal | Propor que o Pet Aumigo seja mencionado nesses eventos de adoção |
+| Petland + ONGs locais de Santos | ONGs de adoção | Eventos de adoção realizados nas lojas | Geração de tráfego + conteúdo de causa animal | Propor que o SOS Pet Aumigo seja mencionado nesses eventos de adoção |
 | Cobasi Cuida / Adote Petz | 320+ ONGs no Brasil | Visibilidade mútua, drive de adoções | Escala + reputação de bem-estar animal | Usar como argumento de que "redes grandes já validaram esse modelo" |
 
-**Gap claro:** Nenhuma plataforma regional com foco na Baixada Santista fez isso. O Pet Aumigo é o primeiro a poder oferecer ao pet shop de Santos um diretório hiperlocal — não nacional genérico.
+**Gap claro:** Nenhuma plataforma regional com foco na Baixada Santista fez isso. O SOS Pet Aumigo é o primeiro a poder oferecer ao pet shop de Santos um diretório hiperlocal — não nacional genérico.
 
 ---
 
@@ -139,7 +139,7 @@ Abordagem: Propor co-criação de conteúdo: "quando um pet for encontrado graç
 2. **Nenhuma plataforma regional de pets perdidos tem diretório de prestadores integrado** — AlertPet e Viu Meu Pet são nacionais sem foco na Baixada
 3. **Os grupos locais de Facebook/Instagram (Bicho Perdido Bicho Achado, 69k curtidas) não têm parceiro pet shop** — o grupo ativo não direciona tutores para serviços locais; essa ponte não existe
 4. **Franqueados do Petland têm Instagram próprio mas sem conteúdo de causa** — são receptivos a conteúdo pronto e co-branded porque têm estrutura mas pouco diferencial editorial
-5. **O momento do tutor em crise (visita ao pet shop pedindo ajuda) não é capitalizado por nenhum serviço** — o atendente não tem ferramenta para ajudar; o Pet Aumigo preenche esse gap no balcão
+5. **O momento do tutor em crise (visita ao pet shop pedindo ajuda) não é capitalizado por nenhum serviço** — o atendente não tem ferramenta para ajudar; o SOS Pet Aumigo preenche esse gap no balcão
 
 ---
 

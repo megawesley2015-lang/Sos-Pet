@@ -1,4 +1,4 @@
-﻿// lib/errors.ts — fonte única da verdade para todos os erros do Pet Aumigo
+﻿// lib/errors.ts — fonte única da verdade para todos os erros do SOS Pet Aumigo
 
 export class AppError extends Error {
   constructor(

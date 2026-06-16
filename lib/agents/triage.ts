@@ -1,7 +1,7 @@
 ﻿import { callClaude, extractJson } from './claude'
 import type { PetInputForAgents, TriagemResult } from './types'
 
-const SYSTEM = `Você é o Agente de Triagem do Pet Aumigo, plataforma de localização de pets perdidos na Baixada Santista (Santos, Guarujá, São Vicente e região).
+const SYSTEM = `Você é o Agente de Triagem do SOS Pet Aumigo, plataforma de localização de pets perdidos na Baixada Santista (Santos, Guarujá, São Vicente e região).
 
 Sua função é analisar dados de um pet cadastrado e retornar JSON estruturado com:
 1. Tags para busca rápida

@@ -10,7 +10,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Cadastrar Prestador",
-  description: "Cadastre sua clínica veterinária, pet shop ou serviço de cuidados na rede Pet Aumigo.",
+  description: "Cadastre sua clínica veterinária, pet shop ou serviço de cuidados na rede SOS Pet Aumigo.",
 };
 
 export default async function NovoPrestadorPage() {

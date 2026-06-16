@@ -1,4 +1,4 @@
-﻿# Métricas e Metas — Pet Aumigo
+﻿# Métricas e Metas — SOS Pet Aumigo
 
 ## KPIs principais
 

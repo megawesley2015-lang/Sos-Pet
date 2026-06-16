@@ -8,8 +8,8 @@
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Pet Aumigo — Achados & Perdidos",
-    short_name: "Pet Aumigo",
+    name: "SOS Pet Aumigo — Achados & Perdidos",
+    short_name: "SOS Pet Aumigo",
     description:
       "Rede colaborativa de resgate. Cadastre seu pet perdido, dispare um SOS e conte com a rede pra trazer ele de volta.",
     start_url: "/",

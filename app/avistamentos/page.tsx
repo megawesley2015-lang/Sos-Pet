@@ -8,7 +8,7 @@ import { formatRelativeDate } from "@/lib/utils/format";
 export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Avistamentos",
-  description: "Veja os avistamentos recentes de pets perdidos reportados pela comunidade Pet Aumigo.",
+  description: "Veja os avistamentos recentes de pets perdidos reportados pela comunidade SOS Pet Aumigo.",
   alternates: { canonical: "/avistamentos" },
   openGraph: { url: "/avistamentos", type: "website" as const },
 };

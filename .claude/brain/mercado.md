@@ -1,4 +1,4 @@
-﻿# Mercado — Pet Aumigo
+﻿# Mercado — SOS Pet Aumigo
 
 ## Tamanho do mercado
 

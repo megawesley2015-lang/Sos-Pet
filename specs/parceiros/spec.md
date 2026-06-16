@@ -75,7 +75,7 @@ THE SYSTEM SHALL aplicar rate limiting: máximo 3 submissions por IP por hora.
 
 WHEN uma partnership request é salva com sucesso
 THE SYSTEM SHALL enviar email para o parceiro com:
-- Subject: "Bem-vindo à rede Pet Aumigo!"
+- Subject: "Bem-vindo à rede SOS Pet Aumigo!"
 - Conteúdo: agradecimento, próximos passos, link para `/parcerias` (FAQ)
 - Prazo de resposta: "48 horas úteis"
 - Contato de suporte

@@ -8,7 +8,7 @@ export type FeatureFlag =
   | 'verified_badge'       // exibir badge de verificado no perfil
   | 'analytics_dashboard'  // acesso ao painel de métricas
   | 'bulk_notifications'   // notificações em massa para contatos salvos
-  | 'api_access'           // acesso à API pública do Pet Aumigo
+  | 'api_access'           // acesso à API pública do SOS Pet Aumigo
 
 export type FeatureFlags = Partial<Record<FeatureFlag, boolean>>
 

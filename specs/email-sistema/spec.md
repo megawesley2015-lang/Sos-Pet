@@ -52,7 +52,7 @@ THEN THE SYSTEM SHALL logar aviso no console e não tentar o envio.
 
 WHEN um pet é cadastrado com sucesso em `POST /api/pets`
 THE SYSTEM SHALL enviar email para `profiles.email` do tutor com:
-- Subject: "Pet cadastrado com sucesso — Pet Aumigo"
+- Subject: "Pet cadastrado com sucesso — SOS Pet Aumigo"
 - Conteúdo: nome do pet, espécie, foto, link para `/pets/[id]`
 - CTA: "Ver cadastro do pet"
 

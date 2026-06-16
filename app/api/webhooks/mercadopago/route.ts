@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
       const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aumigo.com.br'
       void sendEmail({
         to: email,
-        subject: 'Pedido confirmado — Pet Aumigo',
+        subject: 'Pedido confirmado — SOS Pet Aumigo',
         html: `<p>Seu pedido foi confirmado! Número: <strong>${order.id.slice(0, 8)}</strong></p>
                <p><a href="${siteUrl}/loja/sucesso?payment_id=${paymentId}">Ver detalhes</a></p>`,
         templateName: 'order_confirmation',

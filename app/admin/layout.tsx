@@ -54,7 +54,7 @@ export default async function AdminLayout({
         <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3">
           <ShieldCheck className="h-5 w-5 text-brand-500" />
           <span className="font-display text-sm font-bold tracking-wide text-fg">
-            Admin — Pet Aumigo
+            Admin — SOS Pet Aumigo
           </span>
           <span className="ml-auto text-xs text-fg-subtle">
             {user.email}

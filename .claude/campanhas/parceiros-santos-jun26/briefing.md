@@ -2,7 +2,7 @@
 
 **Status:** GATE 1 — aguardando alinhamento
 **Data de início:** 13/06/2026
-**Responsável:** Diretor de Marketing (Pet Aumigo)
+**Responsável:** Diretor de Marketing (SOS Pet Aumigo)
 
 ## Briefing recebido
 
@@ -10,7 +10,7 @@
 
 ## Meu entendimento
 
-Campanha B2B para recrutar pet shops de Santos como parceiros do diretório Pet Aumigo.
+Campanha B2B para recrutar pet shops de Santos como parceiros do diretório SOS Pet Aumigo.
 
 **Proposta de valor para o pet shop:**
 - Perfil gratuito no diretório de prestadores
@@ -18,7 +18,7 @@ Campanha B2B para recrutar pet shops de Santos como parceiros do diretório Pet 
 - Co-marketing: quando um pet é encontrado em Santos, o pet shop parceiro aparece como opção de serviço no alerta
 
 **O que queremos em troca:**
-- Mencionar o Pet Aumigo quando um cliente chegar com pet perdido
+- Mencionar o SOS Pet Aumigo quando um cliente chegar com pet perdido
 - Indicar a plataforma para clientes tutores
 
 ## Próximos passos (aguardando GATE 1)

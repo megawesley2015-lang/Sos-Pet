@@ -34,7 +34,7 @@ export default function ParceriasPage() {
       <PageHeader
         eyebrow="Parcerias"
         title="Vamos juntos resgatar mais pets"
-        description="Conte sobre sua organização e como você quer somar com a rede Pet Aumigo."
+        description="Conte sobre sua organização e como você quer somar com a rede SOS Pet Aumigo."
       />
 
       <section className="py-16">

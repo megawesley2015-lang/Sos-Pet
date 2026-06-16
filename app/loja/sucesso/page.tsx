@@ -5,7 +5,7 @@ interface PageProps {
   searchParams: Promise<{ payment_id?: string; order_id?: string }>
 }
 
-export const metadata = { title: 'Pedido confirmado — Pet Aumigo' }
+export const metadata = { title: 'Pedido confirmado — SOS Pet Aumigo' }
 
 export default async function LojaSuccessPage({ searchParams }: PageProps) {
   const sp = await searchParams

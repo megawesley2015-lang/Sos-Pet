@@ -12,10 +12,10 @@ import type { PetKind, PetSpecies, PetRow } from "@/lib/types/database";
 export const metadata: Metadata = {
   title: "Achados & Perdidos",
   description:
-    "Veja todos os pets perdidos e encontrados cadastrados na rede Pet Aumigo. Filtre por espécie, tipo e cidade.",
+    "Veja todos os pets perdidos e encontrados cadastrados na rede SOS Pet Aumigo. Filtre por espécie, tipo e cidade.",
   alternates: { canonical: "/pets" },
   openGraph: {
-    title: "Achados & Perdidos · Pet Aumigo",
+    title: "Achados & Perdidos · SOS Pet Aumigo",
     description: "Pets perdidos e encontrados na sua região. Ajude a reencontrar quem se perdeu.",
     url: "/pets",
     type: "website",

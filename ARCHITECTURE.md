@@ -1,6 +1,6 @@
-﻿# Architecture — Pet Aumigo
+﻿# Architecture — SOS Pet Aumigo
 
-Documento que descreve a arquitetura técnica, stack, convenções e padrões do projeto Pet Aumigo.
+Documento que descreve a arquitetura técnica, stack, convenções e padrões do projeto SOS Pet Aumigo.
 
 ---
 

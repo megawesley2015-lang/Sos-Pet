@@ -2,7 +2,7 @@
 
 **Versão:** 1.0  
 **Data:** 2026-06-13  
-**Campanha:** Captacao de pet shops em Santos como parceiros do diretorio Pet Aumigo  
+**Campanha:** Captacao de pet shops em Santos como parceiros do diretorio SOS Pet Aumigo  
 **Angulos ativos:** Angulo 1 (heroi no balcao) + Angulo 3 (causa com retorno de marca)
 
 ---
@@ -26,13 +26,13 @@ O pet shop ja conhece a dor. A pergunta de abertura nao vende nada — apenas no
 ```
 Canal:    WhatsApp (apos contato inicial) + email se solicitado
 Mensagem: "Olha como fica o perfil do [nome do pet shop] no diretorio
-           Pet Aumigo — e o que aparece para o tutor quando ele procura
+           SOS Pet Aumigo — e o que aparece para o tutor quando ele procura
            servico proximo a onde o pet sumiu."
 Meta:     Demonstracao concreta do beneficio (mock do perfil + print
           do fluxo de alerta) — fechar acordo de parceria informal
 ```
 
-O mock do perfil e o momento de ancoragem. O decisor ve o nome do negocio dele numa plataforma regional voltada para crise — visibilidade que ele nao precisa pagar nem produzir. Incluir screenshot do post de co-branding que o Pet Aumigo faz quando um pet e encontrado, mostrando como o nome do parceiro aparece.
+O mock do perfil e o momento de ancoragem. O decisor ve o nome do negocio dele numa plataforma regional voltada para crise — visibilidade que ele nao precisa pagar nem produzir. Incluir screenshot do post de co-branding que o SOS Pet Aumigo faz quando um pet e encontrado, mostrando como o nome do parceiro aparece.
 
 ### FUNDO — Conversao (Dias 7 a 21)
 
@@ -40,7 +40,7 @@ O mock do perfil e o momento de ancoragem. O decisor ve o nome do negocio dele n
 Canal:    Presencial (segunda visita) ou WhatsApp com link de cadastro
 Mensagem: "E sem custo, sem exclusividade e sem contrato. So precisamos
            que quando um tutor chegar aqui pedindo ajuda, o seu
-           atendente mostre o Pet Aumigo pra ele. A gente cuida do resto."
+           atendente mostre o SOS Pet Aumigo pra ele. A gente cuida do resto."
 Meta:     Cadastro completo do pet shop no diretorio + WhatsApp do
           responsavel salvo para coordenacao de co-posts
 ```
@@ -54,7 +54,7 @@ Canal:    WhatsApp direto com o responsavel do pet shop
 Mensagem: "Hoje o [nome do pet] foi encontrado perto da [loja parceira]
            — vamos fazer o post juntos. Voce quer aparecer como [nome
            da loja] ou com algum CTA especifico?"
-Meta:     Co-post publicado no Instagram Pet Aumigo + compartilhamento
+Meta:     Co-post publicado no Instagram SOS Pet Aumigo + compartilhamento
           pelo pet shop = prova publica da parceria = efeito vitrine
           para os proximos pet shops abordados
 ```
@@ -71,7 +71,7 @@ O pos-parceria e o canal de aquisicao do proximo parceiro. Cada post de reencont
 Visita fisica ao pet shop durante horario de menor movimento (terca ou quarta, entre 10h e 12h). Falar diretamente com o dono ou gerente. Nao mandar representante — essa abordagem inicial exige pessoa com autoridade para tomar decisao no momento.
 
 **Script de abertura (nao usar antes de apresentar-se):**
-> "Bom dia, sou [nome] do Pet Aumigo — somos a plataforma de pets perdidos da Baixada Santista. Posso te fazer uma pergunta rapida? Quantas vezes por semana alguem chega aqui perguntando se voce viu um cachorro ou um gato que sumiu no bairro?"
+> "Bom dia, sou [nome] do SOS Pet Aumigo — somos a plataforma de pets perdidos da Baixada Santista. Posso te fazer uma pergunta rapida? Quantas vezes por semana alguem chega aqui perguntando se voce viu um cachorro ou um gato que sumiu no bairro?"
 
 Aguardar resposta. A resposta quase sempre e "bastante" ou "toda semana". Continuar:
 
@@ -89,14 +89,14 @@ Se o dono nao estiver disponivel: pedir o WhatsApp do responsavel e combinar hor
 Enviar sequencia de 3 mensagens no WhatsApp do responsavel (nao grupo, apenas privado). Intervalo de pelo menos 1 hora entre mensagens para nao parecer spam.
 
 **Mensagem 1 (imagem):**  
-Print ou mock do perfil do pet shop no diretorio Pet Aumigo. Legenda:
-> "Oi [nome], aqui e [seu nome] do Pet Aumigo! Fiz um preview de como o [nome do pet shop] ficaria no nosso diretorio. Tutores que perdem pets em Santos pesquisam os servicos mais proximos — voce apareceria aqui automaticamente quando buscassem na regiao do [bairro]."
+Print ou mock do perfil do pet shop no diretorio SOS Pet Aumigo. Legenda:
+> "Oi [nome], aqui e [seu nome] do SOS Pet Aumigo! Fiz um preview de como o [nome do pet shop] ficaria no nosso diretorio. Tutores que perdem pets em Santos pesquisam os servicos mais proximos — voce apareceria aqui automaticamente quando buscassem na regiao do [bairro]."
 
 **Mensagem 2 (texto, 30 minutos depois):**  
 > "Alem do diretorio, quando um pet e encontrado em Santos, a gente faz um post no Instagram marcando o pet shop parceiro da regiao. Post de reencontro tem 3 a 5 vezes mais engajamento que post de promocao — e o nome do [nome do pet shop] aparece nesse momento."
 
 **Mensagem 3 (fechamento suave, 1 hora depois):**  
-> "E sem custo nenhum e sem compromisso. So precisaria que quando um tutor chegasse na loja pedindo ajuda, o atendente mostrasse o Pet Aumigo pra ele. Posso te ligar amanha pra 5 minutinhos?"
+> "E sem custo nenhum e sem compromisso. So precisaria que quando um tutor chegasse na loja pedindo ajuda, o atendente mostrasse o SOS Pet Aumigo pra ele. Posso te ligar amanha pra 5 minutinhos?"
 
 **Meta da Etapa 2:** Resposta positiva ou agendamento de ligacao de 3 dos 5 decisores contactados.
 
@@ -109,7 +109,7 @@ Ligacao rapida (objetivo: menos de 5 minutos) para tirar duvidas e coletar os da
 
 **Roteiro da ligacao:**
 1. Confirmar que viram as mensagens — "o que achou?"
-2. Responder a unica objecao real: "isso vai dar trabalho?" → Resposta: "Nao. E so quando um tutor chegar pedindo ajuda — o atendente fala o nome Pet Aumigo. Nao muda nada na rotina de voces."
+2. Responder a unica objecao real: "isso vai dar trabalho?" → Resposta: "Nao. E so quando um tutor chegar pedindo ajuda — o atendente fala o nome SOS Pet Aumigo. Nao muda nada na rotina de voces."
 3. Coletar ao vivo: nome do estabelecimento, endereco, telefone de contato, Instagram, categoria principal (banho/tosa, veterinaria, loja, etc.)
 4. Confirmar: "Posso ja te cadastrar agora e mandar o link do perfil pra voce checar?"
 
@@ -165,7 +165,7 @@ Petz Ana Costa e Petz Macuco sao unidades de rede nacional com decisao centraliz
 - **Dia 8-9:** Ligacoes de fechamento com os que responderam positivamente. Fazer o cadastro ao vivo durante a ligacao.
 - **Dia 10-11:** Segunda visita presencial aos que nao responderam — abordagem de follow-up sem pressao: "Passei aqui para ver se voce teve tempo de olhar o que te mandei."
 - **Dia 12-13:** Iniciar visitas ao Tier 2: Petland Embare e Petland Boqueirao. Usar os primeiros parceiros ja cadastrados como prova social: "O Molecao ja esta no diretorio — quer ver como ficou o perfil deles?"
-- **Dia 14:** Publicar o primeiro post de co-branding no Instagram Pet Aumigo (mesmo que seja um caso hipotetico com o consentimento do parceiro) para ter conteudo para mostrar.
+- **Dia 14:** Publicar o primeiro post de co-branding no Instagram SOS Pet Aumigo (mesmo que seja um caso hipotetico com o consentimento do parceiro) para ter conteudo para mostrar.
 
 **Metrica de sucesso da Semana 2:** 3 pet shops cadastrados no diretorio + 1 post de co-branding publicado.
 
@@ -173,14 +173,14 @@ Petz Ana Costa e Petz Macuco sao unidades de rede nacional com decisao centraliz
 
 ### Semana 3 (Dias 15 a 21) — Ativacao e prova social
 
-**Objetivo:** Ativar os parceiros cadastrados (fazer eles mencionarem o Pet Aumigo) e converter os alvos Tier 2 restantes.
+**Objetivo:** Ativar os parceiros cadastrados (fazer eles mencionarem o SOS Pet Aumigo) e converter os alvos Tier 2 restantes.
 
-- **Dia 15:** Enviar para cada parceiro cadastrado um kit de ativacao no WhatsApp: texto salvo para o atendente usar quando tutor chegar com pet perdido + sticker/status com "Parceiro Pet Aumigo".
+- **Dia 15:** Enviar para cada parceiro cadastrado um kit de ativacao no WhatsApp: texto salvo para o atendente usar quando tutor chegar com pet perdido + sticker/status com "Parceiro SOS Pet Aumigo".
 - **Dia 16-17:** Visitas de acompanhamento aos parceiros Tier 1 — checar se os atendentes sabem o que dizer. Corrigir em tempo real.
 - **Dia 18-19:** Fechar Tier 2: Petland Canal 6, Royal Sandy. Usar print dos parceiros ja cadastrados + post de co-branding como argumento visual.
 - **Dia 20-21:** Abordar Petland Jose Menino e Pet Pitangueiras (litoral sul) — menor prioridade mas completam a cobertura geografica.
 
-**Metrica de sucesso da Semana 3:** 6 pet shops ativos no diretorio + pelo menos 2 mencoes organicas ao Pet Aumigo (tutor atendido por parceiro que registrou o caso na plataforma).
+**Metrica de sucesso da Semana 3:** 6 pet shops ativos no diretorio + pelo menos 2 mencoes organicas ao SOS Pet Aumigo (tutor atendido por parceiro que registrou o caso na plataforma).
 
 ---
 
@@ -204,8 +204,8 @@ Petz Ana Costa e Petz Macuco sao unidades de rede nacional com decisao centraliz
 | Pet shops abordados (Tier 1) | 4 | Semana 1 | Registro no CRM (planilha ou notion) |
 | Pet shops abordados (Tier 2) | 6 | Semana 2 | Registro no CRM |
 | Taxa de conversao de abordagem | >50% | Semana 2 | Cadastrados / abordados |
-| Pet shops cadastrados no diretorio | 8 | Dia 30 | Diretorio Pet Aumigo |
-| Posts de co-branding publicados | 2 | Dia 30 | Instagram Pet Aumigo |
+| Pet shops cadastrados no diretorio | 8 | Dia 30 | Diretorio SOS Pet Aumigo |
+| Posts de co-branding publicados | 2 | Dia 30 | Instagram SOS Pet Aumigo |
 | Media de interacoes por post co-branded | 200+ | Dia 30 | Instagram Insights |
 | Tutores registrados via indicacao de parceiro | 3 | Dia 30 | Campo "como conheceu" no cadastro |
 | Parceiros com atendente treinado | 100% dos cadastrados | Semana 3 | Checklist de ativacao |
@@ -220,7 +220,7 @@ Petz Ana Costa e Petz Macuco sao unidades de rede nacional com decisao centraliz
 |---|---|
 | "Ja tenho muito trabalho, nao tenho tempo" | "Nao muda nada na rotina de voces. E so o atendente falar o nome quando alguem chegar pedindo ajuda. 30 segundos por tutor." |
 | "Nao sei se vai dar resultado" | "Posso te mostrar o que aconteceu no [pet shop parceiro ja cadastrado] — ou voce ve o engajamento dos posts de reencontro no nosso Instagram." |
-| "E gratis mesmo? Qual e o peguinho?" | "O unico compromisso e mencionar o Pet Aumigo quando o tutor chegar na loja. Nao tem contrato, nao tem fidelidade, nao tem custo." |
+| "E gratis mesmo? Qual e o peguinho?" | "O unico compromisso e mencionar o SOS Pet Aumigo quando o tutor chegar na loja. Nao tem contrato, nao tem fidelidade, nao tem custo." |
 | "Tenho que falar com o dono / a matrix" | Tier 1 (independentes): contornar pedindo contato do dono. Tier 2 (franquias): perguntar o que o franqueado tem autonomia para decidir e fechar o que for possivel. |
 | "Ja temos parceria com outra plataforma" | "A gente e regional — so Baixada Santista. Nao e concorrente das plataformas nacionais; e complementar. Seus clientes de Santos ficam aqui." |
 
@@ -228,7 +228,7 @@ Petz Ana Costa e Petz Macuco sao unidades de rede nacional com decisao centraliz
 
 ## Materiais necessarios para execucao
 
-- [ ] Mock do perfil de pet shop no diretorio Pet Aumigo (imagem para WhatsApp e impressao A4)
+- [ ] Mock do perfil de pet shop no diretorio SOS Pet Aumigo (imagem para WhatsApp e impressao A4)
 - [ ] Print do fluxo de alerta mostrando como o parceiro aparece na notificacao
 - [ ] Post de co-branding de exemplo (pode ser caso hipotetico com layout real)
 - [ ] Texto padrao para o atendente usar no balcao (2-3 linhas, simples)

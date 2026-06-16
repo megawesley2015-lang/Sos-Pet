@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/marketing/PageHeader";
 export const metadata = {
   title: "Termos de Uso",
   description:
-    "Termos e condições de uso da plataforma Pet Aumigo — Achados e Perdidos.",
+    "Termos e condições de uso da plataforma SOS Pet Aumigo — Achados e Perdidos.",
   alternates: { canonical: "/termos" },
   openGraph: { url: "/termos", type: "website" as const },
 };
@@ -34,7 +34,7 @@ export default function TermosPage() {
       <article className="py-16">
         <div className="mx-auto max-w-2xl px-4">
           <Section title="1. Sobre a plataforma">
-            O Pet Aumigo é uma plataforma colaborativa para registro e
+            O SOS Pet Aumigo é uma plataforma colaborativa para registro e
             divulgação de pets perdidos e encontrados. Os registros são feitos
             por usuários e a plataforma serve como intermediária técnica para
             facilitar o reencontro entre pets e tutores.
@@ -72,7 +72,7 @@ export default function TermosPage() {
           </Section>
 
           <Section title="6. Limitação de responsabilidade">
-            O Pet Aumigo é uma ferramenta de intermediação. Não nos
+            O SOS Pet Aumigo é uma ferramenta de intermediação. Não nos
             responsabilizamos pela conduta dos usuários, pela autenticidade
             das informações publicadas, nem por eventuais negociações,
             promessas de recompensa ou conflitos entre tutor e encontrante.

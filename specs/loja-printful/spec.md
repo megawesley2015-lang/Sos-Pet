@@ -10,7 +10,7 @@
 
 ## Contexto de Negócio
 
-A loja do Pet Aumigo vende plaquinhas de identificação para pets e outros produtos personalizados
+A loja do SOS Pet Aumigo vende plaquinhas de identificação para pets e outros produtos personalizados
 via Printful (print-on-demand). O modelo de negócio B2C complementa a monetização principal.
 As rotas `/loja` e `/loja/[id]` já existem, a variável `PRINTFUL_API_KEY` está nas env vars,
 e a tabela `store_products` já existe. O gap é o fluxo completo: catálogo sincronizado com

@@ -13,7 +13,7 @@
 
 ONGs e protetores independentes resgatam animais, gerenciam lares temporários e
 encaminham para adoção. Hoje fazem isso via planilha, papel ou memória.
-O módulo ONG fornece um sistema web integrado ao Pet Aumigo para gestão completa
+O módulo ONG fornece um sistema web integrado ao SOS Pet Aumigo para gestão completa
 do ciclo de vida de um pet resgatado: entrada → prontuário → adoção → follow-up.
 
 **Meta de produto:** Cada ONG cadastrada gera histórias reais de reencontros

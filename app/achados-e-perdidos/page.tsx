@@ -19,7 +19,7 @@ interface PageProps {
 }
 
 export const metadata = {
-  title:       'Achados e Perdidos — Pet Aumigo',
+  title:       'Achados e Perdidos — SOS Pet Aumigo',
   description: 'Pets perdidos e encontrados na sua região. Cadastre um alerta grátis.',
 }
 

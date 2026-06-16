@@ -10,7 +10,7 @@
 
 ## Contexto de Negócio
 
-A plataforma Pet Aumigo exibe listas de pets perdidos/encontrados, prestadores de serviço e pets
+A plataforma SOS Pet Aumigo exibe listas de pets perdidos/encontrados, prestadores de serviço e pets
 de abrigo. Sem paginação, uma cidade com centenas de cadastros trava o browser, degrada o
 SEO (page weight alto) e onera o Supabase com queries sem LIMIT. O cursor-based pagination
 (keyset pagination) é preferível ao offset porque mantém consistência quando novos registros

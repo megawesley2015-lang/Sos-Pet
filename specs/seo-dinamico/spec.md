@@ -12,7 +12,7 @@
 
 Tutores que perdem um pet geralmente fazem buscas no Google como "cachorro perdido em Santos"
 ou "gato encontrado em Guarujá". A plataforma precisa ranquear nessas buscas para que o
-tutor chegue ao Pet Aumigo organicamente. A rota dinâmica `/[type]-em-[city]` já existe no
+tutor chegue ao SOS Pet Aumigo organicamente. A rota dinâmica `/[type]-em-[city]` já existe no
 CLAUDE.md mas ainda não está implementada com geração estática. Com ISR (Incremental Static
 Regeneration), as páginas são geradas uma vez e revalidadas periodicamente, garantindo SEO
 forte sem custo de processamento por request. Um sitemap automático fecha o ciclo.
@@ -58,7 +58,7 @@ THE SYSTEM SHALL renderizar a página sem retornar 404 (página existe, mas com 
 
 WHEN um visitante acessa `/cachorro-perdido-em-santos`
 THE SYSTEM SHALL exibir:
-- `<title>` e `<h1>`: "Cachorros perdidos em Santos — Pet Aumigo"
+- `<title>` e `<h1>`: "Cachorros perdidos em Santos — SOS Pet Aumigo"
 - `<meta name="description">`: "Veja os cachorros perdidos em Santos. Ajude a reunir famílias com seus pets na Baixada Santista."
 - Open Graph: `og:title`, `og:description`, `og:image` (imagem do pet mais recente ou imagem padrão)
 - Lista de até 24 pets filtrados por `species` e `kind` e `city`

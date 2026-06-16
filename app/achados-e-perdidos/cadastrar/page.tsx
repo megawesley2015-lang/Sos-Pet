@@ -4,7 +4,7 @@ import Link      from 'next/link'
 import { PetForm } from '@/components/pets/PetFormWithUpload'
 
 export const metadata = {
-  title:       'Cadastrar Pet — Pet Aumigo',
+  title:       'Cadastrar Pet — SOS Pet Aumigo',
   description: 'Cadastre um alerta de pet perdido ou encontrado. Grátis, sem login.',
 }
 

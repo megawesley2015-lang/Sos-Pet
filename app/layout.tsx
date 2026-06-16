@@ -22,14 +22,14 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   title: {
-    default: "Pet Aumigo — Achados & Perdidos",
-    template: "%s · Pet Aumigo",
+    default: "SOS Pet Aumigo — Achados & Perdidos",
+    template: "%s · SOS Pet Aumigo",
   },
   description:
     "Rede colaborativa de resgate. Cadastre seu pet perdido, dispare um SOS e conte com a rede pra trazer ele de volta.",
   metadataBase: new URL(getBaseUrl()),
-  applicationName: "Pet Aumigo",
-  authors: [{ name: "Pet Aumigo" }],
+  applicationName: "SOS Pet Aumigo",
+  authors: [{ name: "SOS Pet Aumigo" }],
   keywords: [
     "pet perdido",
     "pet encontrado",
@@ -40,22 +40,22 @@ export const metadata: Metadata = {
     "veterinário",
   ],
   openGraph: {
-    title: "Pet Aumigo — Achados & Perdidos",
+    title: "SOS Pet Aumigo — Achados & Perdidos",
     description:
       "Rede colaborativa de resgate. Cadastre, busque e ajude a reencontrar pets.",
     type: "website",
     locale: "pt_BR",
-    siteName: "Pet Aumigo",
+    siteName: "SOS Pet Aumigo",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pet Aumigo — Achados & Perdidos",
+    title: "SOS Pet Aumigo — Achados & Perdidos",
     description:
       "Rede colaborativa de resgate. Cadastre, busque e ajude a reencontrar pets.",
   },
   appleWebApp: {
     capable: true,
-    title: "Pet Aumigo",
+    title: "SOS Pet Aumigo",
     statusBarStyle: "black-translucent",
   },
   formatDetection: {
