@@ -31,13 +31,12 @@ export function SOSBadge({ kind, className }: SOSBadgeProps) {
     <span
       className={cn(
         "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide",
-        isLost && "animate-pulse-brand",
         className
       )}
       style={spanStyle}
     >
       <span
-        className="h-1.5 w-1.5 rounded-full"
+        className={cn("h-1.5 w-1.5 rounded-full", isLost && "animate-pulse")}
         style={{ backgroundColor: isLost ? "var(--color-badge-lost-fg)" : "var(--color-badge-found-fg)" }}
       />
       {isLost ? "SOS Perdido" : "Encontrado"}

@@ -31,15 +31,17 @@ export function CTAButton({
   ...props
 }: CTAButtonProps) {
   const classes = cn(
-    "inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-bold transition-all",
+    "inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-bold",
+    "transition-[background-color,box-shadow,color,opacity] duration-200",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
     "disabled:cursor-not-allowed disabled:opacity-50",
     fullWidth && "w-full",
     variant === "primary" &&
-      "bg-brand-500 text-white shadow-glow-brand hover:bg-brand-400 hover:shadow-glow-brand-lg active:scale-[0.98]",
+      "bg-brand-500 text-white shadow-glow-brand hover:bg-brand-400 hover:shadow-glow-brand-lg active:translate-y-px focus-visible:ring-brand-500",
     variant === "secondary" &&
-      "border border-brand-500/50 bg-brand-500/10 text-brand-700 hover:bg-brand-500/20 hover:shadow-glow-brand active:scale-[0.98]",
+      "border border-accent/50 bg-accent/10 text-accent hover:bg-accent/20 hover:shadow-glow-cyan active:translate-y-px focus-visible:ring-accent",
     variant === "ghost" &&
-      "text-fg-muted hover:bg-white/5 hover:text-fg",
+      "text-fg-muted hover:bg-fg/5 hover:text-fg focus-visible:ring-fg-muted",
     className
   );
 

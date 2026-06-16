@@ -390,14 +390,8 @@ function RescueHighlight() {
           <div className="flex justify-center">
             <div className="relative h-56 w-56">
               <div className="absolute inset-0 rounded-full bg-brand-500/30 blur-3xl" />
-              <span
-                className="absolute inset-4 rounded-full border-2 border-brand-500/40"
-                style={{ animation: "ping 1.5s cubic-bezier(0,0,0.2,1) infinite" }}
-              />
-              <span
-                className="absolute inset-2 rounded-full border-2 border-brand-500/30"
-                style={{ animation: "ping 2s cubic-bezier(0,0,0.2,1) infinite" }}
-              />
+              <span className="absolute inset-4 rounded-full border-2 border-brand-500/40 animate-[ping_1.5s_cubic-bezier(0,0,0.2,1)_infinite]" />
+              <span className="absolute inset-2 rounded-full border-2 border-brand-500/30 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite]" />
               <div className="absolute inset-10 flex items-center justify-center rounded-full bg-brand-500 text-white shadow-glow-brand-lg">
                 <div className="flex flex-col items-center gap-1">
                   <Siren className="h-10 w-10" strokeWidth={2.5} />

@@ -3,7 +3,8 @@
 import Link  from 'next/link'
 import Image from 'next/image'
 import { MapPin, Clock, ChevronRight } from 'lucide-react'
-import type { PetPublic } from '@/types/pets'
+import type { PetPublic, PetKind } from '@/types/pets'
+import { SOSBadge } from '@/components/ui/SOSBadge'
 
 function formatTimeAgo(dateStr: string): string {
   const diffMs = Date.now() - new Date(dateStr).getTime()
@@ -20,21 +21,6 @@ function formatTimeAgo(dateStr: string): string {
 const SPECIES_LABEL: Record<string, string> = { dog: 'Cachorro', cat: 'Gato', other: 'Animal' }
 const SIZE_LABEL:    Record<string, string> = { small: 'Pequeno', medium: 'Médio', large: 'Grande' }
 
-function StatusBadge({ kind }: { kind: string }) {
-  const isLost = kind === 'lost'
-  return (
-    <span className={[
-      'inline-flex items-center gap-1.5 rounded-full px-3 py-1',
-      'text-xs font-bold uppercase tracking-wider border',
-      isLost
-        ? 'bg-[rgb(var(--color-primary))]/15 border-[rgb(var(--color-primary))]/30 text-[rgb(var(--color-primary))]'
-        : 'bg-[rgb(var(--color-accent))]/15 border-[rgb(var(--color-accent))]/30 text-[rgb(var(--color-accent))]',
-    ].join(' ')}>
-      <span className={['h-1.5 w-1.5 rounded-full animate-pulse', isLost ? 'bg-[rgb(var(--color-primary))]' : 'bg-[rgb(var(--color-accent))]'].join(' ')} aria-hidden="true" />
-      {isLost ? 'Perdido' : 'Encontrado'}
-    </span>
-  )
-}
 
 interface PetCardProps {
   pet: PetPublic
@@ -70,7 +56,7 @@ export function PetCard({ pet }: PetCardProps) {
             {pet.species === 'dog' ? '🐶' : pet.species === 'cat' ? '🐱' : '🐾'}
           </div>
         )}
-        <div className="absolute left-3 top-3"><StatusBadge kind={pet.kind} /></div>
+        <div className="absolute left-3 top-3"><SOSBadge kind={pet.kind as PetKind} /></div>
       </div>
 
       <div className="flex flex-col gap-2 p-4">

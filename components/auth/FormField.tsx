@@ -33,11 +33,11 @@ export function FormField({
         aria-invalid={!!error}
         aria-describedby={error ? `${name}-error` : undefined}
         className={cn(
-          "w-full rounded-lg border bg-ink-800/70 px-3 py-2.5 text-sm text-fg placeholder:text-fg-subtle/70",
+          "w-full rounded-lg border bg-bg-raised px-3 py-2.5 text-sm text-fg placeholder:text-fg-subtle/70",
           "transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500/40",
           error
             ? "border-danger/60 focus:border-danger"
-            : "border-white/10 focus:border-brand-500/60",
+            : "border-border focus:border-brand-500/60",
           className
         )}
         {...props}

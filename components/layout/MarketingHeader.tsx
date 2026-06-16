@@ -57,48 +57,25 @@ export async function MarketingHeader() {
 
         {/* Nav desktop */}
         <nav className="hidden items-center gap-6 sm:flex">
-          <Link
-            href="/pets"
-            className="text-sm font-medium text-fg-muted transition-colors hover:text-brand-600"
-          >
-            Achados
-          </Link>
-          <Link
-            href="/mapa"
-            className="text-sm font-medium text-fg-muted transition-colors hover:text-brand-600"
-          >
-            Mapa
-          </Link>
-          <Link
-            href="/avistamentos"
-            className="text-sm font-medium text-fg-muted transition-colors hover:text-brand-600"
-          >
-            Avistamentos
-          </Link>
-          <Link
-            href="/prestadores"
-            className="text-sm font-medium text-fg-muted transition-colors hover:text-brand-600"
-          >
-            Prestadores
-          </Link>
-          <Link
-            href="/dicas"
-            className="text-sm font-medium text-fg-muted transition-colors hover:text-brand-600"
-          >
-            Dicas
-          </Link>
-          <Link
-            href="/sentinela"
-            className="text-sm font-medium text-cyan-600 transition-colors hover:text-cyan-700"
-          >
-            📷 Sentinela
-          </Link>
-          <Link
-            href="/loja"
-            className="text-sm font-medium text-brand-600 transition-colors hover:text-brand-700"
-          >
-            🛍️ Loja
-          </Link>
+          {[
+            { href: "/pets",         label: "Achados" },
+            { href: "/mapa",         label: "Mapa" },
+            { href: "/avistamentos", label: "Avistamentos" },
+            { href: "/prestadores",  label: "Prestadores" },
+            { href: "/dicas",        label: "Dicas" },
+            { href: "/sentinela",    label: "📷 Sentinela" },
+            { href: "/loja",         label: "🛍️ Loja" },
+          ].map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              className="relative text-sm font-medium text-fg-muted transition-colors duration-150 hover:text-brand-600
+                after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-brand-500
+                after:transition-[width] after:duration-200 hover:after:w-full"
+            >
+              {label}
+            </Link>
+          ))}
         </nav>
 
         {/* Ações desktop + mobile */}
@@ -131,7 +108,7 @@ export async function MarketingHeader() {
                 </Link>
                 <Link
                   href="/registro"
-                  className="rounded-full bg-brand-500 px-4 py-2 text-xs font-bold text-white shadow-glow-brand transition-all hover:bg-brand-400"
+                  className="rounded-lg bg-brand-500 px-4 py-2 text-xs font-bold text-white shadow-glow-brand transition-[background-color,box-shadow] duration-200 hover:bg-brand-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
                 >
                   Criar conta
                 </Link>
