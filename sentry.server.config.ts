@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/nextjs";
 import type { ErrorEvent, EventHint } from "@sentry/nextjs";
 
-const DSN = process.env.NEXT_PUBLIC_SENTRY_DSN;
+const DSN = process.env.NEXT_PUBLIC_SENTRY_DSN?.replace(/^﻿/, '');
 
 if (DSN) {
   Sentry.init({
