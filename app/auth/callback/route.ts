@@ -61,6 +61,26 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL("/redefinir-senha", url.origin));
   }
 
+  // Verifica se o usuário precisa passar pelo onboarding.
+  // Se o perfil não tiver nome (full_name NULL) ou onboarding não foi concluído,
+  // redireciona para /cadastro em vez do destino padrão.
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("full_name, onboarding_completed")
+      .eq("id", user.id)
+      .single();
+
+    const needsOnboarding =
+      !profile ||
+      !profile.full_name ||
+      profile.onboarding_completed === false;
+
+    if (needsOnboarding && next !== "/redefinir-senha") {
+      return NextResponse.redirect(new URL("/cadastro", url.origin));
+    }
+  }
+
   // Sucesso → manda pro destino, garantindo que o path é interno
   const safeNext = next.startsWith("/") && !next.startsWith("//")
     ? next

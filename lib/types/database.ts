@@ -963,33 +963,39 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          cidade: string | null
           consent_at: string | null
           created_at: string
           feature_flags: Json
           full_name: string | null
           id: string
+          onboarding_completed: boolean | null
           phone: string | null
           role: string
           updated_at: string
         }
         Insert: {
           avatar_url?: string | null
+          cidade?: string | null
           consent_at?: string | null
           created_at?: string
           feature_flags?: Json
           full_name?: string | null
           id: string
+          onboarding_completed?: boolean | null
           phone?: string | null
           role?: string
           updated_at?: string
         }
         Update: {
           avatar_url?: string | null
+          cidade?: string | null
           consent_at?: string | null
           created_at?: string
           feature_flags?: Json
           full_name?: string | null
           id?: string
+          onboarding_completed?: boolean | null
           phone?: string | null
           role?: string
           updated_at?: string

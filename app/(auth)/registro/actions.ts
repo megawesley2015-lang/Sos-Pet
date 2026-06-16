@@ -27,7 +27,7 @@ export async function registerAction(
     options: {
       data: { full_name: parsed.data.full_name },
       // Onde o link de confirmação volta. authCallbackUrl resolve dev/preview/prod.
-      emailRedirectTo: authCallbackUrl("/pets"),
+      emailRedirectTo: authCallbackUrl("/cadastro"),
     },
   });
 
