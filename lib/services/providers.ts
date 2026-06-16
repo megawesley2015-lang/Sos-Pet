@@ -90,7 +90,7 @@ export const getProviderStats = cache(async (
   const supabase = await createSupabaseServerClient();
   const { data } = await supabase
     .from("prestador_stats")
-    .select("id, created_at, updated_at, user_id, slug, nome, descricao, categoria, telefone, whatsapp, email, instagram, site, cidade, bairro, estado, endereco, logo_url, capa_url, emergencia24h, delivery, agendamento_online, verificado, destaque, media_avaliacoes, total_avaliacoes, status")
+    .select("prestador_id, visualizacoes, cliques_whatsapp, cliques_telefone, updated_at")
     .eq("prestador_id", prestadorId)
     .maybeSingle();
   return (data as PrestadorStatsRow | null) ?? null;
