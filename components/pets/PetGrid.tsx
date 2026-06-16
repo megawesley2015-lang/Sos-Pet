@@ -1,6 +1,7 @@
 // components/pets/PetGrid.tsx — grade responsiva de cards de pets
 
 import { PetCard } from '@/components/pets/PetCard'
+import { PetEmptyState } from '@/components/pets/PetEmptyState'
 import type { PetPublic } from '@/types/pets'
 
 interface PetGridProps {
@@ -19,12 +20,7 @@ export function PetGrid({
   hasMore,
 }: PetGridProps) {
   if (pets.length === 0) {
-    return (
-      <div className="flex flex-col items-center gap-3 py-20 text-center">
-        <span className="text-5xl" aria-hidden="true">🐾</span>
-        <p className="text-sm text-[rgb(var(--color-fg-muted))]">{emptyMessage}</p>
-      </div>
-    )
+    return <PetEmptyState message={emptyMessage} />
   }
 
   return (

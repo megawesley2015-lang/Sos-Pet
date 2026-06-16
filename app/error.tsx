@@ -2,7 +2,8 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { AlertTriangle, RefreshCw, Home } from "lucide-react";
+import { RefreshCw, Home } from "lucide-react";
+import { MascotBubble } from "@/components/ui/MascotBubble";
 
 interface ErrorProps {
   error: Error & { digest?: string };
@@ -22,16 +23,17 @@ export default function ErrorPage({ error, reset }: ErrorProps) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-ink-800 px-4">
       <div className="w-full max-w-md text-center">
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border-2 border-danger/40 bg-danger/10">
-          <AlertTriangle className="h-7 w-7 text-danger-fg" />
+        <div className="mb-4 flex justify-center">
+          <MascotBubble
+            pose="dog-sad"
+            message="Ops... tivemos um problema inesperado. Tenta de novo — se persistir, volta pra home."
+            size={96}
+            side="right"
+          />
         </div>
         <h1 className="font-display text-2xl font-bold text-fg">
           Algo deu errado
         </h1>
-        <p className="mt-2 text-sm text-fg-muted">
-          Tivemos um problema inesperado. Tenta de novo — se persistir, volta
-          pra home.
-        </p>
         {error.digest && (
           <p className="mt-3 text-[11px] text-fg-subtle">
             Código: {error.digest}
