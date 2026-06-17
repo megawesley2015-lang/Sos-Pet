@@ -1,5 +1,5 @@
 ﻿/**
- * Service Worker — Pet Aumigo
+ * Service Worker — SOS Pet Aumigo
  *
  * Estratégia: Network First com fallback para cache.
  * Garante que o app possa abrir mesmo offline (mostra cache),
@@ -8,7 +8,7 @@
  * Cache versionado: mude CACHE_NAME para forçar atualização.
  */
 
-const CACHE_NAME = "sos-pet-v1";
+const CACHE_NAME = "sos-pet-v2";
 
 // Arquivos essenciais para funcionar offline
 const PRECACHE_URLS = [
@@ -84,5 +84,50 @@ self.addEventListener("fetch", (event) => {
             })
         )
       )
+  );
+});
+
+// ── Push Notifications ────────────────────────────────────────
+self.addEventListener("push", (event) => {
+  if (!event.data) return;
+
+  let payload;
+  try {
+    payload = event.data.json();
+  } catch {
+    payload = { title: "SOS Pet Aumigo", body: event.data.text() };
+  }
+
+  const title = payload.title || "SOS Pet Aumigo";
+  const options = {
+    body: payload.body || "Nova atividade na plataforma",
+    icon: "/icon-192.png",
+    badge: "/icon-192.png",
+    tag: payload.tag || "sos-pet",
+    data: { url: payload.url || "/" },
+    vibrate: [200, 100, 200],
+    requireInteraction: payload.requireInteraction || false,
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+// ── Notification Click ────────────────────────────────────────
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+
+  const url = event.notification.data?.url || "/";
+
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clients) => {
+      // Foca janela já aberta se existir
+      for (const client of clients) {
+        if (client.url === url && "focus" in client) {
+          return client.focus();
+        }
+      }
+      // Abre nova janela
+      return self.clients.openWindow(url);
+    })
   );
 });

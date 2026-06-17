@@ -59,8 +59,9 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
   },
   formatDetection: {
-    telephone: false, // evita o iOS auto-converter números em links
+    telephone: false,
   },
+  manifest: "/manifest.json",
 };
 
 export const viewport: Viewport = {
