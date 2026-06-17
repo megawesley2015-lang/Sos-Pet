@@ -1,8 +1,9 @@
 ---
 name: avaliacoes-prestadores
-status: pending
+status: done
 priority: 2
 depends_on: []
+completed_at: 2026-06-16
 ---
 
 # Sistema de Avaliações de Prestadores
