@@ -76,13 +76,6 @@ export async function MarketingHeader() {
               {label}
             </Link>
           ))}
-          {/* CTA B2B destacado */}
-          <Link
-            href="/para-prestadores"
-            className="rounded-lg bg-cyan-50 px-3 py-1.5 text-xs font-bold text-cyan-700 ring-1 ring-cyan-200 transition-colors hover:bg-cyan-100"
-          >
-            Sou prestador
-          </Link>
         </nav>
 
         {/* Ações desktop + mobile */}
@@ -98,6 +91,14 @@ export async function MarketingHeader() {
 
           {/* Auth — desktop */}
           <div className="hidden sm:flex sm:items-center sm:gap-2">
+            {role !== "prestador" && (
+              <Link
+                href="/para-prestadores"
+                className="rounded-lg border border-cyan-600 px-3 py-1.5 text-xs font-bold text-cyan-700 transition-colors hover:bg-cyan-50"
+              >
+                Sou prestador
+              </Link>
+            )}
             {user ? (
               <UserMenu
                 email={user.email ?? ""}
@@ -109,7 +110,7 @@ export async function MarketingHeader() {
               <>
                 <Link
                   href="/login"
-                  className="text-sm font-bold text-fg-muted hover:text-brand-600"
+                  className="rounded-lg border border-warm-200 px-3 py-2 text-sm font-bold text-fg-muted transition-colors hover:bg-warm-200/60"
                 >
                   Entrar
                 </Link>
@@ -124,7 +125,7 @@ export async function MarketingHeader() {
           </div>
 
           {/* Hamburguer mobile */}
-          <MobileNav isLoggedIn={!!user} />
+          <MobileNav isLoggedIn={!!user} isPrestador={role === "prestador"} />
         </div>
       </div>
     </header>

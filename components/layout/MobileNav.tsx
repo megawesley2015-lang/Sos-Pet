@@ -6,6 +6,7 @@ import { Menu, X, PawPrint, Siren } from "lucide-react";
 
 interface MobileNavProps {
   isLoggedIn: boolean;
+  isPrestador?: boolean;
 }
 
 const NAV_LINKS = [
@@ -23,7 +24,7 @@ const NAV_LINKS = [
  * MobileNav — menu hamburguer para o MarketingHeader (mobile).
  * Visível apenas em telas < sm (escondido no desktop via sm:hidden).
  */
-export function MobileNav({ isLoggedIn }: MobileNavProps) {
+export function MobileNav({ isLoggedIn, isPrestador = false }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -143,14 +144,25 @@ export function MobileNav({ isLoggedIn }: MobileNavProps) {
             {/* Auth */}
             <div className="px-3">
               {isLoggedIn ? (
-                <Link
-                  href="/meus-pets"
-                  onClick={() => setOpen(false)}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-500 px-4 py-3 text-sm font-bold text-white shadow-glow-brand transition-all hover:bg-brand-400"
-                >
-                  <PawPrint className="h-4 w-4" strokeWidth={2.5} />
-                  Meu painel
-                </Link>
+                <div className="flex flex-col gap-2">
+                  <Link
+                    href="/meus-pets"
+                    onClick={() => setOpen(false)}
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-500 px-4 py-3 text-sm font-bold text-white shadow-glow-brand transition-all hover:bg-brand-400"
+                  >
+                    <PawPrint className="h-4 w-4" strokeWidth={2.5} />
+                    Meu painel
+                  </Link>
+                  {!isPrestador && (
+                    <Link
+                      href="/para-prestadores"
+                      onClick={() => setOpen(false)}
+                      className="flex items-center justify-center rounded-xl border border-cyan-600 px-4 py-3 text-sm font-bold text-cyan-700 transition-colors hover:bg-cyan-50"
+                    >
+                      Sou prestador
+                    </Link>
+                  )}
+                </div>
               ) : (
                 <div className="flex flex-col gap-2">
                   <Link
@@ -167,6 +179,13 @@ export function MobileNav({ isLoggedIn }: MobileNavProps) {
                     className="flex items-center justify-center rounded-xl border border-warm-200 bg-warm-100/60 px-4 py-3 text-sm font-bold text-fg-muted transition-colors hover:bg-warm-200/60"
                   >
                     Entrar
+                  </Link>
+                  <Link
+                    href="/para-prestadores"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center justify-center rounded-xl border border-cyan-600 px-4 py-3 text-sm font-bold text-cyan-700 transition-colors hover:bg-cyan-50"
+                  >
+                    Sou prestador
                   </Link>
                 </div>
               )}
