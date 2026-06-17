@@ -1,23 +1,50 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { useActionState } from "react";
 import { Mail } from "lucide-react";
 import { AuthCard } from "@/components/auth/AuthCard";
 import { FormField } from "@/components/auth/FormField";
 import { FormAlert } from "@/components/auth/FormAlert";
-import { SubmitButton } from "@/components/auth/SubmitButton";
-import {
-  forgotPasswordAction,
-  type ForgotPasswordState,
-} from "./actions";
-
-const initial: ForgotPasswordState = {};
+import { createClient } from "@/lib/supabase/client";
+import { CTAButton } from "@/components/ui/CTAButton";
+import { Loader2 } from "lucide-react";
 
 export default function EsqueciSenhaPage() {
-  const [state, formAction] = useActionState(forgotPasswordAction, initial);
+  const [pending, setPending] = useState(false);
+  const [successEmail, setSuccessEmail] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  if (state.ok && state.successEmail) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const email = (form.elements.namedItem("email") as HTMLInputElement).value.trim();
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("Informe um e-mail válido.");
+      return;
+    }
+
+    setPending(true);
+    setError(null);
+
+    const supabase = createClient();
+    // Chama do browser: PKCE verifier fica em cookie acessível ao /auth/callback
+    const { error: sbError } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/callback?type=recovery&next=/redefinir-senha`,
+    });
+
+    setPending(false);
+
+    if (sbError) {
+      console.warn("[forgot-password]", sbError.message);
+    }
+
+    // Anti-enum: sempre mostra sucesso independente de o email existir
+    setSuccessEmail(email);
+  }
+
+  if (successEmail) {
     return (
       <AuthCard
         title="Verifique seu e-mail"
@@ -29,19 +56,13 @@ export default function EsqueciSenhaPage() {
           </div>
           <p className="text-sm text-fg">
             Enviamos para{" "}
-            <span className="font-bold text-brand-600">
-              {state.successEmail}
-            </span>
-            .
+            <span className="font-bold text-brand-600">{successEmail}</span>.
           </p>
           <p className="mt-2 text-xs text-fg-muted">
             O link expira em 1 hora. Se não chegar, confira a pasta de spam.
           </p>
           <p className="mt-4">
-            <Link
-              href="/login"
-              className="text-xs text-fg-muted hover:text-fg"
-            >
+            <Link href="/login" className="text-xs text-fg-muted hover:text-fg">
               ← Voltar para o login
             </Link>
           </p>
@@ -60,17 +81,24 @@ export default function EsqueciSenhaPage() {
         </Link>
       }
     >
-      <form action={formAction} noValidate>
-        {state.message && <FormAlert type="error" message={state.message} />}
+      <form onSubmit={handleSubmit} noValidate>
+        {error && <FormAlert type="error" message={error} />}
         <FormField
           name="email"
           label="E-mail da conta"
           type="email"
           autoComplete="email"
           required
-          error={state.errors?.email}
         />
-        <SubmitButton pendingLabel="Enviando…">Enviar link</SubmitButton>
+        <CTAButton
+          type="submit"
+          variant="primary"
+          fullWidth
+          disabled={pending}
+          icon={pending ? <Loader2 className="h-4 w-4 animate-spin" /> : undefined}
+        >
+          {pending ? "Enviando…" : "Enviar link"}
+        </CTAButton>
       </form>
     </AuthCard>
   );
