@@ -21,11 +21,13 @@ export function LoginForm() {
   const [state, formAction] = useActionState(loginAction, initial);
   const searchParams = useSearchParams();
   const next = searchParams.get("next") ?? "";
+  const authError = searchParams.get("auth_error");
 
   return (
     <form action={formAction} noValidate>
       <input type="hidden" name="next" value={next} />
 
+      {authError && <FormAlert type="error" message={`Erro de autenticação: ${authError}`} />}
       {state.message && <FormAlert type="error" message={state.message} />}
 
       <FormField

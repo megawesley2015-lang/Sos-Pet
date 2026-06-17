@@ -40,6 +40,8 @@ export async function GET(request: NextRequest) {
   );
 
   if (exchangeError) {
+    // Log para diagnóstico via Vercel logs
+    console.error("[auth/callback] exchangeCodeForSession failed:", exchangeError.message, "| type:", type, "| next:", next);
     const dest = new URL("/login", url.origin);
     dest.searchParams.set("auth_error", exchangeError.message);
     return NextResponse.redirect(dest);
