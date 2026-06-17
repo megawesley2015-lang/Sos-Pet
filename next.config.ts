@@ -53,6 +53,7 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   outputFileTracingRoot: process.cwd(),
+  serverExternalPackages: ["web-push"],
   async headers() {
     return [
       {
