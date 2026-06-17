@@ -5,26 +5,29 @@
 # Última consolidação: 2026-06-08
 # ─────────────────────────────────────────────────────────────
 
-## Estado em: 2026-06-16 — RATE LIMITING + INFRA MULTI-SPEC
+## Estado em: 2026-06-16 — JOEL JOTA VIDEOS + 3 SPECS IMPLEMENTADOS
 
 ### Concluído nesta sessão
-- [x] Rate limiting completo: POST/GET /api/pets, PATCH/DELETE /api/pets/[id], POST /api/parceiros
-- [x] Infra multi-spec: pasta `.specs/` + agente `dev` + skill `multi-orchestrador`
-- [x] Rebrand: amora → jarvis (Chief of Staff)
-- [x] Commit: `6b9511b` — 124 arquivos, 0 erros TypeScript
+- [x] Transcrição + brain dos 6 vídeos Joel Jota → `.claude/brain/joel-jota-videos.md`
+- [x] Página `/para-prestadores` — landing B2B completa (commit `fc03ab4`)
+- [x] Migration `avaliacoes_prestadores` SQL + trigger sync_prestador_avaliacao (commit `d27a8b3`)
+- [x] PWA completo: manifest.json + sw.js push handler + API routes + NotificationOptIn (commit `6cfbc38`)
+- [x] Specs done: onboarding-tutor ✓, avaliacoes-prestadores ✓, pwa-push ✓
 
 ### Próxima sessão — o que fazer primeiro
-1. **`/multi-orchestrador spec=onboarding-tutor`** — prioridade 2, alto impacto em conversão
-2. **`/multi-orchestrador spec=avaliacoes-prestadores`** — monetização B2B
-3. **Deploy**: `git push origin main` → Vercel CI/CD (não feito ainda nesta sessão)
+1. **Deploy** → `git push origin main` → Vercel CI/CD
+2. **Supabase** → Aplicar migrations: 20260616_avaliacoes_prestadores + 20260616_push_subscriptions
+3. **VAPID keys** → Gerar com `npx web-push generate-vapid-keys` + adicionar ao .env.local e Vercel
+4. **`busca-foto`** spec — matching por imagem (AI-First do Joel Jota)
+5. **Ícones PWA** → Criar icon-192.png e icon-512.png em /public/
 
 ### Estado do repositório
 - Branch: main
-- Último commit: 6b9511b (rate limiting + infra multi-spec + rebrand Jarvis)
+- Último commit: 6cfbc38 (PWA push notifications)
 - TypeScript: 0 erros
-- Testes: 66/66 passando
-- Build: ✓ 64 páginas
-- Specs pendentes (.specs/): onboarding-tutor, pwa-push, busca-foto, avaliacoes-prestadores, mapa-calor, lgpd-painel
+- Specs: onboarding-tutor ✓, avaliacoes-prestadores ✓, pwa-push ✓, busca-foto ⏳, mapa-calor ⏳, lgpd-painel ⏳
+- Migrations pendentes de deploy: 20260616_avaliacoes_prestadores, 20260616_push_subscriptions
+- Env vars novas necessárias: VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, NEXT_PUBLIC_VAPID_PUBLIC_KEY, PUSH_SEND_SECRET
 
 ---
 
