@@ -2,6 +2,8 @@
 import { Suspense } from "react";
 import {
   ArrowRight,
+  BadgeCheck,
+  Building2,
   HeartHandshake,
   MapPin,
   PawPrint,
@@ -118,7 +120,10 @@ export default async function LandingPage() {
         <FaixaParceirosServer />
       </Suspense>
 
-      {/* 8–9. Confiança + CTA final */}
+      {/* 8. Prestadores B2B */}
+      <PrestadoresCTA prestadores={richStats.prestadores} />
+
+      {/* 9–10. Confiança + CTA final */}
       <Trust />
       <FinalCTA />
     </main>
@@ -458,6 +463,116 @@ function Trust() {
               <p className="mt-1.5 text-sm text-fg-muted">{p.desc}</p>
             </div>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================
+// PRESTADORES B2B — "depositar antes de sacar"
+// ============================================================
+function PrestadoresCTA({ prestadores }: { prestadores: number }) {
+  return (
+    <section className="py-20 sm:py-24">
+      <div className="mx-auto max-w-6xl px-4">
+        <div className="overflow-hidden rounded-3xl border border-cyan-200 bg-gradient-to-br from-cyan-50 to-warm-50">
+          <div className="grid items-center gap-0 lg:grid-cols-2">
+            {/* Esquerda: pitch */}
+            <div className="p-8 sm:p-12">
+              <span className="inline-flex items-center gap-2 rounded-full bg-cyan-100 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-cyan-800">
+                <Building2 className="h-3 w-3" />
+                Para prestadores de serviço
+              </span>
+              <h2 className="mt-4 font-display text-2xl font-black leading-tight text-fg sm:text-3xl">
+                Seu concorrente ainda não
+                <br />
+                tem presença digital.
+                <br />
+                <span className="text-cyan-700">Você pode chegar primeiro.</span>
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-fg-muted">
+                Tutores que usam a plataforma já são clientes em potencial pra
+                vacinas, consultas, banho e tosa. Apareça pra eles no momento
+                exato em que mais precisam.
+              </p>
+
+              <ul className="mt-5 space-y-2.5">
+                {[
+                  { icon: BadgeCheck, txt: "Badge verificado gera confiança no crise" },
+                  { icon: MapPin, txt: "Pin no mapa por bairro — alcance cirúrgico" },
+                  { icon: Users, txt: `Rede com ${prestadores} prestadores — cresça junto` },
+                ].map((item) => (
+                  <li key={item.txt} className="flex items-center gap-2.5 text-sm text-fg-muted">
+                    <item.icon className="h-4 w-4 shrink-0 text-cyan-600" strokeWidth={2.2} />
+                    {item.txt}
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link
+                  href="/para-prestadores"
+                  className="inline-flex items-center gap-2 rounded-xl bg-cyan-700 px-5 py-3 text-sm font-bold text-white transition-all hover:bg-cyan-600 active:scale-95"
+                >
+                  Ver como funciona
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/prestadores/novo"
+                  className="inline-flex items-center gap-2 rounded-xl border border-cyan-300 bg-white px-5 py-3 text-sm font-bold text-cyan-700 transition-all hover:bg-cyan-50"
+                >
+                  Cadastrar grátis
+                </Link>
+              </div>
+            </div>
+
+            {/* Direita: números */}
+            <div className="border-t border-cyan-200 bg-cyan-700/5 p-8 sm:p-12 lg:border-l lg:border-t-0">
+              <p className="text-xs font-bold uppercase tracking-widest text-cyan-700">
+                Por que agora?
+              </p>
+              <blockquote className="mt-4 font-display text-xl font-black leading-snug text-fg">
+                "71% dos brasileiros busca serviços pet online toda semana."
+              </blockquote>
+              <p className="mt-2 text-xs text-fg-muted">
+                — Pesquisa CNDL / SPC Brasil
+              </p>
+
+              <div className="mt-8 space-y-4">
+                {[
+                  {
+                    num: "47%",
+                    label: "dos concorrentes não têm site",
+                    sub: "Sebrae 2024",
+                  },
+                  {
+                    num: "5 min",
+                    label: "pra criar seu perfil completo",
+                    sub: "Sem código, sem designer",
+                  },
+                  {
+                    num: "R$ 0",
+                    label: "pra começar e aparecer no diretório",
+                    sub: "Grátis para sempre no plano básico",
+                  },
+                ].map((s) => (
+                  <div
+                    key={s.num}
+                    className="flex items-center gap-4 rounded-xl border border-cyan-200 bg-white px-4 py-3"
+                  >
+                    <span className="font-display text-2xl font-black text-cyan-700">
+                      {s.num}
+                    </span>
+                    <div>
+                      <p className="text-sm font-bold text-fg">{s.label}</p>
+                      <p className="text-xs text-fg-muted">{s.sub}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

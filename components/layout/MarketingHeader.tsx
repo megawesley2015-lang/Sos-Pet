@@ -76,6 +76,13 @@ export async function MarketingHeader() {
               {label}
             </Link>
           ))}
+          {/* CTA B2B destacado */}
+          <Link
+            href="/para-prestadores"
+            className="rounded-lg bg-cyan-50 px-3 py-1.5 text-xs font-bold text-cyan-700 ring-1 ring-cyan-200 transition-colors hover:bg-cyan-100"
+          >
+            Sou prestador
+          </Link>
         </nav>
 
         {/* Ações desktop + mobile */}

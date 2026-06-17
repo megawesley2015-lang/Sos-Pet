@@ -1,6 +1,6 @@
 ﻿import { Suspense } from "react";
 import Link from "next/link";
-import { Building2, Plus, Stethoscope } from "lucide-react";
+import { ArrowRight, BadgeCheck, Building2, Plus, Stethoscope } from "lucide-react";
 import { TopBar } from "@/components/layout/TopBar";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { PrestadorCard } from "@/components/providers/PrestadorCard";
@@ -78,6 +78,26 @@ export default async function PrestadoresPage({ searchParams }: PageProps) {
                 {providers.length === 1 ? "prestador ativo" : "prestadores ativos"} na rede
               </span>
             </p>
+          </section>
+
+          {/* Banner B2B — "você é prestador?" */}
+          <section className="mb-6">
+            <div className="flex items-center justify-between gap-4 rounded-xl border border-cyan-200 bg-cyan-50 px-5 py-4">
+              <div className="flex items-center gap-3">
+                <BadgeCheck className="h-5 w-5 shrink-0 text-cyan-700" strokeWidth={2.2} />
+                <p className="text-sm font-medium text-fg">
+                  <span className="font-bold text-cyan-800">Você é prestador?</span>{" "}
+                  Apareça pra tutores da região — cadastro gratuito.
+                </p>
+              </div>
+              <Link
+                href="/para-prestadores"
+                className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-cyan-700 px-3 py-2 text-xs font-bold text-white transition-colors hover:bg-cyan-600"
+              >
+                Saiba mais
+                <ArrowRight className="h-3 w-3" />
+              </Link>
+            </div>
           </section>
 
           {/* Filtros */}
