@@ -1,7 +1,17 @@
-import type { NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
+  // Supabase às vezes envia o `code` para a raiz do site (?code=...)
+  // em vez de /auth/callback quando o redirectTo não bate exatamente
+  // com o allowlist. Redireciona para o callback preservando todos os params.
+  const { pathname, searchParams } = request.nextUrl;
+  if (pathname === "/" && searchParams.has("code")) {
+    const callbackUrl = request.nextUrl.clone();
+    callbackUrl.pathname = "/auth/callback";
+    return NextResponse.redirect(callbackUrl);
+  }
+
   return updateSession(request);
 }
 
