@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { mensagemAuthError } from "@/lib/auth/friendly-error";
 
 /**
  * Endpoint de callback do Supabase Auth (PKCE).
@@ -23,7 +24,14 @@ export async function GET(request: NextRequest) {
   // Caso 1: Supabase devolveu erro explícito (link expirado, já usado, etc.)
   if (error) {
     const dest = new URL("/login", url.origin);
-    dest.searchParams.set("auth_error", errorDescription ?? error);
+    dest.searchParams.set(
+      "auth_error",
+      mensagemAuthError({
+        code: url.searchParams.get("error_code"),
+        error,
+        description: errorDescription,
+      })
+    );
     return NextResponse.redirect(dest);
   }
 
@@ -43,7 +51,8 @@ export async function GET(request: NextRequest) {
     // Log para diagnóstico via Vercel logs
     console.error("[auth/callback] exchangeCodeForSession failed:", exchangeError.message, "| type:", type, "| next:", next);
     const dest = new URL("/login", url.origin);
-    dest.searchParams.set("auth_error", exchangeError.message);
+    // Mensagem amigável pro usuário; o detalhe técnico fica no log acima.
+    dest.searchParams.set("auth_error", mensagemAuthError({}));
     return NextResponse.redirect(dest);
   }
 

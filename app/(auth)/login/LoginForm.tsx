@@ -27,7 +27,7 @@ export function LoginForm() {
     <form action={formAction} noValidate>
       <input type="hidden" name="next" value={next} />
 
-      {authError && <FormAlert type="error" message={`Erro de autenticação: ${authError}`} />}
+      {authError && <FormAlert type="error" message={authError} />}
       {state.message && <FormAlert type="error" message={state.message} />}
 
       <FormField

@@ -59,7 +59,8 @@ export default function EsqueciSenhaPage() {
             <span className="font-bold text-brand-600">{successEmail}</span>.
           </p>
           <p className="mt-2 text-xs text-fg-muted">
-            O link expira em 1 hora. Se não chegar, confira a pasta de spam.
+            Use o link assim que receber — ele tem validade limitada. Se não
+            chegar, confira a pasta de spam.
           </p>
           <p className="mt-4">
             <Link href="/login" className="text-xs text-fg-muted hover:text-fg">

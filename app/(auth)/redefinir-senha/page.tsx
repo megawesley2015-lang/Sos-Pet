@@ -1,20 +1,46 @@
-"use client";
-
 import Link from "next/link";
-import { useActionState } from "react";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getUserSafe } from "@/lib/auth/safe";
 import { AuthCard } from "@/components/auth/AuthCard";
-import { FormField } from "@/components/auth/FormField";
-import { FormAlert } from "@/components/auth/FormAlert";
-import { SubmitButton } from "@/components/auth/SubmitButton";
-import {
-  resetPasswordAction,
-  type ResetPasswordState,
-} from "./actions";
+import { RedefinirSenhaForm } from "./RedefinirSenhaForm";
 
-const initial: ResetPasswordState = {};
+/**
+ * /redefinir-senha — Server Component.
+ *
+ * Valida que existe uma sessão de recuperação ativa ANTES de mostrar o form.
+ * O callback (/auth/callback) troca o code por uma sessão; se o usuário cair
+ * aqui sem passar por esse fluxo (link expirado, acesso direto), não há sessão
+ * e exibimos um estado claro em vez de deixá-lo preencher um form que falharia
+ * só no submit.
+ */
+export default async function RedefinirSenhaPage() {
+  const supabase = await createSupabaseServerClient();
+  const user = await getUserSafe(supabase);
 
-export default function RedefinirSenhaPage() {
-  const [state, formAction] = useActionState(resetPasswordAction, initial);
+  if (!user) {
+    return (
+      <AuthCard
+        title="Link inválido ou expirado"
+        subtitle="Não encontramos uma sessão de recuperação ativa."
+        footer={
+          <Link href="/login" className="text-fg-muted hover:text-fg">
+            ← Voltar para o login
+          </Link>
+        }
+      >
+        <p className="text-sm text-fg-muted">
+          O link pode ter expirado ou já ter sido usado. Solicite um novo para
+          redefinir sua senha.
+        </p>
+        <Link
+          href="/esqueci-senha"
+          className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-brand-500 px-6 py-2.5 text-sm font-bold text-white transition hover:bg-brand-400"
+        >
+          Solicitar novo link
+        </Link>
+      </AuthCard>
+    );
+  }
 
   return (
     <AuthCard
@@ -26,30 +52,7 @@ export default function RedefinirSenhaPage() {
         </Link>
       }
     >
-      <form action={formAction} noValidate>
-        {state.message && <FormAlert type="error" message={state.message} />}
-
-        <FormField
-          name="password"
-          label="Nova senha"
-          type="password"
-          autoComplete="new-password"
-          required
-          error={state.errors?.password}
-          hint="Mínimo de 8 caracteres."
-        />
-
-        <FormField
-          name="confirm"
-          label="Confirme a senha"
-          type="password"
-          autoComplete="new-password"
-          required
-          error={state.errors?.confirm}
-        />
-
-        <SubmitButton pendingLabel="Salvando…">Salvar nova senha</SubmitButton>
-      </form>
+      <RedefinirSenhaForm />
     </AuthCard>
   );
 }

@@ -3,6 +3,7 @@ import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import PWAInstaller from "@/components/pwa/PWAInstaller";
 import EmergencyFAB from "@/components/ui/EmergencyFAB";
+import { AuthHashErrorHandler } from "@/components/auth/AuthHashErrorHandler";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { getBaseUrl } from "@/lib/utils/url";
 import { themeScript } from "@/lib/theme-script";
@@ -90,6 +91,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen font-sans antialiased">
         {children}
+        <AuthHashErrorHandler />
         <EmergencyFAB />
         <PWAInstaller />
         <GoogleAnalytics />
