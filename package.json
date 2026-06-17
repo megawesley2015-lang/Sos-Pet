@@ -14,6 +14,7 @@
     "@sentry/nextjs": "^10.54.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.90.0",
+    "@types/web-push": "^3.6.4",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.38.0",
     "clsx": "^2.1.1",
@@ -28,6 +29,7 @@
     "react-hook-form": "^7.76.1",
     "resend": "^6.12.4",
     "tailwind-merge": "^3.6.0",
+    "web-push": "^3.6.7",
     "zod": "^3.25.76"
   },
   "devDependencies": {
