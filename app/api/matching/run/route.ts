@@ -8,7 +8,10 @@ const MIN_SCORE = 0.55
 
 export async function POST(request: NextRequest) {
   const auth = request.headers.get('Authorization')
-  if (MATCH_SECRET && auth !== `Bearer ${MATCH_SECRET}`) {
+  // Fail-closed: sem o secret configurado, o endpoint fica bloqueado.
+  // (antes: `if (MATCH_SECRET && ...)` deixava QUALQUER UM disparar o job O(n²)
+  //  quando MATCH_RUN_SECRET não estava setada em produção)
+  if (!MATCH_SECRET || auth !== `Bearer ${MATCH_SECRET}`) {
     return NextResponse.json({ success: false, error: 'Não autorizado' }, { status: 401 })
   }
 

@@ -3,16 +3,34 @@ import crypto from 'crypto'
 import { createServiceClient } from '@/lib/supabase/server'
 import { sendEmail } from '@/lib/email/send'
 
-function verifySignature(request: NextRequest, body: string): boolean {
+function verifySignature(request: NextRequest, _body: string): boolean {
   const secret = process.env.MP_WEBHOOK_SECRET
-  if (!secret) return true // skip in dev
+  if (!secret) {
+    // Fail-closed: sem secret em produção, rejeita o webhook.
+    // (antes: `return true` aceitava webhooks NÃO assinados em prod)
+    return process.env.NODE_ENV !== 'production'
+  }
 
-  const signature = request.headers.get('x-signature') ?? ''
-  const ts = request.headers.get('x-request-id') ?? Date.now().toString()
-  const manifest = `id:${ts};request-id:${ts};ts:${ts};`
+  // Formato do header: "ts=1234567890,v1=abc123hash"
+  const xSignature = request.headers.get('x-signature') ?? ''
+  const xRequestId = request.headers.get('x-request-id') ?? ''
+
+  const parts = Object.fromEntries(
+    xSignature.split(',').map(p => p.trim().split('=') as [string, string])
+  )
+  const ts = parts['ts'] ?? ''
+  const v1 = parts['v1'] ?? ''
+
+  if (!ts || !v1) return false
+
+  const manifest = `id:${xRequestId};request-id:${xRequestId};ts:${ts};`
   const expected = crypto.createHmac('sha256', secret).update(manifest).digest('hex')
 
-  return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))
+  const expectedBuf = Buffer.from(expected, 'hex')
+  const receivedBuf = Buffer.from(v1, 'hex')
+
+  if (expectedBuf.length !== receivedBuf.length) return false
+  return crypto.timingSafeEqual(expectedBuf, receivedBuf)
 }
 
 export async function POST(request: NextRequest) {

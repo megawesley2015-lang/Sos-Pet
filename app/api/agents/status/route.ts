@@ -1,11 +1,27 @@
 import { NextResponse } from 'next/server'
-import { createServiceClient } from '@/lib/supabase/server'
+import { createServiceClient, createSupabaseServerClient } from '@/lib/supabase/server'
 import { ok, fail } from '@/lib/api-response'
 
 export const revalidate = 0
 
 export async function GET() {
   try {
+    // Auth: apenas admin pode ver os logs internos dos agentes (pet_id,
+    // input/output summaries). Antes este endpoint era público.
+    const authed = await createSupabaseServerClient()
+    const { data: { user } } = await authed.auth.getUser()
+    if (!user) {
+      return NextResponse.json({ success: false, error: 'Não autenticado' }, { status: 401 })
+    }
+    const { data: profile } = await authed
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+    if (profile?.role !== 'admin') {
+      return NextResponse.json({ success: false, error: 'Acesso negado' }, { status: 403 })
+    }
+
     const supabase = createServiceClient()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = supabase as any

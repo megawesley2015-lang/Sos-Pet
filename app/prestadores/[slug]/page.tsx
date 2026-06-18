@@ -35,6 +35,7 @@ import { listReviewsByProvider, getMyReview } from "@/lib/services/reviews";
 import { formatPhone } from "@/lib/utils/format";
 import { getBaseUrl } from "@/lib/utils/url";
 import { providerJsonLd } from "@/lib/utils/jsonld";
+import { safeJsonLd } from "@/lib/utils/json-ld";
 import { capitalizeWords } from "@/lib/utils/string";
 import type { Metadata } from "next";
 
@@ -123,7 +124,7 @@ export default async function PrestadorDetalhePage({ params }: PageProps) {
     <div className="min-h-screen bg-bg" data-theme="light">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
       <TopBar />
 

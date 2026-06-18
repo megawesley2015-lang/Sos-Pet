@@ -18,6 +18,7 @@ import { ResolveButton, ReactivateButton } from "./ResolveButton";
 import { HealthTimeline } from "@/components/pets/HealthTimeline";
 import { listHealthRecords } from "@/lib/services/health";
 import { EmergencySafetyBanner } from "@/components/store/EmergencySafetyBanner";
+import { safeJsonLd } from "@/lib/utils/json-ld";
 import {
   formatPhone,
   formatRelativeDate,
@@ -176,7 +177,7 @@ export default async function PetDetailPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-bg" data-theme="light">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }} />
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-12 pt-6">
         <div className="mb-4 flex items-center justify-between">
