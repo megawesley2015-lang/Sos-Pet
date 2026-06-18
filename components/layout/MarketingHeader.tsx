@@ -56,7 +56,7 @@ export async function MarketingHeader() {
         </Link>
 
         {/* Nav desktop */}
-        <nav className="hidden items-center gap-6 sm:flex">
+        <nav className="hidden items-center gap-6 lg:flex">
           {[
             { href: "/pets",         label: "Achados" },
             { href: "/mapa",         label: "Mapa" },
@@ -83,20 +83,20 @@ export async function MarketingHeader() {
           {/* Busca rápida — só mobile (em vez de sumir tudo) */}
           <Link
             href="/pets"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-warm-200 bg-warm-100/60 text-fg-muted transition-colors hover:bg-warm-200/60 sm:hidden"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-warm-200 bg-warm-100/60 text-fg-muted transition-colors hover:bg-warm-200/60 lg:hidden"
             aria-label="Buscar pets"
           >
             <Search className="h-4 w-4" />
           </Link>
 
           {/* Auth — desktop */}
-          <div className="hidden sm:flex sm:items-center sm:gap-2">
+          <div className="hidden lg:flex lg:items-center lg:gap-2">
             {role !== "prestador" && (
               <Link
                 href="/para-prestadores"
-                className="rounded-lg border border-cyan-600 px-3 py-1.5 text-xs font-bold text-cyan-700 transition-colors hover:bg-cyan-50"
+                className="rounded-lg border border-accent px-3 py-2 text-sm font-bold text-accent transition-colors hover:bg-accent/10"
               >
-                Sou prestador
+                Anuncie seu serviço
               </Link>
             )}
             {user ? (
@@ -116,7 +116,7 @@ export async function MarketingHeader() {
                 </Link>
                 <Link
                   href="/registro"
-                  className="rounded-lg bg-brand-500 px-4 py-2 text-xs font-bold text-white shadow-glow-brand transition-[background-color,box-shadow] duration-200 hover:bg-brand-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
+                  className="rounded-lg bg-brand-500 px-4 py-2 text-sm font-bold text-white shadow-glow-brand transition-[background-color,box-shadow] duration-200 hover:bg-brand-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
                 >
                   Criar conta
                 </Link>

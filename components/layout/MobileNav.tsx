@@ -76,7 +76,7 @@ export function MobileNav({ isLoggedIn, isPrestador = false }: MobileNavProps) {
         aria-expanded={open}
         aria-controls="mobile-nav-drawer"
         onClick={() => setOpen((v) => !v)}
-        className="flex h-9 w-9 items-center justify-center rounded-full border border-warm-200 bg-warm-100/60 text-fg-muted transition-colors hover:bg-warm-200/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 sm:hidden"
+        className="flex h-9 w-9 items-center justify-center rounded-full border border-warm-200 bg-warm-100/60 text-fg-muted transition-colors hover:bg-warm-200/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 lg:hidden"
       >
         {open ? (
           <X className="h-4 w-4" />
@@ -87,7 +87,7 @@ export function MobileNav({ isLoggedIn, isPrestador = false }: MobileNavProps) {
 
       {/* Drawer overlay */}
       {open && (
-        <div className="fixed inset-0 z-50 sm:hidden">
+        <div className="fixed inset-0 z-50 lg:hidden">
           {/* Backdrop */}
           <div
             aria-hidden
@@ -157,9 +157,9 @@ export function MobileNav({ isLoggedIn, isPrestador = false }: MobileNavProps) {
                     <Link
                       href="/para-prestadores"
                       onClick={() => setOpen(false)}
-                      className="flex items-center justify-center rounded-xl border border-cyan-600 px-4 py-3 text-sm font-bold text-cyan-700 transition-colors hover:bg-cyan-50"
+                      className="flex items-center justify-center rounded-xl border border-accent px-4 py-3 text-sm font-bold text-accent transition-colors hover:bg-accent/10"
                     >
-                      Sou prestador
+                      Anuncie seu serviço
                     </Link>
                   )}
                 </div>
@@ -183,9 +183,9 @@ export function MobileNav({ isLoggedIn, isPrestador = false }: MobileNavProps) {
                   <Link
                     href="/para-prestadores"
                     onClick={() => setOpen(false)}
-                    className="flex items-center justify-center rounded-xl border border-cyan-600 px-4 py-3 text-sm font-bold text-cyan-700 transition-colors hover:bg-cyan-50"
+                    className="flex items-center justify-center rounded-xl border border-accent px-4 py-3 text-sm font-bold text-accent transition-colors hover:bg-accent/10"
                   >
-                    Sou prestador
+                    Anuncie seu serviço
                   </Link>
                 </div>
               )}
