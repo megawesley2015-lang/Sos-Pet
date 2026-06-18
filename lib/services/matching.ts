@@ -56,6 +56,12 @@ const MATCH_THRESHOLD = 60;
 /** Top N matches a processar por execução. */
 const MAX_MATCHES = 5;
 
+/** Colunas carregadas do pet (sem contact_* — não usado no matching). */
+const PET_COLUMNS = "id, kind, status, name, species, color, size, sex, city, state, owner_id";
+
+/** Teto de candidatos carregados por execução — guardrail de performance. */
+const CANDIDATE_QUERY_LIMIT = 200;
+
 // ── Tipos ─────────────────────────────────────────────────────────────────────
 
 type GeoPhase = "city" | "baixada" | "state" | "none";
@@ -179,27 +185,28 @@ export function calculateMatchScore(
 async function findCandidates(found: PetRow): Promise<PetRow[]> {
   const supabase = createServiceClient();
 
-  // Constrói filtro OR para as 3 fases geográficas
-  const cityFilter = `city.ilike.${found.city}`;
-
-  // Fase 2: se a cidade do pet encontrado está na Baixada, inclui todas
-  const baixadaFilters = BAIXADA_SET.has(found.city.trim().toLowerCase())
-    ? BAIXADA_SANTISTA.map((c) => `city.ilike.${c}`)
-    : [];
-
-  // Fase 3: mesmo estado
-  const stateFilter = found.state ? `state.eq.${found.state}` : null;
-
-  const orParts = [cityFilter, ...baixadaFilters];
-  if (stateFilter) orParts.push(stateFilter);
+  // Filtro geográfico (OR das fases). Com estado definido, `state.eq` já é
+  // superconjunto de cidade + Baixada (mesmo estado), então dispensa as demais
+  // cláusulas e descarta colisões de nome de cidade entre estados diferentes.
+  let orParts: string[];
+  if (found.state) {
+    orParts = [`state.eq.${found.state}`];
+  } else {
+    const cityFilter = `city.ilike.${found.city}`;
+    const baixadaFilters = BAIXADA_SET.has(found.city.trim().toLowerCase())
+      ? BAIXADA_SANTISTA.map((c) => `city.ilike.${c}`)
+      : [];
+    orParts = [cityFilter, ...baixadaFilters];
+  }
 
   const { data, error } = await supabase
     .from("pets")
-    .select("id, kind, status, name, species, color, size, sex, city, state, owner_id")
+    .select(PET_COLUMNS)
     .eq("kind", "lost")      // só perdidos
     .eq("status", "active")
     .neq("id", found.id)
-    .or(orParts.join(","));
+    .or(orParts.join(","))
+    .limit(CANDIDATE_QUERY_LIMIT);
 
   if (error) {
     console.error("[Matching] Erro ao buscar candidatos:", error.message);
@@ -255,7 +262,7 @@ export async function triggerPetMatching(newPetId: string): Promise<void> {
 
     const { data: petData, error: petError } = await supabase
       .from("pets")
-      .select("id, kind, status, name, species, color, size, sex, city, state, owner_id")
+      .select(PET_COLUMNS)
       .eq("id", newPetId)
       .single();
 
