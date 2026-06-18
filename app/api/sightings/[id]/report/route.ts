@@ -42,6 +42,17 @@ export async function POST(
     }
   }
 
+  // Incremento atômico via RPC (evita a race do read-then-write).
+  const { data: rpcCount, error: rpcError } = await db.rpc(
+    'increment_sighting_report_count',
+    { p_id: id }
+  )
+
+  if (!rpcError && typeof rpcCount === 'number') {
+    return NextResponse.json({ success: true, data: { report_count: rpcCount } })
+  }
+
+  // Fallback: RPC ainda não aplicada no banco → read-then-write (não-atômico).
   const { data: updated } = await supabase
     .from('sightings')
     .select('report_count')
