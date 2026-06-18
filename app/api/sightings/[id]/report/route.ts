@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 const HIDE_THRESHOLD = 3
+const REPORT_RATE = { limit: 10, windowMs: 3_600_000 } // 10 denúncias/hora por usuário
 
 export async function POST(
   _request: NextRequest,
@@ -12,6 +14,14 @@ export async function POST(
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ success: false, error: 'Não autenticado' }, { status: 401 })
+
+  const rl = await checkRateLimit(`sighting-report:${user.id}`, REPORT_RATE)
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { success: false, error: 'Muitas denúncias em pouco tempo. Tente novamente mais tarde.', code: 'RATE_LIMITED' },
+      { status: 429 }
+    )
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const db = supabase as any

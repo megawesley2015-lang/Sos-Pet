@@ -93,6 +93,10 @@ export async function POST(request: NextRequest) {
           pending: `${siteUrl}/loja/checkout`,
         },
         auto_return: 'approved',
+        // Webhook por-preferência: garante que pagamentos da loja sempre
+        // notifiquem o endpoint de store_orders, sem depender da config
+        // global do painel MP (que aponta para o fluxo de plaquinha).
+        notification_url: `${siteUrl}/api/webhooks/mercadopago`,
       }),
     }).catch(() => null)
 

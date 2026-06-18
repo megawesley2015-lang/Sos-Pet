@@ -40,10 +40,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: 'Assinatura inválida' }, { status: 401 })
   }
 
-  const payload = JSON.parse(body)
+  let payload: { action?: string; data?: { id?: string } }
+  try {
+    payload = JSON.parse(body)
+  } catch {
+    return NextResponse.json({ success: false, error: 'Payload inválido' }, { status: 400 })
+  }
   const { action, data } = payload
 
-  if (!['payment.created', 'payment.updated'].includes(action)) {
+  if (action !== 'payment.created' && action !== 'payment.updated') {
     return NextResponse.json({ success: true })
   }
 
