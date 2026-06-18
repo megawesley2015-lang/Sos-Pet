@@ -284,7 +284,7 @@ function StatsSection({
       <div className="relative mx-auto max-w-6xl px-4">
         {/* Cabeçalho */}
         <div className="mx-auto max-w-2xl text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-cyan-300">
+          <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-accent-light">
             Impacto real
           </span>
           <h2 className="mt-4 font-display text-3xl font-black text-fg sm:text-4xl">
@@ -311,7 +311,7 @@ function StatsSection({
                   className={`pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition-opacity group-hover:opacity-100 ${
                     isOrange
                       ? "bg-gradient-to-br from-brand-500/10 via-transparent to-transparent"
-                      : "bg-gradient-to-br from-cyan-500/10 via-transparent to-transparent"
+                      : "bg-gradient-to-br from-accent/10 via-transparent to-transparent"
                   }`}
                 />
 
@@ -319,7 +319,7 @@ function StatsSection({
                   className={`relative flex h-10 w-10 items-center justify-center rounded-xl ${
                     isOrange
                       ? "bg-brand-500/20 text-brand-400"
-                      : "bg-cyan-500/20 text-cyan-400"
+                      : "bg-accent/20 text-accent-light"
                   }`}
                 >
                   <Icon className="h-5 w-5" strokeWidth={2.2} />
@@ -327,7 +327,7 @@ function StatsSection({
 
                 <p
                   className={`relative mt-4 font-display text-4xl font-black tabular-nums ${
-                    isOrange ? "text-brand-400" : "text-cyan-300"
+                    isOrange ? "text-brand-400" : "text-accent-light"
                   }`}
                 >
                   <CountUp to={item.value} suffix={item.suffix} />
@@ -454,7 +454,7 @@ function Trust() {
               key={p.title}
               className="rounded-2xl border border-warm-200 bg-warm-50 p-6 shadow-warm-card transition-all hover:shadow-warm-hover"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-100 text-cyan-700">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent-text">
                 <p.icon className="h-5 w-5" strokeWidth={2.2} />
               </div>
               <h3 className="mt-3 font-display text-base font-bold text-fg">
@@ -474,13 +474,13 @@ function Trust() {
 // ============================================================
 function PrestadoresCTA({ prestadores }: { prestadores: number }) {
   return (
-    <section className="py-20 sm:py-24">
+    <section className="py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="overflow-hidden rounded-3xl border border-cyan-200 bg-gradient-to-br from-cyan-50 to-warm-50">
+        <div className="overflow-hidden rounded-3xl border border-accent/20 bg-gradient-to-br from-accent/5 to-warm-50">
           <div className="grid items-center gap-0 lg:grid-cols-2">
             {/* Esquerda: pitch */}
             <div className="p-8 sm:p-12">
-              <span className="inline-flex items-center gap-2 rounded-full bg-cyan-100 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-cyan-800">
+              <span className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-accent-text">
                 <Building2 className="h-3 w-3" />
                 Para prestadores de serviço
               </span>
@@ -489,7 +489,7 @@ function PrestadoresCTA({ prestadores }: { prestadores: number }) {
                 <br />
                 tem presença digital.
                 <br />
-                <span className="text-cyan-700">Você pode chegar primeiro.</span>
+                <span className="text-accent-text">Você pode chegar primeiro.</span>
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-fg-muted">
                 Tutores que usam a plataforma já são clientes em potencial pra
@@ -504,7 +504,7 @@ function PrestadoresCTA({ prestadores }: { prestadores: number }) {
                   { icon: Users, txt: `Rede com ${prestadores} prestadores — cresça junto` },
                 ].map((item) => (
                   <li key={item.txt} className="flex items-center gap-2.5 text-sm text-fg-muted">
-                    <item.icon className="h-4 w-4 shrink-0 text-cyan-600" strokeWidth={2.2} />
+                    <item.icon className="h-4 w-4 shrink-0 text-accent-text" strokeWidth={2.2} />
                     {item.txt}
                   </li>
                 ))}
@@ -513,14 +513,14 @@ function PrestadoresCTA({ prestadores }: { prestadores: number }) {
               <div className="mt-7 flex flex-wrap gap-3">
                 <Link
                   href="/para-prestadores"
-                  className="inline-flex items-center gap-2 rounded-xl bg-cyan-700 px-5 py-3 text-sm font-bold text-white transition-all hover:bg-cyan-600 active:scale-95"
+                  className="inline-flex items-center gap-2 rounded-xl bg-accent-text px-5 py-3 text-sm font-bold text-white transition-all hover:bg-accent-text/90 active:scale-95"
                 >
                   Ver como funciona
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
                   href="/prestadores/novo"
-                  className="inline-flex items-center gap-2 rounded-xl border border-cyan-300 bg-white px-5 py-3 text-sm font-bold text-cyan-700 transition-all hover:bg-cyan-50"
+                  className="inline-flex items-center gap-2 rounded-xl border border-accent/40 bg-white px-5 py-3 text-sm font-bold text-accent-text transition-all hover:bg-accent/5"
                 >
                   Cadastrar grátis
                 </Link>
@@ -528,8 +528,8 @@ function PrestadoresCTA({ prestadores }: { prestadores: number }) {
             </div>
 
             {/* Direita: números */}
-            <div className="border-t border-cyan-200 bg-cyan-700/5 p-8 sm:p-12 lg:border-l lg:border-t-0">
-              <p className="text-xs font-bold uppercase tracking-widest text-cyan-700">
+            <div className="border-t border-accent/20 bg-accent-text/5 p-8 sm:p-12 lg:border-l lg:border-t-0">
+              <p className="text-xs font-bold uppercase tracking-widest text-accent-text">
                 Por que agora?
               </p>
               <blockquote className="mt-4 font-display text-xl font-black leading-snug text-fg">
@@ -559,9 +559,9 @@ function PrestadoresCTA({ prestadores }: { prestadores: number }) {
                 ].map((s) => (
                   <div
                     key={s.num}
-                    className="flex items-center gap-4 rounded-xl border border-cyan-200 bg-white px-4 py-3"
+                    className="flex items-center gap-4 rounded-xl border border-accent/20 bg-white px-4 py-3"
                   >
-                    <span className="font-display text-2xl font-black text-cyan-700">
+                    <span className="font-display text-2xl font-black text-accent-text">
                       {s.num}
                     </span>
                     <div>

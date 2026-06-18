@@ -19,6 +19,7 @@
   --color-primary-dark:  #E06A00;
   --color-accent:        #20B2AA;
   --color-accent-light:  #3DCFC7;
+  --color-accent-text:   #0F6E56;  /* teal escuro — uso EXCLUSIVO como texto/botão em fundo claro (espelha brand-text) */
 
   /* Semânticos */
   --color-success: #3DAA6B;
