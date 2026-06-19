@@ -11,6 +11,7 @@ interface MobileNavProps {
 
 const NAV_LINKS = [
   { href: "/pets",        label: "Achados & Perdidos" },
+  { href: "/adotar",      label: "❤️ Adoção" },
   { href: "/mapa",        label: "🗺️ Mapa de Alertas" },
   { href: "/avistamentos",label: "Avistamentos" },
   { href: "/prestadores", label: "Prestadores" },

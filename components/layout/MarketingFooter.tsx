@@ -31,6 +31,11 @@ export function MarketingFooter() {
               </Link>
             </li>
             <li>
+              <Link href="/adotar" className="hover:text-brand-600">
+                ❤️ Adoção
+              </Link>
+            </li>
+            <li>
               <Link href="/pets/novo" className="hover:text-brand-600">
                 Cadastrar pet
               </Link>

@@ -59,6 +59,7 @@ export async function MarketingHeader() {
         <nav className="hidden items-center gap-6 lg:flex">
           {[
             { href: "/pets",         label: "Achados" },
+            { href: "/adotar",       label: "❤️ Adoção" },
             { href: "/mapa",         label: "Mapa" },
             { href: "/avistamentos", label: "Avistamentos" },
             { href: "/prestadores",  label: "Prestadores" },
