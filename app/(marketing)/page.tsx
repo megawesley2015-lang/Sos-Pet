@@ -138,6 +138,10 @@ function StatsBand({
 }: {
   stats: { active: number; lost: number; found: number };
 }) {
+  if (stats.active === 0 && stats.lost === 0 && stats.found === 0) {
+    return null;
+  }
+
   return (
     <section className="border-y border-warm-200/80 bg-warm-100/40 py-8 lg:hidden">
       <div className="mx-auto grid max-w-3xl grid-cols-3 gap-4 px-4 text-center">
@@ -234,6 +238,15 @@ function StatsSection({
     prestadores: number;
   };
 }) {
+  if (
+    stats.totalPets === 0 &&
+    stats.resolved === 0 &&
+    stats.sightings === 0 &&
+    stats.prestadores === 0
+  ) {
+    return null;
+  }
+
   const items = [
     {
       value: stats.totalPets,

@@ -90,14 +90,17 @@ export async function MarketingHeader() {
           </Link>
 
           {/* Auth — desktop */}
-          <div className="hidden lg:flex lg:items-center lg:gap-2">
+          <div className="hidden lg:flex lg:items-center lg:gap-4">
             {role !== "prestador" && (
-              <Link
-                href="/para-prestadores"
-                className="rounded-lg border border-accent px-3 py-2 text-sm font-bold text-accent transition-colors hover:bg-accent/10"
-              >
-                Anuncie seu serviço
-              </Link>
+              <>
+                <Link
+                  href="/para-prestadores"
+                  className="text-sm font-semibold text-fg-muted transition-colors hover:text-accent"
+                >
+                  Anuncie seu serviço
+                </Link>
+                <span className="h-5 w-px bg-warm-200" aria-hidden />
+              </>
             )}
             {user ? (
               <UserMenu
@@ -110,13 +113,13 @@ export async function MarketingHeader() {
               <>
                 <Link
                   href="/login"
-                  className="rounded-lg border border-warm-200 px-3 py-2 text-sm font-bold text-fg-muted transition-colors hover:bg-warm-200/60"
+                  className="text-sm font-semibold text-fg-muted transition-colors hover:text-brand-600"
                 >
                   Entrar
                 </Link>
                 <Link
                   href="/registro"
-                  className="rounded-lg bg-brand-500 px-4 py-2 text-sm font-bold text-white shadow-glow-brand transition-[background-color,box-shadow] duration-200 hover:bg-brand-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
+                  className="rounded-full bg-brand-500 px-5 py-2 text-sm font-bold text-white shadow-sm transition-all hover:bg-brand-400 hover:shadow-glow-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
                 >
                   Criar conta
                 </Link>
