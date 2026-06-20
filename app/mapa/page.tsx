@@ -23,27 +23,32 @@ export const dynamic = "force-dynamic";
 export default async function MapaPage() {
   const supabase = await createSupabaseServerClient();
 
-  const { data: petsRaw } = await supabase
-    .from("pets_public")
-    .select("id, kind, name, species, color, photo_url, latitude, longitude, city, neighborhood, created_at")
-    .not("latitude", "is", null)
-    .not("longitude", "is", null)
-    .order("created_at", { ascending: false })
-    .limit(500);
-
   const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString();
-  const { data: sightingsRaw } = await supabase
-    .from("sightings")
-    .select("id, pet_id, lat, lng, description, created_at")
-    .gte("created_at", twoWeeksAgo)
-    .order("created_at", { ascending: false })
-    .limit(200);
 
-  const { data: sentinelsRaw } = await supabase
-    .from("sentinel_partners")
-    .select("id, name, type, latitude, longitude, address, has_cameras")
-    .eq("is_active", true)
-    .limit(200);
+  const [
+    { data: petsRaw },
+    { data: sightingsRaw },
+    { data: sentinelsRaw },
+  ] = await Promise.all([
+    supabase
+      .from("pets_public")
+      .select("id, kind, name, species, color, photo_url, latitude, longitude, city, neighborhood, created_at")
+      .not("latitude", "is", null)
+      .not("longitude", "is", null)
+      .order("created_at", { ascending: false })
+      .limit(500),
+    supabase
+      .from("sightings")
+      .select("id, pet_id, lat, lng, description, created_at")
+      .gte("created_at", twoWeeksAgo)
+      .order("created_at", { ascending: false })
+      .limit(200),
+    supabase
+      .from("sentinel_partners")
+      .select("id, name, type, latitude, longitude, address, has_cameras")
+      .eq("is_active", true)
+      .limit(200),
+  ]);
 
   const pets: PetMapPin[] = (petsRaw ?? []).map((p) => ({
     id:           p.id as string,
@@ -78,8 +83,12 @@ export default async function MapaPage() {
     created_at:  s.created_at as string,
   }));
 
-  const lostCount  = pets.filter((p) => p.kind === "lost").length;
-  const foundCount = pets.filter((p) => p.kind === "found").length;
+  let lostCount = 0;
+  let foundCount = 0;
+  for (const p of pets) {
+    if (p.kind === "lost") lostCount++;
+    else foundCount++;
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-bg">

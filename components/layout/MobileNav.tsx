@@ -149,7 +149,7 @@ export function MobileNav({ isLoggedIn, isPrestador = false }: MobileNavProps) {
                   <Link
                     href="/meus-pets"
                     onClick={() => setOpen(false)}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-500 px-4 py-3 text-sm font-bold text-white shadow-glow-brand transition-all hover:bg-brand-400"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-500 px-4 py-3 text-sm font-bold text-white shadow-glow-brand transition-colors hover:bg-brand-400"
                   >
                     <PawPrint className="h-4 w-4" strokeWidth={2.5} />
                     Meu painel
@@ -169,7 +169,7 @@ export function MobileNav({ isLoggedIn, isPrestador = false }: MobileNavProps) {
                   <Link
                     href="/pets/novo"
                     onClick={() => setOpen(false)}
-                    className="flex items-center justify-center gap-2 rounded-xl bg-brand-500 px-4 py-3 text-sm font-bold text-white shadow-glow-brand transition-all hover:bg-brand-400"
+                    className="flex items-center justify-center gap-2 rounded-xl bg-brand-500 px-4 py-3 text-sm font-bold text-white shadow-glow-brand transition-colors hover:bg-brand-400"
                   >
                     <Siren className="h-4 w-4" strokeWidth={2.5} />
                     Cadastrar pet perdido

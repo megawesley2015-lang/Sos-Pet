@@ -1,11 +1,24 @@
 ﻿// app/achados-e-perdidos/[id]/page.tsx — detalhe do pet, único lugar com contato
 
+import { cache }        from 'react'
 import { notFound }     from 'next/navigation'
 import Link             from 'next/link'
 import Image            from 'next/image'
 import { createSupabaseServerClient as createClient } from '@/lib/supabase/server'
 import { ShareButton }  from '@/components/pets/ShareButton'
 import { PET_DETAIL_COLUMNS, type PetDetail } from '@/types/pets'
+
+// React.cache() garante deduplicação: generateMetadata e PetDetailPage
+// compartilham o mesmo resultado dentro do mesmo request.
+const getCachedPet = cache(async (id: string) => {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('pets')
+    .select(PET_DETAIL_COLUMNS)
+    .eq('id', id)
+    .single()
+  return data
+})
 
 const SPECIES_LABEL: Record<string, string> = { dog: 'Cachorro', cat: 'Gato', other: 'Animal' }
 const SIZE_LABEL:    Record<string, string> = { small: 'Pequeno', medium: 'Médio', large: 'Grande' }
@@ -15,13 +28,8 @@ const SEX_LABEL:     Record<string, string> = { male: 'Macho', female: 'Fêmea',
 type PageParams = { params: Promise<{ id: string }>; searchParams: Promise<{ novo?: string }> }
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
-  const { id }   = await params
-  const supabase = await createClient()
-  const { data } = await supabase
-    .from('pets')
-    .select('name, species, city, kind, photo_url')
-    .eq('id', id)
-    .single()
+  const { id } = await params
+  const data   = await getCachedPet(id) as PetDetail | null
 
   if (!data) return { title: 'Pet não encontrado — SOS Pet Aumigo' }
 
@@ -49,17 +57,11 @@ function Tag({ label, value }: { label: string; value: string }) {
 }
 
 export default async function PetDetailPage({ params, searchParams }: PageParams) {
-  const { id }  = await params
+  const { id }   = await params
   const { novo } = await searchParams
-  const supabase = await createClient()
+  const data     = await getCachedPet(id)
 
-  const { data, error } = await supabase
-    .from('pets')
-    .select(PET_DETAIL_COLUMNS)
-    .eq('id', id)
-    .single()
-
-  if (error || !data) notFound()
+  if (!data) notFound()
 
   const pet          = data as unknown as PetDetail
   const isLost       = pet.kind === 'lost'

@@ -45,12 +45,16 @@ export async function MarketingHeader() {
           <img
             src="/logo.svg"
             alt="SOS Pet Aumigo — Achados e Perdidos"
+            width={120}
+            height={56}
             className="hidden h-14 w-auto sm:block"
           />
           {/* Só ícone — mobile */}
           <img
             src="/logo-icon.svg"
             alt="SOS Pet Aumigo"
+            width={40}
+            height={40}
             className="h-10 w-10 sm:hidden"
           />
         </Link>
@@ -120,7 +124,7 @@ export async function MarketingHeader() {
                 </Link>
                 <Link
                   href="/registro"
-                  className="rounded-full bg-brand-500 px-5 py-2 text-sm font-bold text-white shadow-sm transition-all hover:bg-brand-400 hover:shadow-glow-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
+                  className="rounded-full bg-brand-500 px-5 py-2 text-sm font-bold text-white shadow-sm transition-[background-color,box-shadow] hover:bg-brand-400 hover:shadow-glow-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
                 >
                   Criar conta
                 </Link>

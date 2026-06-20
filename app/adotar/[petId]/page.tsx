@@ -68,14 +68,6 @@ export default async function AdotarPetPage({ params }: { params: { petId: strin
     logo_url: string | null; description: string | null;
   };
 
-  const { data: shelterRaw } = await supabase
-    .from("shelters")
-    .select("id, name, type, city, neighborhood, phone, email, logo_url, description")
-    .eq("id", pet.shelter_id)
-    .maybeSingle();
-
-  const shelter = shelterRaw as ShelterRow | null;
-
   type VacinaRow = {
     vaccine_name: string;
     applied_at: string | null;
@@ -83,14 +75,23 @@ export default async function AdotarPetPage({ params }: { params: { petId: strin
     notes: string | null;
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: vacinasRaw } = await (supabase as any)
-    .from("pet_vaccinations")
-    .select("vaccine_name, applied_at, next_due_at, notes")
-    .eq("pet_id", params.petId)
-    .order("applied_at", { ascending: false })
-    .limit(10);
+  // shelter depende de pet.shelter_id, mas vacinas só precisa de petId — paralelo
+  const [{ data: shelterRaw }, { data: vacinasRaw }] = await Promise.all([
+    supabase
+      .from("shelters")
+      .select("id, name, type, city, neighborhood, phone, email, logo_url, description")
+      .eq("id", pet.shelter_id)
+      .maybeSingle(),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase as any)
+      .from("pet_vaccinations")
+      .select("vaccine_name, applied_at, next_due_at, notes")
+      .eq("pet_id", params.petId)
+      .order("applied_at", { ascending: false })
+      .limit(10),
+  ]);
 
+  const shelter = shelterRaw as ShelterRow | null;
   const vacinas = vacinasRaw as VacinaRow[] | null;
 
   const displayName = pet.name ?? SPECIES_LABEL[pet.species] ?? "Sem nome";

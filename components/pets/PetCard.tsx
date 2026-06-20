@@ -38,7 +38,7 @@ export function PetCard({ pet }: PetCardProps) {
         group relative flex flex-col rounded-xl overflow-hidden
         border border-[rgb(var(--color-border))] bg-[rgb(var(--color-bg-raised))]
         hover:border-[rgb(var(--color-border-strong))] hover:shadow-lg hover:shadow-black/20
-        transition-all duration-200
+        transition-[border-color,box-shadow] duration-200
       "
       aria-label={`${pet.kind === 'lost' ? 'Pet perdido' : 'Pet encontrado'}: ${pet.name ?? speciesLabel} em ${pet.city}`}
     >
