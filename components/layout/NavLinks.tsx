@@ -14,13 +14,27 @@ const LINKS = [
   { href: "/loja",          label: "🛍️ Loja" },
 ];
 
-export function NavLinks() {
+interface NavLinksProps {
+  variant?: "light" | "dark";
+}
+
+export function NavLinks({ variant = "light" }: NavLinksProps) {
   const pathname = usePathname();
+
+  const containerCls =
+    variant === "dark"
+      ? "border border-white/10 bg-white/5"
+      : "border border-warm-200/80 bg-warm-100/50";
+
+  const inactiveCls =
+    variant === "dark"
+      ? "font-medium text-fg-muted hover:bg-white/10 hover:text-fg"
+      : "font-medium text-fg-muted hover:bg-warm-200/70 hover:text-fg";
 
   return (
     <nav
       aria-label="Navegação principal"
-      className="hidden items-center gap-0.5 rounded-full border border-warm-200/80 bg-warm-100/50 px-1.5 py-1 xl:flex"
+      className={`hidden items-center gap-0.5 rounded-full px-1.5 py-1 xl:flex ${containerCls}`}
     >
       {LINKS.map(({ href, label }) => {
         const isActive =
@@ -32,11 +46,11 @@ export function NavLinks() {
             href={href}
             aria-current={isActive ? "page" : undefined}
             className={[
-              "rounded-full px-2.5 py-1.5 text-xs font-medium transition-all duration-150",
+              "rounded-full px-2.5 py-1.5 text-xs transition-all duration-150",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1",
               isActive
                 ? "bg-brand-500 font-semibold text-white shadow-sm"
-                : "text-fg-muted hover:bg-warm-200/70 hover:text-fg",
+                : inactiveCls,
             ].join(" ")}
           >
             {label}

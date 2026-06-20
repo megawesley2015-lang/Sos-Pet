@@ -16,6 +16,7 @@ import { CTAButton } from "@/components/ui/CTAButton";
 import SightingsList from "./SightingsList";
 import { ResolveButton, ReactivateButton } from "./ResolveButton";
 import { HealthTimeline } from "@/components/pets/HealthTimeline";
+import { MatchPanel } from "@/components/pets/MatchPanel";
 import { listHealthRecords } from "@/lib/services/health";
 import { EmergencySafetyBanner } from "@/components/store/EmergencySafetyBanner";
 import { safeJsonLd } from "@/lib/utils/json-ld";
@@ -345,6 +346,19 @@ export default async function PetDetailPage({ params }: PageProps) {
                 petName={pet.name ?? "Pet"}
                 petCity={pet.city}
               />
+            )}
+
+            {isOwner && pet.status === "active" && (
+              <div className="mt-8">
+                <h2 className="mb-3 flex items-center gap-2 text-sm font-bold text-fg">
+                  🤖 Matching IA
+                </h2>
+                <MatchPanel
+                  petId={pet.id}
+                  petKind={pet.kind as "lost" | "found"}
+                  petName={pet.name}
+                />
+              </div>
             )}
 
             {isOwner && (

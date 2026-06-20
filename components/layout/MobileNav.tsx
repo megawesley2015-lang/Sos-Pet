@@ -8,6 +8,7 @@ import { Menu, X, PawPrint, Siren } from "lucide-react";
 interface MobileNavProps {
   isLoggedIn: boolean;
   isPrestador?: boolean;
+  dark?: boolean;
 }
 
 const NAV_LINKS = [
@@ -24,33 +25,24 @@ const NAV_LINKS = [
 
 /**
  * MobileNav — hamburguer + drawer lateral (visível em < xl).
+ * dark=true → botão adaptado para header escuro (TopBar).
  * Active state via usePathname(). Acessibilidade: focus trap + Esc.
  */
-export function MobileNav({ isLoggedIn, isPrestador = false }: MobileNavProps) {
+export function MobileNav({ isLoggedIn, isPrestador = false, dark = false }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const drawerRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
-  // Bloquear scroll quando drawer aberto
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => { document.body.style.overflow = ""; };
   }, [open]);
 
-  // Fechar ao navegar
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+  useEffect(() => { setOpen(false); }, [pathname]);
 
-  // Focus trap + Esc
   useEffect(() => {
-    if (!open) {
-      toggleRef.current?.focus();
-      return;
-    }
+    if (!open) { toggleRef.current?.focus(); return; }
 
     const focusable = drawerRef.current?.querySelectorAll<HTMLElement>(
       'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
@@ -73,9 +65,13 @@ export function MobileNav({ isLoggedIn, isPrestador = false }: MobileNavProps) {
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
+  const btnCls = dark
+    ? "border border-white/20 bg-white/8 text-fg-muted hover:border-brand-400/50 hover:bg-white/15 hover:text-brand-300"
+    : "border border-warm-200/80 bg-warm-100/60 text-fg-muted hover:border-brand-300 hover:bg-warm-200/60 hover:text-brand-600";
+
   return (
     <>
-      {/* Botão hamburguer — mobile/tablet */}
+      {/* Botão hamburguer */}
       <button
         ref={toggleRef}
         type="button"
@@ -83,22 +79,19 @@ export function MobileNav({ isLoggedIn, isPrestador = false }: MobileNavProps) {
         aria-expanded={open}
         aria-controls="mobile-nav-drawer"
         onClick={() => setOpen((v) => !v)}
-        className="flex h-9 w-9 items-center justify-center rounded-full border border-warm-200/80 bg-warm-100/60 text-fg-muted transition-all duration-150 hover:border-brand-300 hover:bg-warm-200/60 hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 xl:hidden"
+        className={`flex h-9 w-9 items-center justify-center rounded-full transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 xl:hidden ${btnCls}`}
       >
         {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
       </button>
 
-      {/* Drawer overlay */}
       {open && (
         <div className="fixed inset-0 z-50 xl:hidden">
-          {/* Backdrop */}
           <div
             aria-hidden
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={() => setOpen(false)}
           />
 
-          {/* Painel lateral */}
           <div
             id="mobile-nav-drawer"
             ref={drawerRef}
@@ -127,7 +120,7 @@ export function MobileNav({ isLoggedIn, isPrestador = false }: MobileNavProps) {
               </button>
             </div>
 
-            {/* Links de navegação */}
+            {/* Links */}
             <nav className="flex-1 overflow-y-auto px-3 py-2">
               {NAV_LINKS.map((link) => {
                 const isActive =
@@ -147,10 +140,7 @@ export function MobileNav({ isLoggedIn, isPrestador = false }: MobileNavProps) {
                     ].join(" ")}
                   >
                     {isActive && (
-                      <span
-                        aria-hidden
-                        className="mr-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-500"
-                      />
+                      <span aria-hidden className="mr-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-500" />
                     )}
                     {link.label}
                   </Link>
@@ -158,7 +148,6 @@ export function MobileNav({ isLoggedIn, isPrestador = false }: MobileNavProps) {
               })}
             </nav>
 
-            {/* Divisor */}
             <div className="mx-5 border-t border-warm-200/80" />
 
             {/* Auth */}
