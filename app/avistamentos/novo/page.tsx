@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Eye, Loader2, MapPin, Navigation } from "lucide-react";
+import { ArrowLeft, Eye, Loader2, MapPin, Navigation, PawPrint, Search } from "lucide-react";
 import { registrarAvistamento } from "../actions";
 import type { SightingFormState } from "../actions";
 
@@ -19,12 +19,15 @@ function FieldError({ errors }: { errors?: string[] }) {
  * Aceita ?pet=<uuid> para pré-selecionar o pet.
  * Geolocalização via navigator.geolocation + Nominatim reverse geocoding.
  */
+type Step = "choice" | "sighting";
+
 export default function NovoAvistamentoPage({
   searchParams,
 }: {
   searchParams: Promise<{ pet?: string }>;
 }) {
   const [state, action, isPending] = useActionState(registrarAvistamento, initialState);
+  const [step, setStep] = useState<Step>("choice");
 
   const [petId, setPetId] = useState("");
   const [pets, setPets] = useState<{ id: string; name: string | null; species: string }[]>([]);
@@ -36,9 +39,12 @@ export default function NovoAvistamentoPage({
   const successRef = useRef(false);
 
   useEffect(() => {
-    // Pré-seleciona pet se veio por querystring
+    // Pré-seleciona pet se veio por querystring — pula tela de escolha
     searchParams.then((p) => {
-      if (p.pet) setPetId(p.pet);
+      if (p.pet) {
+        setPetId(p.pet);
+        setStep("sighting");
+      }
     });
 
     // Busca pets perdidos ativos para o select
@@ -109,10 +115,22 @@ export default function NovoAvistamentoPage({
       {/* Header fixo */}
       <header className="sticky top-0 z-40 border-b border-warm-200 bg-bg/90 backdrop-blur-sm">
         <div className="mx-auto flex max-w-2xl items-center gap-3 px-4 py-3">
-          <Link href="/avistamentos" className="rounded-lg p-2 text-fg-muted hover:bg-warm-100 hover:text-fg">
-            <ArrowLeft className="h-4 w-4" />
-          </Link>
-          <span className="font-display text-sm font-bold text-fg">Reportar avistamento</span>
+          {step === "sighting" ? (
+            <button
+              type="button"
+              onClick={() => setStep("choice")}
+              className="rounded-lg p-2 text-fg-muted hover:bg-warm-100 hover:text-fg"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </button>
+          ) : (
+            <Link href="/avistamentos" className="rounded-lg p-2 text-fg-muted hover:bg-warm-100 hover:text-fg">
+              <ArrowLeft className="h-4 w-4" />
+            </Link>
+          )}
+          <span className="font-display text-sm font-bold text-fg">
+            {step === "choice" ? "O que você quer fazer?" : "Reportar avistamento"}
+          </span>
           <span className="ml-2 rounded-full border border-brand-500/30 bg-brand-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-brand-700">
             Sem login
           </span>
@@ -120,7 +138,76 @@ export default function NovoAvistamentoPage({
       </header>
 
       <main className="mx-auto max-w-2xl px-4 pb-20 pt-6">
-        {state.success ? (
+        {/* ── Tela de escolha ── */}
+        {step === "choice" && (
+          <div>
+            <div className="mb-8 text-center">
+              <h1 className="font-display text-2xl font-bold text-fg">O que aconteceu?</h1>
+              <p className="mt-1 text-sm text-fg-muted">
+                Escolha a opção que melhor descreve sua situação.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              {/* Opção A — avistamento de pet já cadastrado */}
+              <button
+                type="button"
+                onClick={() => setStep("sighting")}
+                className="group w-full rounded-2xl border-2 border-warm-200 bg-white p-6 text-left transition-all hover:border-brand-500/50 hover:shadow-warm-hover"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-500/10 text-brand-600 transition group-hover:bg-brand-500/20">
+                    <Search className="h-6 w-6" strokeWidth={2.2} />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-display text-base font-bold text-fg">
+                      Vi um pet que já foi reportado como perdido
+                    </p>
+                    <p className="mt-1 text-sm text-fg-muted">
+                      O tutor já cadastrou o pet aqui e você reconheceu. Você registra onde e quando viu — ajuda a triangular a localização.
+                    </p>
+                    <span className="mt-3 inline-block text-xs font-bold text-brand-600">
+                      Registrar avistamento →
+                    </span>
+                  </div>
+                </div>
+              </button>
+
+              {/* Opção B — animal desconhecido encontrado na rua */}
+              <Link
+                href="/pets/novo?kind=found"
+                className="group flex w-full rounded-2xl border-2 border-warm-200 bg-white p-6 text-left transition-all hover:border-cyan-500/50 hover:shadow-warm-hover"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-700 transition group-hover:bg-cyan-500/20">
+                    <PawPrint className="h-6 w-6" strokeWidth={2.2} />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-display text-base font-bold text-fg">
+                      Encontrei um animal na rua sem saber se tem dono
+                    </p>
+                    <p className="mt-1 text-sm text-fg-muted">
+                      O animal não está no sistema. Você cadastra ele como "encontrado" — o algoritmo cruza automaticamente com os pets perdidos da região.
+                    </p>
+                    <span className="mt-3 inline-block text-xs font-bold text-cyan-700">
+                      Cadastrar animal encontrado →
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </div>
+
+            <p className="mt-8 text-center text-xs text-fg-subtle">
+              Não sabe qual das duas?{" "}
+              <Link href="/pets?kind=lost" className="text-brand-500 hover:underline">
+                Veja os pets perdidos na rede
+              </Link>{" "}
+              e veja se reconhece o animal.
+            </p>
+          </div>
+        )}
+
+        {step === "sighting" && state.success ? (
           /* ── Sucesso ── */
           <div className="flex flex-col items-center gap-6 py-12 text-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-500/15 text-3xl">
@@ -147,7 +234,7 @@ export default function NovoAvistamentoPage({
               </Link>
             </div>
           </div>
-        ) : (
+        ) : step === "sighting" ? (
           /* ── Formulário ── */
           <>
             <div className="mb-6">
@@ -306,7 +393,7 @@ export default function NovoAvistamentoPage({
               </p>
             </form>
           </>
-        )}
+        ) : null}
       </main>
     </div>
   );
