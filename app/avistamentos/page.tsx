@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import Image from "next/image";
 import { Eye, MapPin, Plus, Clock } from "lucide-react";
 import { TopBar } from "@/components/layout/TopBar";
@@ -13,7 +13,83 @@ export const metadata = {
   openGraph: { url: "/avistamentos", type: "website" as const },
 };
 
+const SPECIES_LABEL: Record<string, string> = { dog: "Cachorro", cat: "Gato", other: "Animal" };
 const SPECIES_EMOJI: Record<string, string> = { dog: "🐶", cat: "🐱", other: "🐾" };
+
+type Sighting = Awaited<ReturnType<typeof listarAvistamentosRecentes>>[number];
+type SightingPet = { id: string; name: string | null; species: string; photo_url: string | null; city: string; neighborhood: string | null; kind: string; status: string } | null;
+
+function SightingCard({ sighting }: { sighting: Sighting }) {
+  const pet = sighting.pets as SightingPet;
+  const speciesLabel = SPECIES_LABEL[pet?.species ?? "other"] ?? "Animal";
+  const emoji = SPECIES_EMOJI[pet?.species ?? "other"];
+  const displayName = pet?.name ?? speciesLabel;
+  const href = pet ? `/achados-e-perdidos/${pet.id}` : "#";
+
+  return (
+    <article className="group flex flex-col rounded-xl overflow-hidden border border-[rgb(var(--color-border))] bg-[rgb(var(--color-bg-raised))] hover:border-[rgb(var(--color-border-strong))] hover:shadow-lg hover:shadow-black/20 transition-[border-color,box-shadow] duration-200">
+      <Link href={href} className="flex flex-col" aria-label={`Avistamento de ${displayName}`}>
+        {/* Foto do pet */}
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-[rgb(var(--color-bg-overlay))]">
+          {pet?.photo_url ? (
+            <Image
+              src={pet.photo_url}
+              alt={`Foto de ${displayName}`}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              className="object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-4xl" aria-hidden="true">
+              {emoji}
+            </div>
+          )}
+
+          {/* Badge avistamento */}
+          <div className="absolute left-3 top-3">
+            <span className="inline-flex items-center gap-1 rounded-full border border-cyan-400/40 bg-cyan-500/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-cyan-300 backdrop-blur-sm">
+              <Eye className="h-3 w-3" />
+              Avistado
+            </span>
+          </div>
+        </div>
+
+        {/* Info */}
+        <div className="flex flex-col gap-2 p-4">
+          <p className="text-sm font-bold text-[rgb(var(--color-fg))] leading-tight">
+            {displayName}
+            <span className="ml-1 font-normal text-[rgb(var(--color-fg-muted))]">· {speciesLabel}</span>
+          </p>
+
+          {sighting.description && (
+            <p className="text-xs text-[rgb(var(--color-fg-muted))] line-clamp-2 leading-relaxed">
+              {sighting.description}
+            </p>
+          )}
+
+          <div className="flex items-center gap-1 text-xs text-[rgb(var(--color-fg-subtle))]">
+            <MapPin className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
+            <span className="truncate">
+              {sighting.address ?? [pet?.neighborhood, pet?.city].filter(Boolean).join(", ")}
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1 text-xs text-[rgb(var(--color-fg-subtle))]">
+              <Clock className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
+              <span>{formatRelativeDate(sighting.created_at)}</span>
+            </div>
+            {sighting.reporter_name && (
+              <span className="text-[10px] text-[rgb(var(--color-fg-subtle))] truncate max-w-[120px]">
+                por {sighting.reporter_name}
+              </span>
+            )}
+          </div>
+        </div>
+      </Link>
+    </article>
+  );
+}
 
 export default async function AvistamentosPage() {
   const avistamentos = await listarAvistamentosRecentes();
@@ -26,11 +102,9 @@ export default async function AvistamentosPage() {
         {/* Header */}
         <div className="mb-6 flex items-start justify-between gap-4">
           <div>
-            <h1 className="font-display text-3xl font-bold text-fg">
-              Avistamentos
-            </h1>
+            <h1 className="font-display text-3xl font-bold text-fg">Avistamentos</h1>
             <p className="mt-1 text-sm text-fg-muted">
-              Registre onde viu um pet perdido — sem precisar de conta.
+              Pets perdidos vistos pela comunidade nos últimos 30 dias.
             </p>
           </div>
           <Link
@@ -38,18 +112,8 @@ export default async function AvistamentosPage() {
             className="flex shrink-0 items-center gap-2 rounded-xl bg-brand-500 px-4 py-2.5 text-sm font-bold text-white shadow-glow-brand transition hover:bg-brand-400"
           >
             <Plus className="h-4 w-4" />
-            Reportar avistamento
+            Reportar
           </Link>
-        </div>
-
-        {/* Banner informativo */}
-        <div className="mb-6 rounded-xl border border-brand-200/60 bg-brand-500/5 px-4 py-3 text-sm text-brand-700">
-          <Eye className="mb-1 h-4 w-4 inline mr-1.5" />
-          Viu um pet perdido na rua?{" "}
-          <Link href="/avistamentos/novo" className="font-bold underline underline-offset-2 hover:text-brand-600">
-            Registre o avistamento
-          </Link>{" "}
-          e ajude o tutor a encontrá-lo. Não precisa de login.
         </div>
 
         {avistamentos.length === 0 ? (
@@ -57,92 +121,17 @@ export default async function AvistamentosPage() {
             <Eye className="h-12 w-12 text-fg-subtle/40" strokeWidth={1} />
             <div>
               <p className="font-semibold text-fg">Nenhum avistamento nos últimos 30 dias</p>
-              <p className="mt-1 text-sm text-fg-muted">
-                Viu um pet perdido? Seja o primeiro a reportar.
-              </p>
+              <p className="mt-1 text-sm text-fg-muted">Viu um pet perdido? Seja o primeiro a reportar.</p>
             </div>
-            <Link
-              href="/avistamentos/novo"
-              className="rounded-lg bg-brand-500 px-4 py-2 text-sm font-bold text-white"
-            >
+            <Link href="/avistamentos/novo" className="rounded-lg bg-brand-500 px-4 py-2 text-sm font-bold text-white">
               Registrar avistamento
             </Link>
           </div>
         ) : (
-          <div className="space-y-3">
-            {avistamentos.map((a) => {
-              const pet = a.pets as { id: string; name: string | null; species: string; photo_url: string | null; city: string; neighborhood: string | null } | null;
-              const emoji = SPECIES_EMOJI[pet?.species ?? "other"];
-
-              return (
-                <div
-                  key={a.id}
-                  className="flex gap-4 rounded-xl border border-white/5 bg-ink-700/50 p-4"
-                >
-                  {/* Avatar pet */}
-                  <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-ink-600">
-                    {pet?.photo_url ? (
-                      <Image
-                        src={pet.photo_url}
-                        alt={pet.name ?? "Pet"}
-                        fill
-                        sizes="56px"
-                        className="object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center text-2xl">
-                        {emoji}
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-[10px] font-bold uppercase tracking-wide text-cyan-400">
-                        👀 Avistado
-                      </span>
-                      {pet && (
-                        <Link
-                          href={`/pets/${pet.id}`}
-                          className="text-sm font-semibold text-fg hover:text-brand-300"
-                        >
-                          {pet.name ?? "Pet sem nome"}
-                        </Link>
-                      )}
-                    </div>
-
-                    {a.description && (
-                      <p className="mt-1 text-sm text-fg-muted line-clamp-2">{a.description}</p>
-                    )}
-
-                    <div className="mt-2 flex flex-wrap gap-3 text-xs text-fg-subtle">
-                      {a.address && (
-                        <span className="flex items-center gap-1">
-                          <MapPin className="h-3 w-3" />
-                          {a.address}
-                        </span>
-                      )}
-                      <span className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {formatRelativeDate(a.created_at)}
-                      </span>
-                      {a.reporter_name && (
-                        <span className="text-fg-subtle">por {a.reporter_name}</span>
-                      )}
-                    </div>
-                  </div>
-
-                  {pet && (
-                    <Link
-                      href={`/pets/${pet.id}`}
-                      className="shrink-0 self-center text-xs text-cyan-400 hover:text-cyan-300"
-                    >
-                      Ver pet →
-                    </Link>
-                  )}
-                </div>
-              );
-            })}
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {avistamentos.map((a) => (
+              <SightingCard key={a.id} sighting={a} />
+            ))}
           </div>
         )}
       </main>
