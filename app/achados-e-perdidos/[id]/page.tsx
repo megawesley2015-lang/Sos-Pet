@@ -214,6 +214,16 @@ export default async function PetDetailPage({ params, searchParams }: PageParams
           )}
         </div>
 
+        {/* Avistamento — só para pets perdidos */}
+        {isLost && (
+          <Link
+            href={`/avistamentos/novo?pet=${pet.id}`}
+            className="flex items-center justify-center gap-2 rounded-xl border border-border bg-bg-raised px-5 py-3 text-sm font-medium text-fg-muted hover:border-brand-500/50 hover:text-brand-600 hover:bg-brand-500/5 transition-colors shadow-warm-card"
+          >
+            👀 Vi esse animal — registrar avistamento
+          </Link>
+        )}
+
         <ShareButton petName={displayName} />
 
         <Link
