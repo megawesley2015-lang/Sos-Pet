@@ -149,21 +149,12 @@ const FAQS = [
 export default async function ParaPrestadoresPage() {
   const supabase = createServiceClient();
 
-  const [tutoresRes, prestadoresRes, reencontrosRes] = await Promise.all([
-    supabase.from("profiles").select("*", { count: "exact", head: true }),
-    supabase
-      .from("prestadores")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "ativo"),
-    supabase
-      .from("pets")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "resolved"),
-  ]);
+  const prestadoresRes = await supabase
+    .from("prestadores")
+    .select("*", { count: "exact", head: true })
+    .eq("status", "ativo");
 
-  const tutores = tutoresRes.count ?? 0;
   const prestadores = prestadoresRes.count ?? 0;
-  const reencontros = reencontrosRes.count ?? 0;
 
   return (
     <main>
@@ -189,10 +180,10 @@ export default async function ParaPrestadoresPage() {
           <h1 className="mt-5 font-display text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
             Apareça pra{" "}
             <span className="text-brand-400">
-              {tutores.toLocaleString("pt-BR")}+ tutores
+              50.000+ famílias
             </span>
             <br />
-            que precisam de você.
+            com pets na Baixada Santista.
           </h1>
 
           <p className="mx-auto mt-5 max-w-2xl text-base text-white/75 sm:text-lg">
@@ -221,8 +212,8 @@ export default async function ParaPrestadoresPage() {
           {/* Stats rápidos */}
           <div className="mt-12 flex flex-wrap justify-center gap-8 text-center">
             {[
-              { label: "Tutores cadastrados", value: `${tutores.toLocaleString("pt-BR")}+` },
-              { label: "Reencontros registrados", value: reencontros.toLocaleString("pt-BR") },
+              { label: "Famílias com pets na região", value: "50.000+" },
+              { label: "Cidades da Baixada Santista", value: "9" },
               { label: "Prestadores na rede", value: prestadores.toLocaleString("pt-BR") },
             ].map((s) => (
               <div key={s.label}>
