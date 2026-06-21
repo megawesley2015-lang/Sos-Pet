@@ -7,6 +7,8 @@ import { AuthHashErrorHandler } from "@/components/auth/AuthHashErrorHandler";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { getBaseUrl } from "@/lib/utils/url";
 import { themeScript } from "@/lib/theme-script";
+import { organizationJsonLd, websiteJsonLd } from "@/lib/utils/jsonld";
+import { safeJsonLd } from "@/lib/utils/json-ld";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -88,6 +90,8 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(organizationJsonLd(getBaseUrl())) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(websiteJsonLd(getBaseUrl())) }} />
       </head>
       <body className="min-h-screen font-sans antialiased">
         {children}

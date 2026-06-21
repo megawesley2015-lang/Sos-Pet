@@ -14,7 +14,11 @@ import { ArrowLeft } from "lucide-react";
 import { TopBar } from "@/components/layout/TopBar";
 import { PetGrid } from "@/components/pets/PetGrid";
 import { listPets } from "@/lib/services/pets";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { slugToCity } from "@/lib/utils/string";
+import { breadcrumbJsonLd } from "@/lib/utils/jsonld";
+import { safeJsonLd } from "@/lib/utils/json-ld";
+import { getBaseUrl } from "@/lib/utils/url";
 import type { PetKind } from "@/lib/types/database";
 
 export const dynamic = "force-dynamic";
@@ -36,19 +40,37 @@ export async function generateMetadata({
   const isFound = type === "achados";
   const typeLabel = isFound ? "Achados" : "Perdidos";
   const emoji = isFound ? "🐾" : "❤️";
+  const kind: PetKind = isFound ? "found" : "lost";
+
+  // Contagem dinâmica para meta description — melhora CTR na SERP
+  let count = 0;
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { count: n } = await supabase
+      .from("pets")
+      .select("*", { count: "exact", head: true })
+      .eq("kind", kind)
+      .eq("status", "active")
+      .ilike("city", realCity);
+    count = n ?? 0;
+  } catch {
+    // fallback silencioso — description genérica se DB offline
+  }
+
+  const countText = count > 0
+    ? `${count} pet${count !== 1 ? "s" : ""} ${isFound ? "encontrado" : "perdido"}${count !== 1 ? "s" : ""} em ${realCity} agora.`
+    : `Pets ${isFound ? "encontrados" : "perdidos"} em ${realCity}.`;
 
   return {
     title: `${emoji} ${typeLabel} em ${realCity}`,
-    description: `Todos os pets ${isFound ? "encontrados" : "perdidos"} em ${realCity}. Ajude a reunir animais com suas famílias ou compartilhe informações sobre achados.`,
+    description: `${countText} Ajude a reunir animais com suas famílias ou cadastre um avistamento.`,
+    alternates: { canonical: `/${type}-em-${city}` },
     openGraph: {
       title: `${typeLabel} em ${realCity} — SOS Pet Aumigo`,
-      description: `${typeLabel} de pets em ${realCity}. Reencontre seu pet ou ajude na busca.`,
+      description: `${countText} Reencontre seu pet ou ajude na busca.`,
       type: "website",
     },
-    robots: {
-      index: true,
-      follow: true,
-    },
+    robots: { index: true, follow: true },
   };
 }
 
@@ -69,8 +91,16 @@ export default async function LocalPetsPage({ params }: PageProps) {
     limit: 100,
   });
 
+  const baseUrl = getBaseUrl();
+  const breadcrumb = breadcrumbJsonLd([
+    { name: "Início", url: baseUrl },
+    { name: "Pets", url: `${baseUrl}/pets` },
+    { name: `${typeLabel} em ${realCity}`, url: `${baseUrl}/${type}-em-${city}` },
+  ]);
+
   return (
     <div className="min-h-screen bg-bg" data-theme="light">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumb) }} />
       <TopBar />
 
       <main className="mx-auto max-w-6xl px-4 pb-16 pt-6">

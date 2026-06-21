@@ -8,6 +8,8 @@ import {
   Share2,
 } from "lucide-react";
 import { PageHeader } from "@/components/marketing/PageHeader";
+import { faqJsonLd } from "@/lib/utils/jsonld";
+import { safeJsonLd } from "@/lib/utils/json-ld";
 
 export const metadata = {
   title: "Dicas para encontrar seu pet",
@@ -50,9 +52,14 @@ const tips = [
   },
 ];
 
+const faqSchema = faqJsonLd(
+  tips.map((tip) => ({ question: tip.title, answer: tip.body }))
+);
+
 export default function DicasPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(faqSchema) }} />
       <PageHeader
         eyebrow="Guia rápido"
         title="Dicas para reencontrar seu pet"

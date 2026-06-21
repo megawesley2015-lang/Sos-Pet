@@ -32,6 +32,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/privacidade`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${base}/loja`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     { url: `${base}/plaquinha`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${base}/avistamentos`, lastModified: now, changeFrequency: "hourly", priority: 0.8 },
+    { url: `${base}/mapa`, lastModified: now, changeFrequency: "hourly", priority: 0.7 },
+    { url: `${base}/sentinela`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
   ];
 
   // SEO localizado — /achados-em-{slug} e /perdidos-em-{slug} para Baixada Santista

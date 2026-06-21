@@ -21,6 +21,77 @@
  */
 import type { PetRow, PrestadorRow } from "@/lib/types/database";
 
+// ─── Schemas globais ─────────────────────────────────────────────────────────
+
+export function organizationJsonLd(baseUrl: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${baseUrl}/#organization`,
+    name: "SOS Pet Aumigo",
+    url: baseUrl,
+    logo: {
+      "@type": "ImageObject",
+      url: `${baseUrl}/logo.png`,
+      width: 200,
+      height: 200,
+    },
+    description: "Rede colaborativa de resgate. Pets perdidos e encontrados na Baixada Santista.",
+    areaServed: {
+      "@type": "AdministrativeArea",
+      name: "Baixada Santista",
+      containsPlace: [
+        "Santos", "Guarujá", "São Vicente", "Cubatão",
+        "Bertioga", "Praia Grande", "Mongaguá", "Itanhaém", "Peruíbe",
+      ].map((name) => ({ "@type": "City", name })),
+    },
+  } as const;
+}
+
+export function websiteJsonLd(baseUrl: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${baseUrl}/#website`,
+    name: "SOS Pet Aumigo",
+    url: baseUrl,
+    publisher: { "@id": `${baseUrl}/#organization` },
+    inLanguage: "pt-BR",
+  } as const;
+}
+
+// ─── BreadcrumbList ───────────────────────────────────────────────────────────
+
+export function breadcrumbJsonLd(items: Array<{ name: string; url: string }>) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+}
+
+// ─── FAQPage ─────────────────────────────────────────────────────────────────
+
+export function faqJsonLd(items: Array<{ question: string; answer: string }>) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+}
+
 interface PetArticleLd {
   "@context": "https://schema.org";
   "@type": "Article";
