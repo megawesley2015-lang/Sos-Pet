@@ -12,7 +12,13 @@ const GET_LIMIT = { limit: 30, windowMs: 60_000 }; // 30 req/min por IP
  * Usado pelo formulário de avistamento anônimo (sem autenticação).
  */
 export async function GET(request: NextRequest) {
-  const rl = await checkRateLimit(`lost-active:${getClientIp(request)}`, GET_LIMIT);
+  // Rate limit com degradação graciosa: se Redis não estiver configurado, permite a requisição.
+  let rl: Awaited<ReturnType<typeof checkRateLimit>> = { allowed: true, remaining: 99, resetAt: Date.now() + 60_000 };
+  try {
+    rl = await checkRateLimit(`lost-active:${getClientIp(request)}`, GET_LIMIT);
+  } catch {
+    // Upstash não configurado — fallback permissivo
+  }
   if (!rl.allowed) {
     return NextResponse.json(
       { success: false, error: "Muitas requisições. Tente novamente em alguns instantes.", code: "RATE_LIMITED" },
