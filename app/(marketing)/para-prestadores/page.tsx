@@ -161,7 +161,7 @@ export default async function ParaPrestadoresPage() {
       {/* ──────────────────────────────────────────────
           HERO
       ────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-ink-900 via-ink-800 to-ink-900 py-20 text-white sm:py-28">
+      <section data-theme="dark" className="relative overflow-hidden bg-gradient-to-br from-ink-900 via-ink-800 to-ink-900 py-20 text-white sm:py-28">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
