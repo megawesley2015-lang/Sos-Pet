@@ -12,6 +12,18 @@
 # Ele substitui qualquer explicação manual do projeto.
 # Antes de gerar qualquer código, leia este arquivo na íntegra.
 # ─────────────────────────────────────────────────────────────────────────────
+#
+# ⚠️  ASSEMBLEIA ESTRATÉGICA — REGRA OBRIGATÓRIA
+#
+# ANTES de executar QUALQUER pedido de produto, feature, código ou negócio,
+# spawn do agente `assembleia` (.claude/agents/assembleia.md) para validar.
+#
+# O agente retorna um VEREDITO (APROVADO / ATENÇÃO / BLOQUEADO).
+# Só execute após o veredito. Pedidos operacionais simples (commits, renames,
+# fixes pontuais) podem pular a assembleia. Tudo estratégico passa por ela.
+#
+# Referência: docs/assembleia-estrategica.md
+# ─────────────────────────────────────────────────────────────────────────────
 
 ## PRODUTO
 
