@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServiceClient, createSupabaseServerClient } from "@/lib/supabase/server";
 
 const SightingSchema = z.object({
   pet_id: z.string().uuid("Pet inválido"),
@@ -69,16 +69,17 @@ export async function registrarAvistamento(
 
 /**
  * Busca avistamentos recentes (últimos 30 dias) para a listagem pública.
+ * Usa o cliente SSR (anon key + RLS) — sightings tem SELECT público.
  */
 export async function listarAvistamentosRecentes(petId?: string) {
-  const supabase = createServiceClient();
+  const supabase = await createSupabaseServerClient();
   const cutoff = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
 
   let query = supabase
     .from("sightings")
     .select(`
       id, created_at, pet_id, lat, lng, address, description, reporter_name,
-      pets(id, name, species, photo_url, city, neighborhood, kind, status)
+      pets!sightings_pet_id_fkey(id, name, species, photo_url, city, neighborhood, kind, status)
     `)
     .gte("created_at", cutoff)
     .order("created_at", { ascending: false })
@@ -86,6 +87,7 @@ export async function listarAvistamentosRecentes(petId?: string) {
 
   if (petId) query = query.eq("pet_id", petId);
 
-  const { data } = await query;
+  const { data, error } = await query;
+  if (error) console.error("[avistamentos] listarAvistamentosRecentes:", error.message);
   return data ?? [];
 }
