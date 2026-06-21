@@ -10,6 +10,8 @@ import { parseFormData } from "@/lib/validation/auth";
 import { validateTurnstileToken } from "@/lib/services/turnstile";
 import { triggerPetMatching } from "@/lib/services/matching";
 import { extractTurnstileToken } from "@/lib/utils/turnstile";
+import { sendEmail } from "@/lib/email/send";
+import { petConfirmationTemplate } from "@/lib/email/templates";
 import type { PetFormState } from "@/components/pets/PetForm";
 
 export async function createPetAction(
@@ -148,5 +150,21 @@ export async function createPetAction(
     console.error("[createPetAction] Erro ao disparar matching:", err);
   });
 
-  redirect(`/pets/${newPetId}`);
+  // 8. Email de confirmação para tutores autenticados (pet perdido)
+  if (ownerId && user?.email && parsed.data.kind === "lost") {
+    sendEmail({
+      to: user.email,
+      subject: `${parsed.data.name ?? "Seu pet"} foi cadastrado — SOS Pet Aumigo`,
+      html: petConfirmationTemplate({
+        petName: parsed.data.name ?? "Sem nome",
+        petId: newPetId,
+        photoUrl: photoUrl ?? undefined,
+        species: parsed.data.species,
+        siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://aumigo.com.br",
+      }),
+      templateName: "pet_confirmation",
+    }).catch((err) => console.error("[createPetAction] Email de confirmação falhou:", err));
+  }
+
+  redirect(`/pets/${newPetId}?novo=true`);
 }

@@ -31,12 +31,14 @@ import {
 } from "@/lib/utils/format";
 import { getBaseUrl } from "@/lib/utils/url";
 import { petArticleJsonLd } from "@/lib/utils/jsonld";
+import { CopyUrlButton } from "@/components/ui/CopyUrlButton";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ novo?: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -66,8 +68,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function PetDetailPage({ params }: PageProps) {
-  const { id } = await params;
+export default async function PetDetailPage({ params, searchParams }: PageProps) {
+  const [{ id }, sp] = await Promise.all([params, searchParams]);
+  const isNew = sp.novo === "true";
 
   // Rate limit para a página de detalhe — 10 visitas por hora por IP.
   // Protege a RPC get_pet_contact chamada internamente por getPetById.
@@ -175,12 +178,87 @@ export default async function PetDetailPage({ params }: PageProps) {
   }
 
   const jsonLd = petArticleJsonLd(pet, getBaseUrl());
+  const petUrl = `${getBaseUrl()}/pets/${id}`
+  const whatsappShareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
+    `Perdemos ${pet.name ? `${pet.name} ` : ""}(${SPECIES_LABEL[pet.species]}) em ${pet.city}. Você pode ajudar? ${petUrl}`
+  )}`
 
   return (
     <div className="min-h-screen bg-bg" data-theme="light">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }} />
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-12 pt-6">
+
+        {isNew && (
+          <div className="mb-6 rounded-2xl border border-green-500/30 bg-green-500/10 p-5">
+            <div className="mb-4 flex items-center gap-2">
+              <span className="text-lg">✅</span>
+              <h2 className="font-bold text-green-300">
+                {pet.kind === "lost"
+                  ? "Alerta cadastrado! Veja o que fazer agora:"
+                  : "Registrado com sucesso! Compartilhe para ajudar o tutor:"}
+              </h2>
+            </div>
+
+            <ol className="space-y-4 text-sm">
+              <li className="flex gap-3">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-500 text-xs font-bold text-white">1</span>
+                <div>
+                  <p className="font-semibold text-fg">Compartilhe agora</p>
+                  <p className="mt-0.5 text-fg-muted">Quanto mais pessoas virem, maior a chance de reencontro.</p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <a
+                      href={whatsappShareUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-[#25D366] px-3 py-1.5 text-xs font-bold text-white"
+                    >
+                      <MessageCircle className="h-3.5 w-3.5" />
+                      WhatsApp
+                    </a>
+                    <CopyUrlButton url={petUrl} />
+                  </div>
+                </div>
+              </li>
+
+              {pet.kind === "lost" && (
+                <>
+                  <li className="flex gap-3">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-500 text-xs font-bold text-white">2</span>
+                    <div>
+                      <p className="font-semibold text-fg">Avise vizinhos</p>
+                      <p className="mt-0.5 text-fg-muted">Imprima este registro e deixe em comércios próximos ao local do desaparecimento.</p>
+                    </div>
+                  </li>
+
+                  <li className="flex gap-3">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-500 text-xs font-bold text-white">3</span>
+                    <div>
+                      <p className="font-semibold text-fg">Confira pets encontrados</p>
+                      <p className="mt-0.5 text-fg-muted">Alguém pode ter encontrado seu pet e ainda não saber de quem é.</p>
+                      <Link
+                        href={`/pets?kind=found&city=${encodeURIComponent(pet.city ?? "")}`}
+                        className="mt-1.5 inline-flex text-xs font-bold text-brand-400 underline hover:text-brand-300"
+                      >
+                        Ver pets encontrados em {pet.city}
+                      </Link>
+                    </div>
+                  </li>
+                </>
+              )}
+            </ol>
+
+            <div className="mt-4 border-t border-green-500/20 pt-4">
+              <Link
+                href="/loja"
+                className="text-xs font-bold text-brand-400 hover:text-brand-300"
+              >
+                🏷️ Garanta uma plaquinha de identificação — evite que isso aconteça de novo
+              </Link>
+            </div>
+          </div>
+        )}
+
         <div className="mb-4 flex items-center justify-between">
           <Link href="/pets" className="inline-flex items-center gap-1.5 text-sm text-fg-muted hover:text-fg">
             <ArrowLeft className="h-4 w-4" />
