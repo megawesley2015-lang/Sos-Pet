@@ -3,7 +3,7 @@ import { MapPin, Eye } from "lucide-react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { SightingRow } from "@/lib/types/database";
 import { formatRelativeDate } from "@/lib/utils/format";
-import SightingButton from "./SightingButton";
+import SightingInlineButton from "./SightingInlineButton";
 import PetMapDynamic from "@/components/map/PetMapDynamic";
 
 interface Props {
@@ -39,7 +39,7 @@ export default async function SightingsList({ petId, petName, petCity }: Props) 
           )}
         </div>
 
-        <SightingButton petId={petId} petName={petName} />
+        <SightingInlineButton petId={petId} petName={petName} />
       </div>
 
       {/* Mapa aparece quando há pelo menos 1 avistamento com coordenadas */}
