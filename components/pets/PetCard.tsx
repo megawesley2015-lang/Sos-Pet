@@ -41,7 +41,8 @@ export function PetCard({ pet }: PetCardProps) {
 
   // Urgência derivada da data do evento (perda) — sem campo dedicado no schema
   const referenceDate = pet.event_date ?? pet.created_at
-  const isUrgent      = isLost && pet.status === 'active' && daysSince(referenceDate) >= DAYS_URGENT
+  const daysMissing   = daysSince(referenceDate)
+  const isUrgent      = isLost && pet.status === 'active' && daysMissing >= DAYS_URGENT
 
   return (
     <article
@@ -97,10 +98,17 @@ export function PetCard({ pet }: PetCardProps) {
           </div>
 
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1 text-xs text-[rgb(var(--color-fg-subtle))]">
-              <Clock className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
-              <span>{formatTimeAgo(pet.created_at)}</span>
-            </div>
+            {isUrgent ? (
+              <div className="flex items-center gap-1 text-xs font-semibold text-brand-700 dark:text-brand-300">
+                <Clock className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
+                <span>Desaparecido há {daysMissing} dias</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1 text-xs text-[rgb(var(--color-fg-subtle))]">
+                <Clock className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
+                <span>{formatTimeAgo(pet.created_at)}</span>
+              </div>
+            )}
             <ChevronRight className="h-4 w-4 text-[rgb(var(--color-fg-subtle))] group-hover:text-[rgb(var(--color-primary))] transition-colors duration-200" aria-hidden="true" />
           </div>
         </div>
