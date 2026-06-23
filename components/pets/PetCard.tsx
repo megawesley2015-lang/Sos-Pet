@@ -21,6 +21,13 @@ function formatTimeAgo(dateStr: string): string {
 const SPECIES_LABEL: Record<string, string> = { dog: 'Cachorro', cat: 'Gato', other: 'Animal' }
 const SIZE_LABEL:    Record<string, string> = { small: 'Pequeno', medium: 'Médio', large: 'Grande' }
 
+// Pet perdido há 7+ dias entra em destaque de urgência
+const DAYS_URGENT = 7
+
+function daysSince(dateStr: string): number {
+  return Math.floor((Date.now() - new Date(dateStr).getTime()) / 86_400_000)
+}
+
 
 interface PetCardProps {
   pet: PetPublic
@@ -32,14 +39,22 @@ export function PetCard({ pet }: PetCardProps) {
   const displayName  = pet.name ? `${pet.name} · ${speciesLabel}` : speciesLabel
   const isLost       = pet.kind === 'lost'
 
+  // Urgência derivada da data do evento (perda) — sem campo dedicado no schema
+  const referenceDate = pet.event_date ?? pet.created_at
+  const isUrgent      = isLost && pet.status === 'active' && daysSince(referenceDate) >= DAYS_URGENT
+
   return (
     <article
-      className="
+      className={`
         group relative flex flex-col rounded-xl overflow-hidden
-        border border-[rgb(var(--color-border))] bg-[rgb(var(--color-bg-raised))]
+        border bg-[rgb(var(--color-bg-raised))]
+        transition-[border-color,box-shadow,transform] duration-200
         hover:border-[rgb(var(--color-border-strong))] hover:shadow-lg hover:shadow-black/20
-        transition-[border-color,box-shadow] duration-200
-      "
+        motion-safe:hover:-translate-y-0.5
+        ${isUrgent
+          ? 'border-brand-500 ring-2 ring-brand-500/60 shadow-[0_0_0_3px_rgba(255,133,27,0.15)]'
+          : 'border-[rgb(var(--color-border))]'}
+      `}
     >
       {/* Área clicável principal → detalhe do pet */}
       <Link
@@ -47,26 +62,26 @@ export function PetCard({ pet }: PetCardProps) {
         className="flex flex-col"
         aria-label={`${isLost ? 'Pet perdido' : 'Pet encontrado'}: ${pet.name ?? speciesLabel} em ${pet.city}`}
       >
-        <div className="relative aspect-[4/3] w-full overflow-hidden bg-[rgb(var(--color-bg-overlay))]">
+        <div className="relative aspect-[3/4] w-full overflow-hidden bg-[rgb(var(--color-bg-overlay))]">
           {pet.photo_url ? (
             <Image
               src={pet.photo_url}
               alt={pet.name ? `Foto de ${pet.name}` : `Foto de ${speciesLabel}`}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-              className="object-cover"
+              className="object-cover transition-transform duration-200 motion-safe:group-hover:scale-[1.03]"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-4xl" aria-hidden="true">
+            <div className="flex h-full w-full items-center justify-center text-5xl" aria-hidden="true">
               {pet.species === 'dog' ? '🐶' : pet.species === 'cat' ? '🐱' : '🐾'}
             </div>
           )}
-          <div className="absolute left-3 top-3"><SOSBadge kind={pet.kind as PetKind} /></div>
+          <div className="absolute left-2 top-2"><SOSBadge kind={pet.kind as PetKind} /></div>
         </div>
 
         <div className="flex flex-col gap-2 p-4">
           <div>
-            <p className="text-sm font-bold text-[rgb(var(--color-fg))] leading-tight">
+            <p className="text-base font-bold text-[rgb(var(--color-fg))] leading-tight">
               {displayName}{pet.breed ? ` · ${pet.breed}` : ''}
             </p>
             {(pet.color || sizeLabel) && (
@@ -102,7 +117,10 @@ export function PetCard({ pet }: PetCardProps) {
               bg-[rgb(var(--color-bg-overlay))] px-3 py-2
               text-xs font-medium text-[rgb(var(--color-fg-muted))]
               hover:border-[#FF851B]/50 hover:text-[#FF851B] hover:bg-[#FF851B]/5
-              transition-colors duration-150
+              transition-[color,background-color,border-color,opacity] duration-150
+              sm:opacity-0 sm:group-hover:opacity-100
+              focus-visible:opacity-100
+              motion-reduce:opacity-100
             "
           >
             <Eye className="h-3.5 w-3.5 flex-shrink-0" aria-hidden="true" />
