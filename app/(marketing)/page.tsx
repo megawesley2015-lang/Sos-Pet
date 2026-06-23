@@ -206,7 +206,7 @@ function HowItWorks() {
           {steps.map((s) => (
             <div
               key={s.title}
-              className="relative rounded-2xl border border-warm-200 bg-white p-6 shadow-warm-card transition-all hover:shadow-warm-hover hover:border-brand-200"
+              className="relative rounded-2xl border border-warm-200 bg-white p-6 shadow-warm-card transition-[box-shadow,border-color,transform] duration-200 hover:shadow-warm-hover hover:border-brand-200 motion-safe:hover:-translate-y-0.5"
             >
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-500/10 text-brand-600">
                 <s.icon className="h-6 w-6" strokeWidth={2.2} />
@@ -465,7 +465,7 @@ function Trust() {
           {points.map((p) => (
             <div
               key={p.title}
-              className="rounded-2xl border border-warm-200 bg-warm-50 p-6 shadow-warm-card transition-all hover:shadow-warm-hover"
+              className="rounded-2xl border border-warm-200 bg-warm-50 p-6 shadow-warm-card transition-[box-shadow,border-color,transform] duration-200 hover:shadow-warm-hover motion-safe:hover:-translate-y-0.5"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent-text">
                 <p.icon className="h-5 w-5" strokeWidth={2.2} />
