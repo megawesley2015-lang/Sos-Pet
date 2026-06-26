@@ -1,368 +1,406 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { Suspense } from "react";
-import {
-  ArrowRight,
-  BadgeCheck,
-  Building2,
-  HeartHandshake,
-  MapPin,
-  PawPrint,
-  Share2,
-  ShieldCheck,
-  Siren,
-  Eye,
-  Users,
-} from "lucide-react";
+import { ArrowRight, Siren, ShieldCheck, PawPrint, MapPin } from "lucide-react";
 import { createServiceClient } from "@/lib/supabase/server";
-import CountUp from "@/components/ui/CountUp";
-import HallRreencontrosServer from "@/components/HallRreencontros.server";
-import HeroSectionServer from "@/components/HeroSection.server";
 import FaixaParceirosServer from "@/components/FaixaParceiros.server";
+import "./home-mock.css";
 
 export const dynamic = "force-dynamic";
 
 /**
- * Landing — rota raiz "/".
+ * Landing "/" — linguagem visual do mockup (.mock-home), seções reordenadas
+ * conforme pedido do Wesley + Assembleia. Dados reais do Supabase.
  *
- * Estrutura:
- *  1. Hero híbrido (dark gradient → warm) com 2 CTAs principais
- *  2. Stats em tempo real (count de pets ativos / lost / found)
- *  3. Como funciona — 3 passos
- *  4. Destaque Central de Resgate (SOS)
- *  5. Confiança / por que confiar
- *  6. CTA final
- *
- * Server Component — busca stats reais do Supabase (count via head:true).
+ * Ordem: Hero → Como funciona → Hall → Impacto real → FaixaParceiros →
+ *        Diferencial/SOS (original) → Por que confiar (original) → CTA final.
  */
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+function tempoRelativo(iso: string): string {
+  const diff = Date.now() - new Date(iso).getTime();
+  const min = Math.floor(diff / 60000);
+  const h = Math.floor(min / 60);
+  const d = Math.floor(h / 24);
+  if (min < 1) return "agora";
+  if (min < 60) return `há ${min}min`;
+  if (h < 24) return `há ${h}h`;
+  if (d === 1) return "há 1 dia";
+  return `há ${d} dias`;
+}
+
+function emojiEspecie(species: string): string {
+  const map: Record<string, string> = { dog: "🐕", cat: "🐈", bird: "🦜", other: "🐾" };
+  return map[species] ?? "🐾";
+}
+
+function especiePtBR(species: string): string {
+  const map: Record<string, string> = { dog: "Cachorro", cat: "Gato", bird: "Pássaro", other: "Outro" };
+  return map[species] ?? "Pet";
+}
+
+// Honestidade: 0 vira "—" para não parecer plataforma abandonada (sem inventar número).
+function fmt(n: number): string {
+  return n > 0 ? n.toLocaleString("pt-BR") : "—";
+}
+
+type PetRow = {
+  id: string;
+  name: string | null;
+  species: string;
+  kind: string;
+  neighborhood: string | null;
+  city: string | null;
+  photo_url: string | null;
+  created_at: string;
+};
+
+type ResolvedRow = {
+  id: string;
+  name: string | null;
+  species: string;
+  breed: string | null;
+  city: string | null;
+  photo_url: string | null;
+  event_date: string | null;
+  updated_at: string;
+};
+
+function reencontrosExemplo(): ResolvedRow[] {
+  const now = Date.now();
+  const h = (n: number) => new Date(now - n * 3600_000).toISOString();
+  return [
+    { id: "ex-mel", name: "Mel", species: "dog", breed: "SRD", city: "Gonzaga, Santos", photo_url: null, event_date: h(13), updated_at: h(7) },
+    { id: "ex-tom", name: "Tom", species: "cat", breed: "Gato", city: "Itararé, São Vicente", photo_url: null, event_date: h(52), updated_at: h(4) },
+    { id: "ex-bidu", name: "Bidu", species: "dog", breed: "SRD", city: "Vila Matias, Santos", photo_url: null, event_date: h(126), updated_at: h(6) },
+  ];
+}
+
+function tempoReencontro(eventISO: string | null, resolvedISO: string): { label: string; cls: string } {
+  if (!eventISO) return { label: "🕐 reencontrado", cls: "time--mid" };
+  const h = Math.max(0, Math.floor((new Date(resolvedISO).getTime() - new Date(eventISO).getTime()) / 3600_000));
+  if (h < 24) return { label: `🕐 ${h || 1}h`, cls: "time--fast" };
+  const d = Math.floor(h / 24);
+  if (d < 4) return { label: `🕐 ${d} dias`, cls: "time--mid" };
+  return { label: `🕐 ${d} dias`, cls: "time--slow" };
+}
+
+// ── Página ───────────────────────────────────────────────────────────────────
+
 export default async function LandingPage() {
-  // createServiceClient bypassa RLS — necessário para contar todos os pets
-  // independentemente do estado de autenticação do visitante.
-  // As queries de count na homepage falhavam silenciosamente (retornavam 0)
-  // para usuários anônimos após a migration 20260504_hardening fechar SELECT
-  // direto na tabela pets.
   const supabase = createServiceClient();
 
-  // Stats reais — count(*) sem trazer linhas (head:true)
-  const [
-    activeCount,
-    lostCount,
-    foundCount,
-    resolvedCount,
-    sightingsCount,
-    prestadoresCount,
-    totalPetsCount,
-  ] = await Promise.all([
-    supabase
-      .from("pets")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "active"),
-    supabase
-      .from("pets")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "active")
-      .eq("kind", "lost"),
-    supabase
-      .from("pets")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "active")
-      .eq("kind", "found"),
-    supabase
-      .from("pets")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "resolved"),
-    supabase
-      .from("sightings")
-      .select("*", { count: "exact", head: true }),
-    supabase
-      .from("prestadores")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "ativo"),
-    supabase
-      .from("pets")
-      .select("*", { count: "exact", head: true }),
-  ]);
+  let activePets: PetRow[] = [];
+  let resolved: ResolvedRow[] = [];
+  let usandoExemplos = false;
+  let stats = { resolved: 0, total: 0, sightings: 0, prestadores: 0, active: 0 };
 
-  const stats = {
-    active: activeCount.count ?? 0,
-    lost: lostCount.count ?? 0,
-    found: foundCount.count ?? 0,
-  };
+  try {
+    const [recentes, resolvidos, totalC, resolvedC, sightingsC, prestadoresC, activeC] = await Promise.all([
+      supabase
+        .from("pets")
+        .select("id, name, species, kind, neighborhood, city, photo_url, created_at")
+        .eq("status", "active")
+        .order("created_at", { ascending: false })
+        .limit(5),
+      supabase
+        .from("pets")
+        .select("id, name, species, breed, city, photo_url, event_date, updated_at")
+        .eq("status", "resolved")
+        .order("updated_at", { ascending: false })
+        .limit(5),
+      supabase.from("pets").select("*", { count: "exact", head: true }),
+      supabase.from("pets").select("*", { count: "exact", head: true }).eq("status", "resolved"),
+      supabase.from("sightings").select("*", { count: "exact", head: true }),
+      supabase.from("prestadores").select("*", { count: "exact", head: true }).eq("status", "ativo"),
+      supabase.from("pets").select("*", { count: "exact", head: true }).eq("status", "active"),
+    ]);
 
-  const richStats = {
-    totalPets: totalPetsCount.count ?? 0,
-    resolved: resolvedCount.count ?? 0,
-    sightings: sightingsCount.count ?? 0,
-    prestadores: prestadoresCount.count ?? 0,
-  };
+    activePets = (recentes.data as PetRow[] | null) ?? [];
+    const resolvedData = (resolvidos.data as ResolvedRow[] | null) ?? [];
+    if (resolvedData.length > 0) {
+      resolved = resolvedData;
+    } else {
+      resolved = reencontrosExemplo();
+      usandoExemplos = true;
+    }
+    stats = {
+      resolved: resolvedC.count ?? 0,
+      total: totalC.count ?? 0,
+      sightings: sightingsC.count ?? 0,
+      prestadores: prestadoresC.count ?? 0,
+      active: activeC.count ?? 0,
+    };
+  } catch {
+    resolved = reencontrosExemplo();
+    usandoExemplos = true;
+  }
+
+  const destaque = resolved[0];
+  const outrosReencontros = resolved.slice(1, 3);
 
   return (
-    <main>
-      {/* 1. Hero — dark gradient → warm */}
-      <Suspense fallback={<div className="min-h-[70vh] bg-[rgb(var(--color-bg))]" />}>
-        <HeroSectionServer />
-      </Suspense>
+    <main className="mock-home">
+      <div className="aurora" aria-hidden="true" />
 
-      {/* 2. Hall de Reencontros — prova social logo após o Hero */}
-      <Suspense fallback={null}>
-        <HallRreencontrosServer limite={5} resolvedCount={richStats.resolved} />
-      </Suspense>
+      <div className="wrap">
+        {/* ── HERO ── */}
+        <section className="hero">
+          <div>
+            <span className="eyebrow">⚡ Rede colaborativa de resgate</span>
+            <h1>
+              Reencontre
+              <br />
+              quem <span className="brand-word">se perdeu.</span>
+            </h1>
+            <p className="sub">
+              Cadastre seu pet desaparecido, dispare um alerta de resgate e conte
+              com a rede pra trazer ele de volta. <strong>Em segundos.</strong>
+            </p>
+            <div className="hero-cta">
+              <Link href="/achados-e-perdidos/cadastrar" className="btn btn--neon">
+                ⚠️ Cadastrar pet perdido →
+              </Link>
+              <Link href="/achados-e-perdidos" className="btn btn--ghost">
+                🔍 Ver pets na rede
+              </Link>
+            </div>
+            <p className="trust">
+              <span>✓ 100% gratuito</span>
+              <span>✓ sem login obrigatório</span>
+              <span>✓ anti-spam automático</span>
+              <span>✓ você no controle</span>
+            </p>
+          </div>
 
-      {/* 3. Stats band (mobile only) */}
-      <StatsBand stats={stats} />
+          <div className="alerts">
+            <div className="alerts-head">
+              <span className="label">
+                <span className="alerts-dot" />
+                Alertas recentes
+              </span>
+              <span className="alerts-count">
+                {stats.active} ativo{stats.active !== 1 ? "s" : ""}
+              </span>
+            </div>
 
-      {/* 4–6. Como funciona → métricas → Central de Resgate */}
-      <HowItWorks />
-      <StatsSection stats={richStats} />
-      <RescueHighlight />
+            {activePets.length === 0 ? (
+              <div className="alerts-empty">
+                Nenhum alerta recente ainda.
+                <br />
+                <b>Seja o primeiro a cadastrar.</b>
+              </div>
+            ) : (
+              activePets.slice(0, 4).map((p) => {
+                const perdido = p.kind === "lost";
+                return (
+                  <Link key={p.id} href={`/achados-e-perdidos/${p.id}`} className="alert-row">
+                    <div className="alert-avatar">
+                      {p.photo_url ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={p.photo_url} alt={p.name ?? "Pet"} />
+                      ) : (
+                        emojiEspecie(p.species)
+                      )}
+                    </div>
+                    <div className="alert-info">
+                      <div className="alert-top">
+                        <span className={`alert-badge ${perdido ? "alert-badge--lost" : "alert-badge--found"}`}>
+                          <span className="pd" />
+                          {perdido ? "perdido" : "encontrado"}
+                        </span>
+                        <span className="alert-name">
+                          {p.name ?? "Sem nome"} · {especiePtBR(p.species).toLowerCase()}
+                        </span>
+                      </div>
+                      <div className="alert-city">📍 {[p.neighborhood, p.city].filter(Boolean).join(", ")}</div>
+                    </div>
+                    <span className="alert-time">{tempoRelativo(p.created_at)}</span>
+                  </Link>
+                );
+              })
+            )}
 
-      {/* 7. Parceiros locais */}
+            <div className="alerts-foot">
+              <Link href="/achados-e-perdidos">Ver todos os pets na rede →</Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ── COMO FUNCIONA (Três passos) ── */}
+        <section className="block">
+          <div className="section-head">
+            <h2>Três passos para trazer seu pet de volta</h2>
+            <p>Sem custo. Movido pela comunidade da sua cidade.</p>
+          </div>
+          <div className="bento">
+            <div className="bento-item">
+              <div className="bento-ico">📣</div>
+              <h3>1. Registre</h3>
+              <p>Em menos de 1 minuto, descreve o pet, sobe uma foto e seu contato — ou cadastra um pet que você encontrou.</p>
+            </div>
+            <div className="bento-item">
+              <div className="bento-ico teal">📲</div>
+              <h3>2. Compartilhe</h3>
+              <p>Dispare o SOS visual: gera um cartaz pronto pra colar no WhatsApp, Instagram ou imprimir.</p>
+            </div>
+            <div className="bento-item">
+              <div className="bento-ico teal">💚</div>
+              <h3>3. Reencontre</h3>
+              <p>Quem viu o pet entra em contato direto via telefone ou WhatsApp. Sem intermediários.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* ── HALL DE REENCONTROS ── */}
+        {destaque && (
+          <section className="block">
+            <div className="hall-head">
+              <div className="ti">
+                <span className="hall-eyebrow">❤ Histórias reais</span>
+                <h2>
+                  Eles voltaram <span className="brand-word">para casa.</span>
+                </h2>
+                <p>Cada reencontro aqui é real. Cada hora contada é a diferença que o SOS Pet Aumigo fez na vida de um tutor.</p>
+              </div>
+              <div className="hall-counter">
+                <b>{usandoExemplos ? "—" : fmt(stats.resolved)}</b>
+                <span>
+                  pets reencontrados
+                  {usandoExemplos && (
+                    <>
+                      <br />
+                      <span className="demo-tag" style={{ marginTop: 5 }}>
+                        histórias de exemplo
+                      </span>
+                    </>
+                  )}
+                </span>
+              </div>
+            </div>
+
+            <div className="reunions">
+              <article className="reunion destaque">
+                <div className="reunion-photo">
+                  {destaque.photo_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={destaque.photo_url} alt={destaque.name ?? "Pet reencontrado"} />
+                  ) : (
+                    <span className="emoji-bg">{emojiEspecie(destaque.species)}</span>
+                  )}
+                  <span className="overlay" />
+                  <span className="sp">{emojiEspecie(destaque.species)}</span>
+                  {(() => {
+                    const t = tempoReencontro(destaque.event_date, destaque.updated_at);
+                    return <span className={`time ${t.cls}`}>{t.label}</span>;
+                  })()}
+                  <span className="heart">♥</span>
+                </div>
+                <div className="reunion-body">
+                  <h3>
+                    {destaque.name ?? "Sem nome"} <small>{destaque.breed ?? especiePtBR(destaque.species)}</small>
+                  </h3>
+                  <p className="reunion-loc">
+                    <span className="pin">📍</span> {destaque.city ?? "Baixada Santista"}
+                  </p>
+                  <div className="reunion-div" />
+                  <span className="reunion-ok">✓ Reencontrado</span>
+                </div>
+              </article>
+
+              {outrosReencontros.map((r) => {
+                const t = tempoReencontro(r.event_date, r.updated_at);
+                return (
+                  <article key={r.id} className="reunion">
+                    <div className="reunion-photo">
+                      {r.photo_url ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={r.photo_url} alt={r.name ?? "Pet reencontrado"} />
+                      ) : (
+                        <span className="emoji-bg">{emojiEspecie(r.species)}</span>
+                      )}
+                      <span className="overlay" />
+                      <span className="sp">{emojiEspecie(r.species)}</span>
+                      <span className={`time ${t.cls}`}>{t.label}</span>
+                      <span className="heart">♥</span>
+                    </div>
+                    <div className="reunion-body">
+                      <h3>
+                        {r.name ?? "Sem nome"} <small>{r.breed ?? especiePtBR(r.species)}</small>
+                      </h3>
+                      <p className="reunion-loc">
+                        <span className="pin">📍</span> {r.city ?? "Baixada Santista"}
+                      </p>
+                      <div className="reunion-div" />
+                      <span className="reunion-ok">✓ Reencontrado</span>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+
+            <div className="hall-all">
+              <Link href="/achados-e-perdidos">Ver todos os reencontros →</Link>
+            </div>
+          </section>
+        )}
+
+        {/* ── IMPACTO REAL ── */}
+        <section className="block">
+          <div className="section-head">
+            <h2>Cada número é um pet amado</h2>
+            <p>Dados em tempo real da nossa rede colaborativa de resgate.</p>
+          </div>
+          <div className="impact">
+            <div className="imp">
+              <b>{fmt(stats.total)}</b>
+              <span>Pets cadastrados</span>
+            </div>
+            <div className="imp">
+              <b>{fmt(stats.resolved)}</b>
+              <span>Reencontros felizes</span>
+            </div>
+            <div className="imp">
+              <b>{fmt(stats.sightings)}</b>
+              <span>Avistamentos</span>
+            </div>
+            <div className="imp">
+              <b>{fmt(stats.prestadores)}</b>
+              <span>Prestadores parceiros</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      {/* ── FAIXA DE PARCEIROS ── */}
       <Suspense fallback={null}>
         <FaixaParceirosServer />
       </Suspense>
 
-      {/* 8. Prestadores B2B */}
-      <PrestadoresCTA prestadores={richStats.prestadores} />
+      {/* ── DIFERENCIAL / BOTÃO SOS (original, mantido igual) ── */}
+      <RescueHighlight />
 
-      {/* 9–10. Confiança + CTA final */}
+      {/* ── POR QUE CONFIAR (original) ── */}
       <Trust />
-      <FinalCTA />
+
+      {/* ── CTA FINAL ── */}
+      <div className="mock-home">
+        <div className="wrap">
+          <section className="softcta">
+            <h2>Cada minuto conta. 🆘</h2>
+            <p>Cadastre seu pet perdido agora — leva 2 minutos e é de graça.</p>
+            <Link href="/achados-e-perdidos/cadastrar" className="btn btn--neon">
+              Cadastrar pet perdido
+            </Link>
+          </section>
+        </div>
+      </div>
     </main>
   );
 }
 
 // ============================================================
-// STATS BAND (visível mobile, redundante desktop)
-// ============================================================
-function StatsBand({
-  stats,
-}: {
-  stats: { active: number; lost: number; found: number };
-}) {
-  if (stats.active === 0 && stats.lost === 0 && stats.found === 0) {
-    return null;
-  }
-
-  return (
-    <section className="border-y border-warm-200/80 bg-warm-100/40 py-8 lg:hidden">
-      <div className="mx-auto grid max-w-3xl grid-cols-3 gap-4 px-4 text-center">
-        <BandStat label="Ativos" value={stats.active} />
-        <BandStat label="Perdidos" value={stats.lost} />
-        <BandStat label="Achados" value={stats.found} />
-      </div>
-    </section>
-  );
-}
-
-function BandStat({ label, value }: { label: string; value: number }) {
-  return (
-    <div>
-      <p className="font-display text-3xl font-black text-brand-600">
-        {value.toLocaleString("pt-BR")}
-      </p>
-      <p className="text-[11px] font-bold uppercase tracking-widest text-fg-muted">
-        {label}
-      </p>
-    </div>
-  );
-}
-
-// ============================================================
-// COMO FUNCIONA — 3 passos
-// ============================================================
-function HowItWorks() {
-  const steps = [
-    {
-      icon: Siren,
-      title: "1. Registre",
-      desc: "Em menos de 1 minuto, descreve o pet, sobe uma foto e seu contato — ou cadastra um pet que você encontrou.",
-    },
-    {
-      icon: Share2,
-      title: "2. Compartilhe",
-      desc: "Dispare o SOS visual: gera um cartaz pronto pra colar no WhatsApp, Instagram ou imprimir.",
-    },
-    {
-      icon: HeartHandshake,
-      title: "3. Reencontre",
-      desc: "Quem viu o pet entra em contato direto via telefone ou WhatsApp. Sem intermediários.",
-    },
-  ];
-
-  return (
-    <section className="py-20 sm:py-28">
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="inline-flex items-center gap-2 rounded-full bg-brand-100 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-brand-700">
-            Como funciona
-          </span>
-          <h2 className="mt-4 font-display text-3xl font-black text-fg sm:text-4xl">
-            Três passos para trazer
-            <br />
-            seu pet de volta.
-          </h2>
-        </div>
-
-        <div className="mt-12 grid gap-6 sm:grid-cols-3">
-          {steps.map((s) => (
-            <div
-              key={s.title}
-              className="relative rounded-2xl border border-warm-200 bg-white p-6 shadow-warm-card transition-[box-shadow,border-color,transform] duration-200 hover:shadow-warm-hover hover:border-brand-200 motion-safe:hover:-translate-y-0.5"
-            >
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-500/10 text-brand-600">
-                <s.icon className="h-6 w-6" strokeWidth={2.2} />
-              </div>
-              <h3 className="mt-4 font-display text-lg font-bold text-fg">
-                {s.title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-fg-muted">
-                {s.desc}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ============================================================
-// STATS SECTION — métricas de impacto com count-up animado
-// ============================================================
-function StatsSection({
-  stats,
-}: {
-  stats: {
-    totalPets: number;
-    resolved: number;
-    sightings: number;
-    prestadores: number;
-  };
-}) {
-  if (
-    stats.totalPets === 0 &&
-    stats.resolved === 0 &&
-    stats.sightings === 0 &&
-    stats.prestadores === 0
-  ) {
-    return null;
-  }
-
-  const items = [
-    {
-      value: stats.totalPets,
-      suffix: "+",
-      label: "Pets cadastrados",
-      desc: "animais registrados na rede desde o início",
-      color: "brand",
-      icon: PawPrint,
-    },
-    {
-      value: stats.resolved,
-      suffix: "",
-      label: "Reencontros felizes",
-      desc: "pets que voltaram para casa",
-      color: "cyan",
-      icon: HeartHandshake,
-    },
-    {
-      value: stats.sightings,
-      suffix: "+",
-      label: "Avistamentos",
-      desc: "registros de quem ajudou sem ser tutor",
-      color: "brand",
-      icon: Eye,
-    },
-    {
-      value: stats.prestadores,
-      suffix: "",
-      label: "Prestadores parceiros",
-      desc: "veterinários e pet shops na rede",
-      color: "cyan",
-      icon: Users,
-    },
-  ] as const;
-
-  return (
-    <section className="relative overflow-hidden bg-ink-900 py-20 sm:py-28" data-theme="dark">
-      {/* Fundo gradiente sutil */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 15% 50%, rgba(255,133,27,0.10), transparent 50%), radial-gradient(circle at 85% 50%, rgba(32,178,170,0.08), transparent 50%)",
-        }}
-      />
-
-      <div className="relative mx-auto max-w-6xl px-4">
-        {/* Cabeçalho */}
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-accent-light">
-            Impacto real
-          </span>
-          <h2 className="mt-4 font-display text-3xl font-black text-fg sm:text-4xl">
-            Cada número é um{" "}
-            <span className="text-brand-400 glow-text-brand">pet amado</span>.
-          </h2>
-          <p className="mt-3 text-sm text-fg-muted">
-            Dados em tempo real da nossa rede colaborativa de resgate.
-          </p>
-        </div>
-
-        {/* Grid de métricas */}
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {items.map((item) => {
-            const Icon = item.icon;
-            const isOrange = item.color === "brand";
-            return (
-              <div
-                key={item.label}
-                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-ink-700/60 p-6 backdrop-blur-sm transition-all hover:border-white/20 hover:bg-ink-700/80"
-              >
-                {/* Glow de fundo no hover */}
-                <div
-                  className={`pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition-opacity group-hover:opacity-100 ${
-                    isOrange
-                      ? "bg-gradient-to-br from-brand-500/10 via-transparent to-transparent"
-                      : "bg-gradient-to-br from-accent/10 via-transparent to-transparent"
-                  }`}
-                />
-
-                <div
-                  className={`relative flex h-10 w-10 items-center justify-center rounded-xl ${
-                    isOrange
-                      ? "bg-brand-500/20 text-brand-400"
-                      : "bg-accent/20 text-accent-light"
-                  }`}
-                >
-                  <Icon className="h-5 w-5" strokeWidth={2.2} />
-                </div>
-
-                <p
-                  className={`relative mt-4 font-display text-4xl font-black tabular-nums ${
-                    isOrange ? "text-brand-400" : "text-accent-light"
-                  }`}
-                >
-                  <CountUp to={item.value} suffix={item.suffix} />
-                </p>
-
-                <p className="relative mt-1 text-sm font-bold text-fg">
-                  {item.label}
-                </p>
-                <p className="relative mt-1 text-xs leading-relaxed text-fg-subtle">
-                  {item.desc}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ============================================================
-// CENTRAL DE RESGATE — destaque
+// CENTRAL DE RESGATE — destaque (original, tema dark — mantido a pedido do Wesley)
 // ============================================================
 function RescueHighlight() {
   return (
@@ -384,15 +422,12 @@ function RescueHighlight() {
             <h2 className="mt-4 font-display text-3xl font-black leading-tight sm:text-4xl">
               Botão SOS gera um
               <br />
-              <span className="text-brand-500 glow-text-brand">
-                cartaz pronto
-              </span>{" "}
-              em segundos.
+              <span className="text-brand-500 glow-text-brand">cartaz pronto</span> em segundos.
             </h2>
             <p className="mt-4 max-w-lg text-fg-muted">
-              Mantenha o botão pressionado por 2 segundos — geramos um card no
-              formato story (1080×1620) com a foto, descrição e seu contato,
-              pronto pra compartilhar no WhatsApp, Insta ou imprimir.
+              Mantenha o botão pressionado por 2 segundos — geramos um card no formato story
+              (1080×1620) com a foto, descrição e seu contato, pronto pra compartilhar no WhatsApp,
+              Insta ou imprimir.
             </p>
             <div className="mt-6">
               <Link
@@ -413,9 +448,7 @@ function RescueHighlight() {
               <div className="absolute inset-10 flex items-center justify-center rounded-full bg-brand-500 text-white shadow-glow-brand-lg">
                 <div className="flex flex-col items-center gap-1">
                   <Siren className="h-10 w-10" strokeWidth={2.5} />
-                  <span className="font-display text-lg font-black tracking-wide">
-                    SOS
-                  </span>
+                  <span className="font-display text-lg font-black tracking-wide">SOS</span>
                 </div>
               </div>
             </div>
@@ -427,7 +460,7 @@ function RescueHighlight() {
 }
 
 // ============================================================
-// CONFIANÇA
+// CONFIANÇA (original)
 // ============================================================
 function Trust() {
   const points = [
@@ -456,8 +489,7 @@ function Trust() {
             Por que confiar no SOS Pet Aumigo?
           </h2>
           <p className="mt-3 text-fg-muted">
-            Construído por quem vive a dor de perder um pet — e a alegria de
-            reencontrar.
+            Construído por quem vive a dor de perder um pet — e a alegria de reencontrar.
           </p>
         </div>
 
@@ -470,171 +502,10 @@ function Trust() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent-text">
                 <p.icon className="h-5 w-5" strokeWidth={2.2} />
               </div>
-              <h3 className="mt-3 font-display text-base font-bold text-fg">
-                {p.title}
-              </h3>
+              <h3 className="mt-3 font-display text-base font-bold text-fg">{p.title}</h3>
               <p className="mt-1.5 text-sm text-fg-muted">{p.desc}</p>
             </div>
           ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ============================================================
-// PRESTADORES B2B — "depositar antes de sacar"
-// ============================================================
-function PrestadoresCTA({ prestadores }: { prestadores: number }) {
-  return (
-    <section className="py-20 sm:py-28">
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="overflow-hidden rounded-3xl border border-accent/20 bg-gradient-to-br from-accent/5 to-warm-50">
-          <div className="grid items-center gap-0 lg:grid-cols-2">
-            {/* Esquerda: pitch */}
-            <div className="p-8 sm:p-12">
-              <span className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-accent-text">
-                <Building2 className="h-3 w-3" />
-                Para prestadores de serviço
-              </span>
-              <h2 className="mt-4 font-display text-2xl font-black leading-tight text-fg sm:text-3xl">
-                Seu concorrente ainda não
-                <br />
-                tem presença digital.
-                <br />
-                <span className="text-accent-text">Você pode chegar primeiro.</span>
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed text-fg-muted">
-                Tutores que usam a plataforma já são clientes em potencial pra
-                vacinas, consultas, banho e tosa. Apareça pra eles no momento
-                exato em que mais precisam.
-              </p>
-
-              <ul className="mt-5 space-y-2.5">
-                {[
-                  { icon: BadgeCheck, txt: "Badge verificado gera confiança no crise" },
-                  { icon: MapPin, txt: "Pin no mapa por bairro — alcance cirúrgico" },
-                  { icon: Users, txt: `Rede com ${prestadores} prestadores — cresça junto` },
-                ].map((item) => (
-                  <li key={item.txt} className="flex items-center gap-2.5 text-sm text-fg-muted">
-                    <item.icon className="h-4 w-4 shrink-0 text-accent-text" strokeWidth={2.2} />
-                    {item.txt}
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Link
-                  href="/para-prestadores"
-                  className="inline-flex items-center gap-2 rounded-xl bg-accent-text px-5 py-3 text-sm font-bold text-white transition-all hover:bg-accent-text/90 active:scale-95"
-                >
-                  Ver como funciona
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  href="/prestadores/novo"
-                  className="inline-flex items-center gap-2 rounded-xl border border-accent/40 bg-white px-5 py-3 text-sm font-bold text-accent-text transition-all hover:bg-accent/5"
-                >
-                  Cadastrar grátis
-                </Link>
-              </div>
-            </div>
-
-            {/* Direita: números */}
-            <div className="border-t border-accent/20 bg-accent-text/5 p-8 sm:p-12 lg:border-l lg:border-t-0">
-              <p className="text-xs font-bold uppercase tracking-widest text-accent-text">
-                Por que agora?
-              </p>
-              <blockquote className="mt-4 font-display text-xl font-black leading-snug text-fg">
-                "71% dos brasileiros busca serviços pet online toda semana."
-              </blockquote>
-              <p className="mt-2 text-xs text-fg-muted">
-                — Pesquisa CNDL / SPC Brasil
-              </p>
-
-              <div className="mt-8 space-y-4">
-                {[
-                  {
-                    num: "47%",
-                    label: "dos concorrentes não têm site",
-                    sub: "Sebrae 2024",
-                  },
-                  {
-                    num: "5 min",
-                    label: "pra criar seu perfil completo",
-                    sub: "Sem código, sem designer",
-                  },
-                  {
-                    num: "R$ 0",
-                    label: "pra começar e aparecer no diretório",
-                    sub: "Grátis para sempre no plano básico",
-                  },
-                ].map((s) => (
-                  <div
-                    key={s.num}
-                    className="flex items-center gap-4 rounded-xl border border-accent/20 bg-white px-4 py-3"
-                  >
-                    <span className="font-display text-2xl font-black text-accent-text">
-                      {s.num}
-                    </span>
-                    <div>
-                      <p className="text-sm font-bold text-fg">{s.label}</p>
-                      <p className="text-xs text-fg-muted">{s.sub}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ============================================================
-// CTA FINAL
-// ============================================================
-function FinalCTA() {
-  return (
-    <section className="pb-20 sm:pb-28">
-      <div className="mx-auto max-w-5xl px-4">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-500 via-brand-600 to-brand-700 p-10 text-center text-white shadow-glow-brand-lg sm:p-16">
-          <div
-            aria-hidden
-            className="absolute inset-0 opacity-30"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.3), transparent 40%), radial-gradient(circle at 80% 80%, rgba(32,178,170,0.3), transparent 40%)",
-            }}
-          />
-          <div className="relative">
-            <h2 className="font-display text-3xl font-black leading-tight sm:text-4xl">
-              Cada minuto conta.
-              <br />
-              Comece agora.
-            </h2>
-            <p className="mx-auto mt-3 max-w-md text-sm text-white/90 sm:text-base">
-              Cadastre um pet ou crie sua conta gratuita pra usar a Central de
-              Resgate.
-            </p>
-            <div className="mt-7 flex flex-wrap justify-center gap-3">
-              <Link
-                href="/pets/novo"
-                className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3.5 text-sm font-bold text-brand-600 transition-all hover:bg-warm-50 active:scale-95"
-              >
-                <Siren className="h-4 w-4" strokeWidth={2.5} />
-                Cadastrar pet
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/registro"
-                className="inline-flex items-center gap-2 rounded-xl border-2 border-white/60 bg-white/10 px-6 py-3.5 text-sm font-bold text-white backdrop-blur-sm transition-all hover:bg-white/20 active:scale-95"
-              >
-                Criar conta grátis
-              </Link>
-            </div>
-          </div>
         </div>
       </div>
     </section>
