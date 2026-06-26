@@ -297,26 +297,26 @@ function StatsSection({
   ] as const;
 
   return (
-    <section className="relative overflow-hidden bg-ink-900 py-20 sm:py-28" data-theme="dark">
+    <section className="relative overflow-hidden border-y border-warm-200/70 bg-warm-100/40 py-20 sm:py-28">
       {/* Fundo gradiente sutil */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 15% 50%, rgba(255,133,27,0.10), transparent 50%), radial-gradient(circle at 85% 50%, rgba(32,178,170,0.08), transparent 50%)",
+            "radial-gradient(circle at 15% 50%, rgba(255,133,27,0.06), transparent 50%), radial-gradient(circle at 85% 50%, rgba(32,178,170,0.05), transparent 50%)",
         }}
       />
 
       <div className="relative mx-auto max-w-6xl px-4">
         {/* Cabeçalho */}
         <div className="mx-auto max-w-2xl text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-accent-light">
+          <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-accent-text">
             Impacto real
           </span>
           <h2 className="mt-4 font-display text-3xl font-black text-fg sm:text-4xl">
             Cada número é um{" "}
-            <span className="text-brand-400 glow-text-brand">pet amado</span>.
+            <span className="text-brand-600">pet amado</span>.
           </h2>
           <p className="mt-3 text-sm text-fg-muted">
             Dados em tempo real da nossa rede colaborativa de resgate.
@@ -331,7 +331,7 @@ function StatsSection({
             return (
               <div
                 key={item.label}
-                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-ink-700/60 p-6 backdrop-blur-sm transition-all hover:border-white/20 hover:bg-ink-700/80"
+                className="group relative overflow-hidden rounded-2xl border border-warm-200 bg-white p-6 shadow-warm-card transition-[box-shadow,transform] duration-200 hover:shadow-warm-hover motion-safe:hover:-translate-y-1"
               >
                 {/* Glow de fundo no hover */}
                 <div
@@ -345,8 +345,8 @@ function StatsSection({
                 <div
                   className={`relative flex h-10 w-10 items-center justify-center rounded-xl ${
                     isOrange
-                      ? "bg-brand-500/20 text-brand-400"
-                      : "bg-accent/20 text-accent-light"
+                      ? "bg-brand-500/10 text-brand-600"
+                      : "bg-accent/10 text-accent-text"
                   }`}
                 >
                   <Icon className="h-5 w-5" strokeWidth={2.2} />
@@ -354,7 +354,7 @@ function StatsSection({
 
                 <p
                   className={`relative mt-4 font-display text-4xl font-black tabular-nums ${
-                    isOrange ? "text-brand-400" : "text-accent-light"
+                    isOrange ? "text-brand-600" : "text-accent-text"
                   }`}
                 >
                   <CountUp to={item.value} suffix={item.suffix} />
@@ -363,7 +363,7 @@ function StatsSection({
                 <p className="relative mt-1 text-sm font-bold text-fg">
                   {item.label}
                 </p>
-                <p className="relative mt-1 text-xs leading-relaxed text-fg-subtle">
+                <p className="relative mt-1 text-xs leading-relaxed text-fg-muted">
                   {item.desc}
                 </p>
               </div>
@@ -382,23 +382,22 @@ function RescueHighlight() {
   return (
     <section className="relative overflow-hidden">
       <div
-        data-theme="dark"
-        className="bg-ink-900 py-20 text-fg sm:py-28"
+        className="border-y border-warm-200/70 bg-gradient-to-br from-warm-100 to-white py-20 text-fg sm:py-28"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 30% 50%, rgba(255,133,27,0.12), transparent 60%), radial-gradient(circle at 80% 30%, rgba(32,178,170,0.08), transparent 50%)",
+            "radial-gradient(circle at 30% 50%, rgba(255,133,27,0.07), transparent 60%), radial-gradient(circle at 80% 30%, rgba(32,178,170,0.05), transparent 50%)",
         }}
       >
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 lg:grid-cols-2">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-brand-500/40 bg-brand-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-brand-300">
+            <span className="inline-flex items-center gap-2 rounded-full border border-brand-500/30 bg-brand-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-brand-700">
               <Siren className="h-3 w-3" />
               Diferencial
             </span>
-            <h2 className="mt-4 font-display text-3xl font-black leading-tight sm:text-4xl">
+            <h2 className="mt-4 font-display text-3xl font-black leading-tight text-fg sm:text-4xl">
               Botão SOS gera um
               <br />
-              <span className="text-brand-500 glow-text-brand">
+              <span className="text-brand-600">
                 cartaz pronto
               </span>{" "}
               em segundos.

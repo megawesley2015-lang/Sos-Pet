@@ -323,6 +323,27 @@
   .glow-text-cyan {
     text-shadow: 0 0 24px rgba(32,178,170,0.5);
   }
+
+  /* Brilho deslizante em botões — sweep no hover */
+  .btn-shine { position: relative; overflow: hidden; }
+  .btn-shine::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      transparent,
+      rgba(255,255,255,0.35),
+      transparent
+    );
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+    pointer-events: none;
+  }
+  .btn-shine:hover::after { left: 125%; }
 }
 
 /* ── Acessibilidade — respeitar prefers-reduced-motion ───────────── */
@@ -333,5 +354,8 @@
   }
   .ping-teal::after {
     animation: none !important;
+  }
+  .btn-shine::after {
+    transition: none !important;
   }
 }
