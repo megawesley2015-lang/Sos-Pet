@@ -142,12 +142,7 @@ export default function HeroSection({
             {/* Pill */}
             <div>
               <span
-                className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-bold uppercase tracking-widest"
-                style={{
-                  borderColor:     'rgba(var(--color-primary), 0.25)',
-                  backgroundColor: 'rgba(var(--color-primary), 0.10)',
-                  color:           'rgb(var(--color-primary))',
-                }}
+                className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-accent-text"
               >
                 <Zap size={11} fill="currentColor" aria-hidden="true" />
                 Rede colaborativa de resgate
@@ -173,7 +168,7 @@ export default function HeroSection({
               {/* Primário: urgência — pet perdido */}
               <Link
                 href="/achados-e-perdidos/cadastrar"
-                className="group inline-flex items-center gap-2.5 rounded-xl bg-brand-500 px-6 py-3.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(255,133,27,0.4)] transition-all hover:bg-brand-400 hover:shadow-[0_0_30px_rgba(255,133,27,0.5)] active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2"
+                className="btn-shine group inline-flex items-center gap-2.5 rounded-xl bg-brand-500 px-6 py-3.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(255,133,27,0.4)] transition-all hover:bg-brand-400 hover:shadow-[0_0_30px_rgba(255,133,27,0.5)] active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2"
               >
                 <AlertTriangle size={15} aria-hidden="true" />
                 Cadastrar pet perdido →

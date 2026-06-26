@@ -113,7 +113,7 @@ export default async function PetDetailPage({ params, searchParams }: PageParams
         )}
       </div>
 
-      <div className="mt-6 flex flex-col gap-5">
+      <div className="mt-6 flex flex-col gap-5 animate-fade-in">
         {/* Badge + data */}
         <div className="flex items-center gap-3">
           <span className={`
@@ -131,7 +131,7 @@ export default async function PetDetailPage({ params, searchParams }: PageParams
           </span>
         </div>
 
-        <h1 className="text-2xl font-black text-fg">
+        <h1 className="text-2xl font-black text-fg sm:text-3xl">
           {displayName}
           {pet.breed && <span className="ml-2 text-lg font-normal text-fg-muted">· {pet.breed}</span>}
         </h1>
