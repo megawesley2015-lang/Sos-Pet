@@ -18,6 +18,9 @@ import CountUp from "@/components/ui/CountUp";
 import HallRreencontrosServer from "@/components/HallRreencontros.server";
 import HeroSectionServer from "@/components/HeroSection.server";
 import FaixaParceirosServer from "@/components/FaixaParceiros.server";
+import { AlertaBairro } from "@/components/marketing/AlertaBairro";
+import { ComunidadeIG } from "@/components/marketing/ComunidadeIG";
+import { FaqHome } from "@/components/marketing/FaqHome";
 
 export const dynamic = "force-dynamic";
 
@@ -123,8 +126,19 @@ export default async function LandingPage() {
       {/* 8. Prestadores B2B */}
       <PrestadoresCTA prestadores={richStats.prestadores} />
 
-      {/* 9–10. Confiança + CTA final */}
+      {/* 9. Confiança */}
       <Trust />
+
+      {/* 10. Alerta por bairro — engajamento */}
+      <AlertaBairro />
+
+      {/* 11. Comunidade no Instagram — 2 fluxos */}
+      <ComunidadeIG />
+
+      {/* 12. FAQ */}
+      <FaqHome />
+
+      {/* 13. CTA final */}
       <FinalCTA />
     </main>
   );

@@ -5,7 +5,7 @@ export function MarketingFooter() {
   const year = new Date().getFullYear();
   return (
     <footer className="border-t border-warm-200/80 bg-warm-100/40 py-10">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 sm:grid-cols-3">
+      <div className="mx-auto grid max-w-6xl gap-8 px-4 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <Link href="/" className="flex items-center">
             <img
@@ -63,6 +63,29 @@ export function MarketingFooter() {
             <li>
               <Link href="/plaquinha" className="hover:text-brand-600">
                 🐾 Plaquinha com QR Code
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="text-xs font-bold uppercase tracking-widest text-brand-700/70">
+            Sobre
+          </h3>
+          <ul className="mt-3 space-y-2 text-sm text-fg-muted">
+            <li>
+              <Link href="/quem-somos" className="hover:text-brand-600">
+                Quem somos
+              </Link>
+            </li>
+            <li>
+              <Link href="/seguranca" className="hover:text-brand-600">
+                Segurança
+              </Link>
+            </li>
+            <li>
+              <Link href="/para-prestadores" className="hover:text-brand-600">
+                Planos para prestadores
               </Link>
             </li>
           </ul>
