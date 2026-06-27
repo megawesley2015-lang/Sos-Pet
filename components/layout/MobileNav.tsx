@@ -4,31 +4,18 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, PawPrint, Siren } from "lucide-react";
+import { PRIMARY_LINKS, SECONDARY_LINKS, isNavActive } from "./nav-config";
 
 interface MobileNavProps {
   isLoggedIn: boolean;
   isPrestador?: boolean;
-  dark?: boolean;
 }
-
-const NAV_LINKS = [
-  { href: "/pets",          label: "Achados & Perdidos" },
-  { href: "/adotar",        label: "❤️ Adoção" },
-  { href: "/mapa",          label: "🗺️ Mapa de Alertas" },
-  { href: "/avistamentos",  label: "Avistamentos" },
-  { href: "/prestadores",   label: "Prestadores" },
-  { href: "/dicas",         label: "Dicas" },
-  { href: "/sentinela",     label: "📷 Rede Sentinela" },
-  { href: "/parcerias",     label: "Parcerias" },
-  { href: "/loja",          label: "🛍️ Loja" },
-];
 
 /**
  * MobileNav — hamburguer + drawer lateral (visível em < xl).
- * dark=true → botão adaptado para header escuro (TopBar).
  * Active state via usePathname(). Acessibilidade: focus trap + Esc.
  */
-export function MobileNav({ isLoggedIn, isPrestador = false, dark = false }: MobileNavProps) {
+export function MobileNav({ isLoggedIn, isPrestador = false }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const drawerRef = useRef<HTMLDivElement>(null);
@@ -65,9 +52,31 @@ export function MobileNav({ isLoggedIn, isPrestador = false, dark = false }: Mob
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
-  const btnCls = dark
-    ? "border border-white/20 bg-white/8 text-fg-muted hover:border-brand-400/50 hover:bg-white/15 hover:text-brand-300"
-    : "border border-warm-200/80 bg-warm-100/60 text-fg-muted hover:border-brand-300 hover:bg-warm-200/60 hover:text-brand-600";
+  const btnCls =
+    "border border-warm-200/80 bg-warm-100/60 text-fg-muted hover:border-brand-300 hover:bg-warm-200/60 hover:text-brand-600";
+
+  const renderLink = (link: { href: string; label: string }) => {
+    const active = isNavActive(pathname, link.href);
+    return (
+      <Link
+        key={link.href}
+        href={link.href}
+        onClick={() => setOpen(false)}
+        aria-current={active ? "page" : undefined}
+        className={[
+          "flex items-center rounded-xl px-4 py-2.5 text-sm transition-all duration-150",
+          active
+            ? "bg-brand-500/10 font-semibold text-brand-600"
+            : "font-medium text-fg-muted hover:bg-warm-200/50 hover:text-fg",
+        ].join(" ")}
+      >
+        {active && (
+          <span aria-hidden className="mr-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-500" />
+        )}
+        {link.label}
+      </Link>
+    );
+  };
 
   return (
     <>
@@ -79,9 +88,10 @@ export function MobileNav({ isLoggedIn, isPrestador = false, dark = false }: Mob
         aria-expanded={open}
         aria-controls="mobile-nav-drawer"
         onClick={() => setOpen((v) => !v)}
-        className={`flex h-9 w-9 items-center justify-center rounded-full transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 xl:hidden ${btnCls}`}
+        className={`flex h-9 items-center gap-1.5 rounded-full px-3 text-sm font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 xl:hidden ${btnCls}`}
       >
         {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+        <span>Menu</span>
       </button>
 
       {open && (
@@ -122,30 +132,9 @@ export function MobileNav({ isLoggedIn, isPrestador = false, dark = false }: Mob
 
             {/* Links */}
             <nav className="flex-1 overflow-y-auto px-3 py-2">
-              {NAV_LINKS.map((link) => {
-                const isActive =
-                  pathname === link.href ||
-                  (link.href.length > 1 && pathname.startsWith(link.href + "/"));
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    aria-current={isActive ? "page" : undefined}
-                    className={[
-                      "flex items-center rounded-xl px-4 py-2.5 text-sm transition-all duration-150",
-                      isActive
-                        ? "bg-brand-500/10 font-semibold text-brand-600"
-                        : "font-medium text-fg-muted hover:bg-warm-200/50 hover:text-fg",
-                    ].join(" ")}
-                  >
-                    {isActive && (
-                      <span aria-hidden className="mr-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-500" />
-                    )}
-                    {link.label}
-                  </Link>
-                );
-              })}
+              {PRIMARY_LINKS.map(renderLink)}
+              <div className="my-2 border-t border-warm-200/70" />
+              {SECONDARY_LINKS.map(renderLink)}
             </nav>
 
             <div className="mx-5 border-t border-warm-200/80" />
@@ -180,7 +169,7 @@ export function MobileNav({ isLoggedIn, isPrestador = false, dark = false }: Mob
                     className="flex items-center justify-center gap-2 rounded-xl bg-brand-500 px-4 py-3 text-sm font-bold text-white shadow-glow-brand transition-all hover:bg-brand-400"
                   >
                     <Siren className="h-4 w-4" strokeWidth={2.5} />
-                    Cadastrar pet perdido
+                    Perdi meu pet
                   </Link>
                   <Link
                     href="/login"

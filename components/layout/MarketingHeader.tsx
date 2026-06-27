@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Search } from "lucide-react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
 import { UserMenu } from "./UserMenu";
@@ -8,9 +7,10 @@ import { NavLinks } from "./NavLinks";
 
 /**
  * Header das páginas públicas.
- * Logado   → UserMenu dropdown
- * Deslogado → "Entrar" ghost pill + "Criar conta" amber pill
- * Mobile   → MobileNav hamburguer com drawer (xl:hidden)
+ * Ação primária (tutor): CTA âmbar "⚠️ Perdi meu pet" → /pets/novo (oculto p/ prestador).
+ * Logado    → UserMenu dropdown
+ * Deslogado → "Entrar" ghost pill (cadastro acontece no fluxo de cadastrar pet)
+ * Mobile    → CTA "Perdi meu pet" no header + MobileNav hamburguer com drawer (xl:hidden)
  */
 export async function MarketingHeader() {
   const supabase = await createSupabaseServerClient();
@@ -62,16 +62,17 @@ export async function MarketingHeader() {
         {/* Ações desktop + mobile */}
         <div className="flex shrink-0 items-center gap-2">
 
-          {/* Busca rápida — mobile/tablet */}
-          <Link
-            href="/pets"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-warm-200/80 bg-warm-100/60 text-fg-muted transition-all duration-150 hover:border-brand-300 hover:bg-warm-200/60 hover:text-brand-600 xl:hidden"
-            aria-label="Buscar pets"
-          >
-            <Search className="h-4 w-4" />
-          </Link>
+          {/* CTA de emergência — mobile/tablet (ação primária do tutor; oculto p/ prestador) */}
+          {role !== "prestador" && (
+            <Link
+              href="/pets/novo"
+              className="flex h-9 items-center gap-1.5 rounded-full bg-brand-500 px-3.5 text-xs font-bold text-white shadow-sm transition-all duration-150 hover:bg-brand-400 hover:shadow-glow-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 xl:hidden"
+            >
+              ⚠️ Perdi meu pet
+            </Link>
+          )}
 
-          {/* Auth — desktop (xl+) */}
+          {/* Ações — desktop (xl+) */}
           <div className="hidden xl:flex xl:items-center xl:gap-2.5">
             {role !== "prestador" && (
               <>
@@ -82,6 +83,13 @@ export async function MarketingHeader() {
                   Anuncie seu serviço
                 </Link>
                 <span className="h-5 w-px bg-warm-200/80" aria-hidden />
+                {/* CTA de emergência — ação primária do tutor */}
+                <Link
+                  href="/pets/novo"
+                  className="rounded-full bg-brand-500 px-5 py-2 text-sm font-bold text-white shadow-sm transition-all duration-150 hover:bg-brand-400 hover:shadow-glow-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
+                >
+                  ⚠️ Perdi meu pet
+                </Link>
               </>
             )}
             {user ? (
@@ -92,20 +100,12 @@ export async function MarketingHeader() {
                 role={role}
               />
             ) : (
-              <>
-                <Link
-                  href="/login"
-                  className="rounded-full border border-warm-300/80 px-4 py-1.5 text-sm font-semibold text-fg-muted transition-all duration-150 hover:border-brand-300/70 hover:bg-warm-100/70 hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
-                >
-                  Entrar
-                </Link>
-                <Link
-                  href="/registro"
-                  className="rounded-full bg-brand-500 px-5 py-2 text-sm font-bold text-white shadow-sm transition-all duration-150 hover:bg-brand-400 hover:shadow-glow-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
-                >
-                  Criar conta
-                </Link>
-              </>
+              <Link
+                href="/login"
+                className="rounded-full border border-warm-300/80 px-4 py-1.5 text-sm font-semibold text-fg-muted transition-all duration-150 hover:border-brand-300/70 hover:bg-warm-100/70 hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
+              >
+                Entrar
+              </Link>
             )}
           </div>
 
