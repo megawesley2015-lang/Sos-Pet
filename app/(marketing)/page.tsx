@@ -251,6 +251,49 @@ export default async function LandingPage() {
             </div>
           </div>
         </section>
+      </div>
+
+      {/* ── DIFERENCIAL / BOTÃO SOS (logo após Como funciona) ── */}
+      <RescueHighlight />
+
+      <div className="wrap">
+        {/* ── PETS NA REGIÃO ── */}
+        {activePets.length > 0 && (
+          <section className="block" id="pets-na-regiao">
+            <div className="section-head">
+              <h2>Procurando agora na sua região</h2>
+              <p>Os pets perdidos mais recentes da Baixada.</p>
+            </div>
+            <div className="pets">
+              {activePets.slice(0, 3).map((p, i) => {
+                const perdido = p.kind === "lost";
+                return (
+                  <Link key={p.id} href={`/achados-e-perdidos/${p.id}`} className="pet-card">
+                    <div className={`pet-photo ph${i + 1}`}>
+                      {p.photo_url ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={p.photo_url} alt={p.name ?? "Pet"} />
+                      ) : (
+                        <span className="pet-emoji">{emojiEspecie(p.species)}</span>
+                      )}
+                      <span className={`badge ${perdido ? "badge--lost" : "badge--found"}`}>
+                        {perdido ? "PERDIDO" : "ENCONTRADO"}
+                      </span>
+                    </div>
+                    <div className="pet-body">
+                      <h4>{p.name ?? "Sem nome"}</h4>
+                      <div className="meta">
+                        {[especiePtBR(p.species), [p.neighborhood, p.city].filter(Boolean).join(", "), tempoRelativo(p.created_at)]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
         {/* ── HALL DE REENCONTROS ── */}
         {destaque && (
@@ -349,7 +392,7 @@ export default async function LandingPage() {
         <section className="block">
           <div className="section-head">
             <h2>Cada número é um pet amado</h2>
-            <p>Dados em tempo real da nossa rede colaborativa de resgate.</p>
+            <p>Rede recém-lançada na Baixada Santista — cada número aqui é uma família real, em tempo real.</p>
           </div>
           <div className="impact">
             <div className="imp">
@@ -370,6 +413,52 @@ export default async function LandingPage() {
             </div>
           </div>
         </section>
+
+        {/* ── FAQ ── */}
+        <section className="block">
+          <div className="section-head">
+            <h2>Perguntas frequentes</h2>
+          </div>
+          <div className="faq">
+            <details open>
+              <summary>É realmente gratuito?</summary>
+              <p>
+                Sim. Cadastrar e procurar pets é 100% gratuito para tutores — a plataforma se mantém com
+                prestadores parceiros e a loja. <strong>Nunca cobramos de quem está em pânico.</strong>
+              </p>
+            </details>
+            <details>
+              <summary>Preciso criar conta pra cadastrar?</summary>
+              <p>Não. Você só precisa de um contato válido. Sem login obrigatório, sem burocracia.</p>
+            </details>
+            <details>
+              <summary>Meu telefone fica exposto?</summary>
+              <p>
+                Não na listagem. Seu contato só aparece na página individual do pet, para quem clicar pra ajudar.
+              </p>
+            </details>
+            <details>
+              <summary>Como funciona o alerta por bairro?</summary>
+              <p>
+                Você escolhe sua cidade e bairro; sempre que um pet some por perto, você recebe um aviso no WhatsApp.
+              </p>
+            </details>
+          </div>
+        </section>
+      </div>
+
+      {/* ── POR QUE CONFIAR (original) ── */}
+      <Trust />
+
+      {/* ── CTA FINAL ── */}
+      <div className="wrap">
+        <section className="softcta">
+          <h2>Cada minuto conta. 🆘</h2>
+          <p>Cadastre seu pet perdido agora — leva 2 minutos e é de graça.</p>
+          <Link href="/achados-e-perdidos/cadastrar" className="btn btn--neon">
+            Cadastrar pet perdido
+          </Link>
+        </section>
       </div>
 
       {/* ── FAIXA DE PARCEIROS ── */}
@@ -377,23 +466,111 @@ export default async function LandingPage() {
         <FaixaParceirosServer />
       </Suspense>
 
-      {/* ── DIFERENCIAL / BOTÃO SOS (original, mantido igual) ── */}
-      <RescueHighlight />
+      {/* ── ENGAJAMENTO (fora da jornada crítica): Alerta por bairro + Instagram ── */}
+      <div className="wrap">
+        {/* ── ALERTA POR BAIRRO (visual — backend em breve) ── */}
+        <section className="block">
+          <div className="alert-cta">
+            <div>
+              <h2>Seja avisado quando sumir um pet perto de você 🔔</h2>
+              <p>
+                Cadastre seu bairro e receba alerta no WhatsApp sempre que um pet for dado como perdido
+                na sua região. Quanto mais olhos, mais reencontros.
+              </p>
+            </div>
+            <div className="alert-form">
+              <div className="row">
+                <select defaultValue="" aria-label="Sua cidade" disabled>
+                  <option value="">Sua cidade</option>
+                  <option>Santos</option>
+                  <option>Guarujá</option>
+                  <option>São Vicente</option>
+                </select>
+                <select defaultValue="" aria-label="Seu bairro" disabled>
+                  <option value="">Seu bairro</option>
+                  <option>Gonzaga</option>
+                  <option>Embaré</option>
+                  <option>Ponta da Praia</option>
+                </select>
+              </div>
+              <input placeholder="Seu WhatsApp — (13) 9 9999-9999" aria-label="Seu WhatsApp" disabled />
+              <button type="button" className="btn btn--neon" disabled>
+                🔔 Ativar alertas do meu bairro
+              </button>
+              <small>Em breve — estamos construindo o alerta por bairro. Sem spam, e você poderá cancelar quando quiser.</small>
+            </div>
+          </div>
+        </section>
 
-      {/* ── POR QUE CONFIAR (original) ── */}
-      <Trust />
-
-      {/* ── CTA FINAL ── */}
-      <div className="mock-home">
-        <div className="wrap">
-          <section className="softcta">
-            <h2>Cada minuto conta. 🆘</h2>
-            <p>Cadastre seu pet perdido agora — leva 2 minutos e é de graça.</p>
-            <Link href="/achados-e-perdidos/cadastrar" className="btn btn--neon">
-              Cadastrar pet perdido
-            </Link>
-          </section>
-        </div>
+        {/* ── COMUNIDADE NO INSTAGRAM (por último — feed de exemplo) ── */}
+        <section className="block">
+          <div className="section-head">
+            <h2>
+              Comunidade no Instagram <span className="demo-tag">exemplo</span>
+            </h2>
+            <p>
+              Conta recém-criada. Os posts abaixo são exemplos do que você verá aqui conforme a rede
+              cresce — marque <b style={{ color: "var(--brand-600)" }}>@sospetaumigo</b> e seu pet aparece.
+            </p>
+          </div>
+          <div className="ig-head">
+            <div className="h">
+              <span className="dot">📷</span>@sospetaumigo
+            </div>
+            <a href="https://instagram.com/sospetaumigo" target="_blank" rel="noopener noreferrer">
+              Seguir no Instagram →
+            </a>
+          </div>
+          <input type="radio" name="igtab" id="tab-perdidos" className="ig-radio" />
+          <input type="radio" name="igtab" id="tab-fofura" className="ig-radio" defaultChecked />
+          <div className="ig-tabs">
+            <label htmlFor="tab-perdidos">🆘 Pets perdidos</label>
+            <label htmlFor="tab-fofura">🥰 Momento fofura</label>
+          </div>
+          <div className="ig-content ig-content--perdidos">
+            <div className="feed">
+              <div className="post g1">
+                🐕<div className="ov" />
+                <div className="cap">Sumiu no Gonzaga · @marina marcou a rede</div>
+              </div>
+              <div className="post g2">
+                🐈<div className="ov" />
+                <div className="cap">Procura-se Bolinha em S. Vicente</div>
+              </div>
+              <div className="post g3">
+                🦜<div className="ov" />
+                <div className="cap">Calopsita perdida na Praia Grande</div>
+              </div>
+              <div className="post g4">
+                🐕‍🦺<div className="ov" />
+                <div className="cap">Husky visto na orla · ajudem a achar!</div>
+              </div>
+            </div>
+          </div>
+          <div className="ig-content ig-content--fofura">
+            <div className="feed">
+              <div className="post g3">
+                🐶<div className="ov" />
+                <div className="cap">Domingo de soneca 😴 @joao</div>
+              </div>
+              <div className="post g2">
+                🐱<div className="ov" />
+                <div className="cap">Primeiro banho da Mia 🛁 @ana</div>
+              </div>
+              <div className="post g4">
+                🐕<div className="ov" />
+                <div className="cap">Thor adotado e feliz 💚 #finalfeliz</div>
+              </div>
+              <div className="post g1">
+                🐾<div className="ov" />
+                <div className="cap">Bocejo da manhã 🥰 @petlover</div>
+              </div>
+            </div>
+          </div>
+          <p className="ig-mark">
+            🆘 Perdeu o pet e não deu tempo de cadastrar? <b>Marque @sospetaumigo no Instagram</b> que a gente cadastra ele na rede de pets perdidos pra você.
+          </p>
+        </section>
       </div>
     </main>
   );
@@ -429,7 +606,7 @@ function RescueHighlight() {
               (1080×1620) com a foto, descrição e seu contato, pronto pra compartilhar no WhatsApp,
               Insta ou imprimir.
             </p>
-            <div className="mt-6">
+            <div className="mt-6 flex flex-wrap items-center gap-4">
               <Link
                 href="/registro"
                 className="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-white shadow-glow-brand transition-all hover:bg-brand-400"
@@ -437,6 +614,9 @@ function RescueHighlight() {
                 Criar conta para usar
                 <ArrowRight className="h-4 w-4" />
               </Link>
+              <a href="#pets-na-regiao" className="text-sm font-semibold text-brand-300 underline-offset-4 hover:underline">
+                Ver pets na região
+              </a>
             </div>
           </div>
 
