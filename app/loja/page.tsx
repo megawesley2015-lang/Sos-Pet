@@ -15,13 +15,13 @@ const CATEGORIA_CONFIG: Record<
   string,
   { label: string; icon: string; color: string }
 > = {
-  seguranca: { label: "Segurança", icon: "🔐", color: "text-brand-400 bg-brand-500/10 border-brand-500/30" },
+  seguranca: { label: "Segurança", icon: "🔐", color: "text-brand-600 bg-brand-500/10 border-brand-500/30" },
   saude:     { label: "Saúde",     icon: "💊", color: "text-[#0F6E56] bg-[#E1F5EE] border-[#20B2AA]/40" },
-  higiene:   { label: "Higiene",   icon: "🛁", color: "text-green-400 bg-green-500/10 border-green-500/30" },
-  alimentacao: { label: "Alimentação", icon: "🍗", color: "text-yellow-400 bg-yellow-500/10 border-yellow-500/30" },
-  acessorio: { label: "Acessórios", icon: "🎽", color: "text-purple-400 bg-purple-500/10 border-purple-500/30" },
-  plaquinha: { label: "Plaquinha QR", icon: "🏷️", color: "text-brand-400 bg-brand-500/10 border-brand-500/30" },
-  geral:     { label: "Geral",     icon: "📦", color: "text-fg-muted bg-white/5 border-white/10" },
+  higiene:   { label: "Higiene",   icon: "🛁", color: "text-green-700 bg-green-500/10 border-green-600/30" },
+  alimentacao: { label: "Alimentação", icon: "🍗", color: "text-yellow-700 bg-yellow-500/10 border-yellow-600/30" },
+  acessorio: { label: "Acessórios", icon: "🎽", color: "text-purple-700 bg-purple-500/10 border-purple-600/30" },
+  plaquinha: { label: "Plaquinha QR", icon: "🏷️", color: "text-brand-600 bg-brand-500/10 border-brand-500/30" },
+  geral:     { label: "Geral",     icon: "📦", color: "text-fg-muted bg-warm-100 border-warm-200" },
 };
 
 export default async function LojaPage({
@@ -66,11 +66,11 @@ export default async function LojaPage({
   return (
     <div className="min-h-screen text-fg" data-theme="light">
       {/* Hero */}
-      <div className="relative overflow-hidden border-b border-white/10 bg-gradient-to-b from-ink-700 to-ink-800 px-4 py-14 text-center">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,107,53,0.08),transparent_60%)]" />
+      <div className="relative overflow-hidden border-b border-warm-200 bg-gradient-to-b from-warm-100 to-white px-4 py-14 text-center">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,133,27,0.08),transparent_60%)]" />
         <div className="relative mx-auto max-w-2xl">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-brand-500/30 bg-brand-500/15 shadow-glow-brand">
-            <ShoppingBag className="h-8 w-8 text-brand-400" />
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-brand-500/30 bg-brand-500/10 shadow-warm-card">
+            <ShoppingBag className="h-8 w-8 text-brand-500" />
           </div>
           <h1 className="font-display text-4xl font-black text-fg">
             Loja <span className="text-brand-500">SOS Pet Aumigo</span>
@@ -82,7 +82,7 @@ export default async function LojaPage({
           </p>
           <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-xs text-fg-subtle">
             <span className="flex items-center gap-1.5">
-              <Shield className="h-3.5 w-3.5 text-green-400" />
+              <Shield className="h-3.5 w-3.5 text-green-600" />
               Produtos verificados
             </span>
             <span className="flex items-center gap-1.5">
@@ -90,7 +90,7 @@ export default async function LojaPage({
               Entrega em 1–7 dias úteis
             </span>
             <span className="flex items-center gap-1.5">
-              <Stethoscope className="h-3.5 w-3.5 text-purple-400" />
+              <Stethoscope className="h-3.5 w-3.5 text-purple-600" />
               Indicados por veterinários
             </span>
           </div>
@@ -105,8 +105,8 @@ export default async function LojaPage({
               href="/loja"
               className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition ${
                 !categoria
-                  ? "bg-brand-500 text-white shadow-glow-brand"
-                  : "border border-white/10 text-fg-muted hover:bg-white/5"
+                  ? "bg-brand-500 text-white shadow-warm-card"
+                  : "border border-warm-200 text-fg-muted hover:bg-warm-100"
               }`}
             >
               Todos
@@ -119,7 +119,7 @@ export default async function LojaPage({
                   href={`/loja?categoria=${cat}`}
                   className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition ${
                     categoria === cat
-                      ? "bg-brand-500 text-white border-brand-500 shadow-glow-brand"
+                      ? "bg-brand-500 text-white border-brand-500 shadow-warm-card"
                       : `${cfg.color} hover:opacity-80`
                   }`}
                 >
@@ -260,7 +260,7 @@ function ProductCard({
 
         <div className="mt-auto pt-3">
           <div className="flex items-baseline gap-2">
-            <span className="font-display text-lg font-bold text-brand-400">
+            <span className="font-display text-lg font-bold text-brand-600">
               {fmt(product.price_cents)}
             </span>
             {product.original_price_cents && (
