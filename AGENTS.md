@@ -134,5 +134,22 @@ sentinela/        → Monitoramento de alertas (experimental)
 
 ---
 
+## AI-First Operating System
+
+Este `AGENTS.md` é o **harness engineering**: mapa, regras, limites e gates para agentes de IA.
+O **sistema operacional AI-first** (fluxo padrão, papéis, modos de trabalho, templates de comando,
+classificação de ideias novas) vive em: **`docs/AI-FIRST-OPERATING-SYSTEM.md`**.
+
+Ponteiros do ecossistema:
+- `docs/AI-FIRST-OPERATING-SYSTEM.md` → como operar (pesquisa → spec → plano → aprovação → implementação → verificação → documentação).
+- `docs/DESIGN-MERGE-RULES.md` → regras de mockup/design merge (mockup = design target; app real = source of truth).
+- `.claude/specs/` → specs e Spec Driven Development das features.
+- `docs/decisions/` → decisões aprovadas (1 arquivo por decisão).
+- `CLAUDE.md` → contexto técnico completo do projeto.
+
+> Ponteiros curtos — não duplicar regra longa aqui.
+
+---
+
 *Para contexto completo do projeto, leia `CLAUDE.md`.*
 *Atualizar este arquivo após mudanças estruturais.*
