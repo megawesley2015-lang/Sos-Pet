@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
@@ -150,7 +150,7 @@ export default async function PetDetailPage({ params, searchParams }: PageProps)
               : `${pet.name ? `${pet.name} foi devolvido` : "O pet foi devolvido"} ao tutor. Ótimo trabalho!`}
           </p>
 
-          <div className="mt-6 rounded-2xl border border-white/10 bg-ink-700/60 p-5 text-left shadow-warm-card transition-shadow">
+          <div className="mt-6 rounded-2xl border border-warm-200 bg-white p-5 text-left shadow-warm-card transition-shadow">
             <p className="text-xs font-bold uppercase tracking-wide text-fg-subtle">Registro</p>
             <p className="mt-1 text-sm font-medium text-fg">
               {pet.name ?? "Sem nome"} · {SPECIES_LABEL[pet.species]}
@@ -163,7 +163,7 @@ export default async function PetDetailPage({ params, searchParams }: PageProps)
           <div className="mt-8 flex flex-col items-center gap-3">
             <Link
               href="/meus-pets"
-              className="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-6 py-3 text-sm font-bold text-white shadow-glow-brand transition hover:bg-brand-400"
+              className="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-6 py-3 text-sm font-bold text-white transition hover:bg-brand-400"
             >
               Ver meus registros
             </Link>
@@ -183,11 +183,29 @@ export default async function PetDetailPage({ params, searchParams }: PageProps)
     `Perdemos ${pet.name ? `${pet.name} ` : ""}(${SPECIES_LABEL[pet.species]}) em ${pet.city}. Você pode ajudar? ${petUrl}`
   )}`
 
+  // Sub-line e specs (estilo mockup pet-detalhe.html). A espécie aparece na
+  // sub-line, então não é repetida como spec.
+  const speciesLabel = SPECIES_LABEL[pet.species] ?? "Animal";
+  const sub = [
+    speciesLabel,
+    pet.breed,
+    pet.sex && SEX_LABEL[pet.sex],
+    pet.size && `porte ${SIZE_LABEL[pet.size].toLowerCase()}`,
+  ].filter(Boolean).join(" · ");
+
+  const specs = ([
+    pet.color ? { label: "Cor", value: pet.color } : null,
+    pet.breed ? { label: "Raça", value: pet.breed } : null,
+    pet.size ? { label: "Porte", value: SIZE_LABEL[pet.size] } : null,
+    pet.sex ? { label: "Sexo", value: SEX_LABEL[pet.sex] } : null,
+    pet.age_approx ? { label: "Idade", value: pet.age_approx } : null,
+  ].filter(Boolean)) as { label: string; value: string }[];
+
   return (
     <div className="min-h-screen bg-bg" data-theme="light">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }} />
       <TopBar />
-      <main className="mx-auto max-w-3xl px-4 pb-12 pt-6">
+      <main className="mx-auto max-w-6xl px-4 pb-12 pt-6">
 
         {isNew && (
           <div className="mb-6 rounded-2xl border border-green-500/30 bg-green-500/10 p-5">
@@ -270,7 +288,7 @@ export default async function PetDetailPage({ params, searchParams }: PageProps)
               {pet.kind === "lost" && (
                 <Link
                   href={`/resgate?pet=${pet.id}`}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-brand-500 bg-brand-500/15 px-3 py-1.5 text-xs font-bold text-brand-200 shadow-glow-brand hover:bg-brand-500/25"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-brand-500 bg-brand-500/15 px-3 py-1.5 text-xs font-bold text-brand-700 hover:bg-brand-500/25"
                 >
                   <Siren className="h-3.5 w-3.5" />
                   Disparar SOS
@@ -278,7 +296,7 @@ export default async function PetDetailPage({ params, searchParams }: PageProps)
               )}
               <Link
                 href={`/pets/${pet.id}/editar`}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-bold text-fg hover:bg-white/10"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-bg-raised px-3 py-1.5 text-xs font-bold text-fg hover:bg-warm-100"
               >
                 <Pencil className="h-3.5 w-3.5" />
                 Editar
@@ -287,75 +305,93 @@ export default async function PetDetailPage({ params, searchParams }: PageProps)
           )}
         </div>
 
-        <article className="overflow-hidden rounded-2xl border border-white/10 bg-ink-700/80 backdrop-blur-sm shadow-warm-card transition-shadow hover:shadow-warm-hover">
-          <div className="relative h-72 bg-gradient-to-br from-ink-600 to-ink-900 sm:h-96">
-            {pet.photo_url ? (
-              <Image
-                src={pet.photo_url}
-                alt={pet.name ?? "Pet"}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 768px"
-                priority
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center">
-                <PawPrint className="h-20 w-20 text-brand-500/30" />
+        {/* ── Bloco principal: 2 colunas (foto | info) ── */}
+        <div className="grid grid-cols-1 items-start gap-9 min-[881px]:grid-cols-[1.1fr_0.9fr]">
+          {/* Coluna esquerda: foto */}
+          <div>
+            <div
+              className="relative h-[320px] w-full overflow-hidden rounded-2xl shadow-card sm:h-[420px]"
+              style={{ background: "linear-gradient(135deg,#FFE4CC,#FFD0A8)" }}
+            >
+              {pet.photo_url ? (
+                <Image
+                  src={pet.photo_url}
+                  alt={pet.name ?? "Pet"}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 600px"
+                  priority
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center">
+                  <PawPrint className="h-20 w-20 text-brand-500/40" />
+                </div>
+              )}
+              <div className="absolute left-3 top-3 z-10 [&>*]:px-3 [&>*]:py-1.5 [&>*]:font-bold">
+                <SOSBadge kind={pet.kind as PetKind} />
               </div>
-            )}
-            <div className="absolute left-3 top-3 z-10 [&>*]:px-3 [&>*]:py-1.5 [&>*]:font-bold">
-              <SOSBadge kind={pet.kind as PetKind} />
             </div>
           </div>
 
-          <div className="p-6">
-            <h1 className="font-display text-3xl font-bold">
+          {/* Coluna direita: info */}
+          <div>
+            <h1 className="font-display text-3xl font-black tracking-tight text-fg sm:text-4xl">
               {pet.name ?? "Sem nome"}
             </h1>
-            <p className="mt-1 flex items-center gap-1.5 text-sm text-fg-muted">
+            <p className="mt-1 text-[15px] text-fg-muted">{sub}</p>
+            <p className="mt-2 flex items-center gap-1.5 text-sm text-fg-muted">
               <MapPin className="h-4 w-4 text-brand-500" />
               {pet.neighborhood}, {pet.city}
               {pet.state && ` - ${pet.state}`}
             </p>
             <p className="mt-1 text-xs text-fg-subtle">
               {pet.kind === "lost" ? "Desaparecido" : "Encontrado"} em{" "}
-              {pet.event_date ? new Date(pet.event_date).toLocaleDateString("pt-BR") : ''} -{" "}
+              {pet.event_date ? new Date(pet.event_date).toLocaleDateString("pt-BR") : ""} ·{" "}
               {formatRelativeDate(pet.created_at)}
             </p>
 
-            <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
-              <Attr label="Espécie" value={SPECIES_LABEL[pet.species]} />
-              {pet.breed && <Attr label="Raça" value={pet.breed} />}
-              <Attr label="Cor" value={pet.color} />
-              {pet.size && <Attr label="Porte" value={SIZE_LABEL[pet.size]} />}
-              {pet.sex && <Attr label="Sexo" value={SEX_LABEL[pet.sex]} />}
-              {pet.age_approx && <Attr label="Idade" value={pet.age_approx} />}
-            </div>
+            {specs.length > 0 && (
+              <div className="my-6 grid grid-cols-2 gap-3">
+                {specs.map((s) => (
+                  <Spec key={s.label} label={s.label} value={s.value} />
+                ))}
+              </div>
+            )}
 
             {pet.description && (
-              <section className="mt-6">
-                <h2 className="text-sm font-bold uppercase tracking-wide text-fg-muted">Descrição</h2>
-                <p className="mt-1 text-sm leading-relaxed text-fg">{pet.description}</p>
-              </section>
+              <div className="mb-5">
+                <h2 className="mb-1.5 font-display text-[15px] font-bold text-fg">Descrição</h2>
+                <p className="text-[15px] leading-relaxed text-fg-muted">{pet.description}</p>
+              </div>
             )}
 
             {pet.behavior && (
-              <section className="mt-4">
-                <h2 className="text-sm font-bold uppercase tracking-wide text-fg-muted">Comportamento</h2>
-                <p className="mt-1 text-sm leading-relaxed text-fg">{pet.behavior}</p>
-              </section>
+              <div className="mb-5">
+                <h2 className="mb-1.5 font-display text-[15px] font-bold text-fg">Comportamento</h2>
+                <p className="text-[15px] leading-relaxed text-fg-muted">{pet.behavior}</p>
+              </div>
             )}
 
-            <section className="mt-8 rounded-xl border border-brand-200 bg-brand-500/5 p-4 shadow-warm-card transition-shadow">
-              <h2 className="text-sm font-bold uppercase tracking-wide text-brand-500">Entre em contato</h2>
-              <div className="mt-1 flex items-center justify-between gap-3">
-                <p className="text-sm text-fg">
-                  {pet.contact_name} - {formatPhone(pet.contact_phone)}
-                </p>
+            {/* Contato — único lugar com esses dados */}
+            <div className="rounded-2xl border border-brand-500/25 bg-gradient-to-br from-warm-200 to-bg-raised p-6 shadow-card min-[881px]:sticky min-[881px]:top-[84px]">
+              <p className="mb-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-accent-text">
+                🔒 Contato visível apenas nesta página
+              </p>
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h2 className="font-display text-lg font-bold text-fg">
+                    Falar com {pet.kind === "lost" ? "o tutor" : "quem encontrou"}
+                  </h2>
+                  {pet.contact_name && (
+                    <p className="mt-0.5 text-sm text-fg-muted">
+                      {pet.contact_name} · {formatPhone(pet.contact_phone)}
+                    </p>
+                  )}
+                </div>
                 {ownerProfile && !isOwner && (
                   <Link
                     href={`/perfil/${ownerProfile.id}`}
-                    className="flex shrink-0 items-center gap-1.5 rounded-full border border-white/10 bg-ink-800/60 px-2.5 py-1 text-[11px] text-fg-muted transition hover:border-cyan-500/30 hover:text-fg"
+                    className="flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-white px-2.5 py-1 text-[11px] text-fg-muted transition hover:border-brand-400 hover:text-fg"
                   >
                     {ownerProfile.avatar_url ? (
                       <Image
@@ -366,7 +402,7 @@ export default async function PetDetailPage({ params, searchParams }: PageProps)
                         className="h-4 w-4 rounded-full object-cover"
                       />
                     ) : (
-                      <span className="flex h-4 w-4 items-center justify-center rounded-full bg-brand-500/20 text-[9px] font-bold text-brand-300">
+                      <span className="flex h-4 w-4 items-center justify-center rounded-full bg-brand-500/20 text-[9px] font-bold text-brand-700">
                         {(ownerProfile.full_name ?? "?")[0]?.toUpperCase()}
                       </span>
                     )}
@@ -374,6 +410,7 @@ export default async function PetDetailPage({ params, searchParams }: PageProps)
                   </Link>
                 )}
               </div>
+
               <div className="mt-4 flex flex-wrap gap-2">
                 {pet.contact_whatsapp && (
                   <CTAButton
@@ -392,74 +429,79 @@ export default async function PetDetailPage({ params, searchParams }: PageProps)
                   Ligar
                 </CTAButton>
               </div>
-            </section>
 
-            {pet.kind === "lost" && (
-              <div className="mt-6">
-                <EmergencySafetyBanner context="lost-pet" />
-              </div>
-            )}
-
-            {pet.kind === "lost" && hasLocation && (
-              <div className="mt-8">
-                <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-fg-muted">
-                  Mapa de busca
-                </h2>
-                <PetDetailMapClient
-                  petId={pet.id}
-                  petName={pet.name}
-                  species={pet.species}
-                  kind={pet.kind}
-                  latitude={Number(pet.latitude)}
-                  longitude={Number(pet.longitude)}
-                  sightings={mapSightings}
-                  showMetaPanel={isOwner}
-                />
-              </div>
-            )}
-
-            {pet.kind === "lost" && (
-              <SightingsList
-                petId={pet.id}
-                petName={pet.name ?? "Pet"}
-                petCity={pet.city}
-              />
-            )}
-
-            {isOwner && pet.status === "active" && (
-              <div className="mt-8">
-                <h2 className="mb-3 flex items-center gap-2 text-sm font-bold text-fg">
-                  🤖 Matching IA
-                </h2>
-                <MatchPanel
-                  petId={pet.id}
-                  petKind={pet.kind as "lost" | "found"}
-                  petName={pet.name}
-                />
-              </div>
-            )}
-
-            {isOwner && (
-              <div className="mt-8">
-                <HealthTimeline
-                  petId={pet.id}
-                  initialRecords={healthRecords}
-                  isOwner={isOwner}
-                />
-              </div>
-            )}
+              {pet.kind === "lost" && (
+                <p className="mt-3 text-xs text-fg-subtle">
+                  Encontrou {pet.name ?? "o pet"}? Avise o tutor antes de tudo. Nunca pague recompensa antecipada.
+                </p>
+              )}
+            </div>
           </div>
-        </article>
+        </div>
+
+        {/* ── Seções extras (funcionalidades reais), largura total ── */}
+        <div className="mt-10 space-y-8">
+          {pet.kind === "lost" && (
+            <EmergencySafetyBanner context="lost-pet" />
+          )}
+
+          {pet.kind === "lost" && hasLocation && (
+            <section>
+              <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-fg-muted">
+                Mapa de busca
+              </h2>
+              <PetDetailMapClient
+                petId={pet.id}
+                petName={pet.name}
+                species={pet.species}
+                kind={pet.kind}
+                latitude={Number(pet.latitude)}
+                longitude={Number(pet.longitude)}
+                sightings={mapSightings}
+                showMetaPanel={isOwner}
+              />
+            </section>
+          )}
+
+          {pet.kind === "lost" && (
+            <SightingsList
+              petId={pet.id}
+              petName={pet.name ?? "Pet"}
+              petCity={pet.city}
+            />
+          )}
+
+          {isOwner && pet.status === "active" && (
+            <section>
+              <h2 className="mb-3 flex items-center gap-2 text-sm font-bold text-fg">
+                🤖 Matching IA
+              </h2>
+              <MatchPanel
+                petId={pet.id}
+                petKind={pet.kind as "lost" | "found"}
+                petName={pet.name}
+              />
+            </section>
+          )}
+
+          {isOwner && (
+            <HealthTimeline
+              petId={pet.id}
+              initialRecords={healthRecords}
+              isOwner={isOwner}
+            />
+          )}
+        </div>
       </main>
     </div>
   );
 }
 
-function Attr({ label, value }: { label: string; value: string }) {
+function Spec({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-white/5 bg-ink-800/50 p-3 shadow-warm-card transition-shadow hover:shadow-warm-hover">
-      <p className="text-xs font-bold uppercase tracking-wide text-fg-subtle">{label}</p>
-      <p className="mt-0.5 text-sm font-medium text-fg">{value}</p>
+    <div className="rounded-2xl border border-border bg-bg-raised px-4 py-3 shadow-card">
+      <p className="text-[11px] font-bold uppercase tracking-wider text-fg-subtle">{label}</p>
+      <p className="mt-1 text-[15px] font-semibold text-fg">{value}</p>
     </div>
   );
 }

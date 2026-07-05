@@ -20,6 +20,18 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
+function emojiFor(species: string): string {
+  return species === "dog" ? "🐶" : species === "cat" ? "🐱" : "🐾";
+}
+
+function timeAgo(dateStr: string): string {
+  const h = Math.floor((Date.now() - new Date(dateStr).getTime()) / 3_600_000);
+  const d = Math.floor(h / 24);
+  if (h < 1) return "agora";
+  if (h < 24) return `há ${h}h`;
+  return `há ${d}d`;
+}
+
 export default async function MapaPage() {
   const supabase = await createSupabaseServerClient();
 
@@ -99,7 +111,7 @@ export default async function MapaPage() {
           <div>
             <h1 className="font-display text-2xl font-bold text-fg">
               Mapa de{" "}
-              <span className="text-brand-500 glow-text-brand">Alertas</span>
+              <span className="text-brand-500">Alertas</span>
             </h1>
             <p className="mt-0.5 text-sm text-fg-muted">
               Rede de monitoramento em tempo real · {pets.length} alfinete{pets.length !== 1 ? "s" : ""} ativos
@@ -107,7 +119,7 @@ export default async function MapaPage() {
           </div>
 
           <div className="flex items-center gap-3 text-xs">
-            <span className="flex items-center gap-1.5 rounded-full border border-brand-500/30 bg-brand-500/10 px-3 py-1.5 font-bold text-brand-300">
+            <span className="flex items-center gap-1.5 rounded-full border border-brand-500/30 bg-brand-500/10 px-3 py-1.5 font-bold text-brand-700">
               <span className="h-2 w-2 rounded-full bg-brand-500 animate-pulse" />
               {lostCount} perdido{lostCount !== 1 ? "s" : ""}
             </span>
@@ -134,14 +146,59 @@ export default async function MapaPage() {
             </p>
             <Link
               href="/pets/novo"
-              className="mt-6 inline-flex items-center gap-2 rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-bold text-white shadow-glow-brand hover:bg-brand-400"
+              className="mt-6 inline-flex items-center gap-2 rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-bold text-white hover:bg-brand-400"
             >
               Registrar pet
             </Link>
           </div>
         ) : (
-          <div className="flex-1 min-h-[500px]">
-            <MapaClient pets={pets} sentinels={sentinels} sightings={sightings} />
+          <div className="grid flex-1 grid-cols-1 gap-5 min-[881px]:grid-cols-[1fr_340px]">
+            {/* Mapa real (Leaflet) */}
+            <div className="min-h-[500px] overflow-hidden rounded-2xl border border-border shadow-card lg:h-[600px]">
+              <MapaClient pets={pets} sentinels={sentinels} sightings={sightings} />
+            </div>
+
+            {/* Painel lateral de ocorrências */}
+            <aside className="flex flex-col overflow-hidden rounded-2xl border border-border bg-bg-raised shadow-card lg:h-[600px]">
+              <div className="flex items-center justify-between border-b border-border bg-bg-overlay px-4 py-3">
+                <span className="text-sm font-bold text-fg">Ocorrências próximas</span>
+                <span className="text-xs text-fg-muted">{pets.length} no mapa</span>
+              </div>
+              <div className="divide-y divide-border overflow-y-auto">
+                {pets.slice(0, 40).map((p) => {
+                  const isLost = p.kind === "lost";
+                  return (
+                    <Link
+                      key={p.id}
+                      href={`/pets/${p.id}`}
+                      className="flex gap-3 px-4 py-3 transition-colors hover:bg-brand-500/5"
+                    >
+                      <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-border bg-bg-overlay text-xl">
+                        {emojiFor(p.species)}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5">
+                          <span
+                            className={`rounded-full border px-1.5 py-px text-[10px] font-bold uppercase ${
+                              isLost
+                                ? "border-[#FF9933]/40 bg-badge-lost-bg text-badge-lost-fg"
+                                : "border-[#20B2AA]/40 bg-badge-found-bg text-badge-found-fg"
+                            }`}
+                          >
+                            {isLost ? "perdido" : "encontrado"}
+                          </span>
+                          <span className="truncate text-sm font-semibold text-fg">{p.name ?? "Sem nome"}</span>
+                        </div>
+                        <p className="mt-0.5 truncate text-xs text-fg-muted">
+                          📍 {[p.neighborhood, p.city].filter(Boolean).join(", ")}
+                        </p>
+                      </div>
+                      <span className="flex-shrink-0 text-[11px] text-fg-subtle">{timeAgo(p.created_at)}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </aside>
           </div>
         )}
 

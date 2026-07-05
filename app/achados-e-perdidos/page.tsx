@@ -36,12 +36,15 @@ export default async function AchadosEPerdidosPage({ searchParams }: PageProps) 
   return (
     <div data-theme="light" className="min-h-screen bg-bg">
       <main aria-labelledby="pets-heading" className="mx-auto max-w-7xl px-4 py-8">
-        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 id="pets-heading" className="text-2xl font-black text-fg">
+            <h1 id="pets-heading" className="font-display text-3xl font-black tracking-tight text-fg sm:text-4xl">
               Achados <span className="text-brand-500">&</span> Perdidos
             </h1>
-            <p className="mt-1 text-sm text-fg-muted">Pets perdidos e encontrados na sua região</p>
+            <p className="mt-2 max-w-xl text-base text-fg-muted">
+              Pets perdidos e encontrados na Baixada Santista. Reconheceu algum? Clique e fale
+              direto com quem cadastrou.
+            </p>
           </div>
 
           <Link
@@ -50,7 +53,7 @@ export default async function AchadosEPerdidosPage({ searchParams }: PageProps) 
               inline-flex items-center gap-2 rounded-full
               bg-brand-500 text-white
               px-6 py-3 text-sm font-semibold
-              shadow-[0_0_20px_rgba(255,133,27,0.3)]
+              shadow-warm-card
               hover:bg-brand-600
               transition-all duration-200
               focus-visible:outline-2 focus-visible:outline-offset-2
