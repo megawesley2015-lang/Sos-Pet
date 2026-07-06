@@ -21,6 +21,9 @@ interface PageProps {
 export const metadata = {
   title:       'Achados e Perdidos — SOS Pet Aumigo',
   description: 'Pets perdidos e encontrados na sua região. Cadastre um alerta grátis.',
+  // Paliativo SEO: aponta a canônica para /pets (mesma listagem, rota canônica)
+  // para reduzir risco de conteúdo duplicado. Não redireciona nem altera filtros.
+  alternates: { canonical: '/pets' },
 }
 
 export default async function AchadosEPerdidosPage({ searchParams }: PageProps) {
