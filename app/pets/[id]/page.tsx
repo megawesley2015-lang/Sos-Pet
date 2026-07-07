@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
-import { ArrowLeft, MapPin, Phone, MessageCircle, PawPrint, Pencil, Siren } from "lucide-react";
+import { ArrowLeft, MapPin, MessageCircle, PawPrint, Pencil, Siren } from "lucide-react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUserSafe } from "@/lib/auth/safe";
 import { getPetById } from "@/lib/services/pets";
@@ -32,13 +32,15 @@ import {
 import { getBaseUrl } from "@/lib/utils/url";
 import { petArticleJsonLd } from "@/lib/utils/jsonld";
 import { CopyUrlButton } from "@/components/ui/CopyUrlButton";
+import { CartazVisitTracker } from "@/components/analytics/CartazVisitTracker";
+import { PetContactButtons } from "@/components/pets/PetContactButtons";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ novo?: string }>;
+  searchParams: Promise<{ novo?: string; src?: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -71,6 +73,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function PetDetailPage({ params, searchParams }: PageProps) {
   const [{ id }, sp] = await Promise.all([params, searchParams]);
   const isNew = sp.novo === "true";
+  const src = sp.src;
 
   // Rate limit para a página de detalhe — 10 visitas por hora por IP.
   // Protege a RPC get_pet_contact chamada internamente por getPetById.
@@ -204,6 +207,7 @@ export default async function PetDetailPage({ params, searchParams }: PageProps)
   return (
     <div className="min-h-screen bg-bg" data-theme="light">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }} />
+      <CartazVisitTracker petId={pet.id} src={src} />
       <TopBar />
       <main className="mx-auto max-w-6xl px-4 pb-12 pt-6">
 
@@ -411,24 +415,16 @@ export default async function PetDetailPage({ params, searchParams }: PageProps)
                 )}
               </div>
 
-              <div className="mt-4 flex flex-wrap gap-2">
-                {pet.contact_whatsapp && (
-                  <CTAButton
-                    href={whatsappLink(pet.contact_phone, waMessage)}
-                    variant="primary"
-                    icon={<MessageCircle className="h-4 w-4" />}
-                  >
-                    WhatsApp
-                  </CTAButton>
-                )}
-                <CTAButton
-                  href={`tel:${pet.contact_phone}`}
-                  variant="secondary"
-                  icon={<Phone className="h-4 w-4" />}
-                >
-                  Ligar
-                </CTAButton>
-              </div>
+              <PetContactButtons
+                petId={pet.id}
+                src={src}
+                whatsappHref={
+                  pet.contact_whatsapp
+                    ? whatsappLink(pet.contact_phone, waMessage)
+                    : null
+                }
+                phoneHref={`tel:${pet.contact_phone}`}
+              />
 
               {pet.kind === "lost" && (
                 <p className="mt-3 text-xs text-fg-subtle">

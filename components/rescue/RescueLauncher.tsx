@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Share2, Download, CheckCircle2, AlertCircle } from "lucide-react";
 import { SOSButton } from "./SOSButton";
 import { SOSAlertCard } from "./SOSAlertCard";
@@ -10,6 +10,11 @@ import { dispatchAlertAction } from "@/app/resgate/actions";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { EmergencySafetyBanner } from "@/components/store/EmergencySafetyBanner";
 import type { PetRow } from "@/lib/types/database";
+import {
+  trackCartazGenerated,
+  trackCartazOpen,
+  trackCartazShared,
+} from "@/lib/analytics/cartaz-funnel";
 
 interface RescueLauncherProps {
   pet: PetRow;
@@ -32,7 +37,14 @@ type FlowState =
  */
 export function RescueLauncher({ pet, appUrl }: RescueLauncherProps) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const openTrackedRef = useRef(false);
   const [state, setState] = useState<FlowState>({ phase: "idle" });
+
+  useEffect(() => {
+    if (openTrackedRef.current) return;
+    openTrackedRef.current = true;
+    trackCartazOpen(pet.id);
+  }, [pet.id]);
 
   async function handleActivate() {
     setState({ phase: "running" });
@@ -43,6 +55,7 @@ export function RescueLauncher({ pet, appUrl }: RescueLauncherProps) {
         throw new Error("Card não está pronto pra renderizar.");
       }
       const blob = await generateAlertImage(cardRef.current);
+      trackCartazGenerated(pet.id);
 
       // 2. Server Action: upload + insert
       const formData = new FormData();
@@ -70,12 +83,15 @@ export function RescueLauncher({ pet, appUrl }: RescueLauncherProps) {
       });
 
       // 3. Tenta Web Share imediatamente (UX: aproveita o gesture do user)
-      await shareAlertImage({
+      const shareResult = await shareAlertImage({
         blob,
         filename: `sos-${pet.name ?? pet.id}.png`,
         title: `SOS Pet Aumigo — ${pet.name ?? "pet desaparecido"}`,
         text: `Procura-se: ${pet.name ?? `${pet.species}`} desaparecido em ${pet.neighborhood}, ${pet.city}. Ajude a compartilhar!`,
       });
+      if (shareResult.ok) {
+        trackCartazShared(pet.id, "auto");
+      }
     } catch (err) {
       setState({
         phase: "error",
@@ -86,12 +102,15 @@ export function RescueLauncher({ pet, appUrl }: RescueLauncherProps) {
 
   async function handleShareAgain() {
     if (state.phase !== "success") return;
-    await shareAlertImage({
+    const shareResult = await shareAlertImage({
       blob: state.blob,
       filename: `sos-${pet.name ?? pet.id}.png`,
       title: `SOS Pet Aumigo — ${pet.name ?? "pet desaparecido"}`,
       text: `Procura-se: ${pet.name ?? `${pet.species}`} desaparecido em ${pet.neighborhood}, ${pet.city}. Ajude a compartilhar!`,
     });
+    if (shareResult.ok) {
+      trackCartazShared(pet.id, "again");
+    }
   }
 
   return (
@@ -134,13 +153,17 @@ export function RescueLauncher({ pet, appUrl }: RescueLauncherProps) {
               Compartilhar de novo
             </CTAButton>
             {state.imagemUrl && (
-              <CTAButton
-                variant="secondary"
-                icon={<Download className="h-4 w-4" />}
-                href={state.imagemUrl}
+              <span
+                onClick={() => trackCartazShared(pet.id, "download")}
               >
-                Baixar PNG
-              </CTAButton>
+                <CTAButton
+                  variant="secondary"
+                  icon={<Download className="h-4 w-4" />}
+                  href={state.imagemUrl}
+                >
+                  Baixar PNG
+                </CTAButton>
+              </span>
             )}
           </div>
 
