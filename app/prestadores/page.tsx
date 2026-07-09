@@ -60,7 +60,7 @@ export default async function PrestadoresPage({ searchParams }: PageProps) {
   });
 
   return (
-    <div className="min-h-screen bg-bg bg-radial-brand">
+    <div className="min-h-screen bg-bg bg-radial-brand" data-theme="light">
       <div className="bg-grid-subtle min-h-screen">
         <TopBar />
 
@@ -69,10 +69,10 @@ export default async function PrestadoresPage({ searchParams }: PageProps) {
           <section className="mb-6">
             <h1 className="font-display text-3xl font-bold leading-tight sm:text-4xl">
               Prestadores{" "}
-              <span className="text-cyan-400 glow-text-brand">parceiros</span>
+              <span className="text-brand-500">parceiros</span>
             </h1>
             <p className="mt-1.5 flex items-center gap-2 text-sm text-fg-muted">
-              <Stethoscope className="h-4 w-4 text-cyan-400" strokeWidth={2} />
+              <Stethoscope className="h-4 w-4 text-[#0F6E56]" strokeWidth={2} />
               <span>
                 {providers.length}{" "}
                 {providers.length === 1 ? "prestador ativo" : "prestadores ativos"} na rede
@@ -82,17 +82,17 @@ export default async function PrestadoresPage({ searchParams }: PageProps) {
 
           {/* Banner B2B — "você é prestador?" */}
           <section className="mb-6">
-            <div className="flex items-center justify-between gap-4 rounded-xl border border-cyan-200 bg-cyan-50 px-5 py-4">
+            <div className="flex items-center justify-between gap-4 rounded-xl border border-[#20B2AA]/40 bg-[#E1F5EE] px-5 py-4">
               <div className="flex items-center gap-3">
-                <BadgeCheck className="h-5 w-5 shrink-0 text-cyan-700" strokeWidth={2.2} />
+                <BadgeCheck className="h-5 w-5 shrink-0 text-[#0F6E56]" strokeWidth={2.2} />
                 <p className="text-sm font-medium text-fg">
-                  <span className="font-bold text-cyan-800">Você é prestador?</span>{" "}
+                  <span className="font-bold text-[#0F6E56]">Você é prestador?</span>{" "}
                   Apareça pra tutores da região — cadastro gratuito.
                 </p>
               </div>
               <Link
                 href="/para-prestadores"
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-cyan-700 px-3 py-2 text-xs font-bold text-white transition-colors hover:bg-cyan-600"
+                className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-[#0F6E56] px-3 py-2 text-xs font-bold text-white transition-colors hover:bg-[#0a5040]"
               >
                 Saiba mais
                 <ArrowRight className="h-3 w-3" />
@@ -145,7 +145,7 @@ export default async function PrestadoresPage({ searchParams }: PageProps) {
 
 function Empty() {
   return (
-    <div className="rounded-2xl border border-dashed border-white/15 bg-ink-700/40 p-10 text-center shadow-warm-card">
+    <div className="rounded-2xl border border-dashed border-warm-200 bg-warm-50 p-10 text-center shadow-warm-card">
       <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-brand-500/40 bg-brand-500/10">
         <Building2 className="h-7 w-7 text-brand-500" strokeWidth={2} />
       </div>
