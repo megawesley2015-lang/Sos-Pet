@@ -36,11 +36,11 @@ export function AvaliacaoForm({
 
   if (!isLoggedIn) {
     return (
-      <div className="rounded-xl border border-white/10 bg-ink-700/50 p-4 text-center">
+      <div className="rounded-xl border border-warm-200 bg-warm-50 p-4 text-center">
         <p className="text-sm text-fg-muted">
           <Link
             href={`/login?next=/prestadores/${slug}`}
-            className="font-bold text-cyan-400 hover:text-cyan-300"
+            className="font-bold text-[#0F6E56] hover:text-[#0a5040]"
           >
             Entre
           </Link>{" "}
@@ -55,7 +55,7 @@ export function AvaliacaoForm({
       <input type="hidden" name="prestador_id" value={prestadorId} />
 
       {state.message && state.ok && (
-        <div className="flex items-center gap-2 rounded-lg border border-cyan-500/40 bg-cyan-500/10 p-3 text-xs text-cyan-100">
+        <div className="flex items-center gap-2 rounded-lg border border-[#20B2AA]/40 bg-[#E1F5EE] p-3 text-xs text-[#0F6E56]">
           <CheckCircle2 className="h-4 w-4 shrink-0" />
           {state.message}
         </div>
@@ -92,10 +92,10 @@ export function AvaliacaoForm({
           maxLength={500}
           defaultValue={myReview?.comentario ?? ""}
           placeholder="O que achou do atendimento? Recomenda?"
-          className={`w-full rounded-lg border bg-ink-800/70 px-3 py-2.5 text-sm text-fg placeholder:text-fg-subtle/70 focus:outline-none focus:ring-2 focus:ring-brand-500/40 ${
+          className={`w-full rounded-lg border bg-white px-3 py-2.5 text-sm text-fg placeholder:text-fg-subtle/70 focus:outline-none focus:ring-2 focus:ring-brand-500/40 ${
             state.errors?.comentario
               ? "border-danger/60 focus:border-danger"
-              : "border-white/10 focus:border-brand-500/60"
+              : "border-warm-200 focus:border-brand-500/60"
           }`}
         />
         {state.errors?.comentario && (

@@ -104,7 +104,7 @@ export function SchedulingModal({
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-brand-500 px-4 py-3 font-bold text-white shadow-glow-brand transition-all hover:bg-brand-400 active:scale-95 sm:flex-none"
+        className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-brand-500 px-4 py-3 font-bold text-white shadow-warm-card transition-all hover:bg-brand-400 active:scale-95 sm:flex-none"
       >
         <Calendar className="h-5 w-5" />
         Agendar Horário
@@ -112,16 +112,16 @@ export function SchedulingModal({
 
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-ink-950/80 backdrop-blur-sm sm:items-center"
+          className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm sm:items-center"
           onClick={(e) => e.target === e.currentTarget && handleClose()}
         >
-          <div className="relative w-full max-w-md rounded-t-3xl border border-white/10 bg-ink-800 p-6 shadow-2xl sm:rounded-2xl">
+          <div className="relative w-full max-w-md rounded-t-3xl border border-warm-200 bg-white p-6 shadow-2xl sm:rounded-2xl">
             {/* Handle móvel */}
-            <div className="absolute left-1/2 top-3 h-1 w-12 -translate-x-1/2 rounded-full bg-white/20 sm:hidden" />
+            <div className="absolute left-1/2 top-3 h-1 w-12 -translate-x-1/2 rounded-full bg-warm-300 sm:hidden" />
 
             <button
               onClick={handleClose}
-              className="absolute right-4 top-4 rounded-full p-1 text-fg-muted hover:bg-white/5 hover:text-fg"
+              className="absolute right-4 top-4 rounded-full p-1 text-fg-muted hover:bg-warm-100 hover:text-fg"
             >
               <X className="h-5 w-5" />
             </button>
@@ -139,7 +139,7 @@ export function SchedulingModal({
                 </p>
                 <button
                   onClick={handleClose}
-                  className="mt-6 rounded-xl border border-white/10 px-6 py-2.5 text-sm font-bold text-fg hover:bg-white/5"
+                  className="mt-6 rounded-xl border border-warm-200 px-6 py-2.5 text-sm font-bold text-fg hover:bg-warm-100"
                 >
                   Fechar
                 </button>
@@ -158,14 +158,14 @@ export function SchedulingModal({
 
                 {/* Info de disponibilidade */}
                 {(diasDisponiveis.length > 0 || horarioInicio) && (
-                  <div className="mb-5 rounded-xl border border-cyan-500/20 bg-cyan-500/5 px-4 py-3">
-                    <p className="text-xs font-bold uppercase tracking-wide text-cyan-400 mb-1.5">
+                  <div className="mb-5 rounded-xl border border-[#20B2AA]/40 bg-[#E1F5EE] px-4 py-3">
+                    <p className="text-xs font-bold uppercase tracking-wide text-[#0F6E56] mb-1.5">
                       Horários disponíveis
                     </p>
                     {diasDisponiveis.length > 0 && (
                       <div className="flex flex-wrap gap-1.5">
                         {diasDisponiveis.map((d) => (
-                          <span key={d} className="rounded-full bg-cyan-500/15 px-2.5 py-0.5 text-xs font-medium text-cyan-300">
+                          <span key={d} className="rounded-full bg-[#20B2AA]/15 px-2.5 py-0.5 text-xs font-medium text-[#0F6E56]">
                             {d}
                           </span>
                         ))}
@@ -191,7 +191,7 @@ export function SchedulingModal({
                         type="text"
                         value={formData.nome}
                         onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-                        className="w-full rounded-lg border border-white/10 bg-ink-900 px-3 py-2 text-sm text-fg placeholder:text-fg-muted/40 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                        className="w-full rounded-lg border border-warm-200 bg-white px-3 py-2 text-sm text-fg placeholder:text-fg-muted/40 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                         placeholder="João Silva"
                       />
                     </div>
@@ -204,7 +204,7 @@ export function SchedulingModal({
                         type="text"
                         value={formData.petNome}
                         onChange={(e) => setFormData({ ...formData, petNome: e.target.value })}
-                        className="w-full rounded-lg border border-white/10 bg-ink-900 px-3 py-2 text-sm text-fg placeholder:text-fg-muted/40 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                        className="w-full rounded-lg border border-warm-200 bg-white px-3 py-2 text-sm text-fg placeholder:text-fg-muted/40 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                         placeholder="Rex"
                       />
                     </div>
@@ -218,7 +218,7 @@ export function SchedulingModal({
                       required
                       value={formData.servico}
                       onChange={(e) => setFormData({ ...formData, servico: e.target.value })}
-                      className="w-full rounded-lg border border-white/10 bg-ink-900 px-3 py-2 text-sm text-fg focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                      className="w-full rounded-lg border border-warm-200 bg-white px-3 py-2 text-sm text-fg focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                     >
                       <option value="">Selecione...</option>
                       {SERVICOS_COMUNS.map((s) => (
@@ -232,7 +232,7 @@ export function SchedulingModal({
                         type="text"
                         value={formData.servicoCustom}
                         onChange={(e) => setFormData({ ...formData, servicoCustom: e.target.value })}
-                        className="mt-2 w-full rounded-lg border border-white/10 bg-ink-900 px-3 py-2 text-sm text-fg placeholder:text-fg-muted/40 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                        className="mt-2 w-full rounded-lg border border-warm-200 bg-white px-3 py-2 text-sm text-fg placeholder:text-fg-muted/40 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                         placeholder="Descreva o serviço..."
                       />
                     )}
@@ -248,7 +248,7 @@ export function SchedulingModal({
                         value={formData.data}
                         min={new Date().toISOString().split("T")[0]}
                         onChange={(e) => setFormData({ ...formData, data: e.target.value })}
-                        className="w-full rounded-lg border border-white/10 bg-ink-900 px-3 py-2 text-sm text-fg focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                        className="w-full rounded-lg border border-warm-200 bg-white px-3 py-2 text-sm text-fg focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                       />
                     </div>
                     <div>
@@ -259,7 +259,7 @@ export function SchedulingModal({
                         type="time"
                         value={formData.horario}
                         onChange={(e) => setFormData({ ...formData, horario: e.target.value })}
-                        className="w-full rounded-lg border border-white/10 bg-ink-900 px-3 py-2 text-sm text-fg focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                        className="w-full rounded-lg border border-warm-200 bg-white px-3 py-2 text-sm text-fg focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                       />
                     </div>
                   </div>

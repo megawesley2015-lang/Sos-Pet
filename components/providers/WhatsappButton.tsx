@@ -35,7 +35,7 @@ export function WhatsappButton({
           trackWhatsappClickAction(prestadorId);
         });
       }}
-      className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-500 px-5 py-3 text-sm font-bold text-white shadow-glow-brand transition-all hover:bg-brand-400 active:scale-[0.98]"
+      className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-500 px-5 py-3 text-sm font-bold text-white shadow-warm-card transition-all hover:bg-brand-400 active:scale-[0.98]"
     >
       <MessageCircle className="h-4 w-4" />
       WhatsApp
