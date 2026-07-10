@@ -93,8 +93,8 @@ export function PrestadorForm({
         height={180}
       />
 
-      <fieldset className="mt-4 rounded-xl border border-cyan-500/30 bg-cyan-500/5 p-4">
-        <legend className="px-2 text-xs font-bold uppercase tracking-wide text-cyan-300">
+      <fieldset className="mt-4 rounded-xl border border-[#20B2AA]/40 bg-[#E1F5EE] p-4">
+        <legend className="px-2 text-xs font-bold uppercase tracking-wide text-[#0F6E56]">
           Contato
         </legend>
 
@@ -141,7 +141,7 @@ export function PrestadorForm({
         />
       </fieldset>
 
-      <fieldset className="mt-4 rounded-xl border border-white/10 bg-ink-700/30 p-4">
+      <fieldset className="mt-4 rounded-xl border border-warm-200 bg-warm-50 p-4">
         <legend className="px-2 text-xs font-bold uppercase tracking-wide text-fg-muted">
           Localização
         </legend>
@@ -180,7 +180,7 @@ export function PrestadorForm({
       </fieldset>
 
       <fieldset className="mt-4 rounded-xl border border-brand-500/30 bg-brand-500/5 p-4">
-        <legend className="px-2 text-xs font-bold uppercase tracking-wide text-brand-300">
+        <legend className="px-2 text-xs font-bold uppercase tracking-wide text-brand-600">
           Diferenciais
         </legend>
 
@@ -257,10 +257,10 @@ function Select({
         defaultValue={defaultValue}
         required={required}
         aria-invalid={!!error}
-        className={`w-full rounded-lg border bg-ink-800/70 px-3 py-2.5 text-sm text-fg focus:outline-none focus:ring-2 focus:ring-cyan-500/40 ${
+        className={`w-full rounded-lg border bg-bg-raised px-3 py-2.5 text-sm text-fg focus:outline-none focus:ring-2 focus:ring-brand-500/40 ${
           error
             ? "border-danger/60 focus:border-danger"
-            : "border-white/10 focus:border-cyan-500/60"
+            : "border-border focus:border-brand-500/60"
         }`}
       >
         {options.map((opt) => (
@@ -304,10 +304,10 @@ function Textarea({
         defaultValue={defaultValue}
         placeholder={placeholder}
         aria-invalid={!!error}
-        className={`w-full rounded-lg border bg-ink-800/70 px-3 py-2.5 text-sm text-fg placeholder:text-fg-subtle/70 focus:outline-none focus:ring-2 focus:ring-cyan-500/40 ${
+        className={`w-full rounded-lg border bg-bg-raised px-3 py-2.5 text-sm text-fg placeholder:text-fg-subtle/70 focus:outline-none focus:ring-2 focus:ring-brand-500/40 ${
           error
             ? "border-danger/60 focus:border-danger"
-            : "border-white/10 focus:border-cyan-500/60"
+            : "border-border focus:border-brand-500/60"
         }`}
       />
       {error && <p className="mt-1 text-xs text-danger-fg">{error}</p>}
@@ -330,7 +330,7 @@ function Toggle({
         type="checkbox"
         name={name}
         defaultChecked={defaultChecked}
-        className="h-4 w-4 rounded border-white/20 bg-ink-800 text-brand-500 focus:ring-brand-500/40"
+        className="h-4 w-4 rounded border-border bg-bg-raised text-brand-500 focus:ring-brand-500/40"
       />
       {label}
     </label>

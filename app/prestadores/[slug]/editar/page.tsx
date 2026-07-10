@@ -28,7 +28,7 @@ export default async function EditarPrestadorPage({ params }: PageProps) {
   if (!owned) notFound();
 
   return (
-    <div className="min-h-screen bg-ink-800">
+    <div className="min-h-screen bg-bg" data-theme="light">
       <TopBar />
       <main className="mx-auto max-w-2xl px-4 pb-16 pt-6">
         <Link
@@ -43,7 +43,7 @@ export default async function EditarPrestadorPage({ params }: PageProps) {
           <h1 className="font-display text-3xl font-bold">Editar prestador</h1>
         </header>
 
-        <div className="rounded-2xl border border-white/10 bg-ink-700/70 p-5 backdrop-blur-sm sm:p-7">
+        <div className="rounded-2xl border border-warm-200 bg-white p-5 shadow-warm-card sm:p-7">
           <EditPrestadorClient prestador={owned} />
         </div>
       </main>

@@ -33,13 +33,13 @@ export default async function NovoPrestadorPage() {
         </Link>
 
         <header className="mb-6 flex items-start gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-500/40 bg-cyan-500/10">
-            <Building2 className="h-5 w-5 text-cyan-400" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#20B2AA]/40 bg-[#E1F5EE]">
+            <Building2 className="h-5 w-5 text-[#0F6E56]" />
           </div>
           <div>
             <h1 className="font-display text-3xl font-bold">
               Cadastrar{" "}
-              <span className="text-cyan-400 glow-text-brand">prestador</span>
+              <span className="text-brand-500">prestador</span>
             </h1>
             <p className="mt-1 text-sm text-fg-muted">
               Apareça pra quem precisa de cuidado pro pet.
@@ -47,7 +47,7 @@ export default async function NovoPrestadorPage() {
           </div>
         </header>
 
-        <div className="rounded-2xl border border-white/10 bg-ink-700/70 p-5 backdrop-blur-sm sm:p-7">
+        <div className="rounded-2xl border border-warm-200 bg-white p-5 shadow-warm-card sm:p-7">
           <PrestadorForm
             action={createProviderAction}
             submitLabel="Cadastrar"
