@@ -70,7 +70,7 @@ export function ProviderPhotoUpload({
 
       {previewUrl ? (
         <div
-          className="relative overflow-hidden rounded-xl border border-white/10 bg-ink-800/70"
+          className="relative overflow-hidden rounded-xl border border-warm-200 bg-warm-50"
           style={{ height }}
         >
           <Image
@@ -85,7 +85,7 @@ export function ProviderPhotoUpload({
             type="button"
             onClick={handleClear}
             aria-label="Remover"
-            className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-ink-900/80 text-fg backdrop-blur-sm hover:bg-danger/20 hover:text-danger-fg"
+            className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full border border-warm-200 bg-white/90 text-fg backdrop-blur-sm hover:bg-danger/20 hover:text-danger-fg"
           >
             <X className="h-4 w-4" />
           </button>
@@ -95,7 +95,7 @@ export function ProviderPhotoUpload({
           type="button"
           onClick={() => inputRef.current?.click()}
           style={{ height }}
-          className="flex w-full flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-white/15 bg-ink-800/40 text-fg-muted transition-colors hover:border-cyan-500/50 hover:text-fg"
+          className="flex w-full flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-warm-300 bg-warm-50 text-fg-muted transition-colors hover:border-[#20B2AA]/50 hover:text-fg"
         >
           <Camera className="h-6 w-6" />
           <span className="text-sm font-medium">
@@ -119,7 +119,7 @@ export function ProviderPhotoUpload({
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="mt-2 text-xs text-cyan-400 hover:text-cyan-300"
+          className="mt-2 text-xs text-[#0F6E56] hover:text-[#0a5040]"
         >
           Trocar imagem
         </button>

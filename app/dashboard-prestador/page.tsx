@@ -57,7 +57,7 @@ export default async function DashboardPrestadorPage() {
             <div>
               <h1 className="font-display text-3xl font-bold leading-tight">
                 Painel do{" "}
-                <span className="text-brand-500 glow-text-brand">prestador</span>
+                <span className="text-brand-500">prestador</span>
               </h1>
               <p className="mt-1 text-sm text-fg-muted">
                 Suas métricas e gestão dos seus estabelecimentos.

@@ -9,7 +9,7 @@ const PetAlertMap = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="flex h-full items-center justify-center rounded-xl border border-white/10 bg-ink-900">
+      <div className="flex h-full items-center justify-center rounded-xl border border-warm-200 bg-warm-50 shadow-warm-card">
         <div className="text-center text-fg-subtle">
           <div className="text-4xl mb-3">🗺️</div>
           <p className="text-sm">Inicializando rede de monitoramento…</p>

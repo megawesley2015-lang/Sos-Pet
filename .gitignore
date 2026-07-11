@@ -38,3 +38,9 @@ yarn-error.log*
 /venv/
 __pycache__/
 *.pyc
+
+# ─── Scripts de seed com credenciais — NUNCA commitar ────────
+supabase/seeds/*.py
+
+# ─── Controle de campanha com PII (contato do tutor) — NUNCA commitar ─
+docs/launch/*.local.csv

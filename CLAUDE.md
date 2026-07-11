@@ -514,6 +514,42 @@ COMPONENTES UI:
 
 ---
 
+## DESIGN MERGE RULES
+
+Sempre que a tarefa envolver mockups, retrofit visual ou "deixar igual ao mockup",
+leia primeiro: **`docs/DESIGN-MERGE-RULES.md`** (regra obrigatória).
+
+Regra central:
+- Mockup é **design target**.
+- App real é **functional source of truth**.
+- Faça **merge inteligente, não substituição**.
+
+Nunca remova funcionalidade real, dados, estados, rotas, auth, queries, RLS ou lógica
+para caber no mockup sem aprovação explícita.
+
+Fluxo obrigatório:
+1. comparar mockup e implementação real;
+2. listar diferenças e melhorias futuras;
+3. aguardar aprovação;
+4. só então implementar o escopo aprovado.
+
+> As regras completas (12 itens + tokens + fluxo) vivem em `docs/DESIGN-MERGE-RULES.md`.
+> Este bloco é só um ponteiro — não duplicar o conteúdo aqui para evitar divergência.
+
+---
+
+## AI-FIRST OPERATING SYSTEM
+
+Como Claude/Codex devem operar neste projeto (fluxo, papéis, modos, gates, ideias novas):
+**`docs/AI-FIRST-OPERATING-SYSTEM.md`** (regra de processo).
+
+Tarefas grandes seguem o fluxo padrão:
+**pesquisa → spec → plano → aprovação humana → implementação → verificação → documentação**.
+
+> Este bloco é só um ponteiro — não duplicar o conteúdo aqui.
+
+---
+
 ## REGRAS DE DESENVOLVIMENTO
 
 ### Supabase

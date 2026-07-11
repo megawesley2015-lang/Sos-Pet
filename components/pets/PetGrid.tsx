@@ -26,12 +26,18 @@ export function PetGrid({
   return (
     <div className="flex flex-col gap-6">
       <ul
-        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+        className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4"
         role="list"
         aria-label="Alertas de pets"
       >
-        {pets.map((pet) => (
-          <li key={pet.id}><PetCard pet={pet} /></li>
+        {pets.map((pet, index) => (
+          <li
+            key={pet.id}
+            className={index < 8 ? 'animate-fade-in' : undefined}
+            style={index < 8 ? { animationDelay: `${index * 50}ms` } : undefined}
+          >
+            <PetCard pet={pet} />
+          </li>
         ))}
       </ul>
 

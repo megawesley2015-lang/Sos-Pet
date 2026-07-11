@@ -1,4 +1,5 @@
 ﻿import { forwardRef } from "react";
+import { QRCodeSVG } from "qrcode.react";
 import {
   formatPhone,
   whatsappLink,
@@ -212,7 +213,8 @@ export const SOSAlertCard = forwardRef<HTMLDivElement, SOSAlertCardProps>(
           </div>
         </div>
 
-        {/* Contato — sempre visível, sem marginTop auto que pode empurrar */}
+        {/* Contato — sempre visível, sem marginTop auto que pode empurrar.
+            QR à direita (rua → perfil digital /pets/[id]); link textual reduzido como fallback. */}
         <div
           style={{
             background: "linear-gradient(135deg, #FF851B 0%, #FF8B5C 100%)",
@@ -221,50 +223,93 @@ export const SOSAlertCard = forwardRef<HTMLDivElement, SOSAlertCardProps>(
             color: "#fff",
             boxShadow: "0 8px 32px rgba(255,133,27,0.4)",
             flexShrink: 0,
+            display: "flex",
+            alignItems: "center",
+            gap: 14,
           }}
         >
-          <div
-            style={{
-              fontSize: 10,
-              textTransform: "uppercase",
-              letterSpacing: 2,
-              opacity: 0.85,
-              marginBottom: 3,
-            }}
-          >
-            Encontrou? Avise:
-          </div>
-          <div style={{ fontSize: 16, fontWeight: 700 }}>
-            {pet.contact_name}
-          </div>
-          <div style={{ fontSize: 26, fontWeight: 900, marginTop: 3 }}>
-            {formatPhone(pet.contact_phone)}
-          </div>
-          {pet.contact_whatsapp && (
+          <div style={{ flex: 1, minWidth: 0 }}>
             <div
               style={{
-                marginTop: 5,
-                fontSize: 13,
-                fontWeight: 700,
-                opacity: 0.9,
-                display: "flex",
-                alignItems: "center",
-                gap: 5,
+                fontSize: 10,
+                textTransform: "uppercase",
+                letterSpacing: 2,
+                opacity: 0.85,
+                marginBottom: 3,
               }}
             >
-              ✅ WhatsApp disponível
+              Encontrou? Avise:
             </div>
-          )}
-          {/* link só visual — não clicável dentro do PNG */}
+            <div style={{ fontSize: 16, fontWeight: 700 }}>
+              {pet.contact_name}
+            </div>
+            <div style={{ fontSize: 26, fontWeight: 900, marginTop: 3 }}>
+              {formatPhone(pet.contact_phone)}
+            </div>
+            {pet.contact_whatsapp && (
+              <div
+                style={{
+                  marginTop: 5,
+                  fontSize: 13,
+                  fontWeight: 700,
+                  opacity: 0.9,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 5,
+                }}
+              >
+                ✅ WhatsApp disponível
+              </div>
+            )}
+            {/* link textual — fallback reduzido e secundário; não clicável dentro do PNG */}
+            {appUrl && (
+              <div
+                style={{
+                  marginTop: 6,
+                  fontSize: 10,
+                  opacity: 0.7,
+                  wordBreak: "break-all",
+                  lineHeight: 1.2,
+                }}
+              >
+                {appUrl}
+              </div>
+            )}
+          </div>
+
+          {/* QR escaneável — wrapper branco com quiet zone; preto-e-branco por legibilidade */}
           {appUrl && (
             <div
               style={{
-                marginTop: 6,
-                fontSize: 11,
-                opacity: 0.7,
+                background: "#fff",
+                padding: 8,
+                borderRadius: 10,
+                flexShrink: 0,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 3,
+                lineHeight: 0,
               }}
             >
-              Detalhes: {appUrl}
+              <QRCodeSVG
+                value={appUrl}
+                size={92}
+                bgColor="#ffffff"
+                fgColor="#121214"
+                level="M"
+              />
+              <span
+                style={{
+                  color: "#121214",
+                  fontSize: 8,
+                  fontWeight: 700,
+                  letterSpacing: 0.5,
+                  lineHeight: 1,
+                }}
+              >
+                Aponte a câmera
+              </span>
             </div>
           )}
         </div>

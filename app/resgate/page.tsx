@@ -110,7 +110,7 @@ export default async function CentralDeResgatePage({ searchParams }: PageProps) 
             </div>
 
             <div className="rounded-2xl border border-brand-500/30 bg-brand-500/5 shadow-warm-card p-6 backdrop-blur-sm sm:p-10">
-              <RescueLauncher pet={pet} appUrl={`${getBaseUrl()}/pets/${pet.id}`} />
+              <RescueLauncher pet={pet} appUrl={`${getBaseUrl()}/pets/${pet.id}?src=cartaz`} />
             </div>
 
             {/* Histórico */}
